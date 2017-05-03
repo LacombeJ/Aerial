@@ -1,6 +1,6 @@
 package jonl.ge;
 
-import jonl.jutils.misc.TypeUtils;
+import jonl.jutils.misc.ArrayUtils;
 
 public class Text extends Component {
     
@@ -54,11 +54,11 @@ public class Text extends Component {
     }
     
     public float[] getColor() {
-        return TypeUtils.copy(color);
+        return ArrayUtils.copy(color);
     }
     
     public void setColor(float[] color) {
-        this.color = TypeUtils.copy(color);
+        this.color = ArrayUtils.copy(color);
     }
     
 }

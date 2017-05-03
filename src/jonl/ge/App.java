@@ -1,7 +1,6 @@
 package jonl.ge;
 
-import jonl.jgl.Input;
-import jonl.jgl.Input.CursorState;
+import jonl.ge.Input.CursorState;
 
 interface App {
     

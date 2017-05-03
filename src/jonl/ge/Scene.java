@@ -2,16 +2,22 @@
 
 import java.util.ArrayList;
 
-import jonl.jgl.Input;
-import jonl.jgl.Input.CursorState;
+import jonl.ge.Input.CursorState;
 
 public abstract class Scene {
     
+    String name = "Scene";
     App application;
-    
     boolean persistent = false;
-
     ArrayList<GameObject> gameObjects = null;
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /** Adds GameObjects and assigns Components to them */
     protected abstract void prepare();
@@ -180,5 +186,9 @@ public abstract class Scene {
         application.close();
     }
     
+    @Override
+    public String toString() {
+        return name+": "+super.toString();
+    }
     
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import jonl.ge.MaterialBuilder.MBFloat;
+import jonl.ge.MaterialBuilder.MBShader;
 import jonl.ge.MaterialBuilder.MBTexU;
 import jonl.ge.MaterialBuilder.MBUniform;
 import jonl.ge.MaterialBuilder.MBVec3;
@@ -15,6 +16,7 @@ public class Material {
     String mbUniforms;
     String mbStatements;
     
+    MBShader shader      = null;
     MBVec3   diffuse     = null;
     MBVec3   specular    = null;
     MBVec3   normal      = null;
@@ -27,11 +29,13 @@ public class Material {
     static int materialCount = 0;
     
     Material(
+            MBShader shader,
             MBVec3 diffuse, MBVec3 specular, MBVec3 normal, MBTexU height,
             MBFloat roughness, MBFloat fresnel,
             ArrayList<String> statements, ArrayList<MBUniform> uniforms
     ) {
         id = materialCount++;
+        this.shader = shader;
         this.diffuse = diffuse;
         this.specular = specular;
         this.normal = normal;

@@ -17,12 +17,48 @@ import jonl.vmath.Vector4;
  */
 public class MaterialBuilder {
     
+    public enum MBShader {
+        
+        /**
+         * Standard lit material using diffuse, specular, normal, height,
+         * roughness, fresnel
+         */
+        STANDARD,
+        
+        /**
+         * Unlit material using only diffuse value to render a solid
+         * color
+         */
+        BASIC;
+        
+    }
+    
+    
+    
+    /* ************************************************************** */
+    /* *********************  Shader Variables   ******************** */
+    /* ************************************************************** */
+    
+    /*
+     * Note:
+     * Adding a variable here means you should add it to calculating
+     * the unique material id in getProgramString
+     */
+    
+    public MBShader shader      = MBShader.STANDARD;
+    
     public MBVec3   diffuse     = null;
     public MBVec3   specular    = null;
     public MBVec3   normal      = null;
     public MBTexU   height      = null;
     public MBFloat  roughness   = null;
     public MBFloat  fresnel     = null;
+    
+    /* ************************************************************** */
+    /* ********************  End Shader Variables  ****************** */
+    /* ************************************************************** */
+    
+    
     
     /** List of Uniforms */
     final ArrayList<MBUniform> mbUniformList = new ArrayList<>();
@@ -38,6 +74,7 @@ public class MaterialBuilder {
     
     public Material build() {
         Material mat = new Material(
+                shader,
                 diffuse,specular,normal,height,
                 roughness,fresnel,
                 mbStatementList,mbUniformList
@@ -72,7 +109,26 @@ public class MaterialBuilder {
         return v;
     }
     
+    private void putString(String string) {
+        mbStatementList.add(string);
+    }
     
+    private void putIf(MBBool b)        { putString("if ("+b.getName()+") {\n"); }
+    private void putElseIf(MBBool b)    { putString("else if ("+b.getName()+") {\n"); }
+    private void putElse()              { putString("else {\n"); }
+    private void putEndIf()             { putString("}\n"); }
+    
+    public void mbIf(MBBool bool)       { putIf(bool); }
+    public void mbElseIf(MBBool bool)   { putElseIf(bool); }
+    public void mbElse()                { putElse(); }
+    public void mbEndIf()               { putEndIf(); }
+    
+    public MBBool   mbBool(String var)  { return putVariable(new MBBoolV(),     var); }
+    public MBInt    mbInt(String var)   { return putVariable(new MBIntV(),      var); }
+    public MBFloat  mbFloat(String var) { return putVariable(new MBFloatV(),    var); }
+    public MBVec4   vec4(String var)    { return putVariable(new MBVec4V(),     var); }
+    public MBVec3   vec3(String var)    { return putVariable(new MBVec3V(),     var); }
+    public MBVec2   vec2(String var)    { return putVariable(new MBVec2V(),     var); }
     
     public MBBool   mbBool  (boolean b) { return putVariable(new MBBoolV(),  b+""); }
     public MBInt    mbInt   (int i)     { return putVariable(new MBIntV(),   i+""); }
@@ -153,6 +209,36 @@ public class MaterialBuilder {
     public MBFloat w(MBVec4 v) { return wp(v); }
 
     
+    
+    
+    public <T extends MBData> void set(T u, T v) {
+        putString(u+" = "+v+";\n");
+    }
+    
+    public <T extends MBData> MBBool and(MBBool u, MBBool v) {
+        return (MBBool) putVariable(new MBBoolV(),u+"&&"+v);
+    }
+    
+    public <T extends MBData> MBBool or(MBBool u, MBBool v) {
+        return (MBBool) putVariable(new MBBoolV(),u+"||"+v);
+    }
+    
+    public <T extends MBData> MBBool equals(T u, T v) {
+        return (MBBool) putVariable(new MBBoolV(),u+"=="+v);
+    }
+    public <T extends MBData> MBBool less(T u, T v) {
+        return (MBBool) putVariable(new MBBoolV(),u+"<"+v);
+    }
+    public <T extends MBData> MBBool greater(T u, T v) {
+        return (MBBool) putVariable(new MBBoolV(),u+">"+v);
+    }
+    public <T extends MBData> MBBool leq(T u, T v) {
+        return (MBBool) putVariable(new MBBoolV(),u+"<="+v);
+    }
+    public <T extends MBData> MBBool geq(T u, T v) {
+        return (MBBool) putVariable(new MBBoolV(),u+">="+v);
+    }
+    
     @SuppressWarnings("unchecked")
     public <T extends MBData> T add(T u, T v) {
         return (T) putVariable(getVar(u),u+"+"+v);
@@ -161,6 +247,18 @@ public class MaterialBuilder {
     @SuppressWarnings("unchecked")
     public <T extends MBData> T sub(T u, T v) {
         return (T) putVariable(getVar(u),u+"-"+v);
+    }
+    
+    public MBFloatV sub(float u, MBFloat v) {
+        return putVariable(new MBFloatV(),u+"-"+v);
+    }
+    
+    public MBFloatV sub(MBFloat u, float v) {
+        return putVariable(new MBFloatV(),u+"-"+v);
+    }
+    
+    public MBFloatV sub(MBFloat u, MBFloat v) {
+        return putVariable(new MBFloatV(),u+"-"+v);
     }
     
     @SuppressWarnings("unchecked")
@@ -188,6 +286,79 @@ public class MaterialBuilder {
         return (T) putVariable(getVar(u),f+"*"+u);
     }
     
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T div(T u, T v) {
+        return (T) putVariable(getVar(u),u+"/"+v);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T pow(T u, T v) {
+        return (T) putVariable(getVar(u),funcBuild("pow",u,v));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T pow(T u, float y) {
+        return (T) putVariable(getVar(u),funcBuild("pow",u,y));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T sqrt(T u) {
+        return (T) putVariable(getVar(u),funcBuild("sqrt",u));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T round(T u) {
+        return (T) putVariable(getVar(u),funcBuild("round",u));
+    }
+    
+    public <T extends MBData> MBFloat length(T u) {
+        return putVariable(new MBFloatV(),funcBuild("length",u));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T abs(T u) {
+        return (T) putVariable(getVar(u),funcBuild("abs",u));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T mix(T u, T v, T w) {
+        return (T) putVariable(getVar(u),funcBuild("mix",u,v,w));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T mix(T u, T v, MBFloat w) {
+        return (T) putVariable(getVar(u),funcBuild("mix",u,v,w));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T mix(T u, T v, float w) {
+        return (T) putVariable(getVar(u),funcBuild("mix",u,v,w));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T min(T u, T v) {
+        return (T) putVariable(getVar(u),funcBuild("min",u,v));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T max(T u, T v) {
+        return (T) putVariable(getVar(u),funcBuild("max",u,v));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T clamp(T u, T min, T max) {
+        return (T) putVariable(getVar(u),funcBuild("clamp",u,min,max));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T clamp(T u, MBFloat min, MBFloat max) {
+        return (T) putVariable(getVar(u),funcBuild("clamp",u,min,max));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends MBData> T clamp(T u, float min, float max) {
+        return (T) putVariable(getVar(u),funcBuild("clamp",u,min,max));
+    }
     
     
     public MBBoolU  mbBoolu(String id, boolean b)  { return putUniform(new MBBoolU(),id, b); }
@@ -247,9 +418,16 @@ public class MaterialBuilder {
     */
     
     
+    
+    
+    
+    
+    
+    
+    
     private static String getType(MBObject v) {
         if (v instanceof MBTexU)    return "sampler2D";
-        if (v instanceof MBBool)    return "int";
+        if (v instanceof MBBool)    return "bool";
         if (v instanceof MBInt)     return "int";
         if (v instanceof MBFloat)   return "float";
         if (v instanceof MBVec4)    return "vec4";
@@ -328,7 +506,14 @@ public class MaterialBuilder {
         MBFloat w();
     }
     public static interface MBVec3  extends MBData {
-        
+        MBVec3 mult(float f);
+        MBVec3 mult(MBFloat f);
+        MBVec3 mult(MBVec3 v);
+        MBVec3 xyz();
+        MBVec2 xy();
+        MBFloat x();
+        MBFloat y();
+        MBFloat z();
     }
     public static interface MBVec2  extends MBData {
         
@@ -406,12 +591,30 @@ public class MaterialBuilder {
         public void set(Vector3 v)  { data = v.get(); }
         public void set(float x, float y, float z)  { data = new Vector3(x,y,z); }
         public String getName() { return name; }
+        
+        //Override
+        public MBVec3 mult(float f) { return mb.mul(this,f); }
+        public MBVec3 mult(MBFloat f) { return mb.mul(this,f); }
+        public MBVec3 mult(MBVec3 v) { return mb.mul(this,v); }
+        public MBVec3 xyz() { return mb.xyz(this); }
+        public MBVec2 xy() { return mb.xy(this); }
+        public MBFloat x() { return mb.x(this); }
+        public MBFloat y() { return mb.y(this); }
+        public MBFloat z() { return mb.z(this); }
     }
     public static class MBVec2U  extends MBUniform implements MBVec2 { 
         public Vector2 get() { return (Vector2) data; }
         public void set(Vector2 v)  { data = v.get(); }
         public void set(float x, float y)  { data = new Vector2(x,y); }
         public String getName() { return name; }
+        
+        //Override
+        public MBVec2 mult(float f) { return mb.mul(this,f); }
+        public MBVec2 mult(MBFloat f) { return mb.mul(this,f); }
+        public MBVec2 mult(MBVec2 v) { return mb.mul(this,v); }
+        public MBVec2 xy() { return mb.xy(this); }
+        public MBFloat x() { return mb.x(this); }
+        public MBFloat y() { return mb.y(this); }
     }
     public static class MBMat4U  extends MBUniform implements MBMat4 { 
         public Matrix4 get() { return (Matrix4) data; }
@@ -459,9 +662,27 @@ public class MaterialBuilder {
     }
     public static class MBVec3V  extends MBVar implements MBVec3 { 
         public String getName() { return name; }
+        
+        //Override
+        public MBVec3 mult(float f) { return mb.mul(this,f); }
+        public MBVec3 mult(MBFloat f) { return mb.mul(this,f); }
+        public MBVec3 mult(MBVec3 v) { return mb.mul(this,v); }
+        public MBVec3 xyz() { return mb.xyz(this); }
+        public MBVec2 xy() { return mb.xy(this); }
+        public MBFloat x() { return mb.x(this); }
+        public MBFloat y() { return mb.y(this); }
+        public MBFloat z() { return mb.z(this); }
     }
     public static class MBVec2V  extends MBVar implements MBVec2 { 
         public String getName() { return name; }
+        
+        //Override
+        public MBVec2 mult(float f) { return mb.mul(this,f); }
+        public MBVec2 mult(MBFloat f) { return mb.mul(this,f); }
+        public MBVec2 mult(MBVec2 v) { return mb.mul(this,v); }
+        public MBVec2 xy() { return mb.xy(this); }
+        public MBFloat x() { return mb.x(this); }
+        public MBFloat y() { return mb.y(this); }
     }
     public static class MBMat4V  extends MBVar implements MBMat4 { 
         public String getName() { return name; }
@@ -472,6 +693,7 @@ public class MaterialBuilder {
     public static class MBMat2V  extends MBVar implements MBMat2 { 
         public String getName() { return name; }
     }
+    
     
     
     

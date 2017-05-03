@@ -1,6 +1,6 @@
 package jonl.ge;
 
-import jonl.jutils.misc.TypeUtils;
+import jonl.jutils.misc.ArrayUtils;
 
 public class Texture {
     
@@ -13,7 +13,7 @@ public class Texture {
     float data[];
     
     public Texture(float[] data, int width, int height, Internal format, Wrap wrap, Filter filter) {
-        this.data = TypeUtils.copy(data);
+        this.data = ArrayUtils.copy(data);
         this.width = width;
         this.height = height;
         this.format = format;

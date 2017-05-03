@@ -4,19 +4,26 @@ import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 
 import jonl.jutils.misc.ImageUtils;
-import jonl.jgl.utils.MeshData;
 import jonl.jgl.utils.MeshLoader;
 
 public class Loader {
 
-    public static Mesh loadMesh(String fileLoc) {
+    public static Mesh loadMesh(MeshData md) {
         Mesh m = new Mesh();
-        MeshData md = MeshLoader.load(fileLoc);
         m.vertices = md.vertexData;
         m.normals = md.normalData;
         m.texCoords = md.texCoordData;
         m.indices = md.indices;
         return m;
+    }
+    
+    public static Mesh loadMesh(String fileLoc) {
+        return loadMesh(loadMeshData(fileLoc));
+    }
+    
+    public static MeshData loadMeshData(String fileLoc) {
+        jonl.jgl.utils.MeshData md = MeshLoader.load(fileLoc);
+        return new MeshData(md.vertexData,md.normalData,md.texCoordData,md.indices);
     }
     
     public static Texture loadTexture(String fileLoc) {

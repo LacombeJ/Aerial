@@ -1,10 +1,9 @@
 package jonl.ge.ext;
 
-import jonl.jgl.Input;
 import jonl.vmath.Mathf;
 import jonl.vmath.Quaternion;
 import jonl.vmath.Vector3;
-
+import jonl.ge.Input;
 import jonl.ge.Property;
 import jonl.ge.Transform;
 

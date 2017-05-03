@@ -1,8 +1,8 @@
 package jonl.ge.ext;
 
-import jonl.jgl.Input;
-import jonl.jgl.Input.CursorState;
-import jonl.jgl.InputEvent;
+import jonl.ge.Input;
+import jonl.ge.Input.CursorState;
+import jonl.ge.InputEvent;
 
 public class MouseGrabToggle extends Toggle {
     

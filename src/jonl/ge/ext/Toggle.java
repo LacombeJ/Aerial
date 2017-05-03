@@ -1,7 +1,6 @@
 package jonl.ge.ext;
 
-import jonl.jgl.InputEvent;
-
+import jonl.ge.InputEvent;
 import jonl.ge.Property;
 
 public abstract class Toggle extends Property {

@@ -3,11 +3,10 @@ package jonl.ge;
 import java.util.ArrayList;
 
 import jonl.jutils.io.Console;
+import jonl.ge.Input.CursorState;
 import jonl.jgl.AudioDevice;
 import jonl.jgl.AudioLibrary;
-import jonl.jgl.Input;
 import jonl.jgl.Window;
-import jonl.jgl.Input.CursorState;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
 
@@ -24,8 +23,8 @@ public abstract class Application implements App {
     private AudioDevice audio;
     @SuppressWarnings("unused") //TODO handle al
     private AudioLibrary al;
-    private Input input;
     
+    private Input input;
     private Updater updater;
     private Renderer renderer;
     
@@ -50,8 +49,8 @@ public abstract class Application implements App {
         
         audio = new ALDevice();
         al = audio.getAudioLibrary();
-        input = window.getInput();
         
+        input = new AppInput(window.getInput());
         updater = new AppUpdater();
         renderer = new AppRenderer(this,window.getGraphicsLibrary());
         
@@ -98,12 +97,12 @@ public abstract class Application implements App {
     
     @Override
     public CursorState getCursorState() {
-        return window.getCursorState();
+        return CursorState.state(window.getCursorState());
     }
     
     @Override
     public void setCursorState(CursorState state) {
-        window.setCursorState(state);
+        window.setCursorState(state.state);
     }
     
     @Override

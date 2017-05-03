@@ -3,6 +3,7 @@ package jonl.ge;
 public class EngineAssets {
     
     /* Mesh Assets */
+    //TODO Hardcode mesh data?
     public final static Mesh RECT_MESH = Loader.loadMesh("res/models/rect.mesh");
     public final static Mesh PLANE_MESH = Loader.loadMesh("res/models/plane.mesh");
     public final static Mesh CUBE_MESH = Loader.loadMesh("res/models/cube2.mesh");

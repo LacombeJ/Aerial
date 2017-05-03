@@ -19,6 +19,7 @@ public class Mesh {
     boolean staticData = true;
     boolean changed = true;
     
+    
     Mesh() {
         
     }

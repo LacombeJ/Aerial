@@ -2,8 +2,7 @@ package jonl.ge;
 
 import java.util.ArrayList;
 
-import jonl.jgl.Input;
-import jonl.jgl.Input.CursorState;
+import jonl.ge.Input.CursorState;
 import jonl.vmath.Matrix4;
 
 public final class GameObject {

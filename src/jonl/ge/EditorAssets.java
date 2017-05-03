@@ -1,8 +1,7 @@
 package jonl.ge;
 
 import jonl.aui.sui.SWindow;
-import jonl.jgl.Input;
-import jonl.jgl.Input.CursorState;
+import jonl.ge.Input.CursorState;
 import jonl.vmath.Mathf;
 import jonl.vmath.Quaternion;
 import jonl.vmath.Vector3;

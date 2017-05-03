@@ -159,7 +159,7 @@ class AppRenderer implements Renderer {
                 }
                 program.setUniformi("numLights",numLights);
                 
-                gl.glRender(glm.getOrCreateMesh(mesh));
+                gl.glRender(glm.getOrCreateMesh(mesh),renderer.mode.mode);
                 
                 gl.glUseProgram(null);
             }

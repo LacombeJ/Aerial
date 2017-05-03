@@ -6,7 +6,7 @@ import jonl.vmath.Vector3;
 
 public class Transform {
 
-    public Vector3      scale;
+    public Vector3      scale; //TODO hide variables, getters setters?
     public Quaternion   rotation;
     public Vector3      translation;
     

@@ -3,10 +3,9 @@ package jonl.ge;
 import java.util.ArrayList;
 
 import jonl.aui.Widget;
+import jonl.ge.Input.CursorState;
 import jonl.jgl.GraphicsLibrary;
-import jonl.jgl.Input;
 import jonl.jgl.GraphicsLibrary.Target;
-import jonl.jgl.Input.CursorState;
 
 public class Editor implements App {
     
@@ -131,12 +130,12 @@ public class Editor implements App {
 
     @Override
     public CursorState getCursorState() {
-        return glWindow.getCursorState();
+        return CursorState.state(glWindow.getCursorState());
     }
 
     @Override
     public void setCursorState(CursorState state) {
-        glWindow.setCursorState(state);
+        glWindow.setCursorState(state.state);
     }
 
     @Override

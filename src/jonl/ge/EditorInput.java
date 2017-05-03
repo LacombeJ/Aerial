@@ -1,16 +1,14 @@
 package jonl.ge;
 
 import jonl.aui.Widget;
-import jonl.jgl.Input;
-import jonl.jgl.InputEvent;
 
-public class EditorInput implements Input {
+class EditorInput implements Input {
     
-    final Input input;
+    final jonl.jgl.Input input;
     
     final Widget box;
     
-    EditorInput(Widget box, Input input) {
+    EditorInput(Widget box, jonl.jgl.Input input) {
         this.box = box;
         this.input = input;
     }
@@ -24,12 +22,12 @@ public class EditorInput implements Input {
     }
     
     boolean glCheckEvent(InputEvent e) {
-        return input.checkEvent(e);
+        return input.checkEvent(new jonl.jgl.InputEvent(e.type,e.code));
     }
 
     @Override
     public boolean checkEvent(InputEvent e) {
-        return isMouseWithin() && input.checkEvent(e);
+        return isMouseWithin() && glCheckEvent(e);
     }
 
     @Override
