@@ -66,6 +66,10 @@ public class FileUtils {
         }
         
     }
+
+    public static void writeToFile(String file, String fragSource) {
+        writeToFile(file, new String[]{fragSource});
+    }
     
     
 }

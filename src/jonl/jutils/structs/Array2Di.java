@@ -2,39 +2,38 @@ package jonl.jutils.structs;
 
 import jonl.jutils.misc.ArrayUtils;
 
-public class Array3Di {
+public class Array2Di {
 
     private final int[] array;
 
     private final int rows;
     private final int columns;
-    private final int layers;
 
-    public Array3Di(int rows, int columns, int layers) {
+    public Array2Di(Object[] array, int rows) {
+        int columns = (rows <= 0) ? 0 : array.length / rows;
+        if (columns == 0)
+            rows = 0;
+        this.array = new int[rows * columns];
+        this.rows = rows;
+        this.columns = columns;
+    }
+
+    public Array2Di(int rows, int columns) {
         if (rows <= 0 || columns <= 0) {
             rows = 0;
             columns = 0;
         }
-        array = new int[rows * columns * layers];
+        array = new int[rows * columns];
         this.rows = rows;
         this.columns = columns;
-        this.layers = layers;
+    }
+    
+    public int get(int i, int j) {
+        return array[j * rows + i];
     }
 
-    public int get(int i, int j, int k) {
-        return array[k * rows * columns + j * rows + i];
-    }
-
-    public int getInArray(int i) {
-        return array[i];
-    }
-
-    public void set(int i, int j, int k, int value) {
-        array[k * rows * columns + j * rows + i] = value;
-    }
-
-    public void setInArray(int i, int value) {
-        array[i] = value;
+    public void set(int i, int j, int v) {
+        array[j * rows + i] = v;
     }
 
     public int getRows() {
@@ -43,10 +42,6 @@ public class Array3Di {
 
     public int getColumns() {
         return columns;
-    }
-
-    public int getLayers() {
-        return layers;
     }
 
     public int size() {

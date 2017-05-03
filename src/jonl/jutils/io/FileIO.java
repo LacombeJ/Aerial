@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import jonl.jutils.misc.TypeUtils;
+import jonl.jutils.misc.ArrayUtils;
 
 /**
  * Utility class for printing/reading to/from files
@@ -48,15 +48,15 @@ public class FileIO {
             for (int i=0; i<objects.length; i++) {
                 Object o = objects[i];
                 if (o instanceof int[]) {
-                    writer.print(TypeUtils.toString((int[]) o));
+                    writer.print(ArrayUtils.toString((int[]) o));
                 } else if (o instanceof float[]) {
-                    writer.print(TypeUtils.toString((float[]) o));
+                    writer.print(ArrayUtils.toString((float[]) o));
                 } else if (o instanceof byte[]) {
-                    writer.print(TypeUtils.toString((byte[]) o));
+                    writer.print(ArrayUtils.toString((byte[]) o));
                 } else if (o instanceof double[]) {
-                    writer.print(TypeUtils.toString((double[]) o));
+                    writer.print(ArrayUtils.toString((double[]) o));
                 } else if (o instanceof char[]) {
-                    writer.print(TypeUtils.toString((char[]) o));
+                    writer.print(ArrayUtils.toString((char[]) o));
                 } else {
                     writer.print(o);
                 }

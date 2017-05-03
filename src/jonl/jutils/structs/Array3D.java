@@ -1,6 +1,6 @@
 package jonl.jutils.structs;
 
-import java.util.Arrays;
+import jonl.jutils.misc.ArrayUtils;
 
 public class Array3D<T> {
 
@@ -46,8 +46,14 @@ public class Array3D<T> {
         return array.length;
     }
 
+    /** @return array backing this object */
+    public Object[] getArray() {
+        return array;
+    }
+
+    /** @return copy of array backing this object */
     public Object[] toArray() {
-        return Arrays.copyOf(array, array.length);
+        return ArrayUtils.copy(array);
     }
 
 }

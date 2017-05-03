@@ -2,38 +2,38 @@ package jonl.jutils.structs;
 
 import jonl.jutils.misc.ArrayUtils;
 
-public class Array3Di {
+public class Array3Df {
 
-    private final int[] array;
+    private final float[] array;
 
     private final int rows;
     private final int columns;
     private final int layers;
 
-    public Array3Di(int rows, int columns, int layers) {
+    public Array3Df(int rows, int columns, int layers) {
         if (rows <= 0 || columns <= 0) {
             rows = 0;
             columns = 0;
         }
-        array = new int[rows * columns * layers];
+        array = new float[rows * columns * layers];
         this.rows = rows;
         this.columns = columns;
         this.layers = layers;
     }
 
-    public int get(int i, int j, int k) {
+    public float get(int i, int j, int k) {
         return array[k * rows * columns + j * rows + i];
     }
 
-    public int getInArray(int i) {
+    public float getInArray(int i) {
         return array[i];
     }
 
-    public void set(int i, int j, int k, int value) {
+    public void set(int i, int j, int k, float value) {
         array[k * rows * columns + j * rows + i] = value;
     }
 
-    public void setInArray(int i, int value) {
+    public void setInArray(int i, float value) {
         array[i] = value;
     }
 
@@ -52,14 +52,14 @@ public class Array3Di {
     public int size() {
         return array.length;
     }
-
+    
     /** @return array backing this object */
-    public int[] getArray() {
+    public float[] getArray() {
         return array;
     }
 
     /** @return copy of array backing this object */
-    public int[] toArray() {
+    public float[] toArray() {
         return ArrayUtils.copy(array);
     }
 

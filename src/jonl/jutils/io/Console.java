@@ -2,7 +2,7 @@ package jonl.jutils.io;
 
 import java.util.Scanner;
 
-import jonl.jutils.misc.TypeUtils;
+import jonl.jutils.misc.ArrayUtils;
 
 /**
  * Utility class for printing/reading to/from console
@@ -28,15 +28,15 @@ public class Console {
         for (int i=0; i<objects.length; i++) {
             Object o = objects[i];
             if (o instanceof int[]) {
-                System.out.print(TypeUtils.toString((int[]) o));
+                System.out.print(ArrayUtils.toString((int[]) o));
             } else if (o instanceof float[]) {
-                System.out.print(TypeUtils.toString((float[]) o));
+                System.out.print(ArrayUtils.toString((float[]) o));
             } else if (o instanceof byte[]) {
-                System.out.print(TypeUtils.toString((byte[]) o));
+                System.out.print(ArrayUtils.toString((byte[]) o));
             } else if (o instanceof double[]) {
-                System.out.print(TypeUtils.toString((double[]) o));
+                System.out.print(ArrayUtils.toString((double[]) o));
             } else if (o instanceof char[]) {
-                System.out.print(TypeUtils.toString((char[]) o));
+                System.out.print(ArrayUtils.toString((char[]) o));
             } else {
                 System.out.print(o);
             }
