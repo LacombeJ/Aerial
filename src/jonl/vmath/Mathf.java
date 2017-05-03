@@ -681,14 +681,28 @@ public final class Mathf {
     
     public static float mag(Vector<?> v) {
         return v.magnitude();
-    };
+    }
+    
+    public static <T extends Vector<T>> T norm(T v) {
+        return v.get().norm();
+    }
     
     public static <T extends Vector<T>> float dot(T u, T v) {
         return u.dot(v);
-    };
+    }
     
     public static <T extends Vector<T>> T proj(T u, T v) {
         return u.get().proj(v);
+    }
+    
+    
+    
+    public static Vector3 cross(Vector3 u, Vector3 v) {
+        return Vector3.cross(u, v);
+    }
+    
+    public static Vector3 normal(Vector3 a, Vector3 b, Vector3 c) {
+        return norm(cross(sub(b,a),sub(c,a)));
     }
     
     /* ******************************************************************************** */
