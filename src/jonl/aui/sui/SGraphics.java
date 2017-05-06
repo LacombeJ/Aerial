@@ -60,7 +60,7 @@ public class SGraphics implements Graphics {
         int[] box = new int[]{w.getWindowX(),w.getWindowY(),w.getWidth(),w.getHeight()};
         SContainer c = (SContainer) w.getParent();
         if (c!=null) {
-            box = cutOut(box, TypeUtils.add( c.getBox(), new int[]{c.getWindowX(),c.getWindowY(),0,0} ));
+            box = cutOut(box, ArrayUtils.add( c.getBox(), new int[]{c.getWindowX(),c.getWindowY(),0,0} ));
         }
         return box;
     }
@@ -87,7 +87,7 @@ public class SGraphics implements Graphics {
         if (w instanceof Container) {
             Container c = (Container) w;
             for (Widget child : c.getChildren()) {
-                int[] cc = TypeUtils.copy(currentCut);
+                int[] cc = ArrayUtils.copy(currentCut);
                 paint(child);
                 currentCut = cc;
             }
