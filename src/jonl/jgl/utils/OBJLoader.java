@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jonl.jutils.io.FileUtils;
-import jonl.jutils.misc.TypeUtils;
+import jonl.jutils.misc.ArrayUtils;
 
 /**
  * Utility for loading wavefront .obj files
@@ -99,8 +99,8 @@ public class OBJLoader {
             i.add(uniqueData.indexOf(d));
         }
         
-        return new MeshData(TypeUtils.toFloatArray(v),TypeUtils.toFloatArray(n),
-                TypeUtils.toFloatArray(t),TypeUtils.toIntArray(i));
+        return new MeshData(ArrayUtils.toFloatArray(v),ArrayUtils.toFloatArray(n),
+                ArrayUtils.toFloatArray(t),ArrayUtils.toIntArray(i));
     }
     
     public static void addToList(List<Float> list, String line) {

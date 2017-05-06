@@ -1,6 +1,6 @@
 package jonl.jgl.utils;
 
-import java.util.Arrays;
+import jonl.jutils.misc.ArrayUtils;
 
 public class MeshData {
 
@@ -33,7 +33,7 @@ public class MeshData {
             tcd[i] = m0.texCoordData[i]*(1-f) + m1.texCoordData[i]*f;
         }
         
-        int[] id = Arrays.copyOf(m0.indices,m0.indices.length);
+        int[] id = ArrayUtils.copy(m0.indices);
         
         return new MeshData(vd,nd,tcd,id);
     }
