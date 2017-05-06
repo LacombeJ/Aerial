@@ -1,9 +1,6 @@
 package jonl.ge.utils;
 
-import jonl.ge.Loader;
 import jonl.ge.MeshData;
-import jonl.jutils.io.Console;
-import jonl.jutils.misc.ArrayUtils;
 import jonl.jutils.structs.Array3Df;
 import jonl.jutils.structs.IntArray;
 
@@ -50,43 +47,8 @@ public class GEUtilities {
             }
         }
         
-        Console.println(vertexData.getArray());
-        
-        for (int i=0; i<R; i++) {
-            for (int j=0; j<C; j++) {
-                
-                float[] vertex = new float[]{
-                        vertexData.get(0,j,i),
-                        vertexData.get(1,j,i),
-                        vertexData.get(2,j,i) };
-                
-                Console.println("Vertex:",vertex);
-                
-                }
-        }
-        Console.println("Space");
-        printVertices(vertexData.getArray());
-        
-        Console.println(indices.getArray());
-        
-        MeshData plane = Loader.loadMeshData("res/models/plane.mesh");
-        
-        Console.println(plane.vertexData);
-        printVertices(plane.vertexData);
-        Console.println(plane.indices);
-        
-        MeshData md = new MeshData(vertexData.getArray(), normalData.getArray(),
+        return new MeshData(vertexData.getArray(), normalData.getArray(),
                 texCoordData.getArray(), indices.getArray());
-        //return Loader.loadMeshData("res/models/cube2.mesh");
-        return md;
-    }
-    
-    private static void printVertices(float[] v) {
-        int c = v.length/3;
-        for (int i=0; i<c; i++) {
-            float[] vertex = ArrayUtils.subArray(v,i*3,i*3+3);
-            Console.println("Vertex:",vertex);
-        }
     }
     
     private static int getIndex(int r, int c, int columns) {
