@@ -22,6 +22,10 @@ public class StopWatch {
         return System.nanoTime() - startTime;
     }
     
+    /**
+     * Calls lap and prints result
+     * @see #lap()
+     */
     public long print() {
         long lap = lap();
         System.out.println(lap);
