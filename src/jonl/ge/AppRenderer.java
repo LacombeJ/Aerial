@@ -3,8 +3,9 @@ package jonl.ge;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import jonl.jutils.func.FunctionUtils;
+import jonl.jutils.func.Tuple2;
 import jonl.jutils.misc.BufferPool;
-
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Blend;
 import jonl.jgl.GraphicsLibrary.Mask;
@@ -84,20 +85,17 @@ class AppRenderer implements Renderer {
             
             Matrix4 VP = camera.projection.get().multiply(view);
             
-            ArrayList<GameObject> sceneObjects = scene.getAllGameObjects();
-            ArrayList<GameObject> canvasObjects = new ArrayList<>();
+            ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
             
-            for (int i=0; i<sceneObjects.size(); i++) {
-                GameObject obj = sceneObjects.get(i);
-                if (obj.getComponent(CanvasRenderer.class)!=null) {
-                    sceneObjects.remove(i);
-                    canvasObjects.add(obj);
-                    i--;
-                }
-            }
+            Tuple2< ArrayList<GameObject>, ArrayList<GameObject> > T = 
+            		FunctionUtils.split( o -> o.getComponent(CanvasRenderer.class)==null , gameObjects);
+            
+            ArrayList<GameObject> sceneObjects = T.x;
+            ArrayList<GameObject> canvasObjects = T.y;
             
             //Render 3D Scene first
             for (GameObject gameObject : sceneObjects) {
+            	
                 renderGameObject(gameObject,VP,view,camera.projection,lights,camera);
             }
             
@@ -123,6 +121,7 @@ class AppRenderer implements Renderer {
                 .scale(t.scale);
         
         MeshRenderer renderer = g.getComponent(MeshRenderer.class);
+        
         if (renderer!=null) {
             Mesh mesh = renderer.mesh;
             Material material = renderer.material;
@@ -181,6 +180,8 @@ class AppRenderer implements Renderer {
         
         
     }
+    
+    
     
     private void renderChar(char c, float x, float y, jonl.jgl.Font font,
             Matrix4 model, Matrix4 VP) { 
