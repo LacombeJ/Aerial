@@ -3,7 +3,8 @@ package jonl.ge;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-import jonl.jutils.func.FunctionUtils;
+import jonl.jutils.func.List;
+import jonl.jutils.func.ListUtils;
 import jonl.jutils.func.Tuple2;
 import jonl.jutils.misc.BufferPool;
 import jonl.jgl.GraphicsLibrary;
@@ -87,9 +88,8 @@ class AppRenderer implements Renderer {
             
             ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
             
-            Tuple2< ArrayList<GameObject>, ArrayList<GameObject> > T = 
-            		FunctionUtils.split( o -> o.getComponent(CanvasRenderer.class)==null , gameObjects);
-            
+            Tuple2<List<GameObject>,List<GameObject>> T = ListUtils.list(gameObjects).split(o -> o.getComponent(CanvasRenderer.class)==null);
+
             ArrayList<GameObject> sceneObjects = T.x;
             ArrayList<GameObject> canvasObjects = T.y;
             
