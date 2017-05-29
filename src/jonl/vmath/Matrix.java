@@ -154,8 +154,8 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
     public M transpose() {
         if (!isTransposable())
             return null;
-        for (int i = 0; i < getRows(); i++) {
-            for (int j = 0; j < getColumns() - i; j++) {
+        for (int i = 0; i < getRows()-1; i++) {
+            for (int j = i+1; j < getColumns(); j++) {
                 float tmp = get(i,j);
                 set(i,j,get(j,i));
                 set(j,i,tmp);
@@ -185,6 +185,18 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
         for (int i=0; i<getRows(); i++) {
             for (int j=0; j<getColumns(); j++) {
                 fb.put(get(i,j));
+            }
+        }
+        fb.flip();
+        return fb;
+    }
+    
+    public static FloatBuffer putFloatBuffer(FloatBuffer fb, Matrix<?,?,?>... matrices) {
+        for (Matrix<?,?,?> m : matrices) {
+            for (int i=0; i<m.getRows(); i++) {
+                for (int j=0; j<m.getColumns(); j++) {
+                    fb.put(m.get(i,j));
+                }
             }
         }
         fb.flip();
@@ -250,5 +262,17 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
         return super.equals(obj);
     }
     
+    @Override
+    public int hashCode() {
+        int sum = 0;
+        for (int i=0; i<getRows(); i++) {
+            for (int j=0; j<getColumns(); j++) {
+                int N = i*getColumns() + j;
+                int v = (int) get(i,j);
+                sum += v*Mathf.pow(10,N);
+            }
+        }
+        return sum;
+    }
 
 }

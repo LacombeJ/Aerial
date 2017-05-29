@@ -271,6 +271,16 @@ public final class Mathf {
     public static float random(float a) { return rand(a); }
     public static float random(float min, float max) { return rand(min,max); }
     
+    public static float[] rand(int len, float min, float max) {
+        float[] r = new float[len];
+        for (int i=0; i<len; i++) {
+            r[i] = rand(min,max);
+        }
+        return r;
+    }
+    
+    public static float[] random(int len, float min, float max) { return rand(len,min,max); }
+    
     public static int randInt(int a) {
         return (int) Math.round(Math.random()*a);
     }

@@ -376,7 +376,7 @@ public class Matrix4 extends Matrix<Matrix4,Vector4,Vector4> {
     public static Matrix4 perspective(float fov, float aspect, float near, float far) {
         float nmf = near-far;
         float rad = Mathf.rad(fov);
-        float width = 2*near*Mathf.tan(rad/2);
+        float width = 2*near*Mathf.tan(rad * 0.5f);
         float ttndw = 2*near/width;
         Matrix4 proj = new Matrix4(
             ttndw,  0,              0,                  0,

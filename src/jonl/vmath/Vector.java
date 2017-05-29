@@ -45,6 +45,7 @@ public abstract class Vector<V extends Vector<V>> {
         return sum;
     }
     
+    /** @return magnitude squared */
     public float magnitude2() {
         float sum = 0;
         for (int i=0; i<size(); i++) {
@@ -234,6 +235,15 @@ public abstract class Vector<V extends Vector<V>> {
         return true;
     }
     
+    @Override
+    public int hashCode() {
+        int sum = 0;
+        for (int i=0; i<size(); i++) {
+            int v = (int) get(i);
+            sum += v*Mathf.pow(10,i);
+        }
+        return sum;
+    }
     
 }
 
