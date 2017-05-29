@@ -1,8 +1,5 @@
 package jonl.jgl.lwjgl;
 
-import java.util.HashMap;
-
-
 /*
 From: https://www.opengl.org/wiki/Vertex_Specification_Best_Practices
 Vertex, normals, texcoords
@@ -13,11 +10,14 @@ If only some of the vertex attributes are dynamic, i.e. often changing, placing
 them in separate VBO makes updates easier and faster.
  */
 
+import java.util.HashMap;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-
+import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.GL33;
 import jonl.jgl.Mesh;
 import jonl.jutils.misc.BufferPool;
 
@@ -29,6 +29,8 @@ import jonl.jutils.misc.BufferPool;
  */
 class LWJGLMesh implements Mesh {
 
+    final static int FLOAT_SIZE = 4;
+    
     final int id;
     
     private int vertexID;
@@ -78,11 +80,7 @@ class LWJGLMesh implements Mesh {
         this(vertexData,null,null,indices);
     }
     
-    void render() {  
-        render(GL11.GL_TRIANGLES);
-    }
-    
-    void render(int mode) {
+    void preRender() {
         GL30.glBindVertexArray(id);
         
         GL20.glEnableVertexAttribArray(0);
@@ -91,11 +89,9 @@ class LWJGLMesh implements Mesh {
         for (int loc : attribMap.keySet()) {
             GL20.glEnableVertexAttribArray(loc);
         }
-        
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
-        GL11.glDrawElements(mode,indicesCount,GL11.GL_UNSIGNED_INT,0);
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
-        
+    }
+    
+    void postRender() {
         GL20.glDisableVertexAttribArray(0);
         if (normalID!=-1)   GL20.glDisableVertexAttribArray(1);
         if (texCoordID!=-1) GL20.glDisableVertexAttribArray(2);
@@ -106,16 +102,54 @@ class LWJGLMesh implements Mesh {
         GL30.glBindVertexArray(0);
     }
     
-    private void setAttrib(int id, int loc, float[] data, int size) {
+    void render() {  
+        render(GL11.GL_TRIANGLES);
+    }
+    
+    void render(int mode) {
+        preRender();
+        
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
+        GL11.glDrawElements(mode,indicesCount,GL11.GL_UNSIGNED_INT,0);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
+        
+        postRender();
+    }
+    
+    void renderInstance(int count) {  
+        renderInstance(GL11.GL_TRIANGLES, count);
+    }
+    
+    void renderInstance(int mode, int count) {
+        preRender();
+        
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
+        GL31.glDrawElementsInstanced(mode, indicesCount, GL11.GL_UNSIGNED_INT, 0, count);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
+        
+        postRender();
+    }
+    
+    private void setAttrib(int id, int loc, float[] data, int size, int count) {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,id);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER,BufferPool.getFloatBuffer(data,true),GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(loc,size,GL11.GL_FLOAT,false,0,0);
+        for (int i=0; i<count; i++) {
+            int stride = (count<=1) ? 0 : FLOAT_SIZE*size*count;
+            GL20.glVertexAttribPointer(loc+i,size,GL11.GL_FLOAT,false,stride,FLOAT_SIZE*size*i);
+        }
+ 
     }
-
+    
+    private void setDivisor(int loc, int count) {
+        for (int i=0; i<count; i++) {
+            GL33.glVertexAttribDivisor(loc+i,1);
+        }
+    }
+    
     @Override
     public void setVertexAttrib(float[] vertices, int size) {
         GL30.glBindVertexArray(id);
-        setAttrib(vertexID,0,vertices,size);
+        setAttrib(vertexID,0,vertices,size,1);
         GL30.glBindVertexArray(0);
     }
 
@@ -125,7 +159,7 @@ class LWJGLMesh implements Mesh {
         if (normalID==-1) {
             normalID = GL15.glGenBuffers();
         }
-        setAttrib(normalID,1,normals,size);
+        setAttrib(normalID,1,normals,size,1);
         GL30.glBindVertexArray(0);
     }
 
@@ -135,18 +169,45 @@ class LWJGLMesh implements Mesh {
         if (texCoordID==-1) {
             texCoordID = GL15.glGenBuffers();
         }
-        setAttrib(texCoordID,2,texCoord,size);
+        setAttrib(texCoordID,2,texCoord,size,1);
         GL30.glBindVertexArray(0);
     }
 
-    @Override
-    public void setCustomAttrib(int loc, float[] data, int size) {
-        GL30.glBindVertexArray(id);
+    private int putAttribMap(int loc, int count) {
         Integer id = attribMap.get(loc);
         if (id==null) {
             attribMap.put(loc,id=GL15.glGenBuffers());
         }
-        setAttrib(id,loc,data,size);
+        for (int i=1; i<count; i++) {
+            attribMap.put(loc+i, id);
+        }
+        return id;
+    }
+    
+    @Override
+    public void setCustomAttrib(int loc, float[] data, int size) {
+        setCustomAttrib(loc,data,size,1);
+    }
+    
+    @Override
+    public void setCustomAttrib(int loc, float[] data, int size, int count) {
+        GL30.glBindVertexArray(id);
+        int attrib = putAttribMap(loc,count);
+        setAttrib(attrib,loc,data,size,count);
+        GL30.glBindVertexArray(0);
+    }
+    
+    @Override
+    public void setCustomAttribInstanced(int loc, float[] data, int size) {
+        setCustomAttribInstanced(loc,data,size,1);
+    }
+    
+    @Override
+    public void setCustomAttribInstanced(int loc, float[] data, int size, int count) {
+        GL30.glBindVertexArray(id);
+        int attrib = putAttribMap(loc,count);
+        setAttrib(attrib,loc,data,size,count);
+        setDivisor(loc,count);
         GL30.glBindVertexArray(0);
     }
     

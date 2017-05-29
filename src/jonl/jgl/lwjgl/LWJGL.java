@@ -62,6 +62,11 @@ class LWJGL extends AbstractGraphicsLibrary {
     }
     
     @Override
+    public String glGetGLSLVersion() {
+        return GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION);
+    }
+    
+    @Override
     public void glBlendFunc(Factor src, Factor dst) {
         GL11.glBlendFunc(getFactor(src),getFactor(dst));
     }
@@ -194,6 +199,16 @@ class LWJGL extends AbstractGraphicsLibrary {
     @Override
     public void glRender(Mesh mesh, Mode mode) {
         ((LWJGLMesh)mesh).render(getMode(mode));
+    }
+    
+    @Override
+    public void glRenderInstance(Mesh mesh, int count) {
+        ((LWJGLMesh)mesh).renderInstance(count);
+    }
+    
+    @Override
+    public void glRenderInstance(Mesh mesh, Mode mode, int count) {
+        ((LWJGLMesh)mesh).renderInstance(getMode(mode), count);
     }
 
     @Override

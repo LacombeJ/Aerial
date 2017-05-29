@@ -12,6 +12,10 @@ public interface Mesh {
     public void setTexCoordAttrib(float[] texCoord, int size);
     
     public void setCustomAttrib(int loc, float[] data, int size);
+    public void setCustomAttrib(int loc, float[] data, int size, int count);
+    
+    public void setCustomAttribInstanced(int loc, float[] data, int size);
+    public void setCustomAttribInstanced(int loc, float[] data, int size, int count);
     
     public void setIndices(int[] indices);
     

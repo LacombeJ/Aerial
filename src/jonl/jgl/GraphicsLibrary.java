@@ -32,6 +32,9 @@ public interface GraphicsLibrary {
     /** Returns GL version */
     public String glGetVersion();
     
+    /** Returns GL shading version */
+    public String glGetGLSLVersion();
+    
     /** Sets the blend function */
     public void glBlendFunc(Factor src, Factor dst);
     
@@ -139,6 +142,10 @@ public interface GraphicsLibrary {
     public void glRender(Mesh mesh);
     
     public void glRender(Mesh mesh, Mode mode);
+    
+    public void glRenderInstance(Mesh mesh, int count);
+    
+    public void glRenderInstance(Mesh mesh, Mode mode, int count);
     
     /** @return a new shader program with the given source code */
     public Program glCreateProgram();
