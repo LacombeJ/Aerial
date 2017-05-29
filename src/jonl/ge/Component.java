@@ -96,4 +96,8 @@ public abstract class Component {
         gameObject.closeWindow();
     }
     
+    public String getInfo(String key) {
+        return gameObject.getInfo(key);
+    }
+    
 }

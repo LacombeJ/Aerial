@@ -26,8 +26,9 @@ interface App {
     void setResizable(boolean resizable);
     void setFullscreen(boolean fullscreen);
     
+    String getInfo(String key);
+    
     Updater getUpdater(); 
     Renderer getRenderer();
-    
     
 }

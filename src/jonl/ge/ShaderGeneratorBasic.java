@@ -97,8 +97,8 @@ class ShaderGeneratorBasic {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getVertSource(Material material) {
-        return ShaderGeneratorStandard.getVertSource(material);
+    static String getVertSource(Material material, boolean instanced) {
+        return ShaderGeneratorStandard.getVertSource(material, instanced);
     }
     
 }

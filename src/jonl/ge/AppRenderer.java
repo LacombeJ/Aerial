@@ -88,17 +88,26 @@ class AppRenderer implements Renderer {
             
             ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
             
-            Tuple2<List<GameObject>,List<GameObject>> T = ListUtils.list(gameObjects).split(o -> o.getComponent(CanvasRenderer.class)==null);
+            Tuple2<List<GameObject>,List<GameObject>> T = ListUtils
+                    .list(gameObjects)
+                    .split(o -> o.getComponent(CanvasRenderer.class)==null);
 
-            ArrayList<GameObject> sceneObjects = T.x;
-            ArrayList<GameObject> canvasObjects = T.y;
+            List<GameObject> sceneObjects = T.x;
+            List<GameObject> canvasObjects = T.y;
             
-            //Render 3D Scene first
-            for (GameObject gameObject : sceneObjects) {
-            	
-                renderGameObject(gameObject,VP,view,camera.projection,lights,camera);
+            List<List<GameObject>> sceneMeshes = sceneObjects
+                    .filter((x -> x.getComponent(MeshRenderer.class)!=null))
+                    .bin((x,y) -> x.getComponent(MeshRenderer.class)==y.getComponent(MeshRenderer.class));
+            
+            //TODO render different renderers separately (MeshRenderer, CanvasRenderer, TextRenderer, ?InstanceRenderer?
+            
+            for (List<GameObject> listMeshes : sceneMeshes) {
+                if (listMeshes.size()==1) {
+                    renderGameObject(listMeshes.first(),VP,view,camera.projection,lights,camera);
+                } else {
+                    renderInstances(listMeshes,VP,view,camera.projection,lights,camera);
+                }
             }
-            
             
             //Render Canvas after (over 3D scene)
             for (GameObject gameObject : canvasObjects) {
@@ -109,6 +118,66 @@ class AppRenderer implements Renderer {
             
         
         }
+        
+    }
+    
+    private void renderInstances(List<GameObject> list, Matrix4 VP, Matrix4 V, Matrix4 P, ArrayList<Light> lights, Camera cam) {
+        
+        
+        
+        
+        MeshRenderer renderer = list.first().getComponent(MeshRenderer.class);
+        Mesh mesh = renderer.mesh;
+        Material material = renderer.material;
+        jonl.jgl.Mesh glMesh = glm.getOrCreateMesh(mesh);
+        
+        if (!mesh.instancedSet) {
+            List<Matrix4> matrices = list.map(g -> {
+                Transform t = updater.getWorldTransform(g);
+                Matrix4 model = Matrix4.identity()
+                        .translate(t.translation)
+                        .rotate(t.rotation)
+                        .scale(t.scale);
+                return model.transpose();
+            });
+            List<Float> mat = new List<>(matrices, x -> ListUtils.listFloat(x.toArray()));
+            glMesh.setCustomAttribInstanced(5, mat.toFloatArray(), 4, 4);
+            mesh.instancedSet = true;
+        }
+        FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
+        
+        Program program = sg.getOrCreateProgram(material, true);
+        
+        gl.glUseProgram(program);
+        
+        program.setUniformMat4("VP",VP.toFloatBuffer(fb));
+        program.setUniformMat4("V",V.toFloatBuffer(fb));
+        
+        for (MaterialBuilder.MBUniform u : material.mbUniformList) {
+            setUniform(program,u.name,u.data,u.textureID);
+        }
+        
+        Vector3 eye = updater.getWorldTransform(cam.gameObject).translation;
+        AppUtil.setUniform(program,"eye",eye);
+        
+        int numLights = 0;
+        for (int i=0; i<lights.size(); i++) {
+            Light light = lights.get(i);
+            Vector3 p = updater.getWorldTransform(light.gameObject).translation;
+            program.setUniformi("light["+i+"].type",light.type);
+            AppUtil.setUniform(program,"light["+i+"].position",p);
+            program.setUniform("light["+i+"].range",light.range);
+            AppUtil.setUniform(program,"light["+i+"].color",light.color);
+            program.setUniform("light["+i+"].intensity",light.intensity);
+            program.setUniform("light["+i+"].angle",light.angle);
+            numLights++;
+        }
+        program.setUniformi("numLights",numLights);
+        
+        //gl.glRender(glMesh,renderer.mode.mode);
+        gl.glRenderInstance(glMesh,renderer.mode.mode, list.size());
+        
+        gl.glUseProgram(null);
         
     }
     
@@ -129,7 +198,7 @@ class AppRenderer implements Renderer {
                 Matrix4 MVP = VP.get().multiply(model);
                 FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
                 
-                Program program = sg.getOrCreateProgram(material);
+                Program program = sg.getOrCreateProgram(material, false);
                 
                 gl.glUseProgram(program);
                 

@@ -16,15 +16,17 @@ class ShaderGenerator {
         this.gl = gl;
     }
     
-    /** Every type of material must have a unique string */
-    private static String getProgramString(Material material) {
+    /** Every type of material must have a unique string 
+     * @param instanced */
+    private static String getProgramString(Material material, boolean instanced) {
         StringBuilder sb = new StringBuilder();
-        sb.append("mat"+material.id); //TODO dont create program for every material instance?
+        sb.append("mat"+material.id);
+        sb.append(instanced ? "i1" : "i0");
         return sb.toString();
     }
     
-    Program getOrCreateProgram(Material material) {
-        String string = getProgramString(material);
+    Program getOrCreateProgram(Material material, boolean instanced) {
+        String string = getProgramString(material, instanced);
         Program glprogram = programMap.get(string);
         if (glprogram==null) {
             String fragSource = null;
@@ -32,12 +34,13 @@ class ShaderGenerator {
             switch (material.shader) {
             case STANDARD:
                 fragSource = ShaderGeneratorStandard.getFragSource(material);
-                vertSource = ShaderGeneratorStandard.getVertSource(material);
+                vertSource = ShaderGeneratorStandard.getVertSource(material, instanced);
+                FileUtils.writeToFile("test_fs"+material.id+".txt", fragSource); //TODO remove DEBUG
+                FileUtils.writeToFile("test_vs"+material.id+".txt", vertSource); //TODO remove DEBUG
                 break;
             case BASIC:
                 fragSource = ShaderGeneratorBasic.getFragSource(material);
-                vertSource = ShaderGeneratorBasic.getVertSource(material);
-                FileUtils.writeToFile("test"+material.id+".txt", fragSource); //TODO remove DEBUG
+                vertSource = ShaderGeneratorBasic.getVertSource(material, instanced);
                 break;
             }
             glprogram = AppUtil.createProgramFromSource(gl,vertSource,fragSource);

@@ -3,6 +3,7 @@ package jonl.ge;
 import java.util.ArrayList;
 
 import jonl.jutils.io.Console;
+import jonl.jutils.misc.DataMap;
 import jonl.ge.Input.CursorState;
 import jonl.jgl.AudioDevice;
 import jonl.jgl.AudioLibrary;
@@ -17,6 +18,8 @@ public abstract class Application implements App {
     private int height = 576;
     private boolean fullscreen = false;
     private boolean resizable = false;
+    
+    private DataMap info = new DataMap();
     
     private Window window;
     
@@ -55,6 +58,7 @@ public abstract class Application implements App {
         renderer = new AppRenderer(this,window.getGraphicsLibrary());
         
         window.setLoader(()->{
+            putInfo();
             updater.load();
             renderer.load();
             Scene scene = scenes.get(currentScene);
@@ -83,6 +87,13 @@ public abstract class Application implements App {
         audio.create();
         window.start();
         
+    }
+    
+    void putInfo() {
+        info.put("NAME",            "Editor");
+        info.put("VERSION",         "1.0");
+        info.put("GL_VERSION",      window.getGraphicsLibrary().glGetVersion());
+        info.put("GLSL_VERSION",    window.getGraphicsLibrary().glGetGLSLVersion());
     }
 
     @Override
@@ -170,6 +181,11 @@ public abstract class Application implements App {
             //TODO app error
             Console.println("Cannot change fullscreen window property after creation");
         }
+    }
+    
+    @Override
+    public String getInfo(String key) {
+        return info.get(key);
     }
 
     @Override

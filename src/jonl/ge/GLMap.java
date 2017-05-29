@@ -20,30 +20,32 @@ class GLMap {
     jonl.jgl.Mesh getOrCreateMesh(Mesh mesh) {
         jonl.jgl.Mesh glmesh = meshMap.get(mesh);
         if (glmesh==null) {
-            glmesh = gl.glGenMesh(mesh.vertices,mesh.normals,mesh.texCoords,mesh.indices);
+            glmesh = gl.glGenMesh(mesh.getVertices(),mesh.getNormals(),mesh.getTexCoords(),mesh.getIndices());
             mesh.calculateTangents();
-            glmesh.setCustomAttrib(3,mesh.tangents,3);
-            glmesh.setCustomAttrib(4,mesh.bitangents,3);
-            mesh.tangents = null;
-            mesh.bitangents = null;
-            if (mesh.staticData) {
-                mesh.vertices = null;
-                mesh.normals = null;
-                mesh.texCoords = null;
-                mesh.indices = null;
+            glmesh.setCustomAttrib(3,mesh.getTangents(),3);
+            glmesh.setCustomAttrib(4,mesh.getBiTangents(),3);
+            mesh.setTangentsNull();
+            mesh.setBiTangentsNull();
+            if (mesh.isStatic()) { //TODO ?
+                mesh.setVerticesNull();
+                mesh.setNormalsNull();
+                mesh.setTexCoordsNull();
+                mesh.setIndicesNull();
             }
+            mesh.overrideChanged();
             meshMap.put(mesh,glmesh);
-        } else if (mesh.changed) {
-            if (mesh.vertices!=null)    glmesh.setVertexAttrib(mesh.vertices,3);
-            if (mesh.normals!=null)     glmesh.setNormalAttrib(mesh.normals,3);
-            if (mesh.normals!=null)     glmesh.setTexCoordAttrib(mesh.normals,2);
-            if (mesh.indices!=null)     glmesh.setIndices(mesh.indices);
-            if (!mesh.staticData) {
-                mesh.vertices = null;
-                mesh.normals = null;
-                mesh.texCoords = null;
-                mesh.indices = null;
+        } else if (mesh.isChanged()) {
+            if (!mesh.isVerticesNull())    glmesh.setVertexAttrib(mesh.getVertices(),3);
+            if (!mesh.isNormalsNull())     glmesh.setNormalAttrib(mesh.getNormals(),3);
+            if (!mesh.isTexCoordsNull())   glmesh.setTexCoordAttrib(mesh.getTexCoords(),2);
+            if (!mesh.isIndicesNull())     glmesh.setIndices(mesh.getIndices());
+            if (mesh.isStatic()) { //TODO
+                mesh.setVerticesNull();
+                mesh.setNormalsNull();
+                mesh.setTexCoordsNull();
+                mesh.setIndicesNull();
             }
+            mesh.overrideChanged();
         }
         return glmesh;
     }

@@ -186,6 +186,10 @@ public abstract class Scene {
         application.close();
     }
     
+    public String getInfo(String key) {
+        return application.getInfo(key);
+    }
+    
     @Override
     public String toString() {
         return name+": "+super.toString();

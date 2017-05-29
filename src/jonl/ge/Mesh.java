@@ -7,18 +7,21 @@ import jonl.vmath.Vector3;
 
 public class Mesh {
     
-    public float[] vertices;
-    public float[] normals;
-    public float[] texCoords;
-    public int[] indices;
+    private int numVertices;
+    
+    private float[] vertices;
+    private float[] normals;
+    private float[] texCoords;
+    private int[] indices;
     
     //Tangents and bitangents are not public and are handled by the AppRenderer currently
-    float[] tangents;
-    float[] bitangents;
+    private float[] tangents;
+    private float[] bitangents;
     
-    boolean staticData = true;
-    boolean changed = true;
+    private boolean staticData = true;
+    private boolean changed = true;
     
+    boolean instancedSet = false;
     
     Mesh() {
         
@@ -38,6 +41,84 @@ public class Mesh {
         this.staticData = staticData;
     }
     
+    public boolean isStatic() {
+        return staticData;
+    }
+    boolean isChanged() {
+        return changed;
+    }
+    
+    public float[] getVertices() {
+        return vertices;
+    }
+    public float[] getNormals() {
+        return normals;
+    }
+    public float[] getTexCoords() {
+        return texCoords;
+    }
+    public int[] getIndices() {
+        return indices;
+    }
+    
+    float[] getTangents() {
+        return tangents;
+    }
+    float[] getBiTangents() {
+        return bitangents;
+    }
+    
+    public void setVertices(float[] v) {
+        changed = true;
+        vertices = v;
+        numVertices = v.length/3;
+    }
+    public void setNormals(float[] n) {
+        changed = true;
+        normals = n;
+    }
+    public void setTexCoords(float[] t) {
+        changed = true;
+        texCoords = t;
+    }
+    public void setIndices(int[] i) {
+        changed = true;
+        indices = i;
+    }
+    
+    void setVerticesNull() {
+        vertices = null;
+    }
+    void setNormalsNull() {
+        normals = null;
+    }
+    void setTexCoordsNull() {
+        texCoords = null;
+    }
+    void setIndicesNull() {
+        indices = null;
+    }
+    
+    void setTangentsNull() {
+        tangents = null;
+    }
+    void setBiTangentsNull() {
+        bitangents = null;
+    }
+    
+    boolean isVerticesNull() {
+        return vertices==null;
+    }
+    boolean isNormalsNull() {
+        return normals==null;
+    }
+    boolean isTexCoordsNull() {
+        return texCoords==null;
+    }
+    boolean isIndicesNull() {
+        return indices==null;
+    }
+    
     /**
      * 
      * @return a read-only copy of the vertex data
@@ -48,7 +129,16 @@ public class Mesh {
     
     public void setVectorArray(Vector3[] array) {
         changed = true;
-        this.vertices = MathUtil.getFloatArray(array);
+        vertices = MathUtil.getFloatArray(array);
+        numVertices = array.length;
+    }
+    
+    void overrideChanged() {
+        changed = false;
+    }
+    
+    public int getNumVertices() {
+        return numVertices;
     }
     
     void calculateTangents() {

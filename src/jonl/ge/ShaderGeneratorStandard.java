@@ -228,15 +228,15 @@ class ShaderGeneratorStandard {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getVertSource(Material material) {
+    static String getVertSource(Material material, boolean instanced) {
         StringBuilder sb = new StringBuilder();
         sb.append(vertVersion());
-        sb.append(vertIn());
-        sb.append(vertUniforms());
-        sb.append(vertOut(material));
+        sb.append(vertIn(instanced));
+        sb.append(vertUniforms(instanced));
+        sb.append(vertOut(material,instanced));
         sb.append(vertFuncUnitTransform(material));
         sb.append(vertMainStart());
-        sb.append(vertBody(material));
+        sb.append(vertBody(material,instanced));
         sb.append(vertMainEnd());
         return sb.toString();
     }
@@ -245,22 +245,41 @@ class ShaderGeneratorStandard {
     private static String vertMainStart()   { return "void main() {\n"; }
     private static String vertMainEnd()     { return "}"; } 
     
-    private static String vertIn() {
+    static String _layout__location_e_5__in_mat4_MVP(boolean instanced) {
+        if (instanced) {
+            return
+                "layout (location = 5) in mat4 M;\n" +
+                "";
+        } else {
+            return
+                "";
+        }
+    }
+    
+    private static String vertIn(boolean instanced) {
         return
             "layout (location = 0) in vec4 vertex;\n" +
             "layout (location = 1) in vec3 normal;\n" +
             "layout (location = 2) in vec2 texCoord;\n" +
             "layout (location = 3) in vec3 tangent;\n" +
             "layout (location = 4) in vec3 bitangent;\n" +
+            _layout__location_e_5__in_mat4_MVP(instanced) +
             "";
     }
     
-    private static String vertUniforms() {
-        return
-            "uniform mat4 MVP;\n" +
-            "uniform mat4 M;\n" +
-            "uniform mat4 MV;\n" +
-            "";
+    private static String vertUniforms(boolean instanced) {
+        if (instanced) {
+            return
+                "uniform mat4 VP;\n" +
+                "uniform mat4 V;\n" +
+                "";
+        } else {
+            return
+                "uniform mat4 MVP;\n" +
+                "uniform mat4 M;\n" +
+                "uniform mat4 MV;\n" +
+                "";
+        }
     }
     
     private static String _out_mat3_mTBN(Material material) {
@@ -268,7 +287,7 @@ class ShaderGeneratorStandard {
         return "";
     }
     
-    private static String vertOut(Material material) {
+    private static String vertOut(Material material, boolean instanced) {
         return
             "out vec3 vFragPos;\n" +
             "out vec3 vNormal;\n" +
@@ -317,8 +336,20 @@ class ShaderGeneratorStandard {
         return "";
     }
     
-    private static String vertBody(Material material) {
+    private static String _____MVP_instance(boolean instanced) {
+        if (instanced) {
+            return
+                "    mat4 MVP = VP * M;\n" +
+                "";
+        } else {
+            return
+                "";
+        }
+    }
+    
+    private static String vertBody(Material material, boolean instanced) {
         return
+            _____MVP_instance(instanced) +
             "    gl_Position = MVP * vertex;\n" +
             "    vFragPos = vec3(M * vertex);\n" +
             "    vNormal = mat3(M) * normal;\n" +

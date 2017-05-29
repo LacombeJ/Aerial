@@ -10,10 +10,10 @@ public class Loader {
 
     public static Mesh loadMesh(MeshData md) {
         Mesh m = new Mesh();
-        m.vertices = md.vertexData;
-        m.normals = md.normalData;
-        m.texCoords = md.texCoordData;
-        m.indices = md.indices;
+        m.setVertices(md.vertexData);
+        m.setNormals(md.normalData);
+        m.setTexCoords(md.texCoordData);
+        m.setIndices(md.indices);
         return m;
     }
     

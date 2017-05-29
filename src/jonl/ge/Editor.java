@@ -6,6 +6,7 @@ import jonl.aui.Widget;
 import jonl.ge.Input.CursorState;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Target;
+import jonl.jutils.misc.DataMap;
 
 public class Editor implements App {
     
@@ -15,6 +16,8 @@ public class Editor implements App {
     final Updater updater;
     final Renderer renderer;
     final EditorGUI gui;
+    
+    private DataMap info = new DataMap();
     
     private ArrayList<Scene> scenes = new ArrayList<>();
     private int currentScene = 0;
@@ -36,6 +39,7 @@ public class Editor implements App {
         initialize();
         
         gui.window.setLoader(()->{
+            putInfo();
             updater.load();
             renderer.load();
         });
@@ -54,6 +58,13 @@ public class Editor implements App {
             gl.glEnable(Target.SCISSOR_TEST);
         });
         
+    }
+    
+    void putInfo() {
+        info.put("NAME",            "Editor");
+        info.put("VERSION",         "1.0");
+        info.put("GL_VERSION",      gl.glGetVersion());
+        info.put("GLSL_VERSION",    gl.glGetGLSLVersion());
     }
     
     void initialize() {
@@ -198,6 +209,11 @@ public class Editor implements App {
     @Override
     public Renderer getRenderer() {
         return renderer;
+    }
+
+    @Override
+    public String getInfo(String key) {
+        return null;
     }
     
     

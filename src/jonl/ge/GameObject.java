@@ -207,6 +207,10 @@ public final class GameObject {
         scene.closeWindow();
     }
     
+    public String getInfo(String key) {
+        return scene.getInfo(key);
+    }
+    
     @Override
     public String toString() {
         return name+": "+super.toString();
