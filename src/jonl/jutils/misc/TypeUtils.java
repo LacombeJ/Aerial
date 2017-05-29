@@ -1,9 +1,5 @@
 package jonl.jutils.misc;
 
-import java.util.Comparator;
-
-import jonl.jutils.func.Function2D;
-
 /**
  * 
  * @author Jonathan Lacombe

@@ -106,6 +106,22 @@ public class ListUtils
 		}
 		return array;
 	}
+	
+	public static List<Integer> listInt(int... list) {
+        List<Integer> array = new List<>(list.length);
+        for (int x : list) {
+            array.add(x);
+        }
+        return array;
+    }
+	
+    public static List<Float> listFloat(float... list) {
+        List<Float> array = new List<>(list.length);
+        for (float x : list) {
+            array.add(x);
+        }
+        return array;
+    }
     
     public static final class FunctionComparator<X> implements Comparator<X> {
 		private final Function2D<X,X,Integer> comparator;

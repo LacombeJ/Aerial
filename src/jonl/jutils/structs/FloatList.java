@@ -175,6 +175,10 @@ public class FloatList implements Iterable<Float> {
         System.arraycopy(list,0,array,0,size);
         return array;
     }
+    
+    public float[] getBackingArray() {
+        return list;
+    }
 
     @Override
     public Iterator<Float> iterator() {

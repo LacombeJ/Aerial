@@ -175,6 +175,10 @@ public class IntList implements Iterable<Integer> {
         System.arraycopy(list,0,array,0,size);
         return array;
     }
+    
+    public int[] getBackingArray() {
+        return list;
+    }
 
     @Override
     public Iterator<Integer> iterator() {

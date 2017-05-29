@@ -23,6 +23,21 @@ public class List<X> extends ArrayList<X>
 		super(c);
 	}
 	
+	public List(int size, Function<Integer,X> comprehension) {
+	    super(size);
+	    for (int i=0; i<size; i++) {
+	        add(comprehension.f(i));
+	    }
+	}
+	
+	public <Y> List(List<Y> list, Function<Y,List<X>> grow) {
+	    super();
+	    for (Y y : list) {
+	        addAll(grow.f(y));
+	    }
+	}
+	
+	
 	public ArrayList<X> array() {
 		return new ArrayList<X>(this);
 	}
@@ -45,7 +60,25 @@ public class List<X> extends ArrayList<X>
 		return ret;
 	}
 	
+	public List<X> repeat(int n) {
+	    List<X> list = new List<>();
+	    for (int i=0; i<n; i++) {
+	        list.addAll(this);
+	    }
+	    return list;
+	}
+	
+	public <Y> Y accumulate(Function2D<X,Y,Y> function, Y y) {
+	    if (size()==0) return null;
+	    Y accum = y;
+	    for (int i=0; i<size(); i++) {
+	        accum = function.f(get(i), accum);
+	    }
+	    return accum;
+	}
+	
 	public X reduce(Function2D<X,X,X> function) {
+	    if (size()==0) return null;
 		X accum = get(0);
 		for (int i=1; i<size(); i++) {
 			accum = function.f(accum, get(i));
@@ -73,6 +106,61 @@ public class List<X> extends ArrayList<X>
 	public X last() {
 		return get(size()-1);
 	}
+	
+	public List<X> first(int n) {
+        return sub(0,n);
+    }
+    
+	public List<X> last(int n) {
+        return sub(size()-n,size());
+    }
+	
+   public void setFirst(X x) {
+        set(0, x);
+    }
+    
+    public void setFirst(List<X> x) {
+        int addLen = x.size();
+        for (int i=0; i<addLen; i++) {
+            set(i,x.get(i));
+        }
+    }
+
+    public void setLast(X x) {
+        set(size()-1, x);
+    }
+    
+    public void setLast(List<X> x) {
+        int listLen = size();
+        int addLen = x.size();
+        for (int i=listLen-addLen, j=0; i<listLen; i++, j++) {
+            set(i,x.get(j));
+        }
+    }
+	
+    private List<X> sub(int fromIndex, int toIndex) {
+        subListRangeCheck(fromIndex, toIndex, size());
+        List<X> list = new List<X>();
+        for (int i=fromIndex; i<toIndex; i++) {
+            list.add(get(i));
+        }
+        return list;
+    }
+	
+	@Override
+	public List<X> subList(int fromIndex, int toIndex) {
+        return sub(fromIndex,toIndex);
+    }
+
+    static void subListRangeCheck(int fromIndex, int toIndex, int size) {
+        if (fromIndex < 0)
+            throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
+        if (toIndex > size)
+            throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+        if (fromIndex > toIndex)
+            throw new IllegalArgumentException("fromIndex(" + fromIndex +
+                                               ") > toIndex(" + toIndex + ")");
+    }
 	
 	public boolean contains(Function<X,Boolean> contains) {
 		for (X x : this) {
@@ -107,7 +195,7 @@ public class List<X> extends ArrayList<X>
 	}
 	
 	public List<List<X>> divide(Function2D<X,X,Boolean> condition) {
-		return map(x -> wrap(wrap(x))).reduce(
+		List<List<X>> map = map(x -> wrap(wrap(x))).reduce(
 			(x,y) -> {
 				if (condition.f(x.last().last(), y.first().first())) {
 					x.last().add(y.first().first());
@@ -116,6 +204,7 @@ public class List<X> extends ArrayList<X>
 				}
 				return x;
 		});
+		return map==null ? new List<List<X>>() : map;
 	}
 	
 	public List<X> copy() {
@@ -138,5 +227,44 @@ public class List<X> extends ArrayList<X>
 				.divide((t0,t1) -> t0.y==t1.y)
 				.map(x -> x.map(y->y.x));
 	}
+	
+	public List<List<X>> bin(Function2D<X,X,Boolean> unique) {
+	    List<List<X>> map = map(x -> wrap(wrap(x))).reduce(
+	            (x,y) -> {
+	                List<X> find = x.find(u -> unique.f(u.get(0),y.first().first()));
+	                if (find!=null) {
+	                    find.add(y.first().first());
+	                } else {
+	                    x.add(y.first());
+	                }
+	                return x;
+	        });
+	    return map==null ? new List<List<X>>() : map;
+	}
+	
+	public X find(Function<X,Boolean> function) {
+	    for (X x : this) {
+	        if (function.f(x)) {
+	            return x;
+	        }
+	    }
+	    return null;
+	}
+	
+	public int[] toIntArray() {
+	    int[] array = new int[size()];
+	    for (int i=0; i<array.length; i++) {
+	        array[i] = (int) get(i);
+	    }
+	    return array;
+	}
+	
+	public float[] toFloatArray() {
+        float[] array = new float[size()];
+        for (int i=0; i<array.length; i++) {
+            array[i] = (float) get(i);
+        }
+        return array;
+    }
 	
 }

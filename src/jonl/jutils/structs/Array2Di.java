@@ -9,11 +9,11 @@ public class Array2Di {
     private final int rows;
     private final int columns;
 
-    public Array2Di(Object[] array, int rows) {
+    public Array2Di(int[] array, int rows) {
         int columns = (rows <= 0) ? 0 : array.length / rows;
         if (columns == 0)
             rows = 0;
-        this.array = new int[rows * columns];
+        this.array = ArrayUtils.copy(array);
         this.rows = rows;
         this.columns = columns;
     }

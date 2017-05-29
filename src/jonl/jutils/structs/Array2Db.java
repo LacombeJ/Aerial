@@ -2,14 +2,14 @@ package jonl.jutils.structs;
 
 import jonl.jutils.misc.ArrayUtils;
 
-public class Array2D<T> {
+public class Array2Db {
 
-    private final Object[] array;
+    private final boolean[] array;
 
     private final int rows;
     private final int columns;
 
-    public Array2D(Object[] array, int rows) {
+    public Array2Db(boolean[] array, int rows) {
         int columns = (rows <= 0) ? 0 : array.length / rows;
         if (columns == 0)
             rows = 0;
@@ -18,23 +18,22 @@ public class Array2D<T> {
         this.columns = columns;
     }
 
-    public Array2D(int rows, int columns) {
+    public Array2Db(int rows, int columns) {
         if (rows <= 0 || columns <= 0) {
             rows = 0;
             columns = 0;
         }
-        array = new Object[rows * columns];
+        array = new boolean[rows * columns];
         this.rows = rows;
         this.columns = columns;
     }
-
-    @SuppressWarnings("unchecked")
-    public T get(int i, int j) {
-        return (T) array[j * rows + i];
+    
+    public boolean get(int i, int j) {
+        return array[j * rows + i];
     }
 
-    public void set(int i, int j, T obj) {
-        array[j * rows + i] = obj;
+    public void set(int i, int j, boolean v) {
+        array[j * rows + i] = v;
     }
 
     public int getRows() {
@@ -50,12 +49,12 @@ public class Array2D<T> {
     }
 
     /** @return array backing this object */
-    public Object[] getArray() {
+    public boolean[] getArray() {
         return array;
     }
 
     /** @return copy of array backing this object */
-    public Object[] toArray() {
+    public boolean[] toArray() {
         return ArrayUtils.copy(array);
     }
 
