@@ -14,7 +14,7 @@ public class Text extends Component {
     
     String text = "text";
     
-    Font font = EngineAssets.FONT_CONSOLAS;
+    Font font = AppUtil.fontConsolas();
     
     float[] color = { 1, 1, 1, 1 };
     

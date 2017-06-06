@@ -33,12 +33,15 @@ class AppRenderer implements Renderer {
     
     private Matrix4 canvas;
     
+    private final Material defaultMaterial;
+    
     AppRenderer(App app, GraphicsLibrary gl) {
         this.app = app;
         updater = app.getUpdater();
         this.gl = gl;
         glm = new GLMap(gl);
         sg = new ShaderGenerator(gl);
+        defaultMaterial = AppUtil.defaultMaterial();
     }
     
     @Override
@@ -123,12 +126,9 @@ class AppRenderer implements Renderer {
     
     private void renderInstances(List<GameObject> list, Matrix4 VP, Matrix4 V, Matrix4 P, ArrayList<Light> lights, Camera cam) {
         
-        
-        
-        
         MeshRenderer renderer = list.first().getComponent(MeshRenderer.class);
         Mesh mesh = renderer.mesh;
-        Material material = renderer.material;
+        Material material = renderer.material==null ? defaultMaterial : renderer.material;
         jonl.jgl.Mesh glMesh = glm.getOrCreateMesh(mesh);
         
         if (!mesh.instancedSet) {
@@ -144,7 +144,7 @@ class AppRenderer implements Renderer {
             glMesh.setCustomAttribInstanced(5, mat.toFloatArray(), 4, 4);
             mesh.instancedSet = true;
         }
-        FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
+        FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
         
         Program program = sg.getOrCreateProgram(material, true);
         
@@ -152,6 +152,8 @@ class AppRenderer implements Renderer {
         
         program.setUniformMat4("VP",VP.toFloatBuffer(fb));
         program.setUniformMat4("V",V.toFloatBuffer(fb));
+        
+        BufferPool.returnFloatBuffer(fb);
         
         for (MaterialBuilder.MBUniform u : material.mbUniformList) {
             setUniform(program,u.name,u.data,u.textureID);
@@ -193,10 +195,10 @@ class AppRenderer implements Renderer {
         
         if (renderer!=null) {
             Mesh mesh = renderer.mesh;
-            Material material = renderer.material;
+            Material material = renderer.material==null ? defaultMaterial : renderer.material;
             if (mesh!=null) {
                 Matrix4 MVP = VP.get().multiply(model);
-                FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
+                FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
                 
                 Program program = sg.getOrCreateProgram(material, false);
                 
@@ -205,6 +207,8 @@ class AppRenderer implements Renderer {
                 program.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
                 program.setUniformMat4("M",model.toFloatBuffer(fb));
                 program.setUniformMat4("MV",V.get().multiply(model).toFloatBuffer(fb));
+                
+                BufferPool.returnFloatBuffer(fb);
                 
                 for (MaterialBuilder.MBUniform u : material.mbUniformList) {
                     setUniform(program,u.name,u.data,u.textureID);
@@ -264,9 +268,10 @@ class AppRenderer implements Renderer {
         Matrix4 M = model.get().translate(x,y,0).scale(width,height,1);
         
         Matrix4 MVP = VP.get().multiply(M);
-        FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
         
+        FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
         fontProgram.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
+        BufferPool.returnFloatBuffer(fb);
         
         gl.glRender(fontRect);
     }
@@ -333,16 +338,19 @@ class AppRenderer implements Renderer {
             p.setUniform(name,v.x,v.y);
         } else if (data instanceof Matrix4) {
             Matrix4 m = (Matrix4) data;
-            FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
+            FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
             p.setUniformMat4(name,m.toFloatBuffer(fb));
+            BufferPool.returnFloatBuffer(fb);
         } else if (data instanceof Matrix3) {
             Matrix3 m = (Matrix3) data;
-            FloatBuffer fb = BufferPool.getFloatBuffer(9,true);
+            FloatBuffer fb = BufferPool.borrowFloatBuffer(9,true);
             p.setUniformMat3(name,m.toFloatBuffer(fb));
+            BufferPool.returnFloatBuffer(fb);
         } else if (data instanceof Matrix2) {
             Matrix2 m = (Matrix2) data;
-            FloatBuffer fb = BufferPool.getFloatBuffer(4,true);
+            FloatBuffer fb = BufferPool.borrowFloatBuffer(4,true);
             p.setUniformMat2(name,m.toFloatBuffer(fb));
+            BufferPool.returnFloatBuffer(fb);
         }
     }
     

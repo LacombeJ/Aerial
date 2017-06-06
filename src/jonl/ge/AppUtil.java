@@ -11,7 +11,29 @@ import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.ShaderType;
 
 class AppUtil {
-
+    
+    static Font fontConsolas() {
+        return new Font("Consolas",Font.PLAIN,24,false);
+    }
+    
+    static GameObject cube() {
+        GameObject cube = new GameObject();
+        cube.setName("Cube");
+        MeshRenderer cubeRenderer = new MeshRenderer();
+        cubeRenderer.mesh = Loader.loadMesh("res/models/cube2.mesh"); //TODO hardcode mesh
+        cube.addComponent(cubeRenderer);
+        return cube;
+    }
+    
+    static Material defaultMaterial() {
+        MaterialBuilder mb = new MaterialBuilder();
+        mb.diffuse = mb.vec3u("diffuse",0.5f,0.5f,0.5f);
+        mb.specular = mb.vec3u("specular",0.5f,0.5f,0.5f);
+        mb.roughness = mb.mbFloatu("roughness",0.8f);
+        mb.fresnel = mb.mbFloatu("fresnel",0.3f);
+        return mb.build();
+    }
+    
     static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String fragSource) {
         Program program = gl.glCreateProgram();
         Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);

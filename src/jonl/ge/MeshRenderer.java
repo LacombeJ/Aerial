@@ -5,7 +5,7 @@ public class MeshRenderer extends Component {
     public Mesh mesh; //TODO hide variables, getters and setters?
     public boolean castShadows = true;
     public boolean recieveShadows = false;
-    Material material = EngineAssets.DEFAULT_MATERIAL;
+    Material material = null;
     Mode mode = Mode.TRIANGLES;
     
     public enum Mode {

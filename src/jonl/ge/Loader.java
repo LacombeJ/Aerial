@@ -3,6 +3,7 @@ package jonl.ge;
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 
+import jonl.jutils.misc.BufferPool;
 import jonl.jutils.misc.ImageUtils;
 import jonl.jgl.utils.MeshLoader;
 
@@ -28,12 +29,13 @@ public class Loader {
     
     public static Texture loadTexture(String fileLoc) {
         BufferedImage b = ImageUtils.loadBufferedImage(fileLoc);
-        FloatBuffer fb = ImageUtils.getBufferData(b);
+        FloatBuffer fb = ImageUtils.borrowBufferData(b);
         float[] f = new float[fb.limit()];
         for (int i=0; i<f.length; i++) {
             f[i] = fb.get(i);
         }
         Texture t = new Texture(f,b.getWidth(),b.getHeight());
+        BufferPool.returnFloatBuffer(fb);
         return t;
     }
     

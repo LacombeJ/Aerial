@@ -81,7 +81,7 @@ public class Editor implements App {
                 
                 control.addComponent(camera);
                 
-                GameObject b = EngineAssets.cube();
+                GameObject b = AppUtil.cube();
                 add(b);
                 
                 add(control);
