@@ -171,8 +171,8 @@ public class SScrollPanel extends AbstractSingleSlot implements ScrollPanel {
     public void paint(Graphics g) {
         super.paint(g);
         
-        g.renderRect(horX,0,horWidth,horBarHeight,Style.buttonColorHover);
-        g.renderRect(getWidth()-verBarWidth,verY,verBarWidth,verHeight,Style.buttonColorHover);
+        g.renderRect(horX,0,horWidth,horBarHeight,Style.get(this).buttonColorHover);
+        g.renderRect(getWidth()-verBarWidth,verY,verBarWidth,verHeight,Style.get(this).buttonColorHover);
         
     }
 

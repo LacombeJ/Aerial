@@ -2,6 +2,7 @@ package jonl.aui;
 
 public interface Widget {
 
+    Widget getRoot();
     Container getParent();
     
     int getX();

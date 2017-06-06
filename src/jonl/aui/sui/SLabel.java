@@ -44,7 +44,7 @@ public class SLabel extends SWidget implements Label {
     void paint(Graphics g) {
         float x = getWidth()/2;
         float y = getHeight()/2;
-        g.renderText(text,x,y,HAlign.CENTER,VAlign.MIDDLE,Style.calibri,new Vector4(0,0,0,1));
+        g.renderText(text,x,y,HAlign.CENTER,VAlign.MIDDLE,Style.get(this).calibri,new Vector4(0,0,0,1));
     }
     
     

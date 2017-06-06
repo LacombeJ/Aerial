@@ -43,6 +43,14 @@ public abstract class SWidget implements Widget {
     }
     
     @Override
+    public Widget getRoot() {
+        if (parent==null) {
+            return this;
+        }
+        return parent.getRoot();
+    }
+    
+    @Override
     public int getX() {
         return x;
     }

@@ -78,11 +78,11 @@ public class SButton extends SWidget implements Button {
             }
         }
         float v = buttonEnterTime / time;
-        Vector4 col = Style.buttonColor.get().lerp(Style.buttonColorHover,v);
+        Vector4 col = Style.get(this).buttonColor.get().lerp(Style.get(this).buttonColorHover,v);
         g.renderRect(0,0,getWidth(),getHeight(),col);
         float x = getWidth()/2;
         float y = getHeight()/2;
-        g.renderText(text,x,y,HAlign.CENTER,VAlign.MIDDLE,Style.calibri,new Vector4(0,0,0,1));
+        g.renderText(text,x,y,HAlign.CENTER,VAlign.MIDDLE,Style.get(this).calibri,new Vector4(0,0,0,1));
     }
     
     

@@ -197,9 +197,10 @@ public class SGraphics implements Graphics {
         Matrix4 M = model.get().translate(x,y,0).scale(width,height,1);
         
         Matrix4 MVP = ortho.get().multiply(M);
-        FloatBuffer fb = BufferPool.getFloatBuffer(16,true);
         
+        FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
         fontProgram.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
+        BufferPool.returnFloatBuffer(fb);
         
         gl.glRender(fontRect);
     }

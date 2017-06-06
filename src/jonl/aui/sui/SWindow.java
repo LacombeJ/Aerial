@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayDeque;
 
+import jonl.jutils.io.Console;
 import jonl.jutils.parallel.SequentialProcessor;
 import jonl.aui.HAlign;
 import jonl.aui.Layout;
@@ -109,7 +110,6 @@ public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
             
             sp.countDown();
             window.setLoader(()->{
-                Style.create(gl);
                 g = new SGraphics(gl);
                 ortho = Matrix4.orthographic(0,window.getWidth(),0,window.getHeight(),-1,1);
                 g.setOrtho(ortho);
@@ -292,6 +292,7 @@ public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
     public void openInput() {
         inputOpen = true;
     }
+
 
     
     

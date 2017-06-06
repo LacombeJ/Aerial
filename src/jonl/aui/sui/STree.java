@@ -54,7 +54,7 @@ public class STree extends SWidget implements Tree {
         super.fireMousePressed(e);
         if (e.button==Input.MB_LEFT) {
             int height = getHeight();
-            float fontHeight = Style.calibri.getHeight();
+            float fontHeight = Style.get(this).calibri.getHeight();
             float y = height;
             for (TreeItem item : getItems()) {
                 y = findAndAct(e.x,e.y,item,fontHeight,y,fontHeight,fontHeight);
@@ -66,7 +66,7 @@ public class STree extends SWidget implements Tree {
     }
     
     float findAndAct(int ex, int ey, TreeItem t, float x, float y, float dx, float dy) {
-        float half = Style.calibri.getHeight() / 2f;
+        float half = Style.get(this).calibri.getHeight() / 2f;
         if (Mathd.isWithinBounds(ex,ey,x-half-2,y-half-2,BUTTON_SIZE,BUTTON_SIZE)) {
             if (t.isExpanded() && t.getItemCount()!=0) {
                 t.collapse();
@@ -90,7 +90,7 @@ public class STree extends SWidget implements Tree {
     @Override
     void paint(Graphics g) {
         int height = getHeight();
-        float fontHeight = Style.calibri.getHeight();
+        float fontHeight = Style.get(this).calibri.getHeight();
         float y = height;
         for (TreeItem item : getItems()) {
             y = paintItem(g,item,fontHeight,y,fontHeight,fontHeight);
@@ -98,9 +98,9 @@ public class STree extends SWidget implements Tree {
     }
     
     float paintItem(Graphics g, TreeItem t, float x, float y, float dx, float dy) {
-        g.renderText(t.getText(),x,y,HAlign.LEFT,VAlign.TOP,Style.calibri,new Vector4(0,0,0,1));
+        g.renderText(t.getText(),x,y,HAlign.LEFT,VAlign.TOP,Style.get(this).calibri,new Vector4(0,0,0,1));
         if (t.getItemCount()!=0) {
-            float half = Style.calibri.getHeight() / 2f;
+            float half = Style.get(this).calibri.getHeight() / 2f;
             Vector4 col = t.isExpanded() ? new Vector4(0,0,0.2f,1) : new Vector4(0.8f,0.8f,0.8f,1);
             g.renderRect(x-half-2,y-half-2,BUTTON_SIZE,BUTTON_SIZE,col);
         }

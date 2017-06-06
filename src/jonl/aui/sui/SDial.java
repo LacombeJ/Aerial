@@ -90,7 +90,7 @@ public class SDial extends SWidget implements Dial {
         float dim = min * ratio;
         float x = getWidth()/2f - dim/2;
         float y = getHeight()/2f - dim/2;
-        g.renderCircle(x,y,dim,dim,Style.buttonColorHover);
+        g.renderCircle(x,y,dim,dim,Style.get(this).buttonColorHover);
         Matrix4 mat = Matrix4.identity();
         
         mat.translate(getWidth()/2f,getHeight()/2f,0);
@@ -100,7 +100,7 @@ public class SDial extends SWidget implements Dial {
         
         mat.translate(dim/2,0,0);
         mat.scale(dim/10,dim/10,1);
-        g.renderRect(mat,Style.buttonColor);
+        g.renderRect(mat,Style.get(this).buttonColor);
     }
     
 }
