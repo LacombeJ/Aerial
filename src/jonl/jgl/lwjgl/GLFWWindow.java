@@ -2,19 +2,19 @@ package jonl.jgl.lwjgl;
 
 import java.util.ArrayList;
 
-import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryUtil;
-
 import jonl.jgl.Closer;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
 import jonl.jgl.Runner;
 import jonl.jgl.Window;
+import jonl.jgl.lwjgl.GLFWInstance.WindowCreationRequest;
+import jonl.jgl.lwjgl.GLFWInstance.WindowCreationResponse;
+import jonl.jgl.lwjgl.GLFWInstance.WindowIDRequest;
+import jonl.jgl.lwjgl.GLFWInstance.WindowRequest;
+import jonl.jutils.func.Callback2D;
 import jonl.jutils.structs.BijectiveMap;
 import jonl.jgl.Input.CursorState;
 
@@ -50,47 +50,13 @@ public final class GLFWWindow implements Window {
     private Runner runner;
     private Closer closer;
     
-    final ArrayList<Int2ChangedListener> sizeListeners;
-    final ArrayList<Int2ChangedListener> positionListeners;
+    private final ArrayList<Int2ChangedListener> sizeListeners;
+    private final ArrayList<Int2ChangedListener> positionListeners;
     
     public GLFWWindow(String title, int width, int height, boolean fullscreen,
             boolean resizable, boolean decorated, int multiSample, boolean vsyncEnabled) {
         
-        GLFWErrorCallback.createPrint(System.err).set();
-        
-        if (!GLFW.glfwInit()) {
-            throw new IllegalStateException("GLFW failed to initialize.");
-        }
-        
-        //Window will show after loading
-        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, multiSample);
-        
-        if (!fullscreen) {
-            GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE,(this.resizable=resizable) ?
-                    GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
-            GLFW.glfwWindowHint(GLFW.GLFW_DECORATED,(this.decorated=decorated) ?
-                    GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
-        } else {
-            this.resizable = false;
-            this.decorated = false;
-        }
-        
-        id = GLFW.glfwCreateWindow(this.width=width,this.height=height,this.title=title,
-                (this.fullscreen=fullscreen) ? GLFW.glfwGetPrimaryMonitor() : MemoryUtil.NULL,
-                MemoryUtil.NULL);
-        
-        if (id == MemoryUtil.NULL) {
-            throw new IllegalStateException("GLFW window creation failed.");
-        }
-        
-        //Centers window
-        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-        screenWidth = mode.width();
-        screenHeight = mode.height();
-        this.x = (screenWidth - width) / 2;
-        this.y = (screenHeight - height) / 2;
-        GLFW.glfwSetWindowPos(id,x,y);
+        GLFWInstance.init();
         
         this.visible = true;
         this.vsyncEnabled = vsyncEnabled;
@@ -98,7 +64,7 @@ public final class GLFWWindow implements Window {
         sizeListeners = new ArrayList<>();
         positionListeners = new ArrayList<>();
         
-        GLFW.glfwSetWindowPosCallback(id,(windowID,x,y)->{
+        Callback2D<Integer,Integer> windowPosCallback = (x,y) -> {
             int prevX = this.x;
             int prevY = getY();
             this.x = x;
@@ -106,9 +72,9 @@ public final class GLFWWindow implements Window {
             for (Int2ChangedListener pl : positionListeners) {
                 pl.valueChanged(x,getY(),prevX,prevY);
             }
-        });
+        };
         
-        GLFW.glfwSetFramebufferSizeCallback(id,(windowID,w,h)->{
+        Callback2D<Integer,Integer> windowSizeCallback = (w,h) -> {
             int prevWidth = this.width;
             int prevHeight = this.height;
             int prevY = getY();
@@ -123,10 +89,26 @@ public final class GLFWWindow implements Window {
                     pl.valueChanged(x,newY,x,prevY);
                 }
             }
-        });
+        };
         
-        input = new GLFWInput(this);
-        gl = new LWJGL();
+        WindowCreationResponse response = GLFWInstance.create(
+                new WindowCreationRequest(this, title, width, height,
+                        fullscreen, resizable, decorated, multiSample,
+                        windowPosCallback, windowSizeCallback));
+        
+        this.id = response.id;
+        this.title = response.title;
+        this.x = response.x;
+        this.y = response.y;
+        this.width = response.width;
+        this.height = response.height;
+        this.resizable = response.resizable;
+        this.decorated = response.decorated;
+        this.fullscreen = response.fullscreen;
+        this.screenWidth = response.screenWidth;
+        this.screenHeight = response.screenHeight;
+        this.input = response.input;
+        this.gl = response.gl;
         
         setLoader(()->{
            //empty by default
@@ -181,13 +163,13 @@ public final class GLFWWindow implements Window {
     
     @Override
     public void start() {
+        GLFWInstance.start(new WindowRequest(this));
         makeContext();
         loader.load();
         showWindow();
         runner.run();
-        closeWindow();
         closer.close();
-        terminate();
+        setClosing();
     }
     
     /**
@@ -203,7 +185,7 @@ public final class GLFWWindow implements Window {
     
     private void showWindow() {
         if (visible) {
-            GLFW.glfwShowWindow(id);
+            GLFWInstance.show(new WindowIDRequest(id));
         }
     }
     
@@ -216,30 +198,13 @@ public final class GLFWWindow implements Window {
         GLFW.glfwSwapBuffers(id);
     }
     
-    private void pollInput() {
-        input.reset();
-        GLFW.glfwPollEvents();
-        input.update();
-    }
-    
     @Override
     public boolean isRunning() {
         if (!GLFW.glfwWindowShouldClose(id)) {
             swapBuffers();
-            pollInput();
             return true;
         }
         return false;
-    }
-    
-    private void closeWindow() {
-        Callbacks.glfwFreeCallbacks(id);
-        GLFW.glfwDestroyWindow(id);
-    }
-    
-    private void terminate() {
-        GLFW.glfwTerminate();
-        GLFW.glfwSetErrorCallback(null).free();
     }
     
     long getID() {
@@ -386,6 +351,14 @@ public final class GLFWWindow implements Window {
     @Override
     public int getScreenHeight() {
         return screenHeight;
+    }
+
+    boolean isClosing = false;
+    boolean isClosing() {
+        return isClosing;
+    }
+    void setClosing() {
+        isClosing = true;
     }
     
 }
