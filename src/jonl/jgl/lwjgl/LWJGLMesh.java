@@ -1,5 +1,8 @@
 package jonl.jgl.lwjgl;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 /*
 From: https://www.opengl.org/wiki/Vertex_Specification_Best_Practices
 Vertex, normals, texcoords
@@ -54,24 +57,38 @@ class LWJGLMesh implements Mesh {
         indicesID       = GL15.glGenBuffers();
         indicesCount    = indices.length;
         
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,vertexID);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER,BufferPool.getFloatBuffer(vertexData,true),GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(0,3,GL11.GL_FLOAT,false,0,0);
+        //Vertices
+        {
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,vertexID);
+            FloatBuffer fb = BufferPool.borrowFloatBuffer(vertexData,true);
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER,fb,GL15.GL_STATIC_DRAW);
+            BufferPool.returnFloatBuffer(fb);
+            GL20.glVertexAttribPointer(0,3,GL11.GL_FLOAT,false,0,0);
+        }
         
         if (normalID!=-1) {
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,normalID);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER,BufferPool.getFloatBuffer(normalData,true),GL15.GL_STATIC_DRAW);
+            FloatBuffer fb = BufferPool.borrowFloatBuffer(normalData,true);
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER,fb,GL15.GL_STATIC_DRAW);
+            BufferPool.returnFloatBuffer(fb);
             GL20.glVertexAttribPointer(1,3,GL11.GL_FLOAT,false,0,0);
         }
         
         if (texCoordID!=-1) {
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,texCoordID);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER,BufferPool.getFloatBuffer(texCoordData,true),GL15.GL_STATIC_DRAW);
+            FloatBuffer fb = BufferPool.borrowFloatBuffer(texCoordData,true);
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER,fb,GL15.GL_STATIC_DRAW);
+            BufferPool.returnFloatBuffer(fb);
             GL20.glVertexAttribPointer(2,2,GL11.GL_FLOAT,false,0,0);
         }
         
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,BufferPool.getIntBuffer(indices,true),GL15.GL_STATIC_DRAW);
+        //Indices
+        {
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
+            IntBuffer ib = BufferPool.borrowIntBuffer(indices,true);
+            GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,ib,GL15.GL_STATIC_DRAW);
+            BufferPool.returnIntBuffer(ib);
+        }
         
         GL30.glBindVertexArray(0);
     }
@@ -132,7 +149,9 @@ class LWJGLMesh implements Mesh {
     
     private void setAttrib(int id, int loc, float[] data, int size, int count) {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,id);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER,BufferPool.getFloatBuffer(data,true),GL15.GL_STATIC_DRAW);
+        FloatBuffer fb = BufferPool.borrowFloatBuffer(data,true);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER,fb,GL15.GL_STATIC_DRAW);
+        BufferPool.returnFloatBuffer(fb);
         for (int i=0; i<count; i++) {
             int stride = (count<=1) ? 0 : FLOAT_SIZE*size*count;
             GL20.glVertexAttribPointer(loc+i,size,GL11.GL_FLOAT,false,stride,FLOAT_SIZE*size*i);
@@ -216,7 +235,9 @@ class LWJGLMesh implements Mesh {
         indicesCount = indices.length;
         GL30.glBindVertexArray(id);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,BufferPool.getIntBuffer(indices,true),GL15.GL_STATIC_DRAW);
+        IntBuffer ib = BufferPool.borrowIntBuffer(indices,true);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,ib,GL15.GL_STATIC_DRAW);
+        BufferPool.returnIntBuffer(ib);
         GL30.glBindVertexArray(0);
     }
 

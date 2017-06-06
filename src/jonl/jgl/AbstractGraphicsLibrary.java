@@ -55,22 +55,34 @@ public abstract class AbstractGraphicsLibrary implements GraphicsLibrary {
     
     @Override
     public Texture glGenTexture(float[] data, int width, int height, Internal internal, Wrap wrap, Filter filter) {
-        return glGenTexture(BufferPool.getFloatBuffer(data,true),width,height,internal,wrap,filter);
+        FloatBuffer fb = BufferPool.borrowFloatBuffer(data,true);
+        Texture t = glGenTexture(fb,width,height,internal,wrap,filter);
+        BufferPool.returnFloatBuffer(fb);
+        return t;
     }
     
     @Override
     public Texture glGenTexture(float[] data, int width, int height) {
-        return glGenTexture(BufferPool.getFloatBuffer(data,true),width,height);
+        FloatBuffer fb = BufferPool.borrowFloatBuffer(data,true);
+        Texture t = glGenTexture(fb,width,height);
+        BufferPool.returnFloatBuffer(fb);
+        return t;
     }
     
     @Override
     public Texture glGenTexture(BufferedImage image, Internal internal, Wrap wrap, Filter filter) {
-        return glGenTexture(ImageUtils.getBufferData(image),image.getWidth(),image.getHeight(),internal,wrap,filter);
+        FloatBuffer fb = ImageUtils.borrowBufferData(image);
+        Texture t = glGenTexture(fb,image.getWidth(),image.getHeight(),internal,wrap,filter);
+        BufferPool.returnFloatBuffer(fb);
+        return t;
     }
     
     @Override
     public Texture glGenTexture(BufferedImage image) {
-        return glGenTexture(ImageUtils.getBufferData(image),image.getWidth(),image.getHeight());
+        FloatBuffer fb = ImageUtils.borrowBufferData(image);
+        Texture t = glGenTexture(fb,image.getWidth(),image.getHeight());
+        BufferPool.returnFloatBuffer(fb);
+        return t;
     }
     
     @Override
@@ -85,12 +97,18 @@ public abstract class AbstractGraphicsLibrary implements GraphicsLibrary {
     
     @Override
     public Texture glGenTexture(int width, int height, Internal internal, Wrap wrap, Filter filter) {
-        return glGenTexture(ImageUtils.getBufferData(new float[4],width,height),width,height,internal,wrap,filter);
+        FloatBuffer fb = ImageUtils.borrowBufferData(new float[4],width,height);
+        Texture t = glGenTexture(fb,width,height,internal,wrap,filter);
+        BufferPool.returnFloatBuffer(fb);
+        return t;
     }
     
     @Override
     public Texture glGenTexture(int width, int height) {
-        return glGenTexture(ImageUtils.getBufferData(new float[4],width,height),width,height);
+        FloatBuffer fb = ImageUtils.borrowBufferData(new float[4],width,height);
+        Texture t = glGenTexture(fb,width,height);
+        BufferPool.returnFloatBuffer(fb);
+        return t;
     }
     
     @Override
