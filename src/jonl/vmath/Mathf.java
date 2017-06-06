@@ -1,5 +1,7 @@
 package jonl.vmath;
 
+import java.util.Arrays;
+
 /**
  * The Mathf class for single-precision math <p>
  * Extension to java math class<p>
@@ -658,6 +660,29 @@ public final class Mathf {
             float bwidth, float bheight, float blength) {
         return isWithin(x,y,z,bx,by,bz,bx+bwidth,by+bheight,bz+blength);
     }
+    
+    
+    
+    /* ******************************************************************************** */
+    /* **************************    FLOAT-ARRAY METHODS      ************************* */
+    /* ******************************************************************************** */
+    
+    public static float[] mul(float v, float[] array) {
+        float[] ret = Arrays.copyOf(array, array.length);
+        for (int i=0; i<ret.length; i++) {
+            ret[i] = ret[i]*v;
+        }
+        return ret;
+    }
+    
+    public static float[] lerp(float alpha, float[] array1, float[] array2) {
+        float[] ret = new float[array1.length];
+        for (int i=0; i<ret.length; i++) {
+            ret[i] = lerp(alpha,array1[i],array2[i]);
+        }
+        return ret;
+    }
+    
     
     
     
