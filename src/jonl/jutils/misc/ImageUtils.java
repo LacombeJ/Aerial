@@ -32,12 +32,10 @@ public class ImageUtils {
     }
     
     /**
-     * Buffer data may be overwritten by other data
-     * @param bi
-     * @return
+     * Return with BufferPool.returnFloatBuffer
      */
-    public static FloatBuffer getBufferData(BufferedImage bi) {
-        FloatBuffer buffer = BufferPool.getFloatBuffer(bi.getWidth()*bi.getHeight()*BYTES_PER_PIXEL,false);
+    public static FloatBuffer borrowBufferData(BufferedImage bi) {
+        FloatBuffer buffer = BufferPool.borrowFloatBuffer(bi.getWidth()*bi.getHeight()*BYTES_PER_PIXEL,false);
         for (int i=0; i<bi.getHeight(); i++) {
             for (int j=0; j<bi.getWidth(); j++) {
                 float[] c = getColor(bi.getRGB(j,i),true);
@@ -51,9 +49,12 @@ public class ImageUtils {
         return buffer;
     }
     
-    public static FloatBuffer getBufferData(float[] color, int width, int height) {
+    /**
+     * Return with BufferPool.returnFloatBuffer
+     */
+    public static FloatBuffer borrowBufferData(float[] color, int width, int height) {
         int size = width*height;
-        FloatBuffer buffer = BufferPool.getFloatBuffer(size*BYTES_PER_PIXEL,false);
+        FloatBuffer buffer = BufferPool.borrowFloatBuffer(size*BYTES_PER_PIXEL,false);
         float r = color.length>0 ? color[0] : 0;
         float g = color.length>1 ? color[1] : 0;
         float b = color.length>2 ? color[2] : 0;

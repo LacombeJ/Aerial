@@ -16,4 +16,10 @@ public interface Processor {
         }
     }
     
+    public static void thread(Processor process) {
+        SequentialProcessor sp = new SequentialProcessor();
+        sp.add(process);
+        sp.run();
+    }
+    
 }

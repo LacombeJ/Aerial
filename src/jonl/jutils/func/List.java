@@ -251,6 +251,15 @@ public class List<X> extends ArrayList<X>
 	    return null;
 	}
 	
+	public int index(Function<X,Boolean> function) {
+	    for (int i=0; i<size(); i++) {
+	        if (function.f(get(i))) {
+                return i;
+            }
+	    }
+	    return -1;
+	}
+	
 	public int[] toIntArray() {
 	    int[] array = new int[size()];
 	    for (int i=0; i<array.length; i++) {

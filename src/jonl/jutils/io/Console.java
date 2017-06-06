@@ -12,11 +12,13 @@ import jonl.jutils.misc.ArrayUtils;
  */
 public class Console {
     
+    
+    
     /* ************************************************************************* */
     /* *************************         OUTPUT         ************************ */
     /* ************************************************************************* */
     
-    public static void print(String... strings) {
+    public static synchronized void print(String... strings) {
         print((Object[])strings);
     }
     
@@ -50,7 +52,7 @@ public class Console {
      * Prints the following objects on one line then prints a new line
      * @param objects
      */
-    public static void println(Object... objects) {
+    public static synchronized void println(Object... objects) {
         print(objects);
         System.out.println();
     }

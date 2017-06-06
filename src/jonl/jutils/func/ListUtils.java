@@ -123,6 +123,29 @@ public class ListUtils
         return array;
     }
     
+    
+    
+    
+    
+    public static List<Float> floatList(int size, Function<Integer,Float> comprehension) {
+        return new List<Float>(size,comprehension);
+    }
+    
+    public static float[] floatArray(int size, Function<Integer,Float> comprehension) {
+        return floatList(size,comprehension).toFloatArray();
+    }
+    
+    public static List<Integer> intList(int size, Function<Integer,Integer> comprehension) {
+        return new List<Integer>(size,comprehension);
+    }
+    
+    public static int[] intArray(int size, Function<Integer,Integer> comprehension) {
+        return intList(size,comprehension).toIntArray();
+    }
+    
+    
+    
+    
     public static final class FunctionComparator<X> implements Comparator<X> {
 		private final Function2D<X,X,Integer> comparator;
 		public FunctionComparator(Function2D<X,X,Integer> compare) {

@@ -72,5 +72,13 @@ public class StringUtils {
         }
         return str;
     }
+
+    public static String spaces(int level, String string) {
+        return padFront(string,' ',level);
+    }
+    
+    public static String spaces(String string, int level) {
+        return padBack(string,' ',level);
+    }
     
 }
