@@ -10,10 +10,18 @@ import jonl.jgl.Input;
 import jonl.jgl.Loader;
 import jonl.jgl.Runner;
 import jonl.jgl.Window;
-import jonl.jgl.lwjgl.GLFWInstance.WindowCreationRequest;
-import jonl.jgl.lwjgl.GLFWInstance.WindowCreationResponse;
-import jonl.jgl.lwjgl.GLFWInstance.WindowIDRequest;
-import jonl.jgl.lwjgl.GLFWInstance.WindowRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetInputModeRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetInputModeResponse;
+import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeResponse;
+import jonl.jgl.lwjgl.GLFWInstance.SetInputModeRequest;
+import jonl.jgl.lwjgl.GLFWInstance.SetWindowPosRequest;
+import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeRequest;
+import jonl.jgl.lwjgl.GLFWInstance.SetWindowTitleRequest;
+import jonl.jgl.lwjgl.GLFWInstance.SetWindowVisibleRequest;
+import jonl.jgl.lwjgl.GLFWInstance.CreateWindowRequest;
+import jonl.jgl.lwjgl.GLFWInstance.CreateWindowResponse;
+import jonl.jgl.lwjgl.GLFWInstance.StartWindowRequest;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.structs.BijectiveMap;
 import jonl.jgl.Input.CursorState;
@@ -91,8 +99,8 @@ public final class GLFWWindow implements Window {
             }
         };
         
-        WindowCreationResponse response = GLFWInstance.create(
-                new WindowCreationRequest(this, title, width, height,
+        CreateWindowResponse response = GLFWInstance.create(
+                new CreateWindowRequest(this, title, width, height,
                         fullscreen, resizable, decorated, multiSample,
                         windowPosCallback, windowSizeCallback));
         
@@ -163,7 +171,7 @@ public final class GLFWWindow implements Window {
     
     @Override
     public void start() {
-        GLFWInstance.start(new WindowRequest(this));
+        GLFWInstance.start(new StartWindowRequest(this));
         makeContext();
         loader.load();
         showWindow();
@@ -185,7 +193,8 @@ public final class GLFWWindow implements Window {
     
     private void showWindow() {
         if (visible) {
-            GLFWInstance.show(new WindowIDRequest(id));
+            SetWindowVisibleRequest request = new SetWindowVisibleRequest(id,true);
+            GLFWInstance.setWindowVisible(request);
         }
     }
     
@@ -198,10 +207,16 @@ public final class GLFWWindow implements Window {
         GLFW.glfwSwapBuffers(id);
     }
     
+    private void pollInput() {
+        input.reset();
+        input.update();
+    }
+    
     @Override
     public boolean isRunning() {
         if (!GLFW.glfwWindowShouldClose(id)) {
             swapBuffers();
+            pollInput();
             return true;
         }
         return false;
@@ -239,7 +254,8 @@ public final class GLFWWindow implements Window {
     
     @Override
     public void setTitle(String title) {
-        GLFW.glfwSetWindowTitle(id,this.title=title);
+        SetWindowTitleRequest request = new SetWindowTitleRequest(id,this.title=title);
+        GLFWInstance.setWindowTitle(request);
     }
     
     @Override
@@ -254,7 +270,8 @@ public final class GLFWWindow implements Window {
     
     @Override
     public void setPosition(int x, int y) {
-        GLFW.glfwSetWindowPos(id,this.x=x,this.y=y);
+        SetWindowPosRequest request = new SetWindowPosRequest(id,x,y);
+        GLFWInstance.setWindowPos(request);
     }
     
     @Override
@@ -269,17 +286,14 @@ public final class GLFWWindow implements Window {
     
     @Override
     public void setSize(int width, int height) {
-        GLFW.glfwSetWindowSize(id,this.width=width,this.height=height);
+        SetWindowSizeRequest request = new SetWindowSizeRequest(id,this.width=width,this.height=height);
+        GLFWInstance.setWindowSize(request);
     }
 
     @Override
     public void setVisible(boolean visible) {
-        this.visible = visible;
-        if (visible) {
-            GLFW.glfwShowWindow(id);
-        } else {
-            GLFW.glfwHideWindow(id);
-        }
+        SetWindowVisibleRequest request = new SetWindowVisibleRequest(id,this.visible=visible);
+        GLFWInstance.setWindowVisible(request);
     }
     
     private final static BijectiveMap<CursorState,Integer> STATE_MAP = new BijectiveMap<>();
@@ -292,7 +306,9 @@ public final class GLFWWindow implements Window {
     
     @Override
     public CursorState getCursorState() {
-        return STATE_MAP.getKey(GLFW.glfwGetInputMode(id,GLFW.GLFW_CURSOR));
+        GetInputModeRequest request = new GetInputModeRequest(id,GLFW.GLFW_CURSOR);
+        GetInputModeResponse response = GLFWInstance.getInputMode(request);
+        return STATE_MAP.getKey(response.value);
     }
     
     @Override
@@ -300,7 +316,8 @@ public final class GLFWWindow implements Window {
         if (getCursorState()==CursorState.GRABBED && state!=CursorState.GRABBED) {
             ((GLFWInput) getInput()).setOverride(true);
         }
-        GLFW.glfwSetInputMode(id,GLFW.GLFW_CURSOR,STATE_MAP.getValue(state));
+        SetInputModeRequest request = new SetInputModeRequest(id,GLFW.GLFW_CURSOR,STATE_MAP.getValue(state));
+        GLFWInstance.setInputMode(request);
     }
     
     @Override
@@ -325,12 +342,9 @@ public final class GLFWWindow implements Window {
 
     @Override
     public Insets getInsets() {
-        int[] left = new int[1];
-        int[] top = new int[1];
-        int[] right = new int[1];
-        int[] bottom = new int[1];
-        GLFW.glfwGetWindowFrameSize(id,left,top,right,bottom);
-        return new Insets(top[0],bottom[0],left[0],right[0]);
+        GetWindowFrameSizeRequest request = new GetWindowFrameSizeRequest(id);
+        GetWindowFrameSizeResponse response = GLFWInstance.getWindowFrameSize(request);
+        return new Insets(response.top,response.bottom,response.left,response.right);
     }
 
     @Override

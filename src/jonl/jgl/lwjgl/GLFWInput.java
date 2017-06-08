@@ -1,11 +1,15 @@
 package jonl.jgl.lwjgl;
 
-import java.nio.DoubleBuffer;
-
 import org.lwjgl.glfw.GLFW;
 
 import jonl.jgl.AbstractInput;
-import jonl.jutils.misc.BufferPool;
+import jonl.jgl.lwjgl.GLFWInstance.GetCursorPosRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetCursorPosResponse;
+import jonl.jgl.lwjgl.GLFWInstance.GetKeyRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetKeyResponse;
+import jonl.jgl.lwjgl.GLFWInstance.GetMouseButtonRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetMouseButtonResponse;
+import jonl.jutils.func.Function0D;
 import jonl.jutils.structs.BijectiveMap;
 
 /**
@@ -15,10 +19,13 @@ import jonl.jutils.structs.BijectiveMap;
  */
 class GLFWInput extends AbstractInput {
 
-    final GLFWWindow window;
+    final long windowID;
+    final Function0D<Integer> windowHeight;
     
     private static final BijectiveMap<Integer,Integer> BUTTON_MAP = new BijectiveMap<>(MB_COUNT);
     private static final BijectiveMap<Integer,Integer> KEY_MAP = new BijectiveMap<>(K_COUNT);
+    private static final int[] BUTTON_ARRAY = new int[MB_COUNT];
+    private static final int[] KEY_ARRAY = new int[K_COUNT];
     
     private final boolean[] buttonDown       = new boolean[MB_COUNT];
     private final boolean[] buttonPressed    = new boolean[MB_COUNT];
@@ -41,13 +48,14 @@ class GLFWInput extends AbstractInput {
      */
     private boolean override = true;
     
-    private final DoubleBuffer xBuffer = BufferPool.createDoubleBuffer(1);
-    private final DoubleBuffer yBuffer = BufferPool.createDoubleBuffer(1);
-    
-    GLFWInput(GLFWWindow window) {
-        this.window = window;
+    /**
+     * This function must only be called from the main thread -> [GLFW]
+     */
+    GLFWInput(long windowID, Function0D<Integer> windowHeight) {
+        this.windowID = windowID;
+        this.windowHeight = windowHeight;
         
-        GLFW.glfwSetScrollCallback(window.getID(),(windowid,xoffset,yoffset)->{
+        GLFW.glfwSetScrollCallback(windowID,(windowid,xoffset,yoffset)->{
             scrollX = (float) xoffset;
             scrollY = (float) yoffset;
         });
@@ -73,10 +81,11 @@ class GLFWInput extends AbstractInput {
     }
     
     private void updatePosition() {
-        GLFW.glfwGetCursorPos(window.getID(),xBuffer,yBuffer);
+        GetCursorPosRequest request = new GetCursorPosRequest(windowID);
+        GetCursorPosResponse response = GLFWInstance.getCursorPos(request);
         
-        int nx = (int) Math.floor(xBuffer.get(0));
-        int ny = window.getHeight() - (int) Math.floor(yBuffer.get(0));
+        int nx = (int) Math.floor(response.x);
+        int ny = windowHeight.f() - (int) Math.floor(response.y);
         
         if (override) {
             override = false;
@@ -110,15 +119,19 @@ class GLFWInput extends AbstractInput {
     }
     
     private void updateButtons() {
+        GetMouseButtonRequest request = new GetMouseButtonRequest(windowID, BUTTON_ARRAY);
+        GetMouseButtonResponse response = GLFWInstance.getMouseButton(request);
         for (int i=0; i<MB_COUNT; i++) {
-            int action = GLFW.glfwGetMouseButton(window.getID(), BUTTON_MAP.getValue(i));
+            int action = response.actions[i];
             updateGLFWAction(i,action,buttonPressed,buttonReleased,buttonDown);
         }
     }
     
     private void updateKeys() {
+        GetKeyRequest request = new GetKeyRequest(windowID, KEY_ARRAY);
+        GetKeyResponse response = GLFWInstance.getKey(request);
         for (int i=0; i<K_COUNT; i++) {
-            int action = GLFW.glfwGetKey(window.getID(), KEY_MAP.getValue(i));
+            int action = response.actions[i];
             updateGLFWAction(i,action,keyPressed,keyReleased,keyDown);
         }
     }
@@ -187,6 +200,10 @@ class GLFWInput extends AbstractInput {
         BUTTON_MAP.put(MB_LEFT, GLFW.GLFW_MOUSE_BUTTON_LEFT);
         BUTTON_MAP.put(MB_RIGHT, GLFW.GLFW_MOUSE_BUTTON_RIGHT);
         BUTTON_MAP.put(MB_MIDDLE, GLFW.GLFW_MOUSE_BUTTON_MIDDLE);
+        
+        for (int i=0; i<MB_COUNT; i++) {
+            BUTTON_ARRAY[i] = BUTTON_MAP.getValue(i);
+        }
     }
 
     static {
@@ -310,6 +327,10 @@ class GLFWInput extends AbstractInput {
         KEY_MAP.put(K_UP, GLFW.GLFW_KEY_UP);
         KEY_MAP.put(K_WORLD1, GLFW.GLFW_KEY_WORLD_1);
         KEY_MAP.put(K_WORLD2, GLFW.GLFW_KEY_WORLD_2);
+        
+        for (int i=0; i<K_COUNT; i++) {
+            KEY_ARRAY[i] = KEY_MAP.getValue(i);
+        }
     }
 
 }
