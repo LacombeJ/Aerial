@@ -11,7 +11,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.misc.BufferPool;
-import jonl.jutils.parallel.MultiLatch;
 import jonl.jutils.parallel.Processor;
 import jonl.jutils.parallel.Request;
 import jonl.jutils.parallel.RequestQueue;
@@ -30,12 +29,10 @@ import jonl.jutils.parallel.Response;
  */
 class GLFWInstance {
 
-    private static final ArrayList<GLFWWindow> WINDOWS = new ArrayList<>();
-    
-    private static final MultiLatch INPUT_LATCH = new MultiLatch(0);
+    private static final ArrayList<Long> CREATED_WINDOWS = new ArrayList<>();
+    private static final ArrayList<GLFWWindow> STARTED_WINDOWS = new ArrayList<>();
     
     private static boolean initialized = false;
-    private static boolean windowStarted = false;
     private static LWJGL gl = new LWJGL();
     
     private final static DoubleBuffer xBuffer = BufferPool.createDoubleBuffer(1);
@@ -77,7 +74,20 @@ class GLFWInstance {
     private static final RequestQueue<SetWindowVisibleRequest,SetWindowVisibleResponse>
         SET_WINDOW_VISIBLE_REQUEST      = new RequestQueue<>( (request) -> _setWindowVisible(request) );
     
-    
+    private static final RequestQueue<?,?>[] REQUEST_QUEUES = {
+            CREATE_REQUEST,
+            START_REQUEST,
+            GET_WINDOW_FRAME_SIZE_REQUEST,
+            SET_WINDOW_TITLE_REQUEST,
+            SET_WINDOW_POS_REQUEST,
+            SET_WINDOW_SIZE_REQUEST,
+            GET_INPUT_MODE_REQUEST,
+            SET_INPUT_MODE_REQUEST,
+            GET_CURSOR_POS_REQUEST,
+            GET_MOUSE_BUTTON_REQUEST,
+            GET_KEY_REQUEST,
+            SET_WINDOW_VISIBLE_REQUEST
+    };
     
     static CreateWindowResponse create(CreateWindowRequest request) {
         return CREATE_REQUEST.request(request);
@@ -118,17 +128,16 @@ class GLFWInstance {
 
     
     static void init() {
-        if (requestInit()) {
+        boolean init = false;
+        synchronized (GLFWInstance.class) {
+            if (!initialized) {
+                initialized = true;
+                init = true;
+            }
+        }
+        if (init) {
             initializeInstance();
         }
-    }
-    
-    private synchronized static boolean requestInit() {
-        if (!initialized) {
-            initialized = true;
-            return true;
-        }
-        return false;
     }
     
     private static void initializeInstance() {
@@ -141,15 +150,15 @@ class GLFWInstance {
             }
             
             while (true) {
-                INPUT_LATCH.setCount(WINDOWS.size());
-                if (WINDOWS.size()>0) {                 
+                if (STARTED_WINDOWS.size()>0) {                 
                     GLFW.glfwPollEvents();
-                    
-                } else if (windowStarted) {
-                    break;
+                } else if (CREATED_WINDOWS.size()==0) {
+                    if (!isAnyRequestLeft()) {
+                        break;
+                    }
                 }
                 ArrayList<GLFWWindow> remove = new ArrayList<>();
-                for (GLFWWindow w : WINDOWS) {
+                for (GLFWWindow w : STARTED_WINDOWS) {
                     if (w.isClosing()) {
                         Callbacks.glfwFreeCallbacks(w.getID());
                         GLFW.glfwDestroyWindow(w.getID());
@@ -157,30 +166,38 @@ class GLFWInstance {
                     }
                 }
                 for (GLFWWindow w : remove) {
-                    WINDOWS.remove(w);
+                    STARTED_WINDOWS.remove(w);
+                    CREATED_WINDOWS.remove(w.getID());
                 }
                 
-                CREATE_REQUEST.respond();
-                START_REQUEST.respond();
-                GET_WINDOW_FRAME_SIZE_REQUEST.respond();
-                SET_WINDOW_TITLE_REQUEST.respond();
-                SET_WINDOW_POS_REQUEST.respond();
-                SET_WINDOW_SIZE_REQUEST.respond();
-                GET_INPUT_MODE_REQUEST.respond();
-                SET_INPUT_MODE_REQUEST.respond();
-                GET_CURSOR_POS_REQUEST.respond();
-                GET_MOUSE_BUTTON_REQUEST.respond();
-                GET_KEY_REQUEST.respond();
-                SET_WINDOW_VISIBLE_REQUEST.respond();
-                
+                requestRespond();
             }
             
             GLFW.glfwTerminate();
             GLFW.glfwSetErrorCallback(null).free();
+            
+            resetInstance();
         });
     }
     
+    private static void requestRespond() {
+        for (RequestQueue<?,?> q : REQUEST_QUEUES) {
+            q.respond();
+        }
+    }
     
+    private static boolean isAnyRequestLeft() {
+        for (RequestQueue<?,?> q : REQUEST_QUEUES) {
+            if (!q.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static void resetInstance() {
+        initialized = false;
+    }
     
     
     
@@ -236,7 +253,7 @@ class GLFWInstance {
             this.gl = gl;
         }
     }
-private static CreateWindowResponse _createWindow(CreateWindowRequest request) {
+    private static CreateWindowResponse _createWindow(CreateWindowRequest request) {
         
         final long id;
         final String title;
@@ -284,11 +301,13 @@ private static CreateWindowResponse _createWindow(CreateWindowRequest request) {
         });
         
         input = new GLFWInput(id,()->request.window.getHeight());
-        gl = GLFWInstance.gl;
         
+        gl = GLFWInstance.gl;
         CreateWindowResponse response = new CreateWindowResponse(id, title, x, y, width, height,
                 resizable, decorated, fullscreen,
                 screenWidth, screenHeight, input, gl);
+        
+        CREATED_WINDOWS.add(id);
         
         return response;
     }
@@ -307,8 +326,7 @@ private static CreateWindowResponse _createWindow(CreateWindowRequest request) {
     }
     private static StartWindowResponse _startWindow(StartWindowRequest request) {
         StartWindowResponse response = new StartWindowResponse();
-        windowStarted = true;
-        WINDOWS.add(request.window);
+        STARTED_WINDOWS.add(request.window);
         return response;
     }
     
