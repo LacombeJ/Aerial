@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Set;
 
-import jonl.jutils.io.Console;
 import jonl.jutils.structs.ObjectSet;
 
 /**
@@ -37,12 +36,6 @@ public class BufferPool {
     /** Minimum size of buffers */
     public static final int MINIMUM = 1;
     
-    /*
-    private static final OrderedList<Buffer> FLOAT_BUFFERS  = new OrderedList<>(COMPARATOR);
-    private static final OrderedList<Buffer> INT_BUFFERS    = new OrderedList<>(COMPARATOR);
-    private static final OrderedList<Buffer> BYTE_BUFFERS   = new OrderedList<>(COMPARATOR);
-    private static final OrderedList<Buffer> DOUBLE_BUFFERS = new OrderedList<>(COMPARATOR);
-    */
     private static final Set<FloatBuffer>   FLOAT_BUFFERS     = new ObjectSet<>();
     private static final Set<IntBuffer>     INT_BUFFERS       = new ObjectSet<>();
     private static final Set<ByteBuffer>    BYTE_BUFFERS      = new ObjectSet<>();
@@ -56,18 +49,18 @@ public class BufferPool {
     
     
     @SuppressWarnings("unchecked")
-    private static synchronized <E extends Buffer> E borrowBuffer(Class<E> c, Set<E> list, int size, boolean exact) {
+    private static synchronized <E extends Buffer> E borrowBuffer(Class<E> c, Set<E> set, int size, boolean exact) {
         if (size<MINIMUM) size = MINIMUM;
         
         //Get smallest buffer with atleast the required size
-        E buffer = getSmallestBuffer(c,list,size);
+        E buffer = getSmallestBuffer(c,set,size);
         
         //If it is a returnable buffer based on the parameters return it
         if (buffer!=null) {
             if ((exact && buffer.capacity()==size) ||
                     (!exact && buffer.capacity()/size<=ROUGH_RATIO)) {
                 buffer.clear();
-                list.remove(buffer);
+                set.remove(buffer);
                 BORROWED_BUFFERS.add(buffer);
                 return (E) buffer;
             }
@@ -166,9 +159,9 @@ public class BufferPool {
     
     
     
-    private static synchronized <E extends Buffer> E returnBuffer(E buffer, Set<E> list) {
+    private static synchronized <E extends Buffer> E returnBuffer(E buffer, Set<E> set) {
         BORROWED_BUFFERS.remove(buffer);
-        list.add(buffer);
+        set.add(buffer);
         return null;
     }
 

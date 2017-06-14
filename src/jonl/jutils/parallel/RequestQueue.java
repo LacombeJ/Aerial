@@ -3,7 +3,6 @@ package jonl.jutils.parallel;
 import java.util.ArrayDeque;
 
 import jonl.jutils.func.Function;
-import jonl.jutils.func.Tuple2;
 
 public class RequestQueue<X extends Request, Y extends Response> {
 
@@ -22,7 +21,7 @@ public class RequestQueue<X extends Request, Y extends Response> {
         return response;
     }
     
-    public Tuple2<X,Y> respond() {
+    public void respond() {
         X request = dequeueRequest();
         Y response = null;
         if (request!=null) {
@@ -30,7 +29,6 @@ public class RequestQueue<X extends Request, Y extends Response> {
             request.setResponse(response);
             request.release();
         }
-        return new Tuple2<>(request,response);
     }
     
     private synchronized X dequeueRequest() {
@@ -39,6 +37,10 @@ public class RequestQueue<X extends Request, Y extends Response> {
     
     private synchronized void queueRequest(X request) {
         queue.addLast(request);;
+    }
+
+    public boolean isEmpty() {
+        return queue.isEmpty();
     }
     
 

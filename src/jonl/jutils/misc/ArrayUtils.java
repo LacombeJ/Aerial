@@ -104,6 +104,10 @@ public class ArrayUtils {
     }
     
     
+    public static double[] copy(double[] array) {
+        return Arrays.copyOf(array,array.length);
+    }
+    
     
     public static String toString(int[] list) {
         StringBuilder build = new StringBuilder();
@@ -170,6 +174,8 @@ public class ArrayUtils {
         System.arraycopy(array, i, sub, 0, sub.length);
         return sub;
     }
+
+
 
 
     
