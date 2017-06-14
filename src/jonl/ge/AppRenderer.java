@@ -89,6 +89,10 @@ class AppRenderer implements Renderer {
             
             Matrix4 VP = camera.projection.get().multiply(view);
             
+            
+            //TODO find a better way to do all of this below
+            
+            
             ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
             
             Tuple2<List<GameObject>,List<GameObject>> T = ListUtils
@@ -101,6 +105,8 @@ class AppRenderer implements Renderer {
             List<List<GameObject>> sceneMeshes = sceneObjects
                     .filter((x -> x.getComponent(MeshRenderer.class)!=null))
                     .bin((x,y) -> x.getComponent(MeshRenderer.class)==y.getComponent(MeshRenderer.class));
+            List<GameObject> sceneText = sceneObjects
+                    .filter((x -> x.getComponent(Text.class)!=null));
             
             //TODO render different renderers separately (MeshRenderer, CanvasRenderer, TextRenderer, ?InstanceRenderer?
             
@@ -112,6 +118,10 @@ class AppRenderer implements Renderer {
                 }
             }
             
+            for (GameObject text : sceneText) {
+                renderText(text,VP,view,camera.projection,lights,camera);
+            }
+            
             //Render Canvas after (over 3D scene)
             for (GameObject gameObject : canvasObjects) {
                 gl.glDisable(Target.DEPTH_TEST);
@@ -119,7 +129,7 @@ class AppRenderer implements Renderer {
                 gl.glEnable(Target.DEPTH_TEST);
             }
             
-        
+            }
         }
         
     }
@@ -153,8 +163,6 @@ class AppRenderer implements Renderer {
         program.setUniformMat4("VP",VP.toFloatBuffer(fb));
         program.setUniformMat4("V",V.toFloatBuffer(fb));
         
-        BufferPool.returnFloatBuffer(fb);
-        
         for (MaterialBuilder.MBUniform u : material.mbUniformList) {
             setUniform(program,u.name,u.data,u.textureID);
         }
@@ -179,6 +187,8 @@ class AppRenderer implements Renderer {
         //gl.glRender(glMesh,renderer.mode.mode);
         gl.glRenderInstance(glMesh,renderer.mode.mode, list.size());
         
+        BufferPool.returnFloatBuffer(fb);
+        
         gl.glUseProgram(null);
         
     }
@@ -198,6 +208,7 @@ class AppRenderer implements Renderer {
             Material material = renderer.material==null ? defaultMaterial : renderer.material;
             if (mesh!=null) {
                 Matrix4 MVP = VP.get().multiply(model);
+                
                 FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
                 
                 Program program = sg.getOrCreateProgram(material, false);
@@ -208,7 +219,7 @@ class AppRenderer implements Renderer {
                 program.setUniformMat4("M",model.toFloatBuffer(fb));
                 program.setUniformMat4("MV",V.get().multiply(model).toFloatBuffer(fb));
                 
-                BufferPool.returnFloatBuffer(fb);
+                
                 
                 for (MaterialBuilder.MBUniform u : material.mbUniformList) {
                     setUniform(program,u.name,u.data,u.textureID);
@@ -233,9 +244,21 @@ class AppRenderer implements Renderer {
                 
                 gl.glRender(glm.getOrCreateMesh(mesh),renderer.mode.mode);
                 
+                BufferPool.returnFloatBuffer(fb);
+                
                 gl.glUseProgram(null);
             }
         }
+        
+    }
+    
+    private void renderText(GameObject g, Matrix4 VP, Matrix4 V, Matrix4 P, ArrayList<Light> lights, Camera cam) {
+        Transform t = updater.getWorldTransform(g);
+        
+        Matrix4 model = Matrix4.identity()
+                .translate(t.translation)
+                .rotate(t.rotation)
+                .scale(t.scale);
         
         Text text = g.getComponent(Text.class);
         if (text!=null || false) {
@@ -250,8 +273,6 @@ class AppRenderer implements Renderer {
             
             gl.glUseProgram(null);
         }
-        
-        
     }
     
     
@@ -271,9 +292,10 @@ class AppRenderer implements Renderer {
         
         FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
         fontProgram.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
-        BufferPool.returnFloatBuffer(fb);
         
         gl.glRender(fontRect);
+        
+        BufferPool.returnFloatBuffer(fb);
     }
     
     //TODO static text transform to reduce matrix multiplications?

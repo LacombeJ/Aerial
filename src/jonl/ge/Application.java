@@ -70,8 +70,12 @@ public abstract class Application implements App {
         window.setRunner(()->{
             while (window.isRunning()) {
                 Scene scene = scenes.get(currentScene);
-                updater.update(scene);
-                renderer.render(scene);
+                //TODO find out why this is causing weird rendering issues
+                //when synchronization is not used between two windows
+                synchronized (Application.class) {
+                    updater.update(scene);
+                    renderer.render(scene);
+                }
             }
         });
         

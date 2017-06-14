@@ -130,60 +130,6 @@ class EditorGUI {
         
         window.setVisible(true);
         
-        /*
-        
-        Button b0 = ui.button("Press Button");
-        b0.addAction(()->{
-            Console.print(b0.getText());
-        });
-        
-        Button b1 = ui.button("Button 2");
-        b1.addAction(()->{
-            Console.print(b1.getText());
-        });
-        
-        Button b2 = ui.button("Button 3");
-        b2.addAction(()->{
-            Console.print(b2.getText());
-        });
-        Button b3 = ui.button("abcdefghijklm");
-        Button b4 = ui.button("nopqrstuvwxyz");
-        Button b5 = ui.button("ABCDEFGHIJKLM");
-        Button b6 = ui.button("NOPQRSTUVWXYZ");
-        
-        Dial d = ui.dial();
-        Label label = ui.label("Dial value: "+d.getValue());
-        d.addValueChangedListener((v,ov)->{
-            label.setText("Dial value: "+d.getValue());
-        });
-        
-        Panel p = ui.panel();
-        WeightedListLayout sl = new WeightedListLayout(Align.VERTICAL,2,2,2,2,2,2,2,12,1);
-        p.setLayout(sl);
-        
-        p.add(b0);
-        p.add(b1);
-        p.add(b2);
-        p.add(b3);
-        p.add(b4);
-        p.add(b5);
-        p.add(b6);
-        p.add(d);
-        p.add(label);
-        
-        ScrollPanel scroll = ui.scrollPanel();
-        scroll.setWidget(p);
-        scroll.setScrollWidth(400);
-        scroll.setScrollHeight(768);
-        
-        editorViewer = ui.panel();
-        
-        SplitPanel total = ui.splitPanel(scroll,editorViewer,Align.HORIZONTAL,0.4f);
-        
-        window.setWidget(total);
-        
-        window.setVisible(true);
-        */
     }
     
     

@@ -1,6 +1,7 @@
 package jonl.ge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jonl.ge.Input.CursorState;
 import jonl.vmath.Matrix4;
@@ -13,7 +14,8 @@ public final class GameObject {
     private Scene scene;
     private GameObject parent = null;
     final ArrayList<GameObject> children = new ArrayList<>();
-    final ArrayList<Component> components = new ArrayList<>();    
+    final ArrayList<Component> components = new ArrayList<>();
+    private final HashMap<String,Object> dataMap = new HashMap<>();
     
     public String getName() {
         return name;
@@ -214,6 +216,14 @@ public final class GameObject {
     @Override
     public String toString() {
         return name+": "+super.toString();
+    }
+
+    public void putData(String key, Object data) {
+        dataMap.put(key, data);
+    }
+    
+    public Object getData(String key) {
+        return dataMap.get(key);
     }
     
 }

@@ -21,6 +21,14 @@ public class Text extends Component {
     int valign = VA_MIDDLE;
     int halign = HA_CENTER;
     
+    public Text(String text) {
+       this.text = text;
+    }
+    
+    public Text() {
+        
+    }
+
     public String getText() {
         return text;
     }

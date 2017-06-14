@@ -47,15 +47,19 @@ public class Editor implements App {
         gui.editorViewer.addPainter((g)->{
             setViewport(camera);
             Scene scene = scenes.get(currentScene);
-            updater.update(scene);
-            gl.glEnable(Target.CULL_FACE);
-            gl.glEnable(Target.DEPTH_TEST);
-            int[] box = gl.glGetScissor();
-            renderer.render(scene);
-            gl.glScissor(box);
-            gl.glDisable(Target.CULL_FACE);
-            gl.glDisable(Target.DEPTH_TEST);
-            gl.glEnable(Target.SCISSOR_TEST);
+            //TODO find out why this is causing weird rendering issues
+            //when synchronization is not used between two windows
+            synchronized (Editor.class) {
+                updater.update(scene);
+                gl.glEnable(Target.CULL_FACE);
+                gl.glEnable(Target.DEPTH_TEST);
+                int[] box = gl.glGetScissor();
+                renderer.render(scene);
+                gl.glScissor(box);
+                gl.glDisable(Target.CULL_FACE);
+                gl.glDisable(Target.DEPTH_TEST);
+                gl.glEnable(Target.SCISSOR_TEST);
+            }
         });
         
     }
