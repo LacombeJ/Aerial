@@ -10,7 +10,7 @@ import jonl.aui.Tree;
 import jonl.aui.TreeItem;
 import jonl.aui.VAlign;
 import jonl.jgl.Input;
-import jonl.vmath.Mathd;
+import jonl.jutils.math.Mathd;
 import jonl.vmath.Vector4;
 
 public class STree extends SWidget implements Tree {

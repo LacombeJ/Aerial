@@ -200,9 +200,10 @@ public class SGraphics implements Graphics {
         
         FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
         fontProgram.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
-        BufferPool.returnFloatBuffer(fb);
         
         gl.glRender(fontRect);
+        
+        BufferPool.returnFloatBuffer(fb);
     }
     
     //TODO static text transform to reduce matrix multiplications?

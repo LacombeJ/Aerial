@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayDeque;
 
-import jonl.jutils.io.Console;
 import jonl.jutils.parallel.SequentialProcessor;
 import jonl.aui.HAlign;
 import jonl.aui.Layout;

@@ -6,7 +6,7 @@ import jonl.aui.MouseMotionEvent;
 import jonl.aui.ScrollPanel;
 import jonl.aui.Widget;
 import jonl.jgl.Input;
-import jonl.vmath.Mathd;
+import jonl.jutils.math.Mathd;
 
 public class SScrollPanel extends AbstractSingleSlot implements ScrollPanel {
     
