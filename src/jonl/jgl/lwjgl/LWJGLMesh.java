@@ -238,6 +238,7 @@ class LWJGLMesh implements Mesh {
         IntBuffer ib = BufferPool.borrowIntBuffer(indices,true);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,ib,GL15.GL_STATIC_DRAW);
         BufferPool.returnIntBuffer(ib);
+        //TODO GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0); ? Will this fix errors?
         GL30.glBindVertexArray(0);
     }
 
