@@ -34,19 +34,20 @@ public class SGraphics implements Graphics {
     
     SGraphics(GraphicsLibrary gl) {
         this.gl = gl;
+        int version = gl.glGetGLSLVersioni();
         
         gl.glEnable(Target.SCISSOR_TEST);
         gl.glEnable(Target.BLEND);
         gl.glBlendFunc(Blend.NORMAL);
         
-        rect = gl.glGenMesh(MeshLoader.load("res/models/rect.mesh"));
-        circle = gl.glGenMesh(MeshLoader.load("res/models/circle.mesh"));
+        rect = gl.glGenMesh(Presets.rectMesh());
+        circle = gl.glGenMesh(Presets.circleMesh());
         
-        fontRect = gl.glGenMesh(MeshLoader.load("res/models/rect.mesh"));
-        fontProgram = loadProgram("res/shaders/font.vert","res/shaders/font.frag");
+        fontRect = gl.glGenMesh(Presets.rectMesh());
+        fontProgram = loadProgramFromSource(Presets.fontVSSource(version),Presets.fontFSSource(version));
         
-        solid = loadProgram("res/shaders/solid.vert","res/shaders/solid.frag");
-        basic = loadProgram("res/shaders/basic.vert","res/shaders/basic.frag");
+        solid = loadProgramFromSource(Presets.solidVSSource(version),Presets.solidFSSource(version));
+        basic = loadProgramFromSource(Presets.basicVSSource(version),Presets.basicFSSource(version));
         
     }
     
@@ -248,6 +249,22 @@ public class SGraphics implements Graphics {
             sdy -= font.getHeight();
         }
         gl.glUseProgram(null);
+    }
+    
+    private Program loadProgramFromSource(String vertSource, String fragSource) {
+        Program p = gl.glCreateProgram();
+        
+        Shader vert = gl.glCreateShader(ShaderType.VERTEX_SHADER);
+        Shader frag = gl.glCreateShader(ShaderType.FRAGMENT_SHADER);
+        
+        vert.compileSource(vertSource);
+        frag.compileSource(fragSource);
+        
+        p.attach(vert);
+        p.attach(frag);
+        p.link();
+        
+        return p;
     }
     
     private Program loadProgram(String vertFile, String fragFile) {
