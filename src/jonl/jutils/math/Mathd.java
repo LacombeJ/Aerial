@@ -686,7 +686,43 @@ public final class Mathd {
     }    
 
     
+    /* ******************************************************************************** */
+    /* ****************************    Int-ARRAY METHODS      ************************* */
+    /* ******************************************************************************** */
     
+    public static void addBy(int[] dst, int[] add) {
+        for (int i=0; i<dst.length; i++) {
+            dst[i] += add[i];
+        }
+    }
+    
+    public static int[] sum(int[]... arrays) {
+        int[] ret = new int[arrays[0].length];
+        for (int i=0; i<arrays.length; i++) {
+            addBy(ret,arrays[i]);
+        }
+        return ret;
+    }
+    
+    public static void divBy(int[] array, int v) {
+        for (int i=0; i<array.length; i++) {
+            array[i] /= v;
+        }
+    }
+    
+    public static void mulBy(int[] array, int v) {
+        for (int i=0; i<array.length; i++) {
+            array[i] *= v;
+        }
+    }
+    
+    public static int[] mul(int v, int[] array) {
+        int[] ret = Arrays.copyOf(array, array.length);
+        for (int i=0; i<ret.length; i++) {
+            ret[i] = ret[i]*v;
+        }
+        return ret;
+    }
     
     
     

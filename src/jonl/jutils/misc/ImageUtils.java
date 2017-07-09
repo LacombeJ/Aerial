@@ -79,4 +79,27 @@ public class ImageUtils {
         };
     }
     
+    /** @return a float array of length 4 with values r,g,b,a */
+    public static int[] getColorInt(int rgba, boolean hasAlpha) {
+        return new int[]{
+                ((rgba >> 16) & 255),
+                ((rgba >> 8) & 255),
+                ((rgba) & 255),
+                hasAlpha ? ((rgba >> 24)&255): 255
+        };
+    }
+    
+    /** @return a float array of length 4 with values r,g,b,a */
+    public static int getRgbaInt(int[] color) {
+        return getRgbaInt(color[0],color[1],color[2],color[3]);
+    }
+
+    public static int getRgbaInt(int r, int g, int b, int a) {
+        int R = r << 16;
+        int G = g << 8;
+        int B = b;
+        int A = a << 24;
+        return R | G | B | A;
+    }
+    
 }
