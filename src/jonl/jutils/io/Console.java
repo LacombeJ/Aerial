@@ -69,7 +69,7 @@ public class Console {
     
     public static boolean open() {
         boolean isClosed = scanner==null;
-        if (!isClosed) {
+        if (isClosed) {
             scanner = new Scanner(System.in);
             return true;
         }
