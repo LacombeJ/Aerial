@@ -35,6 +35,9 @@ public interface GraphicsLibrary {
     /** Returns GL shading version */
     public String glGetGLSLVersion();
     
+    /** Retruns GL shading version as an int */
+    public int glGetGLSLVersioni();
+    
     /** Sets the blend function */
     public void glBlendFunc(Factor src, Factor dst);
     
@@ -218,5 +221,7 @@ public interface GraphicsLibrary {
         TESS_CONTROL_SHADER,
         TESS_EVALUATION_SHADER
     }
+
+    
     
 }

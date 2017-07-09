@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL20;
 
 import jonl.jgl.AbstractShader;
 import jonl.jgl.GraphicsLibrary.ShaderType;
+import jonl.jutils.misc.StringUtils;
 
 
 /**
@@ -39,6 +40,15 @@ class LWJGLShader extends AbstractShader {
         if (GL20.glGetShaderi(id,GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
             System.err.println(type+" Shader failed to compile");
             String log = GL20.glGetShaderInfoLog(id);
+            
+            String[] lines = source.split("\n");
+            int numLen = ("Line "+lines.length+"").length();
+            for (int i=0; i<lines.length; i++) {
+                String n = "Line "+(i+1);
+                n = StringUtils.padBackMatch(n,' ',numLen);
+                n = n+":";
+                System.err.println(n+lines[i]);
+            }
             System.err.println(log);
         }
     }

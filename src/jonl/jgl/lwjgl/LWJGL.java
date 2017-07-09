@@ -67,6 +67,11 @@ class LWJGL extends AbstractGraphicsLibrary {
     }
     
     @Override
+    public int glGetGLSLVersioni() {
+        return Integer.parseInt(glGetGLSLVersion().replace(".",""));
+    }
+    
+    @Override
     public void glBlendFunc(Factor src, Factor dst) {
         GL11.glBlendFunc(getFactor(src),getFactor(dst));
     }
