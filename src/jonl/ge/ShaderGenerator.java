@@ -12,8 +12,18 @@ class ShaderGenerator {
     
     private GraphicsLibrary gl;
     
+    private int version = 430;
+    
     ShaderGenerator(GraphicsLibrary gl) {
         this.gl = gl;
+    }
+    
+    void setGLSLVersion(int i) {
+        this.version = i;
+    }
+    
+    int getGLSLVersion() {
+        return version;
     }
     
     /** Every type of material must have a unique string 
@@ -33,14 +43,12 @@ class ShaderGenerator {
             String vertSource = null;
             switch (material.shader) {
             case STANDARD:
-                fragSource = ShaderGeneratorStandard.getFragSource(material);
-                vertSource = ShaderGeneratorStandard.getVertSource(material, instanced);
-                FileUtils.writeToFile("test_fs"+material.id+".txt", fragSource); //TODO remove DEBUG
-                FileUtils.writeToFile("test_vs"+material.id+".txt", vertSource); //TODO remove DEBUG
+                fragSource = ShaderGeneratorStandard.getFragSource(version, material);
+                vertSource = ShaderGeneratorStandard.getVertSource(version, material, instanced);
                 break;
             case BASIC:
-                fragSource = ShaderGeneratorBasic.getFragSource(material);
-                vertSource = ShaderGeneratorBasic.getVertSource(material, instanced);
+                fragSource = ShaderGeneratorBasic.getFragSource(version, material);
+                vertSource = ShaderGeneratorBasic.getVertSource(version, material, instanced);
                 break;
             }
             glprogram = AppUtil.createProgramFromSource(gl,vertSource,fragSource);
@@ -48,5 +56,7 @@ class ShaderGenerator {
         }
         return glprogram;
     }
+
+    
     
 }

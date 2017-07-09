@@ -8,9 +8,9 @@ class ShaderGeneratorStandard {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getFragSource(Material material) {
+    static String getFragSource(int version, Material material) {
         StringBuilder sb = new StringBuilder();
-        sb.append(fragVersion());
+        version(sb,version);
         sb.append(fragStructLight());
         sb.append(fragIn(material));
         sb.append(fragUniforms(material));
@@ -21,9 +21,14 @@ class ShaderGeneratorStandard {
         return sb.toString();
     }
     
-    private static String fragVersion()     { return "#version 430\n"; }
-    private static String fragMainStart()   { return "void main() {\n"; }
-    private static String fragMainEnd()     { return "}"; }
+    private static void version(StringBuilder sb, int version)   {
+        sb.append("#version "+version+"\n");
+        if (version<330) {
+        sb.append("#extension GL_ARB_explicit_attrib_location : enable \n");
+        }
+    }
+    private static String fragMainStart()            { return "void main() {\n"; }
+    private static String fragMainEnd()              { return "}"; }
     
     private static String fragStructLight() {
         return 
@@ -228,10 +233,10 @@ class ShaderGeneratorStandard {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getVertSource(Material material, boolean instanced) {
+    static String getVertSource(int version, Material material, boolean instanced) {
         StringBuilder sb = new StringBuilder();
-        sb.append(vertVersion());
-        sb.append(vertIn(instanced));
+        version(sb,version);
+        sb.append(vertIn(version,instanced));
         sb.append(vertUniforms(instanced));
         sb.append(vertOut(material,instanced));
         sb.append(vertFuncUnitTransform(material));
@@ -241,22 +246,21 @@ class ShaderGeneratorStandard {
         return sb.toString();
     }
     
-    private static String vertVersion()     { return "#version 430\n"; }
-    private static String vertMainStart()   { return "void main() {\n"; }
-    private static String vertMainEnd()     { return "}"; } 
+    private static String vertMainStart()            { return "void main() {\n"; }
+    private static String vertMainEnd()              { return "}"; } 
     
     static String _layout__location_e_5__in_mat4_MVP(boolean instanced) {
-        if (instanced) {
-            return
-                "layout (location = 5) in mat4 M;\n" +
-                "";
-        } else {
-            return
-                "";
-        }
+        if (instanced)
+            return "layout (location = 5) in mat4 M;\n";
+        return "";
     }
     
-    private static String vertIn(boolean instanced) {
+    private static String vertIn(int version, boolean instanced) {
+        if (version>=300) {
+            
+        } else {
+            
+        }
         return
             "layout (location = 0) in vec4 vertex;\n" +
             "layout (location = 1) in vec3 normal;\n" +
@@ -316,7 +320,7 @@ class ShaderGeneratorStandard {
                 "                   vec3(0,1,0)," +
                 "                   vec3(0,0,-1));\n" +
                 "   }\n" +
-                "   float R = 1f / (1f + B.z);\n" +
+                "   float R = 1.0 / (1.0 + B.z);\n" +
                 "   mat3 M;\n" +
                 "   M[0] = vec3(  0,    0, V.y);\n" +
                 "   M[1] = vec3(  0,    0,  V.x);\n" +

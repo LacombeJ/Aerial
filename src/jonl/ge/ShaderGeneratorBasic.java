@@ -8,9 +8,9 @@ class ShaderGeneratorBasic {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getFragSource(Material material) {
+    static String getFragSource(int version, Material material) {
         StringBuilder sb = new StringBuilder();
-        sb.append(fragVersion());
+        version(sb,version);
         sb.append(fragStructLight());
         sb.append(fragIn(material));
         sb.append(fragUniforms(material));
@@ -20,9 +20,14 @@ class ShaderGeneratorBasic {
         return sb.toString();
     }
     
-    private static String fragVersion()     { return "#version 430\n"; }
-    private static String fragMainStart()   { return "void main() {\n"; }
-    private static String fragMainEnd()     { return "}"; }
+    private static void version(StringBuilder sb, int version) {
+        sb.append("#version "+version+"\n");
+        if (version<330) {
+        sb.append("#extension GL_ARB_explicit_attrib_location : enable \n");
+        }
+    }
+    private static String fragMainStart()               { return "void main() {\n"; }
+    private static String fragMainEnd()                 { return "}"; }
     
     private static String fragStructLight() {
         return 
@@ -97,8 +102,8 @@ class ShaderGeneratorBasic {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getVertSource(Material material, boolean instanced) {
-        return ShaderGeneratorStandard.getVertSource(material, instanced);
+    static String getVertSource(int version, Material material, boolean instanced) {
+        return ShaderGeneratorStandard.getVertSource(version, material, instanced);
     }
     
 }

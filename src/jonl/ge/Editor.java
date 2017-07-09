@@ -8,7 +8,7 @@ import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jutils.misc.DataMap;
 
-public class Editor implements App {
+public class Editor extends AbstractApp {
     
     final jonl.jgl.Window glWindow;
     final GraphicsLibrary gl;

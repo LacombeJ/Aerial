@@ -11,7 +11,7 @@ import jonl.jgl.Window;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
 
-public abstract class Application implements App {
+public abstract class Application extends AbstractApp {
 
     private String title = "Application";
     private int width = 1024;

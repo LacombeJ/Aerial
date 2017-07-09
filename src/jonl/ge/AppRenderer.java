@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import jonl.jutils.func.List;
 import jonl.jutils.func.ListUtils;
 import jonl.jutils.func.Tuple2;
+import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Blend;
 import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jgl.utils.MeshLoader;
+import jonl.jgl.utils.Presets;
 import jonl.jgl.Program;
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
@@ -46,12 +48,15 @@ class AppRenderer implements Renderer {
     
     @Override
     public void load() {
+        int version = gl.glGetGLSLVersioni();
+        sg.setGLSLVersion(version);
+        
         gl.glEnable(Target.DEPTH_TEST);
         gl.glEnable(Target.CULL_FACE);
         gl.glBlendFunc(Blend.NORMAL);
         
         fontRect = gl.glGenMesh(MeshLoader.load("res/models/rect.mesh"));
-        fontProgram = AppUtil.createProgram(gl,"res/shaders/font.vert","res/shaders/font.frag");
+        fontProgram = AppUtil.createProgramFromSource(gl, Presets.fontVSSource(version), Presets.fontFSSource(version));
     }
     
     @Override
@@ -129,10 +134,10 @@ class AppRenderer implements Renderer {
                 gl.glEnable(Target.DEPTH_TEST);
             }
             
-            }
         }
-        
     }
+        
+    
     
     private void renderInstances(List<GameObject> list, Matrix4 VP, Matrix4 V, Matrix4 P, ArrayList<Light> lights, Camera cam) {
         
