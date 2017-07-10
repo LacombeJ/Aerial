@@ -7,6 +7,7 @@ import jonl.jgl.Shader;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
+import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.ShaderType;
 
@@ -18,7 +19,7 @@ class AppUtil {
         GameObject cube = new GameObject();
         cube.setName("Cube");
         MeshRenderer cubeRenderer = new MeshRenderer();
-        cubeRenderer.mesh = Loader.loadMesh("res/models/cube2.mesh"); //TODO hardcode mesh
+        cubeRenderer.mesh = Loader.loadMesh(PresetData.cubeMesh());
         cube.addComponent(cubeRenderer);
         return cube;
     }

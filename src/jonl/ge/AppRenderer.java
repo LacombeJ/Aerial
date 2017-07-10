@@ -55,7 +55,7 @@ class AppRenderer implements Renderer {
         gl.glEnable(Target.CULL_FACE);
         gl.glBlendFunc(Blend.NORMAL);
         
-        fontRect = gl.glGenMesh(MeshLoader.load("res/models/rect.mesh"));
+        fontRect = gl.glGenMesh(Presets.rectMesh());
         fontProgram = AppUtil.createProgramFromSource(gl, Presets.fontVSSource(version), Presets.fontFSSource(version));
     }
     

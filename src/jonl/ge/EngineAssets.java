@@ -1,5 +1,7 @@
 package jonl.ge;
 
+import jonl.ge.utils.PresetData;
+
 public class EngineAssets {
     
     public final Material DEFAULT_MATERIAL;
@@ -18,12 +20,11 @@ public class EngineAssets {
     }
     
     /* Mesh Assets */
-    //TODO Hardcode mesh data?
-    public final Mesh RECT_MESH = Loader.loadMesh("res/models/rect.mesh");
-    public final Mesh PLANE_MESH = Loader.loadMesh("res/models/plane.mesh");
-    public final Mesh CUBE_MESH = Loader.loadMesh("res/models/cube2.mesh");
-    public final Mesh SPHERE_MESH = Loader.loadMesh("res/models/sphere.mesh");
-    public final Mesh CONE_MESH = Loader.loadMesh("res/models/cone.mesh");
+    public final Mesh RECT_MESH = Loader.loadMesh(PresetData.rectMesh());
+    public final Mesh PLANE_MESH = Loader.loadMesh(PresetData.planeMesh());
+    public final Mesh CUBE_MESH = Loader.loadMesh(PresetData.cubeMesh());
+    public final Mesh SPHERE_MESH = Loader.loadMesh(PresetData.sphereMesh());
+    public final Mesh CONE_MESH = Loader.loadMesh(PresetData.coneMesh());
     public final Mesh[] MESHS = {
         RECT_MESH,
         PLANE_MESH,
