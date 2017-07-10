@@ -13,6 +13,8 @@ class GLMap {
     private HashMap<Texture,jonl.jgl.Texture>           textureMap  = new HashMap<>();
     private HashMap<FrameBuffer,jonl.jgl.FrameBuffer>   bufferMap   = new HashMap<>();
     
+    private HashMap<Text,jonl.jgl.Texture>              textMap   = new HashMap<>();
+    
     GLMap(GraphicsLibrary gl) {
         this.gl = gl;
     }
@@ -87,6 +89,34 @@ class GLMap {
         }
         return glbuffer;
     }
+    
+    
+    
+    /* ******************************************************************************** */
+    
+    // We want to create a texture for each text object (to save rendering time in matrix
+    // multiplication and rendering each character as a separate texture
+    // TODO remove font textures that haven't been used in a long time
+    /*
+    jonl.jgl.Texture getOrCreateTextTexture(Text text) {
+        jonl.jgl.Texture gltexture = textureMap.get(texture);
+        if (gltexture==null) {
+            if (texture.data==null) {
+                gltexture = gl.glGenTexture(texture.width,texture.height,
+                        texture.format.format,texture.wrap.wrap,texture.filter.filter);
+            } else {
+                gltexture = gl.glGenTexture(texture.data,texture.width,texture.height,
+                        texture.format.format,texture.wrap.wrap,texture.filter.filter);
+            }
+            textureMap.put(texture,gltexture);
+        }
+        return gltexture;
+    }
+    */
+    
+    
+    /* ******************************************************************************** */
+    
     
 }
 

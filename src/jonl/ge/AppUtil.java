@@ -12,9 +12,7 @@ import jonl.jgl.GraphicsLibrary.ShaderType;
 
 class AppUtil {
     
-    static Font fontConsolas() {
-        return new Font("Consolas",Font.PLAIN,24,false);
-    }
+    static final Font FONT_CONSOLAS = new Font("Consolas",Font.PLAIN,24,false);
     
     static GameObject cube() {
         GameObject cube = new GameObject();

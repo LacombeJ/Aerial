@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import jonl.ge.Input.CursorState;
+import jonl.jutils.func.Callback0D;
 import jonl.vmath.Matrix4;
 
 public final class GameObject {
@@ -45,10 +46,39 @@ public final class GameObject {
         components.add(c);
     }
     
-    public void removeComponent(Component c) {
+    public boolean removeComponent(Component c) {
         if (components.remove(c)) {
             c.gameObject = null;
+            return true;
         }
+        return false;
+    }
+    
+    /** Adds a new property component that calls these function on create and update */
+    public void addProperty(Callback0D lamdaCreate, Callback0D lamdaUpdate) {
+        Property p = new Property() {
+            @Override public void create() { lamdaCreate.f(); }
+            @Override public void update() { lamdaUpdate.f(); }
+        };
+        addComponent(p);
+    }
+    
+    /** Adds a new property component that calls this function on create */
+    public void addCreate(Callback0D lamda) {
+        Property p = new Property() {
+            @Override public void create() { lamda.f(); }
+            @Override public void update() { }
+        };
+        addComponent(p);
+    }
+    
+    /** Adds a new property component that calls this function on update */
+    public void addUpdate(Callback0D lamda) {
+        Property p = new Property() {
+            @Override public void create() { }
+            @Override public void update() { lamda.f(); }
+        };
+        addComponent(p);
     }
     
     public GameObject getChild(String name) {
@@ -96,22 +126,26 @@ public final class GameObject {
     }
     
     void create() {
-        for (Component c : components) {
+        Component[] ccreate = components.toArray(new Component[0]);
+        for (Component c : ccreate) { //To prevent concurrent modification
             if (c instanceof Property) {
                 Property p = (Property) c;
                 p.create();
             }
         }
-        for (GameObject g : children) {
+        GameObject[] gcreate = children.toArray(new GameObject[0]);
+        for (GameObject g : gcreate) { //To prevent concurrent modification
             g.create();
         }
     }
     
     void update() {
-        for (Component c : components) {
+        Component[] cupdate = components.toArray(new Component[0]);
+        for (Component c : cupdate) { //To prevent concurrent modification
             c.updateComponent();
         }
-        for (GameObject g : children) {
+        GameObject[] gupdate = children.toArray(new GameObject[0]);
+        for (GameObject g : gupdate) { //To prevent concurrent modification
             g.update();
         }
     }

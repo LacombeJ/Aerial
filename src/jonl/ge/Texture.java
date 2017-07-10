@@ -4,11 +4,11 @@ import jonl.jutils.misc.ArrayUtils;
 
 public class Texture {
     
-    public int width;
-    public int height;
-    public Internal format;
-    public Wrap wrap;
-    public Filter filter;
+    public final int width;
+    public final int height;
+    public final Internal format;
+    public final Wrap wrap;
+    public final Filter filter;
     
     float data[];
     

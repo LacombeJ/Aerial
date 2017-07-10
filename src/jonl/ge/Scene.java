@@ -35,14 +35,16 @@ public abstract class Scene {
         if (gameObjects==null || !persistent) {
             gameObjects = new ArrayList<>();
             prepare();
-            for (GameObject g : gameObjects) {
+            GameObject[] gcreate = gameObjects.toArray(new GameObject[0]);
+            for (GameObject g : gcreate) { //To prevent concurrent modification
                 g.create();
             }
         }
     }
     
     void update() {
-        for (GameObject g : gameObjects) {
+        GameObject[] gupdate = gameObjects.toArray(new GameObject[0]);
+        for (GameObject g : gupdate) { //To prevent concurrent modification
             g.update();
         }
     }
