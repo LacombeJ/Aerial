@@ -20,6 +20,7 @@ public abstract class AbstractSingleSlot extends SContainer implements SingleSlo
                 SWidget sw = (SWidget)w;
                 sw.parent = null;
                 widget = null;
+                layout();
             }
         }
     }
@@ -53,6 +54,7 @@ public abstract class AbstractSingleSlot extends SContainer implements SingleSlo
         }
         widget = sw;
         sw.parent = this;
+        layout();
     }
     
 }

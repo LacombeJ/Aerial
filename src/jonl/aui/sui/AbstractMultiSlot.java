@@ -25,6 +25,7 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
         }
         children.add(sw);
         sw.parent = this;
+        layout();
     }
     
     @Override
@@ -32,6 +33,7 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
         if (children.remove(w)) {
             SWidget sw = (SWidget)w;
             sw.parent = null;
+            layout();
         }
     }
     
@@ -40,6 +42,7 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
         SWidget sw = children.remove(i);
         if (sw!=null) {
             sw.parent = null;
+            layout();
         }
         return sw;
     }

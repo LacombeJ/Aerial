@@ -30,6 +30,7 @@ public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlo
         SWidget sw = removeFromParent(w);
         widget1 = sw;
         sw.parent = this;
+        layout();
     }
     
     @Override
@@ -42,6 +43,7 @@ public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlo
         SWidget sw = removeFromParent(w);
         widget2 = sw;
         sw.parent = this;
+        layout();
     }
     
     @Override

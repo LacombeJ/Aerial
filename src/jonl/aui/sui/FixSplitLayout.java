@@ -25,28 +25,44 @@ class FixSplitLayout implements Layout<DoubleSlot> {
         SWidget w1 = (SWidget) container.getWidgetTwo();
         switch(type) {
         case TOP:
-            w0.setPositionAndRequestFire(0,height-fix);
-            w0.setSizeAndRequestFire(width,fix);
-            w1.setPositionAndRequestFire(0,0);
-            w1.setSizeAndRequestFire(width,height-fix);
+            if (w0!=null) {
+                w0.setPositionAndRequestFire(0,height-fix);
+                w0.setSizeAndRequestFire(width,fix);
+            }
+            if (w1!=null) {
+                w1.setPositionAndRequestFire(0,0);
+                w1.setSizeAndRequestFire(width,height-fix);
+            }
             break;
         case BOTTOM:
-            w0.setPositionAndRequestFire(0,0);
-            w0.setSizeAndRequestFire(width,fix);
-            w1.setPositionAndRequestFire(0,fix);
-            w1.setSizeAndRequestFire(width,height-fix);
+            if (w0!=null) {
+                w0.setPositionAndRequestFire(0,0);
+                w0.setSizeAndRequestFire(width,fix);
+            }
+            if (w1!=null) {
+                w1.setPositionAndRequestFire(0,fix);
+                w1.setSizeAndRequestFire(width,height-fix);
+            }
             break;
         case LEFT:
-            w0.setPositionAndRequestFire(0,0);
-            w0.setSizeAndRequestFire(fix,height);
-            w1.setPositionAndRequestFire(fix,0);
-            w1.setSizeAndRequestFire(width-fix,height);
+            if (w0!=null) {
+                w0.setPositionAndRequestFire(0,0);
+                w0.setSizeAndRequestFire(fix,height);
+            }
+            if (w1!=null) {
+                w1.setPositionAndRequestFire(fix,0);
+                w1.setSizeAndRequestFire(width-fix,height);
+            }
             break;
         case RIGHT:
-            w0.setPositionAndRequestFire(width-fix,0);
-            w0.setSizeAndRequestFire(fix,height);
-            w1.setPositionAndRequestFire(0,0);
-            w1.setSizeAndRequestFire(width-fix,height);
+            if (w0!=null) {
+                w0.setPositionAndRequestFire(width-fix,0);
+                w0.setSizeAndRequestFire(fix,height);
+            }
+            if (w1!=null) {
+                w1.setPositionAndRequestFire(0,0);
+                w1.setSizeAndRequestFire(width-fix,height);
+            }
             break;
         }
     }

@@ -267,22 +267,6 @@ public class SGraphics implements Graphics {
         return p;
     }
     
-    private Program loadProgram(String vertFile, String fragFile) {
-        Program p = gl.glCreateProgram();
-        
-        Shader vert = gl.glCreateShader(ShaderType.VERTEX_SHADER);
-        Shader frag = gl.glCreateShader(ShaderType.FRAGMENT_SHADER);
-        
-        vert.compileSourceFromFile(vertFile);
-        frag.compileSourceFromFile(fragFile);
-        
-        p.attach(vert);
-        p.attach(frag);
-        p.link();
-        
-        return p;
-    }
-    
     public GraphicsLibrary getGL() {
         return gl;
     }

@@ -33,19 +33,27 @@ class SplitLayout implements Layout<DoubleSlot> {
             int medh = (int) Math.round(ratio * width);
             int width1 = medh - b1;
             int width2 = width - (medh + b2);
-            w1.setPositionAndRequestFire(0,0);
-            w1.setSizeAndRequestFire(width1,height);
-            w2.setPositionAndRequestFire(width-width2,0);
-            w2.setSizeAndRequestFire(width2,height);
+            if (w1!=null) {
+                w1.setPositionAndRequestFire(0,0);
+                w1.setSizeAndRequestFire(width1,height);
+            }
+            if (w2!=null) {
+                w2.setPositionAndRequestFire(width-width2,0);
+                w2.setSizeAndRequestFire(width2,height);
+            }
             break;
         case VERTICAL:
             int medv = (int) Math.round(ratio * height);
             int height1 = medv - b1;
             int height2 = height - (medv + b2);
-            w1.setPositionAndRequestFire(0,0);
-            w1.setSizeAndRequestFire(width,height1);
-            w2.setPositionAndRequestFire(0,height-height2);
-            w2.setSizeAndRequestFire(width,height2);
+            if (w1!=null) {
+                w1.setPositionAndRequestFire(0,0);
+                w1.setSizeAndRequestFire(width,height1);
+            }
+            if (w2!=null) {
+                w2.setPositionAndRequestFire(0,height-height2);
+                w2.setSizeAndRequestFire(width,height2);
+            }
             break;
         }
     }

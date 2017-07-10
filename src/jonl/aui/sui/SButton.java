@@ -62,7 +62,7 @@ public class SButton extends SWidget implements Button {
     
     
     int buttonEnterTime = 0;
-    final float time = 100;
+    final float time = 30;
     
     @Override
     void paint(Graphics g) {
