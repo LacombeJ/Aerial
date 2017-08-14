@@ -11,6 +11,8 @@ import jonl.aui.MouseMotionEvent;
 import jonl.aui.SingleSlot;
 import jonl.aui.VAlign;
 import jonl.aui.Widget;
+import jonl.aui.logic.AWindow;
+import jonl.aui.logic.FillLayout;
 import jonl.aui.sui.WindowEvent.Move;
 import jonl.aui.sui.WindowEvent.Resize;
 import jonl.aui.sui.WindowEvent.SetResizable;
@@ -30,7 +32,7 @@ import jonl.vmath.Matrix4;
  * @author Jonathan Lacombe
  *
  */
-public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
+public class SWindow extends AWindow {
 
     Widget widget;
     

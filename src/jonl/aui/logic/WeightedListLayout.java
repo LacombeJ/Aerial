@@ -1,4 +1,4 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class WeightedListLayout extends ListLayout {
             if (i==container.getChildrenCount()-1) {
                 size = restWidth;
             }
-            SWidget w = (SWidget) container.getChild(i);
+            AWidget w = (AWidget) container.getChild(i);
             w.setPositionAndRequestFire(x,0);
             w.setSizeAndRequestFire(size,height);
             x += size;
@@ -50,7 +50,7 @@ public class WeightedListLayout extends ListLayout {
             if (i==container.getChildrenCount()-1) {
                 size = restHeight;
             }
-            SWidget w = (SWidget) container.getChild(i);
+            AWidget w = (AWidget) container.getChild(i);
             w.setPositionAndRequestFire(0,y);
             w.setSizeAndRequestFire(width,size);
             y += size;

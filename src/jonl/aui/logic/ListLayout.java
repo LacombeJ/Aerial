@@ -1,4 +1,4 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import jonl.aui.Align;
 import jonl.aui.Layout;
@@ -35,7 +35,7 @@ public class ListLayout implements Layout<MultiSlot> {
             if (i==container.getChildrenCount()-1) {
                 size = restWidth;
             }
-            SWidget w = (SWidget) container.getChild(i);
+            AWidget w = (AWidget) container.getChild(i);
             w.setPositionAndRequestFire(x,0);
             w.setSizeAndRequestFire(size,height);
             x += size;
@@ -54,7 +54,7 @@ public class ListLayout implements Layout<MultiSlot> {
                 if (i==container.getChildrenCount()-1) {
                     size = restHeight;
                 }
-                SWidget w = (SWidget) container.getChild(i);
+                AWidget w = (AWidget) container.getChild(i);
                 w.setPositionAndRequestFire(0,y);
                 w.setSizeAndRequestFire(width,size);
                 y += size;

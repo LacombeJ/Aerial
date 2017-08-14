@@ -1,10 +1,10 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import jonl.aui.Border;
 import jonl.aui.DoubleSlot;
 import jonl.aui.Layout;
 
-class FixSplitLayout implements Layout<DoubleSlot> {
+public class FixSplitLayout implements Layout<DoubleSlot> {
     
     Border type;
     int fix;
@@ -21,8 +21,8 @@ class FixSplitLayout implements Layout<DoubleSlot> {
     public void layout(DoubleSlot container) {
         int width = container.getWidth();
         int height = container.getHeight();
-        SWidget w0 = (SWidget) container.getWidgetOne();
-        SWidget w1 = (SWidget) container.getWidgetTwo();
+        AWidget w0 = (AWidget) container.getWidgetOne();
+        AWidget w1 = (AWidget) container.getWidgetTwo();
         switch(type) {
         case TOP:
             if (w0!=null) {

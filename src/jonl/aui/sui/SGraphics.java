@@ -5,15 +5,16 @@ import java.nio.FloatBuffer;
 import jonl.jutils.misc.*;
 import jonl.vmath.*;
 import jonl.aui.Container;
-import jonl.aui.Graphics;
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.Widget;
+import jonl.aui.logic.AGraphics;
+import jonl.aui.logic.AWidget;
 import jonl.jgl.*;
 import jonl.jgl.GraphicsLibrary.*;
 import jonl.jgl.utils.*;
 
-public class SGraphics implements Graphics {
+public class SGraphics extends AGraphics {
 
     GraphicsLibrary gl;
     
@@ -57,18 +58,9 @@ public class SGraphics implements Graphics {
     
     int[] currentCut;
     
-    private int[] getBox(SWidget w) {
-        int[] box = new int[]{w.getWindowX(),w.getWindowY(),w.getWidth(),w.getHeight()};
-        SContainer c = (SContainer) w.getParent();
-        if (c!=null) {
-            box = cutOut(box, ArrayUtils.add( c.getBox(), new int[]{c.getWindowX(),c.getWindowY(),0,0} ));
-        }
-        return box;
-    }
-    
     void paint(Widget w) {
         boolean firstCut = false;
-        int[] box = getBox((SWidget) w);
+        int[] box = getBox((AWidget) w);
         if (currentCut==null) {
             firstCut = true;
             currentCut = box;
@@ -81,8 +73,8 @@ public class SGraphics implements Graphics {
         float oy = offsetY;
         offsetX = w.getWindowX();
         offsetY = w.getWindowY();
-        SWidget sw = (SWidget)w;
-        sw.paint(this);
+        AWidget sw = (AWidget)w;
+        paintWidget(sw);
         offsetX = ox;
         offsetY = oy;
         if (w instanceof Container) {
@@ -96,23 +88,6 @@ public class SGraphics implements Graphics {
         if (firstCut) {
             currentCut = null;
         }
-    }
-    
-    int[] cutOut(int[] paper, int[] scissorBox) {
-        int x = Math.max(paper[0],scissorBox[0]);
-        int y = Math.max(paper[1],scissorBox[1]);
-        
-        int paperX1 = paper[0] + paper[2];
-        int boxX1 = scissorBox[0] + scissorBox[2];
-        int x1 = Math.min(paperX1,boxX1);
-        int width = x1 - x;
-        
-        int paperY1 = paper[1] + paper[3];
-        int boxY1 = scissorBox[1] + scissorBox[3];
-        int y1 = Math.min(paperY1,boxY1);
-        int height = y1 - y;
-        
-        return new int[]{x,y,width,height};
     }
     
     @Override

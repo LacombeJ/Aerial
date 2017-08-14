@@ -1,12 +1,12 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import jonl.aui.Container;
 import jonl.aui.SingleSlot;
 import jonl.aui.Widget;
 
-public abstract class AbstractSingleSlot extends SContainer implements SingleSlot {
+public abstract class ASingleSlot extends AContainer implements SingleSlot {
 
-    SWidget widget;
+    AWidget widget;
     
     @Override
     public boolean contains(Widget w) {
@@ -17,7 +17,7 @@ public abstract class AbstractSingleSlot extends SContainer implements SingleSlo
     public void remove(Widget w) {
         if (widget!=null) {
             if (widget.equals(w)) {
-                SWidget sw = (SWidget)w;
+                AWidget sw = (AWidget)w;
                 sw.parent = null;
                 widget = null;
                 layout();
@@ -36,18 +36,18 @@ public abstract class AbstractSingleSlot extends SContainer implements SingleSlo
     }
     
     @Override
-    public SWidget[] getChildren() {
-        return widget!=null ? new SWidget[]{widget} : new SWidget[0];
+    public AWidget[] getChildren() {
+        return widget!=null ? new AWidget[]{widget} : new AWidget[0];
     }
     
     @Override
-    public SWidget getWidget() {
+    public AWidget getWidget() {
         return widget;
     }
     
     @Override
     public void setWidget(Widget w) {
-        SWidget sw = (SWidget)w;
+        AWidget sw = (AWidget)w;
         Container c = w.getParent();
         if (c!=null) {
             c.remove(w);

@@ -1,4 +1,4 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import jonl.aui.Layout;
 import jonl.aui.SingleSlot;
@@ -19,7 +19,7 @@ public class BoxLayout implements Layout<SingleSlot> {
     
     @Override
     public void layout(SingleSlot container) {
-        SWidget w = (SWidget) container.getWidget();
+        AWidget w = (AWidget) container.getWidget();
         int width = container.getWidth();
         int height = container.getHeight();
         int T = (int) (top);

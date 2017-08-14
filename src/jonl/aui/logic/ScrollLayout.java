@@ -1,9 +1,9 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import jonl.aui.Layout;
 import jonl.aui.SingleSlot;
 
-class ScrollLayout implements Layout<SingleSlot> {
+public class ScrollLayout implements Layout<SingleSlot> {
     
     
     
@@ -13,7 +13,7 @@ class ScrollLayout implements Layout<SingleSlot> {
     
     @Override
     public void layout(SingleSlot container) {
-        SWidget w = (SWidget) container.getWidget();
+        AWidget w = (AWidget) container.getWidget();
         if (w!=null) {
             w.setPositionAndRequestFire(w.getX(),w.getY());
             w.setSizeAndRequestFire(w.getWidth(),w.getHeight());

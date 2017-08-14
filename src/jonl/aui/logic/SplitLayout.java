@@ -1,10 +1,10 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import jonl.aui.Align;
 import jonl.aui.DoubleSlot;
 import jonl.aui.Layout;
 
-class SplitLayout implements Layout<DoubleSlot> {
+public class SplitLayout implements Layout<DoubleSlot> {
     
     Align align;
     double ratio;
@@ -24,8 +24,8 @@ class SplitLayout implements Layout<DoubleSlot> {
     public void layout(DoubleSlot container) {
         int width = container.getWidth();
         int height = container.getHeight();
-        SWidget w1 = (SWidget) container.getWidgetOne();
-        SWidget w2 = (SWidget) container.getWidgetTwo();
+        AWidget w1 = (AWidget) container.getWidgetOne();
+        AWidget w2 = (AWidget) container.getWidgetTwo();
         int b1 = (int) Math.round(border/2.0);
         int b2 = border - b1;
         switch (align) {

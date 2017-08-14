@@ -4,6 +4,7 @@ public interface SplitPanel extends DoubleSlot {
     
     void setSplit(Widget w1, Widget w2, Align align, double ratio);
     
+    Align getAlign();
     void setAlign(Align align);
     
     void setRatio(double d);

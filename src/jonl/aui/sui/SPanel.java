@@ -2,12 +2,10 @@ package jonl.aui.sui;
 
 import jonl.aui.Layout;
 import jonl.aui.MultiSlot;
-import jonl.aui.Panel;
+import jonl.aui.logic.APanel;
 
-public class SPanel extends AbstractMultiSlot implements Panel {
+public class SPanel extends APanel {
 
-    Layout<MultiSlot> layout = new ListLayout();
-    
     SPanel() {
         
     }
@@ -15,23 +13,5 @@ public class SPanel extends AbstractMultiSlot implements Panel {
     SPanel(Layout<MultiSlot> layout) {
         setLayout(layout);
     }
-    
-    @Override
-    public void layout() {
-        layout.layout(this);
-    }
-    
-    @Override
-    public Layout<MultiSlot> getLayout() {
-        return layout;
-    }
-
-    @Override
-    public void setLayout(Layout<MultiSlot> layout) {
-        this.layout = layout;
-        layout();
-    }
-
-    
 
 }

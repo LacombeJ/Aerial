@@ -1,4 +1,4 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +7,9 @@ import jonl.aui.Container;
 import jonl.aui.MultiSlot;
 import jonl.aui.Widget;
 
-public abstract class AbstractMultiSlot extends SContainer implements MultiSlot {
+public abstract class AMultiSlot extends AContainer implements MultiSlot {
 
-    List<SWidget> children = new ArrayList<>();
+    List<AWidget> children = new ArrayList<>();
     
     @Override
     public boolean contains(Widget w) {
@@ -18,7 +18,7 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
     
     @Override
     public void add(Widget w) {
-        SWidget sw = (SWidget)w;
+        AWidget sw = (AWidget)w;
         Container c = w.getParent();
         if (c!=null) {
             c.remove(w);
@@ -31,15 +31,15 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
     @Override
     public void remove(Widget w) {
         if (children.remove(w)) {
-            SWidget sw = (SWidget)w;
+            AWidget sw = (AWidget)w;
             sw.parent = null;
             layout();
         }
     }
     
     @Override
-    public SWidget remove(int i) {
-        SWidget sw = children.remove(i);
+    public AWidget remove(int i) {
+        AWidget sw = children.remove(i);
         if (sw!=null) {
             sw.parent = null;
             layout();
@@ -48,7 +48,7 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
     }
     
     @Override
-    public SWidget getChild(int i) {
+    public AWidget getChild(int i) {
         if (!hasChildren()) return null;
         return children.get(i);
     }
@@ -64,8 +64,8 @@ public abstract class AbstractMultiSlot extends SContainer implements MultiSlot 
     }
     
     @Override
-    public SWidget[] getChildren() {
-        return children.toArray(new SWidget[0]);
+    public AWidget[] getChildren() {
+        return children.toArray(new AWidget[0]);
     }
     
     

@@ -1,4 +1,4 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import jonl.aui.Widget;
 import jonl.aui.Window;
 import jonl.jutils.func.Tuple2i;
 
-public abstract class SWidget implements Widget {
+public abstract class AWidget implements Widget {
 
     private int x;
     private int y;
@@ -71,7 +71,7 @@ public abstract class SWidget implements Widget {
         return height;
     }
 
-    void setXAndRequestFire(int x) {
+    protected void setXAndRequestFire(int x) {
         int prevX = this.x;
         this.x = x;
         if (prevX!=x) {
@@ -79,7 +79,7 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    void setYAndRequestFire(int y) {
+    protected void setYAndRequestFire(int y) {
         int prevY = this.y;
         this.y = y;
         if (prevY!=y) {
@@ -87,7 +87,7 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    void setPositionAndRequestFire(int x, int y) {
+    protected void setPositionAndRequestFire(int x, int y) {
         int prevX = this.x;
         int prevY = this.y;
         this.x = x;
@@ -97,7 +97,7 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    void setWidthAndRequestFire(int width) {
+    protected void setWidthAndRequestFire(int width) {
         int prevWidth = this.width;
         this.width = width;
         if (prevWidth!=width) {
@@ -105,7 +105,7 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    void setHeightAndRequestFire(int height) {
+    protected void setHeightAndRequestFire(int height) {
         int prevHeight = this.height;
         this.height = height;
         if (prevHeight!=height) {
@@ -113,7 +113,7 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    void setSizeAndRequestFire(int width, int height) {
+    protected void setSizeAndRequestFire(int width, int height) {
         int prevWidth = this.width;
         int prevHeight = this.height;
         this.width = width;
@@ -123,19 +123,19 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    void setXWithNoRequest(int x) {
+    protected void setXWithNoRequest(int x) {
         this.x = x;
     }
     
-    void setYWithNoRequest(int y) {
+    protected void setYWithNoRequest(int y) {
         this.y = y;
     }
     
-    void setWidthWithNoRequest(int width) {
+    protected void setWidthWithNoRequest(int width) {
         this.width = width;
     }
     
-    void setHeightWithNoRequest(int height) {
+    protected void setHeightWithNoRequest(int height) {
         this.height = height;
     }
     
@@ -228,7 +228,7 @@ public abstract class SWidget implements Widget {
     public Painter[] getPainters() {
         return painters.toArray(new Painter[0]);
     }
-    void paint(Graphics g) {
+    protected void paint(Graphics g) {
         for (Painter p : painters) {
             p.paint(g);
         }
@@ -250,7 +250,7 @@ public abstract class SWidget implements Widget {
     public Int2ChangedListener[] getPositionChangedListeners() {
         return positionChangedListeners.toArray(new Int2ChangedListener[0]);
     }
-    void firePositionChanged(int x, int y, int prevX, int prevY) {
+    protected void firePositionChanged(int x, int y, int prevX, int prevY) {
         for (Int2ChangedListener pc : positionChangedListeners) {
             pc.valueChanged(x,y,prevX,prevY);
         }
@@ -291,22 +291,22 @@ public abstract class SWidget implements Widget {
         return mouseMotionListeners.toArray(new MouseMotionListener[0]);
     }
     
-    void fireMouseMoved(MouseMotionEvent e) {
+    protected void fireMouseMoved(MouseMotionEvent e) {
         for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }
     }
-    void fireMouseEnter(MouseMotionEvent e) {
+    protected void fireMouseEnter(MouseMotionEvent e) {
         for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }
     }
-    void fireMouseHover(MouseMotionEvent e) {
+    protected void fireMouseHover(MouseMotionEvent e) {
         for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }      
     }
-    void fireMouseExit(MouseMotionEvent e) {
+    protected void fireMouseExit(MouseMotionEvent e) {
         for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }
@@ -327,18 +327,18 @@ public abstract class SWidget implements Widget {
     public MouseButtonListener[] getMouseButtonListeners() {
         return mouseButtonListeners.toArray(new MouseButtonListener[0]);
     }
-    void fireMousePressed(MouseButtonEvent e) {
+    protected void fireMousePressed(MouseButtonEvent e) {
         for (MouseButtonListener m : mouseButtonListeners) {
             m.occur(e);
         }
         inClickState = true;
     }
-    void fireMouseDown(MouseButtonEvent e) {
+    protected void fireMouseDown(MouseButtonEvent e) {
         for (MouseButtonListener m : mouseButtonListeners) {
             m.occur(e);
         }
     }
-    void fireMouseReleased(MouseButtonEvent e) {
+    protected void fireMouseReleased(MouseButtonEvent e) {
         for (MouseButtonListener m : mouseButtonListeners) {
             m.occur(e);
         }
@@ -347,7 +347,7 @@ public abstract class SWidget implements Widget {
             inClickState = false;
         }
     }
-    void fireMouseClicked(MouseButtonEvent e) {
+    protected void fireMouseClicked(MouseButtonEvent e) {
         for (MouseButtonListener m : mouseButtonListeners) {
             m.occur(e);
         }
@@ -368,22 +368,22 @@ public abstract class SWidget implements Widget {
     public MouseMotionListener[] getGlobalMouseMotionListeners() {
         return globalMouseMotionListeners.toArray(new MouseMotionListener[0]);
     }
-    void fireGlobalMouseMoved(MouseMotionEvent e) {
+    protected void fireGlobalMouseMoved(MouseMotionEvent e) {
         for (MouseMotionListener m : globalMouseMotionListeners) {
             m.occur(e);
         }
     }
-    void fireGlobalMouseEnter(MouseMotionEvent e) {
+    protected void fireGlobalMouseEnter(MouseMotionEvent e) {
         for (MouseMotionListener m : globalMouseMotionListeners) {
             m.occur(e);
         }
     }
-    void fireGlobalMouseHover(MouseMotionEvent e) {
+    protected void fireGlobalMouseHover(MouseMotionEvent e) {
         for (MouseMotionListener m : globalMouseMotionListeners) {
             m.occur(e);
         }
     }
-    void fireGlobalMouseExit(MouseMotionEvent e) {
+    protected void fireGlobalMouseExit(MouseMotionEvent e) {
         for (MouseMotionListener m : globalMouseMotionListeners) {
             m.occur(e);
         }
@@ -404,22 +404,22 @@ public abstract class SWidget implements Widget {
     public MouseButtonListener[] getGlobalMouseButtonListeners() {
         return globalMouseButtonListeners.toArray(new MouseButtonListener[0]);
     }
-    void fireGlobalMousePressed(MouseButtonEvent e) {
+    protected void fireGlobalMousePressed(MouseButtonEvent e) {
         for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }
     }
-    void fireGlobalMouseDown(MouseButtonEvent e) {
+    protected void fireGlobalMouseDown(MouseButtonEvent e) {
         for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }
     }
-    void fireGlobalMouseReleased(MouseButtonEvent e) {
+    protected void fireGlobalMouseReleased(MouseButtonEvent e) {
         for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }
     }
-    void fireGlobalMouseClicked(MouseButtonEvent e) {
+    protected void fireGlobalMouseClicked(MouseButtonEvent e) {
         for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }

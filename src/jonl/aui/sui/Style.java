@@ -2,6 +2,8 @@ package jonl.aui.sui;
 
 import java.util.HashMap;
 
+import jonl.aui.Widget;
+import jonl.aui.logic.AWidget;
 import jonl.jgl.GraphicsLibrary;
 import jonl.vmath.Vector4;
 
@@ -36,8 +38,8 @@ class Style {
         return i;
     }
 
-    static Instance get(SWidget sw) {
-        SWidget root = (SWidget) sw.getRoot();
+    static Instance get(Widget sw) {
+        AWidget root = (AWidget) sw.getRoot();
         if (root instanceof SWindow) {
             SWindow window = (SWindow)root;
             return get2(window.gl);

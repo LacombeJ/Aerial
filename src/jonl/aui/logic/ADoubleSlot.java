@@ -1,4 +1,4 @@
-package jonl.aui.sui;
+package jonl.aui.logic;
 
 import java.util.ArrayList;
 
@@ -6,18 +6,18 @@ import jonl.aui.Container;
 import jonl.aui.DoubleSlot;
 import jonl.aui.Widget;
 
-public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlot {
+public abstract class ADoubleSlot extends AContainer implements DoubleSlot {
 
-    SWidget widget1;
-    SWidget widget2;
+    AWidget widget1;
+    AWidget widget2;
     
     @Override
-    public SWidget getWidgetOne() {
+    public AWidget getWidgetOne() {
         return widget1;
     }
     
-    private SWidget removeFromParent(Widget w) {
-        SWidget sw = (SWidget)w;
+    private AWidget removeFromParent(Widget w) {
+        AWidget sw = (AWidget)w;
         Container c = w.getParent();
         if (c!=null) {
             c.remove(w);
@@ -27,20 +27,20 @@ public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlo
     
     @Override
     public void setWidgetOne(Widget w) {
-        SWidget sw = removeFromParent(w);
+        AWidget sw = removeFromParent(w);
         widget1 = sw;
         sw.parent = this;
         layout();
     }
     
     @Override
-    public SWidget getWidgetTwo() {
+    public AWidget getWidgetTwo() {
         return widget2;
     }
     
     @Override
     public void setWidgetTwo(Widget w) {
-        SWidget sw = removeFromParent(w);
+        AWidget sw = removeFromParent(w);
         widget2 = sw;
         sw.parent = this;
         layout();
@@ -52,7 +52,7 @@ public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlo
                 || (widget2!=null && widget2.equals(w));
     }
 
-    private SWidget removeWidget(SWidget widget, SWidget w) {
+    private AWidget removeWidget(AWidget widget, AWidget w) {
         if (widget!=null) {
             if (widget.equals(w)) {
                 w.parent = null;
@@ -64,8 +64,8 @@ public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlo
     
     @Override
     public void remove(Widget w) {
-        widget1 = removeWidget(widget1,(SWidget) w);
-        widget2 = removeWidget(widget2,(SWidget) w);
+        widget1 = removeWidget(widget1,(AWidget) w);
+        widget2 = removeWidget(widget2,(AWidget) w);
     }
 
     @Override
@@ -82,11 +82,11 @@ public abstract class AbstractDoubleSlot extends SContainer implements DoubleSlo
     }
     
     @Override
-    public SWidget[] getChildren() {
-        ArrayList<SWidget> w = new ArrayList<>();
+    public AWidget[] getChildren() {
+        ArrayList<AWidget> w = new ArrayList<>();
         if (widget1!=null) w.add(widget1);
         if (widget2!=null) w.add(widget2);
-        return w.toArray(new SWidget[0]);
+        return w.toArray(new AWidget[0]);
     }
     
     
