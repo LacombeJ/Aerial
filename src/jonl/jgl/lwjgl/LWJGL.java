@@ -68,7 +68,7 @@ class LWJGL extends AbstractGraphicsLibrary {
     
     @Override
     public int glGetGLSLVersioni() {
-        return Integer.parseInt(glGetGLSLVersion().replace(".",""));
+        return Integer.parseInt(glGetGLSLVersion().replace(".","").split(" ")[0]);
     }
     
     @Override
