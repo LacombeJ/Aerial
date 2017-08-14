@@ -22,6 +22,7 @@ import jonl.jgl.lwjgl.GLFWInstance.SetWindowVisibleRequest;
 import jonl.jgl.lwjgl.GLFWInstance.CreateWindowRequest;
 import jonl.jgl.lwjgl.GLFWInstance.CreateWindowResponse;
 import jonl.jgl.lwjgl.GLFWInstance.StartWindowRequest;
+import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.structs.BijectiveMap;
 import jonl.jgl.Input.CursorState;
@@ -60,17 +61,19 @@ public final class GLFWWindow implements Window {
     
     private final ArrayList<Int2ChangedListener> sizeListeners;
     private final ArrayList<Int2ChangedListener> positionListeners;
+    private final ArrayList<Callback<Boolean>>   cursorListeners;
     
     public GLFWWindow(String title, int width, int height, boolean fullscreen,
             boolean resizable, boolean decorated, int multiSample, boolean vsyncEnabled) {
         
         GLFWInstance.init();
         
-        this.visible = true;
+        this.visible = false;
         this.vsyncEnabled = vsyncEnabled;
         
         sizeListeners = new ArrayList<>();
         positionListeners = new ArrayList<>();
+        cursorListeners = new ArrayList<>();
         
         Callback2D<Integer,Integer> windowPosCallback = (x,y) -> {
             int prevX = this.x;
@@ -355,6 +358,16 @@ public final class GLFWWindow implements Window {
     @Override
     public void removePositionListener(Int2ChangedListener pl) {
         positionListeners.remove(pl);
+    }
+    
+    @Override
+    public void addCursorListener(Callback<Boolean> cl) {
+        cursorListeners.add(cl);
+    }
+    
+    @Override
+    public void removeCursorListener(Callback<Boolean> cl) {
+        cursorListeners.remove(cl);
     }
 
     @Override

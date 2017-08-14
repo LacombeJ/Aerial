@@ -1,6 +1,7 @@
 package jonl.jgl;
 
 import jonl.jgl.Input.CursorState;
+import jonl.jutils.func.Callback;
 
 /**
  * @author Jonathan Lacombe
@@ -88,6 +89,9 @@ public interface Window {
     
     public void addPositionListener(Int2ChangedListener pl);
     public void removePositionListener(Int2ChangedListener pl);
+    
+    public void addCursorListener(Callback<Boolean> cl);
+    public void removeCursorListener(Callback<Boolean> cl);
     
     public interface Int2ChangedListener {
         public void valueChanged(int x, int y, int x2, int y2);

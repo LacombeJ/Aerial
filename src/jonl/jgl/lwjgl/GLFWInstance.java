@@ -291,7 +291,6 @@ class GLFWInstance {
         x = (screenWidth - request.width) / 2;
         y = (screenHeight - request.height) / 2;
         GLFW.glfwSetWindowPos(id,x,y);
-        
         GLFW.glfwSetWindowPosCallback(id, (windowID,wx,wy)->{
             request.windowPosCallback.f(wx, wy);
         });

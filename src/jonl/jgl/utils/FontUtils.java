@@ -1,7 +1,6 @@
 package jonl.jgl.utils;
 
 import jonl.jgl.Font;
-import jonl.jutils.func.Tuple2f;
 import jonl.jutils.func.Tuple4f;
 
 public class FontUtils {
