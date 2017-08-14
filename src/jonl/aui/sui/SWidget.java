@@ -14,6 +14,7 @@ import jonl.aui.MouseMotionListener;
 import jonl.aui.Painter;
 import jonl.aui.Widget;
 import jonl.aui.Window;
+import jonl.jutils.func.Tuple2i;
 
 public abstract class SWidget implements Widget {
 
@@ -30,12 +31,12 @@ public abstract class SWidget implements Widget {
     
     List<Int2ChangedListener>   positionChangedListeners            = new ArrayList<>();
     List<Int2ChangedListener>   sizeChangedListeners                = new ArrayList<>();
-    List<MouseMotionListener>         mouseListeners                      = new ArrayList<>();
+    List<MouseMotionListener>   mouseMotionListeners                = new ArrayList<>();
     List<MouseButtonListener>   mouseButtonListeners                = new ArrayList<>();
     List<Action>                actions                             = new ArrayList<>();
     
-    List<MouseButtonListener>   globalMouseListeners                = new ArrayList<>();
-    List<Int2ChangedListener>   globalMousePositionChangedListeners = new ArrayList<>();
+    List<MouseMotionListener>   globalMouseMotionListeners          = new ArrayList<>();
+    List<MouseButtonListener>   globalMouseButtonListeners          = new ArrayList<>();
     
     @Override
     public Container getParent() {
@@ -176,6 +177,38 @@ public abstract class SWidget implements Widget {
         return y;
     }
     
+    
+    private Tuple2i fromParentSpace(int x, int y) {
+        return new Tuple2i(x + getX(), y + getY());
+    }
+    private Tuple2i toParentSpace(int x, int y) {
+        return new Tuple2i(x - getX(), y - getY());
+    }
+    
+    @Override
+    public Tuple2i fromGlobalSpace(int x, int y) {
+        if (this instanceof Window) {
+            return new Tuple2i(x,y);
+        }
+        if (parent!=null) {
+            Tuple2i c = toParentSpace(x,y);
+            return parent.fromGlobalSpace(c.x, c.y);
+        }
+        return null;
+    }
+    
+    @Override
+    public Tuple2i toGlobalSpace(int x, int y) {
+        if (this instanceof Window) {
+            return new Tuple2i(x,y);
+        }
+        if (parent!=null) {
+            Tuple2i c = fromParentSpace(x,y);
+            return parent.toGlobalSpace(c.x, c.y);
+        }
+        return null;
+    }
+    
     /** @return if point is within local coordinate bounds */
     @Override
     public boolean isWithin(int x, int y) {
@@ -243,43 +276,44 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    //Mouse Hover events
+    //Mouse Motion events
     //--------------------------------------------------------------------
     @Override
-    public void addMouseListener(MouseMotionListener m) {
-        mouseListeners.add(m);
+    public void addMouseMotionListener(MouseMotionListener m) {
+        mouseMotionListeners.add(m);
     }
     @Override
-    public void removeMouseListener(MouseMotionListener m) {
-        mouseListeners.remove(m);
+    public void removeMouseMotionListener(MouseMotionListener m) {
+        mouseMotionListeners.remove(m);
     }
     @Override
-    public MouseMotionListener[] getMouseListeners() {
-        return mouseListeners.toArray(new MouseMotionListener[0]);
+    public MouseMotionListener[] getMouseMotionListener() {
+        return mouseMotionListeners.toArray(new MouseMotionListener[0]);
     }
+    
     void fireMouseMoved(MouseMotionEvent e) {
-        for (MouseMotionListener m : mouseListeners) {
+        for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }
     }
     void fireMouseEnter(MouseMotionEvent e) {
-        for (MouseMotionListener m : mouseListeners) {
+        for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }
     }
     void fireMouseHover(MouseMotionEvent e) {
-        for (MouseMotionListener m : mouseListeners) {
+        for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
-        }
+        }      
     }
     void fireMouseExit(MouseMotionEvent e) {
-        for (MouseMotionListener m : mouseListeners) {
+        for (MouseMotionListener m : mouseMotionListeners) {
             m.occur(e);
         }
         inClickState = false;
     }
     
-    //Mouse events
+    //Mouse Button events
     //--------------------------------------------------------------------
     @Override
     public void addMouseButtonListener(MouseButtonListener m) {
@@ -319,58 +353,75 @@ public abstract class SWidget implements Widget {
         }
     }
     
-    //GlobalMouse events
+    
+    //Global Mouse Motion events
     //--------------------------------------------------------------------
     @Override
-    public void addGlobalMouseListener(MouseButtonListener m) {
-        globalMouseListeners.add(m);
+    public void addGlobalMouseMotionListener(MouseMotionListener m) {
+        globalMouseMotionListeners.add(m);
     }
     @Override
-    public void removeGlobalMouseListener(MouseButtonListener m) {
-        globalMouseListeners.remove(m);
+    public void removeGlobalMouseMotionListener(MouseMotionListener m) {
+        globalMouseMotionListeners.remove(m);
     }
     @Override
-    public MouseButtonListener[] getGlobalMouseListeners() {
-        return globalMouseListeners.toArray(new MouseButtonListener[0]);
+    public MouseMotionListener[] getGlobalMouseMotionListeners() {
+        return globalMouseMotionListeners.toArray(new MouseMotionListener[0]);
+    }
+    void fireGlobalMouseMoved(MouseMotionEvent e) {
+        for (MouseMotionListener m : globalMouseMotionListeners) {
+            m.occur(e);
+        }
+    }
+    void fireGlobalMouseEnter(MouseMotionEvent e) {
+        for (MouseMotionListener m : globalMouseMotionListeners) {
+            m.occur(e);
+        }
+    }
+    void fireGlobalMouseHover(MouseMotionEvent e) {
+        for (MouseMotionListener m : globalMouseMotionListeners) {
+            m.occur(e);
+        }
+    }
+    void fireGlobalMouseExit(MouseMotionEvent e) {
+        for (MouseMotionListener m : globalMouseMotionListeners) {
+            m.occur(e);
+        }
+    }
+    
+    
+    //Global Mouse Button events
+    //--------------------------------------------------------------------
+    @Override
+    public void addGlobalMouseButtonListener(MouseButtonListener m) {
+        globalMouseButtonListeners.add(m);
+    }
+    @Override
+    public void removeGlobalMouseButtonListener(MouseButtonListener m) {
+        globalMouseButtonListeners.remove(m);
+    }
+    @Override
+    public MouseButtonListener[] getGlobalMouseButtonListeners() {
+        return globalMouseButtonListeners.toArray(new MouseButtonListener[0]);
     }
     void fireGlobalMousePressed(MouseButtonEvent e) {
-        for (MouseButtonListener m : globalMouseListeners) {
+        for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }
     }
     void fireGlobalMouseDown(MouseButtonEvent e) {
-        for (MouseButtonListener m : globalMouseListeners) {
+        for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }
     }
     void fireGlobalMouseReleased(MouseButtonEvent e) {
-        for (MouseButtonListener m : globalMouseListeners) {
+        for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
         }
     }
     void fireGlobalMouseClicked(MouseButtonEvent e) {
-        for (MouseButtonListener m : globalMouseListeners) {
+        for (MouseButtonListener m : globalMouseButtonListeners) {
             m.occur(e);
-        }
-    }
-    
-    
-    //Global mouse position events
-    //--------------------------------------------------------------------
-    public void addGlobalMousePositionChangedListener(Int2ChangedListener mpc) {
-        globalMousePositionChangedListeners.add(mpc);
-    }
-    @Override
-    public void removeGlobalMousePositionChangedListener(Int2ChangedListener mpc) {
-        globalMousePositionChangedListeners.remove(mpc);
-    }
-    @Override
-    public Int2ChangedListener[] getGlobalMousePositionListeners() {
-        return globalMousePositionChangedListeners.toArray(new Int2ChangedListener[0]);
-    }
-    void fireGlobalMousePositionChanged(int x, int y, int prevX, int prevY) {
-        for (Int2ChangedListener mpc : globalMousePositionChangedListeners) {
-            mpc.valueChanged(x,y,prevX,prevY);
         }
     }
     

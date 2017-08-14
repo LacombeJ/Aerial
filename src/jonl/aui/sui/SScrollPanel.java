@@ -12,9 +12,11 @@ public class SScrollPanel extends AbstractSingleSlot implements ScrollPanel {
     
     ScrollLayout layout = new ScrollLayout();
     
+    float oa = 0;
+    float ob = 0;
+    
     double horScroll = 0;
     double verScroll = 0;
-    int barOffset = 0;
     
     boolean inHorState = false;
     boolean inVerState = false;
@@ -81,17 +83,19 @@ public class SScrollPanel extends AbstractSingleSlot implements ScrollPanel {
         if (e.button==Input.MB_LEFT) {
             if (Mathd.isWithinBounds(e.x,e.y,horX,0,horWidth,horBarHeight)) {
                 inHorState = true;
-                barOffset = (e.x - horX);
+                oa = e.x - horX;
+                ob = e.x + (getWidth() - verBarWidth - horWidth - horX);
             } else if (Mathd.isWithinBounds(e.x,e.y,getWidth()-verBarWidth,verY,verBarWidth,verHeight)) {
                 inVerState = true;
-                barOffset = (e.y - verY);
+                oa = e.y - verY;
+                ob = e.y + (getHeight() - verHeight - verY);
             }
         }
     }
     
     @Override
-    void fireMouseReleased(MouseButtonEvent e) {
-        super.fireMouseReleased(e);
+    void fireGlobalMouseReleased(MouseButtonEvent e) {
+        super.fireGlobalMouseReleased(e);
         if (e.button==Input.MB_LEFT) {
             inHorState = false;
             inVerState = false;
@@ -99,24 +103,23 @@ public class SScrollPanel extends AbstractSingleSlot implements ScrollPanel {
     }
     
     @Override
-    void fireMouseMoved(MouseMotionEvent e) {
-        super.fireMouseMoved(e);
+    void fireGlobalMouseMoved(MouseMotionEvent e) {
+        super.fireGlobalMouseMoved(e);
         if (inHorState) {
-            double r = ((double)(e.x-barOffset) / (getWidth()-verBarWidth-horWidth));
+            double r = Mathd.alpha(e.x, oa, ob);
             horScroll = Mathd.clamp(r,0,1);
             updateScrollPos();
         } else if (inVerState) {
-            double r = ((double)(e.y-barOffset) / (getHeight()-horBarHeight-verHeight));
+            double r = Mathd.alpha(e.y, oa, ob);
             verScroll = Mathd.clamp(r,0,1);
             verScroll = 1 - verScroll;
             updateScrollPos();
         }
-        
     }
     
     @Override
-    void fireMouseExit(MouseMotionEvent e) {
-        super.fireMouseExit(e);
+    void fireGlobalMouseExit(MouseMotionEvent e) {
+        super.fireGlobalMouseExit(e);
         inHorState = false;
         inVerState = false;
     }

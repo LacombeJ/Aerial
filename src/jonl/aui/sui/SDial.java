@@ -9,8 +9,10 @@ import jonl.aui.IntChangedListener;
 import jonl.aui.MouseButtonEvent;
 import jonl.aui.MouseMotionEvent;
 import jonl.jgl.Input;
+import jonl.jutils.func.Tuple2i;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
+import jonl.vmath.Vector2;
 
 public class SDial extends SWidget implements Dial {
 
@@ -19,6 +21,9 @@ public class SDial extends SWidget implements Dial {
     int value;
     boolean wrap = true;
     
+    float ox = 0;
+    float oy = 0;
+    int ovalue = 0;
     boolean inDialState = false;
     
     List<IntChangedListener> valueChangedListeners = new ArrayList<>();
@@ -44,30 +49,42 @@ public class SDial extends SWidget implements Dial {
         super.fireMousePressed(e);
         if (e.button==Input.MB_LEFT) {
             inDialState = true;
+            ox = e.x;
+            oy = e.y;
+            ovalue = value;
         }
     }
     
     @Override
-    void fireMouseReleased(MouseButtonEvent e) {
-        super.fireMouseReleased(e);
+    void fireGlobalMouseReleased(MouseButtonEvent e) {
+        super.fireGlobalMouseReleased(e);
         if (e.button==Input.MB_LEFT) {
             inDialState = false;
         }
     }
     
     @Override
-    void fireMouseMoved(MouseMotionEvent e) {
-        super.fireMouseMoved(e);
+    void fireGlobalMouseMoved(MouseMotionEvent e) {
+        super.fireGlobalMouseMoved(e);
         if (inDialState) {
-            //TODO change this logic for better dial controls
-            int dx = e.x - e.prevX;
+            float x = getWidth()/2f;
+            float y = getHeight()/2f;
+            
+            Tuple2i local = fromGlobalSpace(e.x,e.y);
+            
+            Vector2 u = new Vector2(ox-x,oy-y);
+            Vector2 v = new Vector2(local.x-x,local.y-y);
+            
+            float ang = Vector2.rad(u,v);
             int oldValue = value;
-            value += dx;
+            int diff = (int)((ang/Mathf.TWO_PI) * 100);
+            value = ovalue + diff;
+            
             if (value > maxValue) {
-                value = wrap ? minValue : maxValue;
+                value = (int) Mathf.pattern(value, minValue, maxValue);
             }
             else if (value < minValue) {
-                value = wrap ? maxValue : minValue;
+                value = (int) Mathf.pattern(value, minValue, maxValue);
             }
             if (value!=oldValue) {
                 fireValueChanged(value,oldValue);
@@ -76,8 +93,8 @@ public class SDial extends SWidget implements Dial {
     }
     
     @Override
-    void fireMouseExit(MouseMotionEvent e) {
-        super.fireMouseExit(e);
+    void fireGlobalMouseExit(MouseMotionEvent e) {
+        super.fireGlobalMouseExit(e);
         inDialState = false;
     }
 

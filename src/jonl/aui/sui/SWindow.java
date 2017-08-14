@@ -1,9 +1,8 @@
 package jonl.aui.sui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayDeque;
-
 import jonl.jutils.parallel.SequentialProcessor;
 import jonl.aui.HAlign;
 import jonl.aui.Layout;
@@ -54,6 +53,12 @@ public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
     
     Loader loader;
     
+    boolean inClickState = false;
+    
+    boolean isAligned = true;
+    HAlign halign = HAlign.CENTER;
+    VAlign valign = VAlign.MIDDLE;
+    
     public String getTitle() {
         return title;
     }
@@ -62,34 +67,30 @@ public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
         this.title = title;
     }
     
-    public void setPosition(HAlign halign, VAlign valign) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double w = screenSize.getWidth();
-        double h = screenSize.getHeight();
-        
-        switch (halign) {
-        case LEFT:      setXWithNoRequest( 0 );                                 break;
-        case CENTER:    setXWithNoRequest( (int) ((w/2) - (getWidth()/2)) );    break;
-        case RIGHT:     setXWithNoRequest( (int) (w - (getWidth()/2)) );        break;
-        }
-        switch(valign) {
-        case TOP:       setYWithNoRequest( 0 );                                 break;
-        case MIDDLE:    setYWithNoRequest( (int) ((h/2) - (getHeight()/2)) );   break;
-        case BOTTOM:    setYWithNoRequest( (int) (h - (getHeight()/2)) );       break;
-        }
-    }
-    
     @Override
     public void create() {
         SequentialProcessor sp = new SequentialProcessor();
         sp.setLockCount(1);
         sp.add(()->{
-            window = new GLFWWindow(title,getWidth(),getHeight(),false,resizable,true,4,false);
+            synchronized (lock) {
+                window = new GLFWWindow(title,getWidth(),getHeight(),false,resizable,true,4,false);
+                window.setVisible(visible);
+                
+                Insets insets = window.getInsets();
+                if (isAligned) {
+                    setPosition(halign,valign);
+                }
+                window.setPosition(insets.left+getX(),insets.top+getY());
+            }
             gl = window.getGraphicsLibrary();
             input = window.getInput();
             
-            Insets insets = window.getInsets();
-            window.setPosition(insets.left+getX(),insets.top+getY());
+            
+            window.addCursorListener((enter)->{
+                if (enter) {
+                    
+                }
+            });
             
             window.addPositionListener((x,y,prevX,prevY)->{
                 setXWithNoRequest(x);
@@ -156,67 +157,104 @@ public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
     
     @Override
     public void setX(int x) {
-        if (window!=null) {
-            synchronized (lock) {
+        synchronized (lock) {
+            if (window!=null) {
                 windowEventQueue.addLast(new Move(x,getY()));
+            } else {
+                setXWithNoRequest(x);
+                isAligned = false;
             }
-        } else {
-            setXWithNoRequest(x);
         }
     }
     
     @Override
     public void setY(int y) {
-        if (window!=null) {
-            synchronized (lock) {
+        synchronized (lock) {
+            if (window!=null) {
                 windowEventQueue.addLast(new Move(getX(),window.getScreenHeight() - (y+window.getWidth())));
+            } else {
+                setYWithNoRequest(y);
+                isAligned = false;
             }
-        } else {
-            setYWithNoRequest(y);
+        }
+    }
+    
+    public void setPosition(HAlign halign, VAlign valign) {
+        synchronized (lock) {
+            int x = getX();
+            int y = getY();
+            
+            GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice[] devices = g.getScreenDevices();
+            
+            double w = devices[0].getDisplayMode().getWidth();
+            double h = devices[0].getDisplayMode().getHeight();
+            
+            switch (halign) {
+            case LEFT:      x = 0;                                 break;
+            case CENTER:    x = (int) ((w/2) - (getWidth()/2));    break;
+            case RIGHT:     x = (int) (w - (getWidth()/2));        break;
+            }
+            switch(valign) {
+            case TOP:       y = 0;                                 break;
+            case MIDDLE:    y = (int) ((h/2) - (getHeight()/2));   break;
+            case BOTTOM:    y = (int) (h - (getHeight()/2));       break;
+            }
+            
+            if (window!=null) {
+                windowEventQueue.addLast(new Move(x,y));
+            } else {
+                setXWithNoRequest(x);
+                setYWithNoRequest(y);
+                isAligned = true;
+                this.halign = halign;
+                this.valign = valign;
+            }
+            
         }
     }
     
     @Override
     public void setWidth(int width) {
-        if (window!=null) {
-            synchronized (lock) {
+        synchronized (lock) {
+            if (window!=null) {
                 windowEventQueue.addLast(new Resize(width,getHeight()));
+            } else {
+                setWidthWithNoRequest(width);
             }
-        } else {
-            setWidthWithNoRequest(width);
         }
     }
     
     @Override
     public void setHeight(int height) {
-        if (window!=null) {
-            synchronized (lock) {
+        synchronized (lock) {
+            if (window!=null) {
                 windowEventQueue.addLast(new Resize(getWidth(),height));
+            } else {
+                setHeightWithNoRequest(height);
             }
-        } else {
-            setHeightWithNoRequest(height);
         }
     }
     
     @Override
     public void setVisible(boolean visible) {
-        if (window!=null) {
-            synchronized (lock) {
-                windowEventQueue.addLast(new SetResizable(visible));
+        synchronized (lock) {
+            if (window!=null) {
+                windowEventQueue.addLast(new SetVisible(visible));
+            } else {
+                this.visible = visible;
             }
-        } else {
-            this.visible = visible;
         }
     }
     
     @Override
     public void setResizable(boolean resizable) {
-        if (window!=null) {
-            synchronized (lock) {
+        synchronized (lock) {
+            if (window!=null) {
                 windowEventQueue.addLast(new SetResizable(resizable));
+            } else {
+                this.resizable = resizable;
             }
-        } else {
-            this.resizable = resizable;
         }
     }
     
@@ -240,28 +278,37 @@ public class SWindow extends AbstractSingleSlot implements jonl.aui.Window {
                 if (input.isButtonPressed(i)) {
                     this.fireMousePressed(new MouseButtonEvent(MouseButtonEvent.PRESSED,i,x,y));
                     this.fireGlobalMousePressed(new MouseButtonEvent(MouseButtonEvent.PRESSED,i,x,y));
+                    inClickState = true;
                 }
                 if (input.isButtonReleased(i)) {
                     this.fireMouseReleased(new MouseButtonEvent(MouseButtonEvent.RELEASED,i,x,y));
                     this.fireGlobalMouseReleased(new MouseButtonEvent(MouseButtonEvent.RELEASED,i,x,y));
+                    if (inClickState) {
+                        this.fireGlobalMouseClicked(new MouseButtonEvent(MouseButtonEvent.CLICKED,i,x,y));
+                        inClickState = false;
+                    }
                 }
             }
             boolean inNow = isWithin(x,y);
             boolean inBefore = isWithin(prevX,prevY);
             if (inNow && !inBefore) {
                 this.fireMouseEnter(new MouseMotionEvent(MouseMotionEvent.ENTER,x,y,prevX,prevY));
+                this.fireGlobalMouseEnter(new MouseMotionEvent(MouseMotionEvent.ENTER,x,y,prevX,prevY));
             }
             if (!inNow && inBefore) {
                 this.fireMouseExit(new MouseMotionEvent(MouseMotionEvent.EXIT,x,y,prevX,prevY));
+                this.fireGlobalMouseExit(new MouseMotionEvent(MouseMotionEvent.EXIT,x,y,prevX,prevY));
+                inClickState = false;
             }
             if (inNow) {
                 this.fireMouseHover(new MouseMotionEvent(MouseMotionEvent.HOVER,x,y,prevX,prevY));
+                this.fireGlobalMouseHover(new MouseMotionEvent(MouseMotionEvent.HOVER,x,y,prevX,prevY));
             }
             if (x!=prevX || y!=prevY) {
                 if (inNow && inBefore) {
                     this.fireMouseMoved(new MouseMotionEvent(MouseMotionEvent.MOVED,x,y,prevX,prevY));
+                    this.fireGlobalMouseMoved(new MouseMotionEvent(MouseMotionEvent.MOVED,x,y,prevX,prevY));
                 }
-                this.fireGlobalMousePositionChanged(x,y,prevX,prevY);
             }
         }
     }

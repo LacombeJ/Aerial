@@ -171,11 +171,38 @@ public abstract class SContainer extends SWidget implements Container {
     }
     
     @Override
-    void fireGlobalMousePositionChanged(int x, int y, int prevX, int prevY) {
-        super.fireGlobalMousePositionChanged(x,y,prevX,prevY);
+    void fireGlobalMouseMoved(MouseMotionEvent e) {
+        super.fireGlobalMouseMoved(e);
         for (Widget w : getChildren()) {
             SWidget sw = (SWidget)w;
-            sw.fireGlobalMousePositionChanged(x,y,prevX,prevY);
+            sw.fireGlobalMouseMoved(e);
+        }
+    }
+    
+    @Override
+    void fireGlobalMouseEnter(MouseMotionEvent e) {
+        super.fireGlobalMouseEnter(e);
+        for (Widget w : getChildren()) {
+            SWidget sw = (SWidget)w;
+            sw.fireGlobalMouseEnter(e);
+        }
+    }
+    
+    @Override
+    void fireGlobalMouseHover(MouseMotionEvent e) {
+        super.fireGlobalMouseHover(e);
+        for (Widget w : getChildren()) {
+            SWidget sw = (SWidget)w;
+            sw.fireGlobalMouseHover(e);
+        }
+    }
+    
+    @Override
+    void fireGlobalMouseExit(MouseMotionEvent e) {
+        super.fireGlobalMouseExit(e);
+        for (Widget w : getChildren()) {
+            SWidget sw = (SWidget)w;
+            sw.fireGlobalMouseExit(e);
         }
     }
     

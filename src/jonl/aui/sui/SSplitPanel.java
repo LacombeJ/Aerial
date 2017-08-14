@@ -11,6 +11,7 @@ import jonl.aui.MouseMotionEvent;
 import jonl.aui.SplitPanel;
 import jonl.aui.Widget;
 import jonl.jgl.Input;
+import jonl.jutils.func.Tuple2i;
 import jonl.vmath.Vector4;
 
 public class SSplitPanel extends AbstractDoubleSlot implements SplitPanel {
@@ -79,24 +80,25 @@ public class SSplitPanel extends AbstractDoubleSlot implements SplitPanel {
     }
     
     @Override
-    void fireMouseReleased(MouseButtonEvent e) {
-        super.fireMouseReleased(e);
+    void fireGlobalMouseReleased(MouseButtonEvent e) {
+        super.fireGlobalMouseReleased(e);
         if (e.button==Input.MB_LEFT) {
             inAdjustState = false;
         }
     }
     
     @Override
-    void fireMouseMoved(MouseMotionEvent e) {
-        super.fireMouseMoved(e);
+    void fireGlobalMouseMoved(MouseMotionEvent e) {
+        super.fireGlobalMouseMoved(e);
         double ratio = layout.ratio;
         if (inAdjustState) {
+            Tuple2i local = this.fromGlobalSpace(e.x, e.y);
             switch (layout.align) {
             case HORIZONTAL:
-                ratio = (double)e.x / getWidth();
+                ratio = (double)local.x / getWidth();
                 break;
             case VERTICAL:
-                ratio = (double)e.y / getHeight();
+                ratio = (double)local.y / getHeight();
                 break;
             }
         }
@@ -106,8 +108,8 @@ public class SSplitPanel extends AbstractDoubleSlot implements SplitPanel {
     }
     
     @Override
-    void fireMouseExit(MouseMotionEvent e) {
-        super.fireMouseExit(e);
+    void fireGlobalMouseExit(MouseMotionEvent e) {
+        super.fireGlobalMouseExit(e);
         inAdjustState = false;
     }
     
