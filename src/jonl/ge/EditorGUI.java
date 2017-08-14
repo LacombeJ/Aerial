@@ -66,7 +66,7 @@ class EditorGUI {
                         {
                             tree = ui.tree();
                         }
-                        hierarchyScroll.setScroll(tree,0,0,500,800);
+                        hierarchyScroll.setScroll(tree,0,0,200,800);
                         editorSplit = ui.splitPanel();
                         {
                             consoleSplit = ui.splitPanel();

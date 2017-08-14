@@ -13,8 +13,6 @@ class GLMap {
     private HashMap<Texture,jonl.jgl.Texture>           textureMap  = new HashMap<>();
     private HashMap<FrameBuffer,jonl.jgl.FrameBuffer>   bufferMap   = new HashMap<>();
     
-    private HashMap<Text,jonl.jgl.Texture>              textMap   = new HashMap<>();
-    
     GLMap(GraphicsLibrary gl) {
         this.gl = gl;
     }
