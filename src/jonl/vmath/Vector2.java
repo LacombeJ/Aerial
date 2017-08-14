@@ -154,4 +154,10 @@ public class Vector2 extends Vector<Vector2> {
         return new Vector2(-v.x,-v.y);
     }
     
+    public static float rad(Vector2 u, Vector2 v) {
+        float cross = Vector2.cross(u, v);
+        int sign = cross>0 ? 1 : -1;
+        return sign * Mathf.acos(u.dot(v) / (u.mag() * v.mag()));
+    }
+    
 }

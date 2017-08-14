@@ -399,8 +399,29 @@ public final class Mathf {
         return x<y;
     }
     
+    /**
+     * <pre>
+     * pattern(25,  50, 100) = 75
+     * pattern(50,  50, 100) = 50
+     * pattern(100, 50, 100) = 50
+     * pattern(125, 50, 100) = 75
+     * pattern(0,   50, 100) = 50
+     * pattern(-50, 50, 100) = 50
+     * </pre>
+     * @return a mapping of a real number to a value in the given range
+     */
     public static float pattern(float x, float min ,float max) {
-        return x%(max-min) + min;
+        float x_minus_min = x - min;
+        boolean positive = x_minus_min > 0;
+        float abs_diff = abs(x_minus_min);
+        float mod_range = abs_diff%(max-min);
+        if (mod_range==0) {
+            return min;
+        }
+        if (positive) {
+            return mod_range + min;
+        }
+        return max - mod_range;
     }
     
     public static float lerp(float alpha, float a, float b) {
