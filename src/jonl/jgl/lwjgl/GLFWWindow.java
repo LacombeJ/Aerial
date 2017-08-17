@@ -63,12 +63,17 @@ public final class GLFWWindow implements Window {
     private final ArrayList<Int2ChangedListener> positionListeners;
     private final ArrayList<Callback<Boolean>>   cursorListeners;
     
-    public GLFWWindow(String title, int width, int height, boolean fullscreen,
+    /**
+     * Constructs a GLFWWindow
+     * 
+     * @param visible window becomes visible when {@link #start()} is called
+     */
+    public GLFWWindow(String title, int width, int height, boolean visible, boolean fullscreen,
             boolean resizable, boolean decorated, int multiSample, boolean vsyncEnabled) {
         
         GLFWInstance.init();
         
-        this.visible = false;
+        this.visible = visible;
         this.vsyncEnabled = vsyncEnabled;
         
         sizeListeners = new ArrayList<>();
@@ -134,20 +139,20 @@ public final class GLFWWindow implements Window {
         });
     }
     
-    public GLFWWindow(String title, int width, int height, boolean resizable) {
-        this(title,width,height,false,resizable,true,4,true);
+    public GLFWWindow(String title, int width, int height, boolean visible, boolean resizable) {
+        this(title,width,height,visible,false,resizable,true,4,true);
     }
     
     public GLFWWindow(String title, int width, int height) {
-        this(title,width,height,false,false,true,4,true);
+        this(title,width,height,true,false);
     }
     
     public GLFWWindow(int width, int height) {
-        this("GLFW Window",width,height,false,false,true,4,true);
+        this("GLFW Window",width,height);
     }
     
     public GLFWWindow(String title) {
-        this(title,1024,576,false,false,true,4,true);
+        this(title,1024,576);
     }
     
     public GLFWWindow() {
