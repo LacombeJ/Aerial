@@ -45,7 +45,7 @@ public abstract class Application extends AbstractApp {
         
         prepare();
         
-        window = new GLFWWindow(title,width,height,fullscreen,resizable,true,4,true);
+        window = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,4,true);
         
         width = window.getWidth();
         height = window.getHeight();
