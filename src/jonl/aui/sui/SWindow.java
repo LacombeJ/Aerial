@@ -75,8 +75,7 @@ public class SWindow extends AWindow {
         sp.setLockCount(1);
         sp.add(()->{
             synchronized (lock) {
-                window = new GLFWWindow(title,getWidth(),getHeight(),false,resizable,true,4,false);
-                window.setVisible(visible);
+                window = new GLFWWindow(title,getWidth(),getHeight(),visible,false,resizable,true,4,false);
                 
                 Insets insets = window.getInsets();
                 if (isAligned) {
