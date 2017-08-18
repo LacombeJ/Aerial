@@ -80,8 +80,9 @@ public class SWindow extends AWindow {
                 Insets insets = window.getInsets();
                 if (isAligned) {
                     setPosition(halign,valign);
+                } else {
+                	window.setPosition(insets.left+getX(),insets.top+getY());
                 }
-                window.setPosition(insets.left+getX(),insets.top+getY());
             }
             gl = window.getGraphicsLibrary();
             input = window.getInput();
