@@ -4,19 +4,19 @@ import jonl.jutils.time.TimeUtils.TimeMetric;
 
 public class Clock {
 
-    private static StopWatch stopWatch;
-    private static TimeRate timeRate;
+    private StopWatch stopWatch;
+    private TimeRate timeRate;
     
-    public static void clock() {
+    public Clock() {
         stopWatch = new StopWatch();
         timeRate = new TimeRate();
     }
     
-    public static long lap() {
+    public long lap() {
         return stopWatch.lap();
     }
     
-    public static double rate() {
+    public double rate() {
         return timeRate.rate(TimeMetric.SECOND);
     }
     

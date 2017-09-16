@@ -5,11 +5,13 @@ import jonl.jutils.time.Clock;
 
 public class NamespaceDebug {
     
+    private static Clock clock = new Clock();
+    
     public static void      print(Object... objects)    { Console.print(objects);       }
     public static void      println(Object... objects)  { Console.println(objects);     }
 
-    public static void      clock()                     { Clock.clock();                }
-    public static long      lap()                       { return Clock.lap();           }
-    public static double    rate()                      { return Clock.rate();          }
+    public static void      clock()                     { clock = new Clock();          }
+    public static long      lap()                       { return clock.lap();           }
+    public static double    rate()                      { return clock.rate();          }
     
 }
