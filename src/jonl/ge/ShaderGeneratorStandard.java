@@ -8,7 +8,7 @@ class ShaderGeneratorStandard {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getFragSource(int version, Material material) {
+    static String getFragSource(int version, GeneratedMaterial material) {
         StringBuilder sb = new StringBuilder();
         version(sb,version);
         sb.append(fragStructLight());
@@ -43,14 +43,14 @@ class ShaderGeneratorStandard {
             "";
     }
     
-    private static String _in_mat3_mTBN(Material material) {
+    private static String _in_mat3_mTBN(GeneratedMaterial material) {
         if (material.normal!=null || material.height!=null) {
             return "in mat3 mTBN;\n";
         }
         return "";
     }
     
-    private static String fragIn(Material material) {
+    private static String fragIn(GeneratedMaterial material) {
         return
             "in vec3 vFragPos;\n" +
             "in vec3 vNormal;\n" +
@@ -61,11 +61,11 @@ class ShaderGeneratorStandard {
             "";
     }
     
-    private static String getShaderFunctionUniforms(Material material) {
+    private static String getShaderFunctionUniforms(GeneratedMaterial material) {
         return material.mbUniforms;
     }
     
-    private static String fragUniforms(Material material) {
+    private static String fragUniforms(GeneratedMaterial material) {
         return
             "uniform vec3 eye;\n" +
             "uniform Light light[8];\n" +
@@ -76,7 +76,7 @@ class ShaderGeneratorStandard {
     }
     
     // https://learnopengl.com/#!Advanced-Lighting/Parallax-Mapping
-    private static String fragFuncParallaxMapping(Material material) {
+    private static String fragFuncParallaxMapping(GeneratedMaterial material) {
         if (material.height!=null) {
             return
                 "vec2 parallaxTexCoord(vec2 texCoords, vec3 eyeDir) {\n" +
@@ -111,57 +111,45 @@ class ShaderGeneratorStandard {
         return "";
     }
     
-    private static String _____texCooord_E_parallaxTexCoord_vTexCoord_eyeDir_(Material material) {
+    private static String _____texCooord_E_parallaxTexCoord_vTexCoord_eyeDir_(GeneratedMaterial material) {
         if (material.height!=null) {
             return "    texCoord = parallaxTexCoord(vTexCoord,eyeDir);\n";
         }
         return "";
     }
     
-    private static String _____vec3_materialDiffuse_E_X(Material material) {
+    private static String _____vec3_materialDiffuse_E_X(GeneratedMaterial material) {
         if (material.diffuse!=null)
             return "    vec3 materialDiffuse = "+material.diffuse.getName()+";\n";
         return "    vec3 materialDiffuse = vec3(0,0,0);\n";
     }
-    private static String _____vec3_materialSpecular_E_X(Material material) {
+    private static String _____vec3_materialSpecular_E_X(GeneratedMaterial material) {
         if (material.specular!=null)
             return "    vec3 materialSpecular = "+material.specular.getName()+";\n";
         return "    vec3 materialSpecular = vec3(0,0,0);\n";
     }
-    private static String _____float_materialRoughness_E_X(Material material) {
+    private static String _____float_materialRoughness_E_X(GeneratedMaterial material) {
         if (material.roughness!=null)
             return "    float materialRoughness = "+material.roughness.getName()+";\n";
         return "    float materialRoughness = 0.8f;\n";
     }
-    private static String _____float_materialFresnel_E_X(Material material) {
+    private static String _____float_materialFresnel_E_X(GeneratedMaterial material) {
         if (material.fresnel!=null)
             return "    float materialFresnel = "+material.fresnel.getName()+";\n";
         return "    float materialFresnel = 0.3f;\n";
     }
     
-    private static String _____normal_E_texture2D_material_normal_vTexCoord_xyz(Material material) {
+    private static String _____normal_E_texture2D_material_normal_vTexCoord_xyz(GeneratedMaterial material) {
         if (material.normal!=null) {
             return "    normal = mTBN * (("+material.normal+"-0.5) * 2);\n";
         }
         return "";
     }
-    /*
-    private static String tempMethod(Material material) {
-        if (material.normal!=null) {
-            return 
-                "    vec3 normalx = mTBN * ((texture2D(material.normal,texCoord).xyz-0.5) * 2);\n" +
-                "    gl_FragColor = vec4(normalx,1)*0.5 + 0.5;\n" +
-                "";
-            //return "    gl_FragColor = vec4(vNormal*0.5+0.5, 1.0);\n";
-        }
-        return "";
-    }
-    */
-    private static String _____getShaderFunctionString(Material material) {
+    private static String _____getShaderFunctionString(GeneratedMaterial material) {
         return material.mbStatements;
     }
     
-    private static String fragMainBody(Material material) {
+    private static String fragMainBody(GeneratedMaterial material) {
         return
             "    vec3 normal = normalize(vNormal);\n" +
             "    vec3 varEyeDir = eye - vFragPos;\n" +
@@ -206,7 +194,7 @@ class ShaderGeneratorStandard {
             "        float roughness = r1 * exp(r2);\n" +
             "        \n" +
             "        // Schlick approximation\n" +
-            "        float fresnel = pow(1.0 - VdotH, 5.0);\n" +
+            "        float fresnel = pow(1.0 - VdotH, 3.0);\n" + //changed from 5 to 3, because of black artifacts, why?
             "        fresnel *= (1.0 - materialFresnel);\n" +
             "        fresnel += materialFresnel;\n" +
             "        \n" +
@@ -221,9 +209,7 @@ class ShaderGeneratorStandard {
             "        lightSum += finalValue;\n" +
             "        \n" +
             "    }\n" +
-            "    gl_FragColor = vec4(gl_FragCoord.x/1024,gl_FragCoord.y/576,gl_FragColor.z,1);\n" +
             "    gl_FragColor = vec4(lightSum, 1.0);\n" +
-            //tempMethod(material) +
             "";
     }
     
@@ -233,7 +219,7 @@ class ShaderGeneratorStandard {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getVertSource(int version, Material material, boolean instanced) {
+    static String getVertSource(int version, GeneratedMaterial material, boolean instanced) {
         StringBuilder sb = new StringBuilder();
         version(sb,version);
         sb.append(vertIn(version,instanced));
@@ -286,12 +272,12 @@ class ShaderGeneratorStandard {
         }
     }
     
-    private static String _out_mat3_mTBN(Material material) {
+    private static String _out_mat3_mTBN(GeneratedMaterial material) {
         if (material.normal!=null || material.height!=null) return "out mat3 mTBN;\n";
         return "";
     }
     
-    private static String vertOut(Material material, boolean instanced) {
+    private static String vertOut(GeneratedMaterial material, boolean instanced) {
         return
             "out vec3 vFragPos;\n" +
             "out vec3 vNormal;\n" +
@@ -309,7 +295,7 @@ class ShaderGeneratorStandard {
     //   so I handle this by providing the correct matrices in the scenario where A = (0,0,1)
     //TODO replace this with another function (transforming vectors close to (0,0,-1) results in slightly
     //     incorrect values
-    private static String vertFuncUnitTransform(Material material) {
+    private static String vertFuncUnitTransform(GeneratedMaterial material) {
         if (material.normal!=null || material.height!=null) {
             return
                 "mat3 unitTransform(vec3 B) {\n" +
@@ -332,7 +318,7 @@ class ShaderGeneratorStandard {
         return "";
     }
     
-    private static String _____mTBN_E_mat3_vTangent_vBitangent_vNormal_(Material material) {
+    private static String _____mTBN_E_mat3_vTangent_vBitangent_vNormal_(GeneratedMaterial material) {
         if (material.normal!=null || material.height!=null) {
             return 
                 "    mTBN = mat3(vTangent,vBitangent,vNormal);\n";
@@ -351,7 +337,7 @@ class ShaderGeneratorStandard {
         }
     }
     
-    private static String vertBody(Material material, boolean instanced) {
+    private static String vertBody(GeneratedMaterial material, boolean instanced) {
         return
             _____MVP_instance(instanced) +
             "    gl_Position = MVP * vertex;\n" +

@@ -1,6 +1,7 @@
 package jonl.ge;
 
 import jonl.ge.Input.CursorState;
+import jonl.jutils.time.Clock;
 
 interface App {
     
@@ -28,6 +29,7 @@ interface App {
     
     Platform getPlatform();
     String getInfo(String key);
+    Clock getClock();
     
     Updater getUpdater(); 
     Renderer getRenderer();

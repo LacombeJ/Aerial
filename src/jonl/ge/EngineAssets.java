@@ -4,20 +4,7 @@ import jonl.ge.utils.PresetData;
 
 public class EngineAssets {
     
-    public final Material DEFAULT_MATERIAL;
-    
-    public EngineAssets() {
-        DEFAULT_MATERIAL = defaultMaterial();
-    }
-    
-    private Material defaultMaterial() {
-        MaterialBuilder mb = new MaterialBuilder();
-        mb.diffuse = mb.vec3u("diffuse",0.5f,0.5f,0.5f);
-        mb.specular = mb.vec3u("specular",0.5f,0.5f,0.5f);
-        mb.roughness = mb.mbFloatu("roughness",0.8f);
-        mb.fresnel = mb.mbFloatu("fresnel",0.3f);
-        return mb.build();
-    }
+    //TODO remove these meshes with generated Geometry
     
     /* Mesh Assets */
     public final Mesh RECT_MESH = Loader.loadMesh(PresetData.rectMesh());
@@ -45,8 +32,9 @@ public class EngineAssets {
     public GameObject rect() {
         GameObject rect = new GameObject();
         rect.setName("Rect");
-        MeshRenderer cubeRenderer = new MeshRenderer();
-        cubeRenderer.mesh = RECT_MESH;
+        Mesh mesh = RECT_MESH;
+        Material mat = new GeneratedMaterial();
+        MeshRenderer cubeRenderer = new MeshRenderer(mesh,mat);
         rect.addComponent(cubeRenderer);
         return rect;
     }
@@ -54,8 +42,9 @@ public class EngineAssets {
     public GameObject plane() {
         GameObject plane = new GameObject();
         plane.setName("Plane");
-        MeshRenderer cubeRenderer = new MeshRenderer();
-        cubeRenderer.mesh = PLANE_MESH;
+        Mesh mesh = PLANE_MESH;
+        Material mat = new GeneratedMaterial();
+        MeshRenderer cubeRenderer = new MeshRenderer(mesh,mat);
         plane.addComponent(cubeRenderer);
         return plane;
     }
@@ -63,8 +52,9 @@ public class EngineAssets {
     public GameObject cube() {
         GameObject cube = new GameObject();
         cube.setName("Cube");
-        MeshRenderer cubeRenderer = new MeshRenderer();
-        cubeRenderer.mesh = CUBE_MESH;
+        Mesh mesh = CUBE_MESH;
+        Material mat = new GeneratedMaterial();
+        MeshRenderer cubeRenderer = new MeshRenderer(mesh,mat);
         cube.addComponent(cubeRenderer);
         return cube;
     }
@@ -72,8 +62,9 @@ public class EngineAssets {
     public GameObject sphere() {
         GameObject sphere = new GameObject();
         sphere.setName("Sphere");
-        MeshRenderer sphereRenderer = new MeshRenderer();
-        sphereRenderer.mesh = SPHERE_MESH;
+        Mesh mesh = SPHERE_MESH;
+        Material mat = new GeneratedMaterial();
+        MeshRenderer sphereRenderer = new MeshRenderer(mesh,mat);
         sphere.addComponent(sphereRenderer);
         return sphere;
     }
@@ -81,8 +72,9 @@ public class EngineAssets {
     public GameObject cone() {
         GameObject cone = new GameObject();
         cone.setName("Cone");
-        MeshRenderer coneRenderer = new MeshRenderer();
-        coneRenderer.mesh = CONE_MESH;
+        Mesh mesh = CONE_MESH;
+        Material mat = new GeneratedMaterial();
+        MeshRenderer coneRenderer = new MeshRenderer(mesh,mat);
         cone.addComponent(coneRenderer);
         return cone;
     }

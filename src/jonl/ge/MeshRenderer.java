@@ -2,9 +2,11 @@ package jonl.ge;
 
 public class MeshRenderer extends Component {
 
-    public Mesh mesh; //TODO hide variables, getters and setters?
     public boolean castShadows = true;
     public boolean recieveShadows = false;
+    public boolean recieveLight = true;
+    
+    Mesh mesh; //TODO hide variables, getters and setters?
     Material material = null;
     Mode mode = Mode.TRIANGLES;
     
@@ -18,6 +20,19 @@ public class MeshRenderer extends Component {
         Mode(jonl.jgl.GraphicsLibrary.Mode mode) {
             this.mode = mode;
         }
+    }
+    
+    public MeshRenderer(Mesh mesh, Material material) {
+        this.mesh = mesh;
+        this.material = material;
+    }
+    
+    public Mesh getMesh() {
+        return mesh;
+    }
+    
+    public void setMesh(Mesh mesh) {
+        this.mesh = mesh;
     }
     
     public Material getMaterial() {

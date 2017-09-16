@@ -1,6 +1,7 @@
 package jonl.ge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
@@ -15,7 +16,7 @@ import jonl.vmath.Vector4;
  * @author Jonathan Lacombe
  *
  */
-public class MaterialBuilder {
+public class GeneratedMaterialBuilder {
     
     public enum MBShader {
         
@@ -68,28 +69,79 @@ public class MaterialBuilder {
     private final ArrayList<String> mbStatementList = new ArrayList<>();
     private int variableCount = 0;
     
-    public MaterialBuilder() {
-        
+    
+    //To id unique generated materials we use a static unique_gm for every GMBuilder
+    //with another int everytime the GMB is changed and return _gm_[unique_gm_id]_[unique_gm_changed]
+    //This is so that only one shader is generated for every unique GM
+    int unique_gm_id = 0;
+    int unique_gm_changed = 0;
+    static int unique_gm_count = 0;
+    
+    public GeneratedMaterialBuilder() {
+        unique_gm_id = unique_gm_count++;
     }
     
-    public Material build() {
-        Material mat = new Material(
-                shader,
-                diffuse,specular,normal,height,
-                roughness,fresnel,
-                mbStatementList,mbUniformList
-        );
+    
+    public GeneratedMaterial build() {
+        GeneratedMaterial mat = new GeneratedMaterial(Construct.UNINITIALIZED);
+        apply(mat);
         return mat;
     }
     
+    
+    
+    void apply(GeneratedMaterial gm) {
+        String id = "_gm_build_"+unique_gm_id+"_"+unique_gm_changed+"_";
+        
+        gm.id = id;
+        gm.shader = shader;
+        
+        gm.diffuse = copyData(diffuse);
+        gm.specular = copyData(specular);
+        gm.normal = copyData(normal);
+        gm.height = copyData(height);
+        gm.roughness = copyData(roughness);
+        gm.fresnel = copyData(fresnel)
+                ;
+        gm.mbStatements = gm.getStatementString(mbStatementList);
+        gm.mbUniforms = gm.getUniformString(mbUniformList);
+        gm.mbUniformList = new ArrayList<>();
+        gm.mbUniformMap = new HashMap<>();
+        for (MBUniform mbu : mbUniformList) {
+            MBUniform uniform = mbu.copy();
+            gm.mbUniformList.add(uniform);
+            gm.mbUniformMap.put(uniform.id,uniform);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <T extends MBData> T copyData(T md) {
+        if (md==null) {
+            return null;
+        }
+        if (md instanceof MBUniform) {
+            MBUniform mbu = (MBUniform) md;
+            return (T) mbu.copy();
+        }
+        return md;
+    }
+    
+    
+    /**
+     * @return a unique name for a generated variable
+     */
     private String genName() {
-        String name = "mb_"+variableCount;
+        String name = "_gmv_"+variableCount;
         variableCount++;
         return name;
     }
     
+    // -----------------------------------------------------------------------------
+    // SHADER MODIFICATION
+    
     /** Sets this variable to the given value */
     private <T extends MBVar> T putVariable(T v, String value) {
+        unique_gm_changed++;
         v.mb = this;
         v.type = getType(v);
         v.name = genName();
@@ -100,6 +152,7 @@ public class MaterialBuilder {
     }
     
     private <T extends MBUniform> T putUniform(T v, String id, Object data) {
+        unique_gm_changed++;
         v.mb = this;
         v.type = getType(v);
         v.name = genName();
@@ -110,8 +163,14 @@ public class MaterialBuilder {
     }
     
     private void putString(String string) {
+        unique_gm_changed++;
         mbStatementList.add(string);
     }
+    
+    // -----------------------------------------------------------------------------
+    
+    
+    
     
     private void putIf(MBBool b)        { putString("if ("+b.getName()+") {\n"); }
     private void putElseIf(MBBool b)    { putString("else if ("+b.getName()+") {\n"); }
@@ -374,11 +433,7 @@ public class MaterialBuilder {
     public MBMat4U mat4u(String id, Matrix4 m) { return putUniform(new MBMat4U(),id,m.get()); }
     public MBMat3U mat4u(String id, Matrix3 m) { return putUniform(new MBMat3U(),id,m.get()); }
     public MBMat2U mat4u(String id, Matrix2 m) { return putUniform(new MBMat2U(),id,m.get()); }
-    public MBTexU texture(String id, Texture t) {
-        MBTexU u = new MBTexU();
-        u.textureID = textureCount++;
-        return putUniform(u,id,t);
-    }
+    public MBTexU texture(String id, Texture t) { return putUniform(new MBTexU(),id,new TextureUniform(t,textureCount++)); }
     
     private static String funcBuild(String name, Object... params) {
         String build = name + "(";
@@ -390,37 +445,7 @@ public class MaterialBuilder {
         }
         build += ")";
         return build;
-    }
-    /*
-    private static String vec4s(Vector4 v) {
-        return funcBuild("vec4",v.x,v.y,v.z,v.w);
-    }
-    
-    private static String vec3s(Vector3 v) {
-        return funcBuild("vec3",v.x,v.y,v.z);
-    }
-    
-    private static String vec2s(Vector2 v) {
-        return funcBuild("vec2",v.x,v.y);
-    }
-    
-    private static String mat4s(Matrix4 m) {
-        return funcBuild("mat4",vec4s(m.getCol(0)),vec4s(m.getCol(1)),vec4s(m.getCol(2)),vec4s(m.getCol(3)));
-    }
-    
-    private static String mat3s(Matrix3 m) {
-        return funcBuild("mat3",vec3s(m.getCol(0)),vec3s(m.getCol(1)),vec3s(m.getCol(2)));
-    }
-    
-    private static String mat2s(Matrix2 m) {
-        return funcBuild("mat2",vec2s(m.getCol(0)),vec2s(m.getCol(1)));
-    }
-    */
-    
-    
-    
-    
-    
+    } 
     
     
     
@@ -475,7 +500,7 @@ public class MaterialBuilder {
     }
     
     private abstract static class MBObject {
-        MaterialBuilder mb;
+        GeneratedMaterialBuilder mb;
         String name;
         String type;
         @Override
@@ -531,10 +556,9 @@ public class MaterialBuilder {
     abstract static class MBUniform extends MBObject {
         Object data;
         String id; //ID to request uniforms
-        int textureID = -1;
         @Override
         public int hashCode() {
-            return data.hashCode() + id.hashCode() + textureID;
+            return data.hashCode() + id.hashCode();
         }
         MBUniform copy() {
             MBUniform uniform = getUniform(this);
@@ -543,12 +567,11 @@ public class MaterialBuilder {
             uniform.type = type;
             uniform.data = this.data;
             uniform.id = this.id;
-            uniform.textureID = this.textureID;
             return uniform;
         }
     }
     
-    public static class MBTexU extends MBUniform {
+    public static class MBTexU extends MBUniform implements MBData {
         public Texture get() { return (Texture) data; }
         public void set(Texture t)  { data = t; }
         public String getName() { return name; }

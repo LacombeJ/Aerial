@@ -3,8 +3,8 @@ package jonl.ge.ext;
 import jonl.jutils.io.FileUtils;
 import jonl.vmath.Mathf;
 import jonl.vmath.Vector3;
-import jonl.ge.Camera;
 import jonl.ge.CameraExtension;
+import jonl.ge.RenderTarget;
 
 /**
  * https://learnopengl.com/#!Advanced-Lighting/SSAO
@@ -52,8 +52,8 @@ public class Blur extends CameraExtension {
 
     @Override
     public void render() {
-        Camera camera = getComponent(Camera.class);
-        setTexture(camera.getTexture(Camera.RENDER_TEXTURE),"texture");
+        RenderTarget camera = getComponent(RenderTarget.class);
+        setTexture(camera.getTexture(RenderTarget.RENDER_TEXTURE),"texture");
         
     }
 

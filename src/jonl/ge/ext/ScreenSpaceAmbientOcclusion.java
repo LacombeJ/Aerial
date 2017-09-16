@@ -6,8 +6,8 @@ import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
 
-import jonl.ge.Camera;
 import jonl.ge.CameraExtension;
+import jonl.ge.RenderTarget;
 import jonl.ge.Texture;
 import jonl.ge.Transform;
 import jonl.ge.Texture.Filter;
@@ -64,9 +64,9 @@ public class ScreenSpaceAmbientOcclusion extends CameraExtension {
 
     @Override
     public void render() {
-        Camera camera = getComponent(Camera.class);
-        setTexture(camera.getTexture(Camera.POSITION_TEXTURE),"gPosition");
-        setTexture(camera.getTexture(Camera.NORMALS_TEXTURE),"gNormal");
+        RenderTarget camera = getComponent(RenderTarget.class);
+        setTexture(camera.getTexture(RenderTarget.POSITION_TEXTURE),"gPosition");
+        setTexture(camera.getTexture(RenderTarget.NORMALS_TEXTURE),"gNormal");
         setTexture(noiseTexture,"texNoise");
         setVec3Array(ssaoKernel,"samples");
         setMat4(camera.getProjection(),"projection");

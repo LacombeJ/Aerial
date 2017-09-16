@@ -8,7 +8,7 @@ class ShaderGeneratorBasic {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getFragSource(int version, Material material) {
+    static String getFragSource(int version, GeneratedMaterial material) {
         StringBuilder sb = new StringBuilder();
         version(sb,version);
         sb.append(fragStructLight());
@@ -42,14 +42,14 @@ class ShaderGeneratorBasic {
             "";
     }
     
-    private static String _in_mat3_mTBN(Material material) {
+    private static String _in_mat3_mTBN(GeneratedMaterial material) {
         if (material.normal!=null || material.height!=null) {
             return "in mat3 mTBN;\n";
         }
         return "";
     }
     
-    private static String fragIn(Material material) {
+    private static String fragIn(GeneratedMaterial material) {
         return
             "in vec3 vFragPos;\n" +
             "in vec3 vNormal;\n" +
@@ -60,11 +60,11 @@ class ShaderGeneratorBasic {
             "";
     }
     
-    private static String getShaderFunctionUniforms(Material material) {
+    private static String getShaderFunctionUniforms(GeneratedMaterial material) {
         return material.mbUniforms;
     }
     
-    private static String fragUniforms(Material material) {
+    private static String fragUniforms(GeneratedMaterial material) {
         return
             "uniform vec3 eye;\n" +
             "uniform Light light[8];\n" +
@@ -74,17 +74,17 @@ class ShaderGeneratorBasic {
             "";
     }
     
-    private static String _____vec3_materialDiffuse_E_X(Material material) {
+    private static String _____vec3_materialDiffuse_E_X(GeneratedMaterial material) {
         if (material.diffuse!=null)
             return "    vec3 materialDiffuse = "+material.diffuse.getName()+";\n";
         return "    vec3 materialDiffuse = vec3(0,0,0);\n";
     }
     
-    private static String _____getShaderFunctionString(Material material) {
+    private static String _____getShaderFunctionString(GeneratedMaterial material) {
         return material.mbStatements;
     }
     
-    private static String fragMainBody(Material material) {
+    private static String fragMainBody(GeneratedMaterial material) {
         return
             "    vec3 normal = normalize(vNormal);\n" +
             "    vec3 varEyeDir = eye - vFragPos;\n" +
@@ -102,7 +102,7 @@ class ShaderGeneratorBasic {
     /* ******************************************************************************************************** */
     /* ******************************************************************************************************** */
     
-    static String getVertSource(int version, Material material, boolean instanced) {
+    static String getVertSource(int version, GeneratedMaterial material, boolean instanced) {
         return ShaderGeneratorStandard.getVertSource(version, material, instanced);
     }
     

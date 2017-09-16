@@ -1,5 +1,8 @@
 package jonl.ge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
@@ -7,7 +10,7 @@ public class Camera extends Component {
     
     float height = 10f; //used in orthographic projection
     float fov = 90; //used in perspective projection
-    float aspect = 16/9f;
+    float aspect = 16/9f; //width / height
     float near = 0.1f;
     float far = 100f;
     
@@ -19,16 +22,27 @@ public class Camera extends Component {
     float viewRight = 1;
     float viewTop = 1;
     
-    public boolean renderToTexture = true;
-    FrameBuffer gBuffer = null;
-    FrameBuffer buffer = null;
-    
     float[] clearColor = { 0, 0, 0, 1 };
     boolean scissor = true;
     boolean scaleProjection = false;
     
     
-
+    public enum Target {
+        ALL,
+        EXCEPT,
+        ONLY,
+    }
+    private Target type = Target.ALL;
+    private List<GameObject> targets = new ArrayList<>();
+    
+    
+    
+    /**
+     * Camera Component
+     * <p>
+     * Default view is projection with 90 fov, 16/9.0 aspect ratio,
+     * 0.1 near, and 100 far.
+     */
     public Camera() {
         
     }
@@ -61,6 +75,10 @@ public class Camera extends Component {
         this.far = far;
         projection = Matrix4.orthographic(height,aspect,near,far);
         return this;
+    }
+    
+    public Camera setOrthographicBox(float height, float width, float near, float far) {
+        return setOrthographic(height,width/height,near,far);
     }
     
     public Camera setPerspective() {
@@ -103,6 +121,10 @@ public class Camera extends Component {
         return this;
     }
     
+    public void setClearColor(float r, float g, float b, float a) {
+        clearColor = new float[]{r,g,b,a};
+    }
+    
     public Camera setScissor(boolean scissor) {
         this.scissor = scissor;
         return this;
@@ -126,23 +148,34 @@ public class Camera extends Component {
     
     
     
-    public static final int POSITION_TEXTURE    = 0;
-    public static final int NORMALS_TEXTURE     = 1;
-    public static final int DIFFUSE_TEXTURE     = 2;
-    public static final int SPECULAR_TEXTURE    = 3;
-    public static final int MATERIAL_TEXTURE    = 4;
-    public static final int RENDER_TEXTURE      = 5;
     
-    public Texture getTexture(int type) {
-        if (type==RENDER_TEXTURE) return buffer.getTexture(0);
-        return gBuffer.getTexture(type);
+    public Target getTargetType() {
+        return type;
     }
     
-    public Texture getRenderTexture() {
-        return buffer.getTexture(0);
+    public void setTargetType(Target type) {
+        this.type = type;
     }
     
+    public boolean hasTarget(GameObject obj) {
+        return targets.contains(obj);
+    }
     
+    public void addTargets(GameObject... objects) {
+        for (GameObject o : objects) {
+            targets.add(o);
+        }
+    }
+    
+    public void removeTargets(GameObject... objects) {
+        for (GameObject o : objects) {
+            targets.remove(o);
+        }
+    }
+    
+    public void removeAllTargets() {
+        targets = new ArrayList<GameObject>();
+    }
     
     
 }

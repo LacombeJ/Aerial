@@ -55,7 +55,7 @@ class AppInput implements Input {
         return input.getScrollX();
     }
     public float getScrollY() {
-        return input.getScrollX();
+        return input.getScrollY();
     }
     
     public boolean isButtonDown(int mbutton) {

@@ -18,14 +18,15 @@ class AppUtil {
     static GameObject cube() {
         GameObject cube = new GameObject();
         cube.setName("Cube");
-        MeshRenderer cubeRenderer = new MeshRenderer();
-        cubeRenderer.mesh = Loader.loadMesh(PresetData.cubeMesh());
+        Mesh mesh = Loader.loadMesh(PresetData.cubeMesh());
+        Material mat = new GeneratedMaterial();
+        MeshRenderer cubeRenderer = new MeshRenderer(mesh,mat);
         cube.addComponent(cubeRenderer);
         return cube;
     }
     
-    static Material defaultMaterial() {
-        MaterialBuilder mb = new MaterialBuilder();
+    static GeneratedMaterial defaultMaterial() {
+        GeneratedMaterialBuilder mb = new GeneratedMaterialBuilder();
         mb.diffuse = mb.vec3u("diffuse",0.5f,0.5f,0.5f);
         mb.specular = mb.vec3u("specular",0.5f,0.5f,0.5f);
         mb.roughness = mb.mbFloatu("roughness",0.8f);
@@ -38,6 +39,18 @@ class AppUtil {
         Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);
         Shader fragShader = gl.glCreateShader(ShaderType.FRAGMENT_SHADER,fragSource);
         program.attach(vertShader);
+        program.attach(fragShader);
+        program.link();
+        return program;
+    }
+    
+    static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String geomSource, String fragSource) {
+        Program program = gl.glCreateProgram();
+        Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);
+        Shader geomShader = gl.glCreateShader(ShaderType.GEOMETRY_SHADER,geomSource);
+        Shader fragShader = gl.glCreateShader(ShaderType.FRAGMENT_SHADER,fragSource);
+        program.attach(vertShader);
+        program.attach(geomShader);
         program.attach(fragShader);
         program.link();
         return program;

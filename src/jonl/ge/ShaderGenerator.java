@@ -27,14 +27,14 @@ class ShaderGenerator {
     
     /** Every type of material must have a unique string 
      * @param instanced */
-    private static String getProgramString(Material material, boolean instanced) {
+    private static String getProgramString(GeneratedMaterial material, boolean instanced) {
         StringBuilder sb = new StringBuilder();
-        sb.append("mat"+material.id);
+        sb.append(material.shaderKey());
         sb.append(instanced ? "i1" : "i0");
         return sb.toString();
     }
     
-    Program getOrCreateProgram(Material material, boolean instanced) {
+    Program getOrCreateProgram(GeneratedMaterial material, boolean instanced) {
         String string = getProgramString(material, instanced);
         Program glprogram = programMap.get(string);
         if (glprogram==null) {
