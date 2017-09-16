@@ -216,7 +216,6 @@ public final class GLFWWindow implements Window {
     }
     
     private void pollInput() {
-        input.reset();
         input.update();
     }
     

@@ -42,6 +42,9 @@ class GLFWInput extends AbstractInput {
     private float scrollX;
     private float scrollY;
     
+    //Accumulating because scroll callback access happends on a different thread
+    private float saccumx;
+    private float saccumy;
     /**
      * Used to get correct dx and dy values following start of window or
      * following change in cursor state (grabbed to normal and vice-versa)
@@ -56,22 +59,14 @@ class GLFWInput extends AbstractInput {
         this.windowHeight = windowHeight;
         
         GLFW.glfwSetScrollCallback(windowID,(windowid,xoffset,yoffset)->{
-            scrollX = (float) xoffset;
-            scrollY = (float) yoffset;
+            saccumx += (float) xoffset;
+            saccumy += (float) yoffset;
         });
         
     }
     
     void setOverride(boolean o) {
         override = o;
-    }
-    
-    /**
-     * Called from GLFWWindow update method
-     */
-    void reset() {
-        scrollX = 0;
-        scrollY = 0;
     }
     
     void update() {
@@ -93,6 +88,11 @@ class GLFWInput extends AbstractInput {
             dx = nx - x;
             dy = ny - y;
         }
+        
+        scrollX = saccumx;
+        scrollY = saccumy;
+        saccumx = 0;
+        saccumy = 0;
         
         x = nx;
         y = ny;

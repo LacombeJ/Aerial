@@ -44,6 +44,7 @@ import org.lwjgl.opengl.GL20;
 import jonl.jgl.AbstractProgram;
 import jonl.jgl.Shader;
 import jonl.jgl.Texture;
+import jonl.jutils.misc.StringUtils;
 
 
 /**
@@ -162,6 +163,9 @@ class LWJGLProgram extends AbstractProgram {
         
         if (GL20.glGetProgrami(id,GL20.GL_LINK_STATUS)==GL11.GL_FALSE) {
             System.err.println("Program "+id+" failed to link");
+            
+            String log = GL20.glGetProgramInfoLog(id);
+            System.err.println(log);
         }
     }
     
