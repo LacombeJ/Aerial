@@ -84,6 +84,8 @@ public abstract class Vector<V extends Vector<V>> {
     
     public V multiply(float scalar) { return scale(scalar); }
     
+    public V divide(float scalar) { return scale(1f/scalar); }
+    
     /**
      * Multiplies the components of this vector by the corresponding
      * components of the given vector
@@ -93,6 +95,19 @@ public abstract class Vector<V extends Vector<V>> {
     public V multiply(V v) {
         for (int i=0; i<size(); i++) {
             set(i,get(i)*v.get(i));
+        }
+        return (V) this;
+    }
+    
+    /**
+     * Divides the components of this vector by the corresponding
+     * components of the given vector
+     * @return this Vector after it has been divided
+     */
+    @SuppressWarnings("unchecked")
+    public V divide(V v) {
+        for (int i=0; i<size(); i++) {
+            set(i,get(i)/v.get(i));
         }
         return (V) this;
     }
@@ -142,11 +157,27 @@ public abstract class Vector<V extends Vector<V>> {
         return (V) this;
     }
     
+    @SuppressWarnings("unchecked")
+    public V add(float scalar) {
+        for (int i=0; i<size(); i++) {
+            set(i,get(i)+scalar);
+        }
+        return (V) this;
+    }
+    
     /** @return this vector as the difference of two vectors */
     @SuppressWarnings("unchecked")
     public V sub(V vector) {
         for (int i=0; i<size(); i++) {
             set(i,get(i)-vector.get(i));
+        }
+        return (V) this;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public V sub(float scalar) {
+        for (int i=0; i<size(); i++) {
+            set(i,get(i)-scalar);
         }
         return (V) this;
     }
@@ -172,6 +203,42 @@ public abstract class Vector<V extends Vector<V>> {
     }
     
     public V abs() { return absolute(); }
+    
+    @SuppressWarnings("unchecked")
+    public V min(V v) {
+        for (int i=0; i<size(); i++) {
+            set(i,get(i) < v.get(i) ? get(i) : v.get(i));
+        }
+        return (V) this;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public V max(V v) {
+        for (int i=0; i<size(); i++) {
+            set(i,get(i) > v.get(i) ? get(i) : v.get(i));
+        }
+        return (V) this;
+    }
+    
+    public float min() {
+        float min = get(0);
+        for (int i=1; i<size(); i++) {
+            if (get(i) < min) {
+                min = get(i);
+            }
+        }
+        return min;
+    }
+    
+    public float max() {
+        float min = get(0);
+        for (int i=1; i<size(); i++) {
+            if (get(i) < min) {
+                min = get(i);
+            }
+        }
+        return min;
+    }
     
     @SuppressWarnings("unchecked")
     public V lerp(V v, float alpha) {

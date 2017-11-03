@@ -40,7 +40,9 @@ public final class Mathf {
      * A constant epsilon for comparing floats
      */
     public static final float EPSILON = 0.000001f;
-    
+
+    public static final float POSITIVE_INFINITY = Float.POSITIVE_INFINITY;
+    public static final float NEGATIVE_INFINITY = Float.NEGATIVE_INFINITY;
     
     /* ******************************************************************************** */
     /* *****************************    Simple METHODS      *************************** */

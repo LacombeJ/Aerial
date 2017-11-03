@@ -5,24 +5,25 @@ package jonl.vmath;
  * @author Jonathan Lacombe
  *
  */
-public class MatrixN extends SquareMatrix<MatrixN,VectorN> {
+public class MatrixMxN extends Matrix<MatrixMxN,VectorN,VectorN> {
 
     public final float[] matrix;
     
     private final int rows;
     
-    public MatrixN(int dimension) {
+    public MatrixMxN(int width, int height) {
         
-        matrix = new float[dimension*dimension];
-        rows = dimension;
+        matrix = new float[width*height];
+        rows = height;
         
     }
     
-    public MatrixN(float[][] array) {
+    public MatrixMxN(float[][] array) {
         rows = array.length;
-        matrix = new float[rows*rows];
+        int cols = array[0].length;
+        matrix = new float[rows*cols];
         for (int i=0; i<rows; i++) {
-            for (int j=0; j<rows; j++) {
+            for (int j=0; j<cols; j++) {
                 set(i,j,array[i][j]);
             }
         }
@@ -31,6 +32,11 @@ public class MatrixN extends SquareMatrix<MatrixN,VectorN> {
     @Override
     public int getRows() {
         return rows;
+    }
+
+    @Override
+    public int getColumns() {
+        return matrix.length/rows;
     }
     
     @Override
@@ -52,16 +58,15 @@ public class MatrixN extends SquareMatrix<MatrixN,VectorN> {
     protected VectorN getEmptyRow() {
         return new VectorN(new float[getColumns()]);
     }
-    
+
     @Override
-    protected MatrixN getEmptyMatrix() {
-        return new MatrixN(getRows());
+    protected VectorN getEmptyCol() {
+        return new VectorN(new float[getRows()]);
     }
-    
-    @SuppressWarnings("unchecked")
+
     @Override
-    public <S extends SquareMatrix<S, ?>> S subMatrix() {
-        return (S) new MatrixN(rows-1);
+    protected MatrixMxN getEmptyMatrix() {
+        return new MatrixMxN(getRows(),getColumns());
     }
     
 }

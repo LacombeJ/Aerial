@@ -1,5 +1,8 @@
 package jonl.vmath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Jonathan Lacombe
@@ -17,6 +20,10 @@ public class Vector2 extends Vector<Vector2> {
     
     public Vector2(Vector2 v) {
         this(v.x,v.y);
+    }
+    
+    public Vector2(float f) {
+        this(f,f);
     }
     
     public Vector2() { }
@@ -158,6 +165,31 @@ public class Vector2 extends Vector<Vector2> {
         float cross = Vector2.cross(u, v);
         int sign = cross>0 ? 1 : -1;
         return sign * Mathf.acos(u.dot(v) / (u.mag() * v.mag()));
+    }
+    
+    public static Vector2 random() {
+        return new Vector2(Mathf.random(),Mathf.random());
+    }
+    
+    public static List<Vector2> pack(float[] values) {
+        List<Vector2> vectors = new ArrayList<>();
+        for (int i=0; i<values.length/2; i++) {
+            Vector2 v = new Vector2(
+                values[i],
+                values[i*2+1]
+            );
+            vectors.add(v);
+        }
+        return vectors;
+    }
+    
+    public static float[] unpack(List<Vector2> vectors) {
+        float[] values = new float[vectors.size()*2];
+        for (int i=0; i<vectors.size(); i++) {
+            values[i*2] = vectors.get(i).x;
+            values[i*2+1] = vectors.get(i).y;
+        }
+        return values;
     }
     
 }

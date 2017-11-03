@@ -5,7 +5,7 @@ package jonl.vmath;
  * @author Jonathan Lacombe
  *
  */
-public class Matrix3 extends Matrix<Matrix3,Vector3,Vector3> {
+public class Matrix3 extends SquareMatrix<Matrix3,Vector3> {
 
     public float m00, m01, m02;
     public float m10, m11, m12;
@@ -61,11 +61,6 @@ public class Matrix3 extends Matrix<Matrix3,Vector3,Vector3> {
 
     @Override
     public int getRows() {
-        return 3;
-    }
-
-    @Override
-    public int getColumns() {
         return 3;
     }
     
@@ -128,13 +123,24 @@ public class Matrix3 extends Matrix<Matrix3,Vector3,Vector3> {
     }
 
     @Override
-    protected Vector3 getEmptyCol() {
-        return new Vector3();
-    }
-
-    @Override
     protected Matrix3 getEmptyMatrix() {
         return new Matrix3();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public <S extends SquareMatrix<S, ?>> S subMatrix() {
+        return (S) new Matrix2();
+    }
+    
+    /** @return the identity matrix */
+    public static Matrix3 identity() {
+        return new Matrix3(1,1,1);
+    }
+    
+    /** @return a matrix filled with ones */
+    public static Matrix3 ones() {
+        return new Matrix3(1,1,1,1,1,1,1,1,1);
     }
     
 }

@@ -7,7 +7,7 @@ import java.nio.FloatBuffer;
  * @author Jonathan Lacombe
  *
  */
-public class Matrix4 extends Matrix<Matrix4,Vector4,Vector4> {
+public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
     
     private static final Matrix4 tmp1 = new Matrix4();
     
@@ -97,11 +97,6 @@ public class Matrix4 extends Matrix<Matrix4,Vector4,Vector4> {
     public int getRows() {
         return 4;
     }
-
-    @Override
-    public int getColumns() {
-        return 4;
-    }
     
     @Override
     public int size() {
@@ -179,15 +174,16 @@ public class Matrix4 extends Matrix<Matrix4,Vector4,Vector4> {
     protected Vector4 getEmptyRow() {
         return new Vector4();
     }
-
-    @Override
-    protected Vector4 getEmptyCol() {
-        return new Vector4();
-    }
-
+    
     @Override
     protected Matrix4 getEmptyMatrix() {
         return new Matrix4();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public <S extends SquareMatrix<S, ?>> S subMatrix() {
+        return (S) new Matrix3();
     }
     
     /** 
@@ -389,13 +385,28 @@ public class Matrix4 extends Matrix<Matrix4,Vector4,Vector4> {
     
     public static Vector4 toScreenSpace(Matrix4 MVP, Vector3 vertex) {
         Vector4 v = MVP.multiply(new Vector4(vertex,1));
-        v = ( v.scale(1.0f/v.w).add(new Vector4(1,1,1,1)) ).scale(0.5f);
+        v = ( v.divide(v.w).add(new Vector4(1,1,1,1)) ).scale(0.5f);
         return v;
+    }
+    
+    public static Vector3 fromScreenSpace(Matrix4 MVP, Vector4 fragCoord) {
+        Vector4 v = fragCoord.get();
+        v.scale(2);
+        v.sub(new Vector4(1,1,1,1));
+        v.scale(v.w);
+        v = MVP.get().inverse().multiply(v);
+        v.divide(v.w);
+        return v.xyz();
     }
     
     /** @return the identity matrix */
     public static Matrix4 identity() {
         return new Matrix4(1,1,1,1);
+    }
+    
+    /** @return a matrix filled with ones */
+    public static Matrix4 ones() {
+        return new Matrix4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
     }
     
 }

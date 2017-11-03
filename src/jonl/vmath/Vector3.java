@@ -1,5 +1,8 @@
 package jonl.vmath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Jonathan Lacombe
@@ -25,8 +28,12 @@ public class Vector3 extends Vector<Vector3> {
         this(v.x,v.y,z);
     }
     
-    public Vector3() { }
+    public Vector3(float f) {
+        this(f,f,f);
+    }
     
+    public Vector3() { }
+
     @Override
     public int size() {
         return 3;
@@ -133,5 +140,44 @@ public class Vector3 extends Vector<Vector3> {
         return perpRad.add(proj);
     }
     
+    public static Vector3 min(Vector3 u, Vector3 v) {
+        return u.get().min(v);
+    }
+    
+    public static Vector3 max(Vector3 u, Vector3 v) {
+        return u.get().max(v);
+    }
+    
+    public static Vector3 random() {
+        return new Vector3(Mathf.random(),Mathf.random(),Mathf.random());
+    }
+    
+    //TODO Make sure these align with Matrix4 and Quaternion definition of forward, up, right
+    public static final Vector3 forward()   { return new Vector3(0,0,1); }
+    public static final Vector3 up()        { return new Vector3(0,1,0); }
+    public static final Vector3 right()     { return new Vector3(1,0,0); }
+    
+    public static List<Vector3> pack(float[] values) {
+        List<Vector3> vectors = new ArrayList<>();
+        for (int i=0; i<values.length/3; i++) {
+            Vector3 v = new Vector3(
+                values[i],
+                values[i*3+1],
+                values[i*3+2]
+            );
+            vectors.add(v);
+        }
+        return vectors;
+    }
+    
+    public static float[] unpack(List<Vector3> vectors) {
+        float[] values = new float[vectors.size()*3];
+        for (int i=0; i<vectors.size(); i++) {
+            values[i*3] = vectors.get(i).x;
+            values[i*3+1] = vectors.get(i).y;
+            values[i*3+2] = vectors.get(i).z;
+        }
+        return values;
+    }
     
 }

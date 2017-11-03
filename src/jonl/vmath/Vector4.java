@@ -1,5 +1,8 @@
 package jonl.vmath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Jonathan Lacombe
@@ -29,6 +32,10 @@ public class Vector4 extends Vector<Vector4> {
     
     public Vector4(Vector2 v, float z, float w) {
         this(v.x,v.y,z,w);
+    }
+    
+    public Vector4(float f) {
+        this(f,f,f,f);
     }
     
     public Vector4() { }
@@ -87,6 +94,39 @@ public class Vector4 extends Vector<Vector4> {
         this.y += y;
         this.z += z;
         this.w += w;
+    }
+    
+    public static Vector4 random() {
+        return new Vector4(Mathf.random(),Mathf.random(),Mathf.random(),Mathf.random());
+    }
+    
+    public static final Vector4 forward()   { return new Vector4(Vector3.forward(), 1); }
+    public static final Vector4 up()        { return new Vector4(Vector3.up(),      1); }
+    public static final Vector4 right()     { return new Vector4(Vector3.right(),   1); }
+    
+    public static List<Vector4> pack(float[] values) {
+        List<Vector4> vectors = new ArrayList<>();
+        for (int i=0; i<values.length/4; i++) {
+            Vector4 v = new Vector4(
+                values[i],
+                values[i*4+1],
+                values[i*4+2],
+                values[i*4+3]
+            );
+            vectors.add(v);
+        }
+        return vectors;
+    }
+    
+    public static float[] unpack(List<Vector4> vectors) {
+        float[] values = new float[vectors.size()*4];
+        for (int i=0; i<vectors.size(); i++) {
+            values[i*4] = vectors.get(i).x;
+            values[i*4+1] = vectors.get(i).y;
+            values[i*4+2] = vectors.get(i).z;
+            values[i*4+3] = vectors.get(i).w;
+        }
+        return values;
     }
     
 }

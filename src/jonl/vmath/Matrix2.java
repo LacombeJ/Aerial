@@ -5,7 +5,7 @@ package jonl.vmath;
  * @author Jonathan Lacombe
  *
  */
-public class Matrix2 extends Matrix<Matrix2,Vector2,Vector2> {
+public class Matrix2 extends SquareMatrix<Matrix2,Vector2> {
 
     public float m00, m01;
     public float m10, m11;
@@ -55,11 +55,6 @@ public class Matrix2 extends Matrix<Matrix2,Vector2,Vector2> {
     public int getRows() {
         return 2;
     }
-
-    @Override
-    public int getColumns() {
-        return 2;
-    }
     
     @Override
     public int size() {
@@ -103,21 +98,23 @@ public class Matrix2 extends Matrix<Matrix2,Vector2,Vector2> {
     protected Vector2 getEmptyRow() {
         return new Vector2();
     }
-
-    @Override
-    protected Vector2 getEmptyCol() {
-        return new Vector2();
-    }
-
+    
     @Override
     protected Matrix2 getEmptyMatrix() {
         return new Matrix2();
     }
     
+    @Override
+    public <S extends SquareMatrix<S, ?>> S subMatrix() {
+        throw new UnsupportedOperationException("Matrix2 cannot not have a sub matrix");
+    }
+    
+    @Override
     public float determinant() {
         return m00 * m11 - m01 * m10;
     }
     
+    @Override
     public Matrix2 inverse() {
         float det = determinant();
         if (Mathf.eq(det,0,Mathf.EPSILON)) return null;
@@ -133,6 +130,16 @@ public class Matrix2 extends Matrix<Matrix2,Vector2,Vector2> {
         float cos = Mathf.cos(theta);
         float sin = Mathf.sin(theta);
         return new Matrix2(cos,-sin,sin,cos);
+    }
+    
+    /** @return the identity matrix */
+    public static Matrix2 identity() {
+        return new Matrix2(1,1);
+    }
+    
+    /** @return a matrix filled with ones */
+    public static Matrix2 ones() {
+        return new Matrix2(1,1,1,1);
     }
     
 }

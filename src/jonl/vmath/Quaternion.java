@@ -910,6 +910,8 @@ public class Quaternion {
     public float getAngleAroundDeg (final Vector3 axis) {
         return getAngleAroundDeg(axis.x, axis.y, axis.z);
     }
+    
+    
 
     public static Quaternion euler(float x, float y, float z) {
         return new Quaternion().setEulerAnglesDeg(x,y,z);
@@ -919,8 +921,9 @@ public class Quaternion {
         return initialRot.get().slerp(targetRot,alpha);
     }
     
-    
-
+    public static Quaternion fromAxisAngle(Vector3 axis, float radians) {
+        return new Quaternion().setFromAxis(axis, radians);
+    }
     
     
 }

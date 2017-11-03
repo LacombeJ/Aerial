@@ -25,11 +25,6 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
     /** @return the number of columns in this matrix */
     public abstract int getColumns();
 
-    /** @return the number of elements in this matrix */
-    public int size() {
-        return getRows() * getColumns();
-    }
-
     /** @return the value at the given row and column */
     public abstract float get(int row, int col);
 
@@ -45,6 +40,11 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
     /** @return a matrix filled with 0s */
     protected abstract M getEmptyMatrix();
 
+    /** @return the number of elements in this matrix */
+    public int size() {
+        return getRows() * getColumns();
+    }
+    
     /** @return a copy of this matrix */
     public M get() {
         M m = getEmptyMatrix();
@@ -118,23 +118,6 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
         return v;
     }
 
-    /** @return this matrix after it has been multiplied by the given matrix */
-    @SuppressWarnings("unchecked")
-    public M multiply(M matrix) {
-        if (!isTransposable() || !matrix.isTransposable())
-            return null;
-        if (getColumns() != matrix.getColumns())
-            return null;
-        M m = getEmptyMatrix();
-        for (int i = 0; i < getRows(); i++) {
-            for (int j = 0; j < getColumns(); j++) {
-                m.set(i,j,getRow(i).dot((R)matrix.getCol(j)));
-            }
-        }
-        set(m);
-        return (M)this;
-    }
-
     /** @return this matrix after it has been scaled by the given constant */
     @SuppressWarnings("unchecked")
     public M multiply(float scalar) {
@@ -144,29 +127,6 @@ public abstract class Matrix<M extends Matrix<M,R,C>,
             }
         }
         return (M)this;
-    }
-
-    /**
-     * @return this matrix after it has been transposed or
-     * null if not transposable
-     */
-    @SuppressWarnings("unchecked")
-    public M transpose() {
-        if (!isTransposable())
-            return null;
-        for (int i = 0; i < getRows()-1; i++) {
-            for (int j = i+1; j < getColumns(); j++) {
-                float tmp = get(i,j);
-                set(i,j,get(j,i));
-                set(j,i,tmp);
-            }
-        }
-        return (M)this;
-    }
-
-    /** @return true if rows==columns */
-    public final boolean isTransposable() {
-        return getRows() == getColumns();
     }
     
     /** @return a float array with the same elements */
