@@ -125,6 +125,11 @@ class LWJGL extends AbstractGraphicsLibrary {
     }
     
     @Override
+    public void glPolygonMode(Face face, PMode mode) {
+        GL11.glPolygonMode(getFace(face), getPMode(mode));
+    }
+    
+    @Override
     public boolean glHasError() {
         return GL11.glGetError()!=GL11.GL_NO_ERROR;
     }
@@ -280,12 +285,30 @@ class LWJGL extends AbstractGraphicsLibrary {
         }
     }
     
+    static int getFace(Face m) {
+        switch(m) {
+        case FRONT:                 return GL11.GL_FRONT;
+        case BACK:                  return GL11.GL_BACK;
+        case FRONT_AND_BACK:        return GL11.GL_FRONT_AND_BACK;
+        default:                    throw new IllegalStateException("Unknown face");
+        }
+    }
+    
     static int getMode(Mode m) {
         switch(m) {
         case POINTS:                return GL11.GL_POINTS;
         case LINES:                 return GL11.GL_LINES;
         case TRIANGLES:             return GL11.GL_TRIANGLES;
         default:                    throw new IllegalStateException("Unknown mode");
+        }
+    }
+    
+    static int getPMode(PMode m) {
+        switch(m) {
+        case POINT:                 return GL11.GL_POINT;
+        case LINE:                  return GL11.GL_LINE;
+        case FILL:                  return GL11.GL_FILL;
+        default:                    throw new IllegalStateException("Unknown polygon mode");
         }
     }
     

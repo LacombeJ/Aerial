@@ -60,7 +60,12 @@ public interface GraphicsLibrary {
     
     public void glLineWidth(float width);
     
+    public void glPolygonMode(Face face, PMode mode);
+    
     public boolean glHasError();
+    
+    
+    
     
     public Texture glGenTexture();
     
@@ -208,10 +213,22 @@ public interface GraphicsLibrary {
         ONE_MINUS_DST_COLOR;
     }
     
+    public static enum Face {
+        FRONT,
+        BACK,
+        FRONT_AND_BACK
+    }
+    
     public static enum Mode {
         POINTS,
         LINES,
         TRIANGLES
+    }
+    
+    public static enum PMode {
+        POINT,
+        LINE,
+        FILL
     }
     
     public static enum ShaderType {
