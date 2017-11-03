@@ -74,6 +74,13 @@ public class ArrayUtils {
     public static float[] copy(float[] f) {
         return Arrays.copyOf(f,f.length);
     }
+    public static float[][] copy(float[][] array) {
+        float[][] copy = new float[array.length][];
+        for (int i=0; i<array.length; i++) {
+            copy[i] = copy(array[i]);
+        }
+        return copy;
+    }
     
     public static int[] intArray(int length, int start, int increment) {
         int[] array = new int[length];
@@ -87,6 +94,14 @@ public class ArrayUtils {
 
     public static int[] copy(int[] i) {
         return Arrays.copyOf(i,i.length);
+    }
+    
+    public static int[][] copy(int[][] array) {
+        int[][] copy = new int[array.length][];
+        for (int i=0; i<array.length; i++) {
+            copy[i] = copy(array[i]);
+        }
+        return copy;
     }
     
     public static int[] add(int[] i, int... j) {
@@ -176,12 +191,58 @@ public class ArrayUtils {
     }
 
 
+    public static boolean equals(float[] a, float[] b) {
+        if (a.length != b.length) return false;
+        for (int i=0; i<a.length; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean equals(int[] a, int[] b) {
+        if (a.length != b.length) return false;
+        for (int i=0; i<a.length; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-
     
+    public static Integer[] wrap(int[] array) {
+        Integer[] wrap = new Integer[array.length];
+        for (int i=0; i<array.length; i++) {
+            wrap[i] = array[i];
+        }
+        return wrap;
+    }
     
+    public static int[] unwrap(Integer[] array) {
+        int[] wrap = new int[array.length];
+        for (int i=0; i<array.length; i++) {
+            wrap[i] = array[i];
+        }
+        return wrap;
+    }
     
+    public static Float[] wrap(float[] array) {
+        Float[] wrap = new Float[array.length];
+        for (int i=0; i<array.length; i++) {
+            wrap[i] = array[i];
+        }
+        return wrap;
+    }
     
+    public static float[] unwrap(Float[] array) {
+        float[] wrap = new float[array.length];
+        for (int i=0; i<array.length; i++) {
+            wrap[i] = array[i];
+        }
+        return wrap;
+    }
     
     
 }

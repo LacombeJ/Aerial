@@ -74,6 +74,16 @@ public class IntList implements Iterable<Integer> {
         insert(index,i);
     }
     
+    public void put(int i) {
+        addLast(i);
+    }
+    
+    public void put(int... values) {
+        for (int i : values) {
+            put(i);
+        }
+    }
+    
     public void delete(int index, int length) {
         if (index<0 || index+length>size) throw indexException(index+length);
         if (index+length!=size) {
@@ -176,6 +186,10 @@ public class IntList implements Iterable<Integer> {
         return array;
     }
     
+    /**
+     * The backing array of this list may have a length larger than this size of this array
+     * @return the backing array of this list
+     */
     public int[] getBackingArray() {
         return list;
     }

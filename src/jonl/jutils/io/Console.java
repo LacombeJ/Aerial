@@ -57,6 +57,15 @@ public class Console {
         System.out.println();
     }
     
+    /**
+     * Same as {@link #println(Object...)}
+     * @see #println(Object...)
+     */
+    public static void log(Object... objects) {
+        println(objects);
+        
+    }
+    
     /* ************************************************************************* */
     /* *************************        INPUT           ************************ */
     /* ************************************************************************* */

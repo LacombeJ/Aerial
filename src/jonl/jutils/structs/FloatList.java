@@ -74,6 +74,16 @@ public class FloatList implements Iterable<Float> {
         insert(index,i);
     }
     
+    public void put(float i) {
+        addLast(i);
+    }
+    
+    public void put(float... values) {
+        for (float i : values) {
+            put(i);
+        }
+    }
+    
     public void delete(int index, int length) {
         if (index<0 || index+length>size) throw indexException(index+length);
         if (index+length!=size) {

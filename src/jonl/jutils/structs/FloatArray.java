@@ -3,28 +3,28 @@ package jonl.jutils.structs;
 import java.util.Iterator;
 import jonl.jutils.misc.ArrayUtils;
 
-public class IntArray implements Iterable<Integer> {
+public class FloatArray implements Iterable<Float> {
     
-    private int[] array;
+    private float[] array;
     private int index = 0;
     
-    public IntArray(int initial) {
-        array = new int[initial];
+    public FloatArray(int initial) {
+        array = new float[initial];
     }
     
-    public void put(int i) {
+    public void put(float i) {
         array[index++] = i;
     }
     
-    public void put(int ...values) {
-        for (int i : values) {
-            put(i);
+    public void put(float...values) {
+        for (float f : values) {
+            put(f);
         }
     }
     
-    public void put(Iterable<Integer> values) {
-        for (int i : values) {
-            put(i);
+    public void put(Iterable<Float> values) {
+        for (float f : values) {
+            put(f);
         }
     }
     
@@ -32,15 +32,15 @@ public class IntArray implements Iterable<Integer> {
         index = 0;
     }
     
-    public int get(int i) {
+    public float get(int i) {
         return array[i];
     }
     
-    public void set(int i, int v) {
+    public void set(int i, float v) {
         array[i] = v;
     }
     
-    public boolean contains(int i) {
+    public boolean contains(float i) {
         for (int j=0; j<array.length; j++) {
             if (array[j]==i) return true;
         }
@@ -59,24 +59,24 @@ public class IntArray implements Iterable<Integer> {
         return array.length;
     }
     
-    public int[] getArray() {
+    public float[] getArray() {
         return array;
     }
     
-    public int[] toArray() {
+    public float[] toArray() {
         return ArrayUtils.copy(array);
     }
 
     @Override
-    public Iterator<Integer> iterator() {
-        return new Iterator<Integer>() {
+    public Iterator<Float> iterator() {
+        return new Iterator<Float>() {
             int i = 0;
             @Override
             public boolean hasNext() {
                 return i<array.length;
             }
             @Override
-            public Integer next() {
+            public Float next() {
                 return array[i++];
             }
         };
