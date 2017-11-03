@@ -25,8 +25,8 @@ public class MeshBuilder {
         indices = new ArrayList<>();
     }
     
-    public Mesh build() {
-        return new Mesh(Vector3.unpack(vertices),Vector3.unpack(normals),Vector2.unpack(texCoords),ArrayUtils.toIntArray(indices));
+    public Geometry build() {
+        return new Geometry(Vector3.unpack(vertices),Vector3.unpack(normals),Vector2.unpack(texCoords),ArrayUtils.toIntArray(indices));
     }
     
     public void addVertex(Vector3... vertices) {

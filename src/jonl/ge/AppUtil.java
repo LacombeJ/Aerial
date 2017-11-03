@@ -18,10 +18,10 @@ class AppUtil {
     static GameObject cube() {
         GameObject cube = new GameObject();
         cube.setName("Cube");
-        Mesh mesh = Loader.loadMesh(PresetData.cubeMesh());
-        Material mat = new GeneratedMaterial();
-        MeshRenderer cubeRenderer = new MeshRenderer(mesh,mat);
-        cube.addComponent(cubeRenderer);
+        Geometry geometry = Loader.loadMesh(PresetData.cubeMesh());
+        Material material = new GeneratedMaterial();
+        Mesh mesh = new Mesh(geometry,material);
+        cube.addComponent(mesh);
         return cube;
     }
     

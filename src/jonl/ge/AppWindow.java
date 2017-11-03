@@ -1,6 +1,6 @@
 package jonl.ge;
 
-public class AppWindow extends AbstractWindow {
+class AppWindow extends AbstractWindow {
 
     private App app;
     

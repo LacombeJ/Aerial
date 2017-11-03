@@ -12,8 +12,8 @@ import jonl.jgl.utils.MeshLoader;
 
 public class Loader {
 
-    public static Mesh loadMesh(MeshData md) {
-        Mesh m = new Mesh();
+    public static Geometry loadMesh(MeshData md) {
+        Geometry m = new Geometry();
         m.setVertices(md.vertexData);
         m.setNormals(md.normalData);
         m.setTexCoords(md.texCoordData);
@@ -21,7 +21,7 @@ public class Loader {
         return m;
     }
     
-    public static Mesh loadMesh(String fileLoc) {
+    public static Geometry loadMesh(String fileLoc) {
         return loadMesh(loadMeshData(fileLoc));
     }
     

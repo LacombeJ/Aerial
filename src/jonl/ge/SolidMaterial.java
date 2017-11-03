@@ -21,6 +21,10 @@ public class SolidMaterial extends Material {
     public SolidMaterial(float r, float g, float b, float a) {
         color.set(r, g, b, a);
     }
+    
+    public SolidMaterial(Vector3 color) {
+        this.color.set(color.x,color.y,color.z,1);
+    }
 
     public SolidMaterial(float r, float g, float b) {
         color.set(r, g, b, 1);

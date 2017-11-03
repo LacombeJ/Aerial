@@ -8,7 +8,7 @@ class GLMap {
     
     private GraphicsLibrary gl;
 
-    private HashMap<Mesh,jonl.jgl.Mesh>                 meshMap     = new HashMap<>();
+    private HashMap<Geometry,jonl.jgl.Mesh>                 meshMap     = new HashMap<>();
     private HashMap<Font,jonl.jgl.Font>                 fontMap     = new HashMap<>();
     private HashMap<Texture,jonl.jgl.Texture>           textureMap  = new HashMap<>();
     private HashMap<FrameBuffer,jonl.jgl.FrameBuffer>   bufferMap   = new HashMap<>();
@@ -17,7 +17,7 @@ class GLMap {
         this.gl = gl;
     }
     
-    jonl.jgl.Mesh getOrCreateMesh(Mesh mesh) {
+    jonl.jgl.Mesh getOrCreateMesh(Geometry mesh) {
         jonl.jgl.Mesh glmesh = meshMap.get(mesh);
         if (glmesh==null) {
             glmesh = gl.glGenMesh(mesh.getVertices(),mesh.getNormals(),mesh.getTexCoords(),mesh.getIndices());

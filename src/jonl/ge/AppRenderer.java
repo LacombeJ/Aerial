@@ -9,7 +9,9 @@ import jonl.ge.Material.Uniform;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Blend;
+import jonl.jgl.GraphicsLibrary.Face;
 import jonl.jgl.GraphicsLibrary.Mask;
+import jonl.jgl.GraphicsLibrary.PMode;
 import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jgl.Program;
 import jonl.vmath.Matrix2;
@@ -26,7 +28,7 @@ class AppRenderer implements Renderer {
     private GraphicsLibrary gl;
     private GLMap glm;
     private MaterialProgramMapper mpm;
-    private Mesh rectMesh;
+    private Geometry rectGeometry;
     
     AppRenderer(App app, GraphicsLibrary gl) {
         this.app = app;
@@ -34,7 +36,7 @@ class AppRenderer implements Renderer {
         this.gl = gl;
         glm = new GLMap(gl);
         mpm = new MaterialProgramMapper(gl);
-        rectMesh = Loader.loadMesh(PresetData.rectMesh());
+        rectGeometry = Loader.loadMesh(PresetData.rectMesh());
     }
     
     @Override
@@ -81,10 +83,10 @@ class AppRenderer implements Renderer {
             
             Matrix4 M = gameObjectTransform(g);
             
-            MeshRenderer mr = g.getComponent(MeshRenderer.class);
-            if (mr != null) {
-                Material mat = mr.material;
-                Mesh mesh = mr.mesh;
+            Mesh mesh = g.getComponent(Mesh.class);
+            if (mesh != null) {
+                Material mat = mesh.material;
+                Geometry geometry = mesh.geometry;
                 
                 Matrix4 MVP = VP.get().multiply(M);
                 
@@ -103,17 +105,26 @@ class AppRenderer implements Renderer {
                     setUniform(program,u.name,u.data);
                 }
                 
-                if (mr.recieveLight) {
+                if (mesh.recieveLight) {
                     setLightUniforms(program,lights,camera);
                 }
                 
-                if (mr.cullFace) {
+                if (mesh.cullFace) {
                     gl.glEnable(Target.CULL_FACE);
                 } else {
                     gl.glDisable(Target.CULL_FACE);
                 }
                 
-                gl.glRender(glm.getOrCreateMesh(mesh),mr.mode.mode);
+                if (mesh.wireframe) {
+                    gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.LINE); 
+                }
+                
+                gl.glRender(glm.getOrCreateMesh(geometry),mesh.mode.mode);
+                
+                if (mesh.wireframe) {
+                    gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.FILL);
+                    
+                }
                 
                 gl.glEnable(Target.CULL_FACE);
                 
@@ -302,7 +313,7 @@ class AppRenderer implements Renderer {
             setUniform(program,u.name,u.data);
         }
         
-        gl.glRender(glm.getOrCreateMesh(rectMesh),GraphicsLibrary.Mode.TRIANGLES);
+        gl.glRender(glm.getOrCreateMesh(rectGeometry),GraphicsLibrary.Mode.TRIANGLES);
         
         BufferPool.returnFloatBuffer(fb);
         
