@@ -1,5 +1,7 @@
 package jonl.ge;
 
+import jonl.vmath.Vector2;
+
 /**
  * @author Jonathan Lacombe
  */
@@ -43,6 +45,9 @@ class AppInput implements Input {
     public float getY() {
         return input.getY();
     }
+    public Vector2 getXY() {
+        return new Vector2(getX(),getY());
+    }
     
     public float getDX() {
         return input.getDX();
@@ -50,12 +55,18 @@ class AppInput implements Input {
     public float getDY() {
         return input.getDY();
     }
+    public Vector2 getDXY() {
+        return new Vector2(getDX(),getDY());
+    }
     
     public float getScrollX() {
         return input.getScrollX();
     }
     public float getScrollY() {
         return input.getScrollY();
+    }
+    public Vector2 getScrollXY() {
+        return new Vector2(getScrollX(),getScrollY());
     }
     
     public boolean isButtonDown(int mbutton) {

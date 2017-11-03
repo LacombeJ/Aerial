@@ -17,4 +17,22 @@ public abstract class Material {
         }
     }
     
+    public abstract void setUniform(String name, Object object);
+
+    public GeneratedMaterial asGeneratedMaterial() {
+        return (GeneratedMaterial) this;
+    }
+    
+    public ShaderMaterial asShaderMaterial() {
+        return (ShaderMaterial) this;
+    }
+    
+    public SolidMaterial asSolidMaterial() {
+        return (SolidMaterial) this;
+    }
+    
+    public TextureMaterial asTextureMaterial() {
+        return (TextureMaterial) this;
+    }
+    
 }

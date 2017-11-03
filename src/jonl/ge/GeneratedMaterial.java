@@ -105,6 +105,12 @@ public class GeneratedMaterial extends Material {
         }
         return sb.toString();
     }
+    
+    @Override
+    public void setUniform(String name, Object object) {
+        MBUniform mbu = mbUniformMap.get(name);
+        mbu.data = object;
+    }
 
     @Override
     List<Uniform> uniforms() {

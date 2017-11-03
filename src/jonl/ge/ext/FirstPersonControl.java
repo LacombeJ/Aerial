@@ -12,14 +12,13 @@ public class FirstPersonControl extends Property {
     Input input;
     Transform transform;
     
+    boolean update = true;
+    
     float resistance = 12;
     float speed = 0.1f; 
     
-    Vector3 targForward = new Vector3(0,0,1);
-    Vector3 forward = new Vector3(0,0,1);
-    
-    Vector3 targRight = new Vector3(1,0,0);
-    Vector3 right = new Vector3(1,0,0);
+    Vector3 forward = Vector3.forward();
+    Vector3 right = Vector3.right();
     
     @Override
     public void create() {
@@ -30,32 +29,34 @@ public class FirstPersonControl extends Property {
     @Override
     public void update() {
         
-        forward = transform.rotation.get().conjugate().transform(targForward.get());
-        right = transform.rotation.get().conjugate().transform(targRight.get());
+        if (update) {
         
-        forward.y = 0;
-        forward.norm();
-        right.y = 0;
-        right.norm();
+            forward = transform.rotation.get().conjugate().transform(Vector3.forward());
+            right = transform.rotation.get().conjugate().transform(Vector3.right());
+            
+            forward.y = 0;
+            forward.norm();
+            right.y = 0;
+            right.norm();
+            
+            speed += 0.01f * input.getScrollY();
+            if (speed<0.01f) {
+                speed = 0.01f;
+            }
+            
+            strafeRight(Mathf.toFloat(input.isKeyDown(Input.K_D))*speed);
+            strafeLeft(Mathf.toFloat(input.isKeyDown(Input.K_A))*speed);
+            
+            moveForward(Mathf.toFloat(input.isKeyDown(Input.K_W))*speed);
+            moveBackward(Mathf.toFloat(input.isKeyDown(Input.K_S))*speed);
+            
+            moveUp(Mathf.toFloat(input.isKeyDown(Input.K_E))*speed);
+            moveDown(Mathf.toFloat(input.isKeyDown(Input.K_Q))*speed);
+            
+            lookHorizontal(input.getDX()/resistance);
+            lookVertical(input.getDY()/resistance);
         
-        speed += 0.01f * input.getScrollY();
-        if (speed<0.01f) {
-            speed = 0.01f;
         }
-        
-        strafeRight(Mathf.toFloat(input.isKeyDown(Input.K_D))*speed);
-        strafeLeft(Mathf.toFloat(input.isKeyDown(Input.K_A))*speed);
-        
-        moveForward(Mathf.toFloat(input.isKeyDown(Input.K_W))*speed);
-        moveBackward(Mathf.toFloat(input.isKeyDown(Input.K_S))*speed);
-        
-        moveUp(Mathf.toFloat(input.isKeyDown(Input.K_E))*speed);
-        moveDown(Mathf.toFloat(input.isKeyDown(Input.K_Q))*speed);
-        
-        lookHorizontal(input.getDX()/resistance);
-        lookVertical(input.getDY()/resistance);
-        
-
         
     }
     

@@ -69,6 +69,10 @@ public abstract class Component {
         return gameObject.findGameObject(name);
     }
     
+    public GameObject findGameObjectWithData(String key) {
+        return gameObject.findGameObjectWithData(key);
+    }
+    
     public GameObject findGameObject(Class<? extends Component> c) {
         return gameObject.findGameObject(c);
     }
@@ -89,12 +93,8 @@ public abstract class Component {
         gameObject.setCursorState(state);
     }
     
-    public int[] getWindowSize() {
-        return gameObject.getWindowSize();
-    }
-    
-    public void closeWindow() {
-        gameObject.closeWindow();
+    public Window getWindow() {
+        return gameObject.getWindow();
     }
     
     public String getInfo(String key) {

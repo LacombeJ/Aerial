@@ -7,7 +7,6 @@ import jonl.jutils.misc.DataMap;
 import jonl.ge.Input.CursorState;
 import jonl.jgl.AudioDevice;
 import jonl.jgl.AudioLibrary;
-import jonl.jgl.Window;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
 
@@ -21,7 +20,7 @@ public abstract class Application extends AbstractApp {
     
     private DataMap info = new DataMap();
     
-    private Window window;
+    private jonl.jgl.Window glWindow;
     
     private AudioDevice audio;
     @SuppressWarnings("unused") //TODO handle al
@@ -30,6 +29,7 @@ public abstract class Application extends AbstractApp {
     private Input input;
     private Updater updater;
     private Renderer renderer;
+    private Window window;
     
     private ArrayList<Scene> scenes = new ArrayList<>();
     private int currentScene = 0;
@@ -45,19 +45,20 @@ public abstract class Application extends AbstractApp {
         
         prepare();
         
-        window = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,4,true);
+        glWindow = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,4,true);
         
-        width = window.getWidth();
-        height = window.getHeight();
+        width = glWindow.getWidth();
+        height = glWindow.getHeight();
         
         audio = new ALDevice();
         al = audio.getAudioLibrary();
         
-        input = new AppInput(window.getInput());
+        input = new AppInput(glWindow.getInput());
         updater = new AppUpdater();
-        renderer = new AppRenderer(this,window.getGraphicsLibrary());
+        renderer = new AppRenderer(this,glWindow.getGraphicsLibrary());
+        window = new AppWindow(this);
         
-        window.setLoader(()->{
+        glWindow.setLoader(()->{
             putInfo();
             updater.load();
             renderer.load();
@@ -67,8 +68,8 @@ public abstract class Application extends AbstractApp {
             renderer.render(scene);
         });
         
-        window.setRunner(()->{
-            while (window.isRunning()) {
+        glWindow.setRunner(()->{
+            while (glWindow.isRunning()) {
                 Scene scene = scenes.get(currentScene);
                 //TODO find out why this is causing weird rendering issues
                 //when synchronization is not used between two windows
@@ -79,30 +80,30 @@ public abstract class Application extends AbstractApp {
             }
         });
         
-        window.setCloser(()->{
+        glWindow.setCloser(()->{
             audio.destroy();
         });
         
-        window.addSizeListener((w,h,pw,ph)->{
+        glWindow.addSizeListener((w,h,pw,ph)->{
             width = w;
             height = h;
         });
         
         audio.create();
-        window.start();
+        glWindow.start();
         
     }
     
     void putInfo() {
         info.put("NAME",            "Editor");
         info.put("VERSION",         "1.0");
-        info.put("GL_VERSION",      window.getGraphicsLibrary().glGetVersion());
-        info.put("GLSL_VERSION",    window.getGraphicsLibrary().glGetGLSLVersion());
+        info.put("GL_VERSION",      glWindow.getGraphicsLibrary().glGetVersion());
+        info.put("GLSL_VERSION",    glWindow.getGraphicsLibrary().glGetGLSLVersion());
     }
 
     @Override
     public void close() {
-        window.close();
+        glWindow.close();
     }
     
     @Override
@@ -112,12 +113,12 @@ public abstract class Application extends AbstractApp {
     
     @Override
     public CursorState getCursorState() {
-        return CursorState.state(window.getCursorState());
+        return CursorState.state(glWindow.getCursorState());
     }
     
     @Override
     public void setCursorState(CursorState state) {
-        window.setCursorState(state.state);
+        glWindow.setCursorState(state.state);
     }
     
     @Override
@@ -128,14 +129,9 @@ public abstract class Application extends AbstractApp {
     @Override
     public void setTitle(String title) {
         this.title = title;
-        if (window!=null) {
-            window.setTitle(title);
+        if (glWindow!=null) {
+            glWindow.setTitle(title);
         }
-    }
-    
-    @Override
-    public int[] getSize() {
-        return new int[]{width,height};
     }
     
     @Override
@@ -150,13 +146,13 @@ public abstract class Application extends AbstractApp {
 
     @Override
     public boolean isResizable() {
-        if (window!=null) return window.isResizable();
+        if (glWindow!=null) return glWindow.isResizable();
         return resizable;
     }
 
     @Override
     public boolean isFullscreen() {
-        if (window!=null) return window.isFullscreen();
+        if (glWindow!=null) return glWindow.isFullscreen();
         return fullscreen;
     }
 
@@ -164,15 +160,15 @@ public abstract class Application extends AbstractApp {
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
-        if (window!=null) {
-            window.setSize(this.width,this.height);
+        if (glWindow!=null) {
+            glWindow.setSize(this.width,this.height);
         }
     }
 
     @Override
     public void setResizable(boolean resizable) {
         this.resizable = resizable;
-        if (window!=null) {
+        if (glWindow!=null) {
             //TODO app error
             Console.println("Cannot change resizable window property after creation");
         }
@@ -181,7 +177,7 @@ public abstract class Application extends AbstractApp {
     @Override
     public void setFullscreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
-        if (window!=null) {
+        if (glWindow!=null) {
             //TODO app error
             Console.println("Cannot change fullscreen window property after creation");
         }
@@ -202,6 +198,9 @@ public abstract class Application extends AbstractApp {
         return renderer;
     }
 
-    
+    @Override
+    public Window getWindow() {
+        return window;
+    }
 
 }

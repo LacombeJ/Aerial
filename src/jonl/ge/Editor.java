@@ -15,6 +15,7 @@ public class Editor extends AbstractApp {
     final EditorInput input;
     final Updater updater;
     final Renderer renderer;
+    final Window window;
     final EditorGUI gui;
     
     private DataMap info = new DataMap();
@@ -35,6 +36,7 @@ public class Editor extends AbstractApp {
         input = new EditorInput(gui.editorViewer,gui.window.getInput());
         updater = new AppUpdater();
         renderer = new AppRenderer(this,gl);
+        window = new AppWindow(this);
         
         initialize();
         
@@ -159,11 +161,6 @@ public class Editor extends AbstractApp {
     }
 
     @Override
-    public int[] getSize() {
-        return new int[]{getWidth(),getHeight()};
-    }
-
-    @Override
     public int getWidth() {
         return gui.editorViewer.getWidth();
     }
@@ -218,6 +215,11 @@ public class Editor extends AbstractApp {
     @Override
     public String getInfo(String key) {
         return null;
+    }
+
+    @Override
+    public Window getWindow() {
+        return window;
     }
     
     

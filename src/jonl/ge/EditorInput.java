@@ -1,6 +1,7 @@
 package jonl.ge;
 
 import jonl.aui.Widget;
+import jonl.vmath.Vector2;
 
 class EditorInput implements Input {
     
@@ -54,6 +55,11 @@ class EditorInput implements Input {
     public float getY() {
         return input.getY() - box.getWindowY();
     }
+    
+    @Override
+    public Vector2 getXY() {
+        return new Vector2(getX(),getY());
+    }
 
     @Override
     public float getDX() {
@@ -66,6 +72,11 @@ class EditorInput implements Input {
     }
 
     @Override
+    public Vector2 getDXY() {
+        return new Vector2(getDX(),getDY());
+    }
+    
+    @Override
     public float getScrollX() {
         return input.getScrollX();
     }
@@ -73,6 +84,11 @@ class EditorInput implements Input {
     @Override
     public float getScrollY() {
         return input.getScrollY();
+    }
+    
+    @Override
+    public Vector2 getScrollXY() {
+        return new Vector2(getScrollX(),getScrollY());
     }
 
     @Override

@@ -2,6 +2,7 @@ package jonl.ge;
 
 public class MeshRenderer extends Component {
 
+    public boolean cullFace = true;
     public boolean castShadows = true;
     public boolean recieveShadows = false;
     public boolean recieveLight = true;

@@ -1,5 +1,7 @@
 package jonl.ge;
 
+import jonl.vmath.Vector2;
+
 /**
  * @author Jonathan Lacombe
  */
@@ -25,12 +27,15 @@ public interface Input {
     
     public float getX();
     public float getY();
+    public Vector2 getXY();
     
     public float getDX();
     public float getDY();
+    public Vector2 getDXY();
     
     public float getScrollX();
     public float getScrollY();
+    public Vector2 getScrollXY();
     
     public boolean isButtonDown(int mbutton);
     public boolean isButtonPressed(int mbutton);

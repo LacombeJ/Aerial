@@ -2,6 +2,7 @@ package jonl.ge.ext;
 
 import jonl.ge.Camera;
 import jonl.ge.Property;
+import jonl.ge.Window;
 
 /**
  * Camera property that updates viewport from updated window dimensions
@@ -25,8 +26,8 @@ public class ViewportUpdate extends Property {
     }
     
     private void viewport() {
-        int[] b = getWindowSize();
-        camera.setViewport(0,0,b[0],b[1]);
+        Window window = getWindow();
+        camera.setViewport(0,0,window.width(),window.height());
     }
     
 }

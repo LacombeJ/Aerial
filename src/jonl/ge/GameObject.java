@@ -17,7 +17,16 @@ public final class GameObject {
     private GameObject parent = null;
     final ArrayList<GameObject> children = new ArrayList<>();
     final ArrayList<Component> components = new ArrayList<>();
+    
     private final HashMap<String,Object> dataMap = new HashMap<>();
+    
+    public GameObject() {
+        
+    }
+    
+    public GameObject(String name) {
+        setName(name);
+    }
     
     public String getName() {
         return name;
@@ -175,7 +184,7 @@ public final class GameObject {
     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponentOfType(Class<T> c) {
         for (Component comp : components) {
-            if (comp.getClass().isInstance(c)) {
+            if (c.isInstance(comp)) {
                 return (T) comp;
             }
         }
@@ -201,6 +210,10 @@ public final class GameObject {
         return scene.findGameObject(name);
     }
     
+    public GameObject findGameObjectWithData(String key) {
+        return scene.findGameObjectWithData(key);
+    }
+    
     public GameObject findGameObject(Class<? extends Component> c) {
         return scene.findGameObject(c);
     }
@@ -211,7 +224,7 @@ public final class GameObject {
     
     public Transform computeWorldTransform() {
         if (parent==null) {
-            return new Transform(transform);
+            return transform.get();
         }
         return transform.get().multiply(parent.computeWorldTransform());
     }
@@ -236,12 +249,8 @@ public final class GameObject {
         scene.setCursorState(state);
     }
     
-    public int[] getWindowSize() {
-        return scene.getWindowSize();
-    }
-    
-    public void closeWindow() {
-        scene.closeWindow();
+    public Window getWindow() {
+        return scene.getWindow();
     }
     
     public String getInfo(String key) {
@@ -252,17 +261,21 @@ public final class GameObject {
         return scene.getClock();
     }
     
-    @Override
-    public String toString() {
-        return name+": "+super.toString();
-    }
-
     public void putData(String key, Object data) {
         dataMap.put(key, data);
     }
     
     public Object getData(String key) {
         return dataMap.get(key);
+    }
+    
+    public boolean hasData(String key) {
+        return dataMap.containsKey(key);
+    }
+    
+    @Override
+    public String toString() {
+        return name+": "+super.toString();
     }
     
 }

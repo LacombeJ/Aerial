@@ -15,8 +15,9 @@ interface App {
     CursorState getCursorState();
     void setCursorState(CursorState state);
     
+    Window getWindow();
+    
     String getTitle();
-    int[] getSize();
     int getWidth();
     int getHeight();
     boolean isResizable();

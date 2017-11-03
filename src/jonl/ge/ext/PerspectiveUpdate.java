@@ -25,8 +25,7 @@ public class PerspectiveUpdate extends Property {
     }
     
     private void perspective() {
-        int[] b = getWindowSize();
-        float aspect = (float)b[0]/b[1];
+        float aspect = getWindow().aspect();
         if (camera.isOrthograpic()) {
             camera.setOrthographic(camera.height(),aspect,camera.near(),camera.far());
         } else {

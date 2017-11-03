@@ -105,6 +105,29 @@ public abstract class Scene {
         return null;
     }
     
+    GameObject findGameObjectWithData(String key) {
+        for (GameObject g : gameObjects) {
+            GameObject ret = findGameObjectWithData(key,g);
+            if (ret!=null) {
+                return ret;
+            }
+        }
+        return null;
+    }
+    
+    private GameObject findGameObjectWithData(String key, GameObject gameObject) {
+        if (gameObject.hasData(key)) {
+            return gameObject;
+        }
+        for (GameObject g : gameObject.children) {
+            GameObject ret = findGameObjectWithData(key,g);
+            if (ret!=null) {
+                return ret;
+            }
+        }
+        return null;
+    }
+    
     <T extends Component> GameObject findGameObject(Class<T> c) {
         for (GameObject g : gameObjects) {
             GameObject ret = findGameObject(c,g);
@@ -181,12 +204,8 @@ public abstract class Scene {
         application.setCursorState(state);
     }
     
-    public int[] getWindowSize() {
-        return application.getSize();
-    }
-    
-    public void closeWindow() {
-        application.close();
+    public Window getWindow() {
+        return application.getWindow();
     }
     
     public String getInfo(String key) {

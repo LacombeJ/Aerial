@@ -20,6 +20,13 @@ public class TextureMaterial extends Material {
     }
 
     @Override
+    public void setUniform(String name, Object object) {
+        if (name=="texture") {
+            this.texture = (Texture) object;
+        }
+    }
+    
+    @Override
     List<Uniform> uniforms() {
         List<Uniform> uniforms = new ArrayList<>();
         uniforms.add(new Uniform("texture",new TextureUniform(texture,0)));
@@ -30,7 +37,5 @@ public class TextureMaterial extends Material {
     String shaderKey() {
         return "_texture_";
     }
-    
-    
     
 }

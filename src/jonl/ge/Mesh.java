@@ -27,6 +27,13 @@ public class Mesh {
         
     }
     
+    Mesh(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
+        this.vertices = vertices;
+        this.normals = normals;
+        this.texCoords = texCoords;
+        this.indices = indices;
+    }
+    
     public Mesh(float[] vertices, int[] indices) {
         this.vertices = vertices;
         this.indices = indices;

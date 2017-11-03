@@ -136,12 +136,11 @@ public class Camera extends Component {
     }
     
     
+    
     @Override
     void updateComponent() {
         if (scaleProjection) {
-            GameObject o = getGameObject();
-            int[] window = o.getWindowSize();
-            aspect = (float)window[0]/window[1];
+            aspect = getWindow().aspect();
             setPerspective();
         }
     }
@@ -175,6 +174,16 @@ public class Camera extends Component {
     
     public void removeAllTargets() {
         targets = new ArrayList<GameObject>();
+    }
+    
+    
+    
+    /** @return computes the view matrix given a transform */
+    public static Matrix4 computeViewMatrix(Transform transform) {
+        Matrix4 view = Matrix4.identity()
+            .rotate(transform.rotation)
+            .translate(transform.translation.get().neg());
+        return view;
     }
     
     

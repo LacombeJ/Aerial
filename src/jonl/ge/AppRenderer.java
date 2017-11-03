@@ -61,6 +61,7 @@ class AppRenderer implements Renderer {
         }
     }
     
+    //TODO refactor this and code that uses this
     void renderCameraSeparately(Camera camera, Scene scene) {
         ArrayList<Light> lights = scene.findComponents(Light.class);
         ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
@@ -106,7 +107,15 @@ class AppRenderer implements Renderer {
                     setLightUniforms(program,lights,camera);
                 }
                 
+                if (mr.cullFace) {
+                    gl.glEnable(Target.CULL_FACE);
+                } else {
+                    gl.glDisable(Target.CULL_FACE);
+                }
+                
                 gl.glRender(glm.getOrCreateMesh(mesh),mr.mode.mode);
+                
+                gl.glEnable(Target.CULL_FACE);
                 
                 BufferPool.returnFloatBuffer(fb);
                 
@@ -126,9 +135,7 @@ class AppRenderer implements Renderer {
         GameObject g = camera.gameObject;
         Transform t = updater.getWorldTransform(g);
         
-        Matrix4 view = Matrix4.identity()
-                .rotate(t.rotation)
-                .translate(t.translation.get().neg());
+        Matrix4 view = Camera.computeViewMatrix(t);
         
         int left=0, bottom=0, right=0, top=0, width=0, height=0;
         if (camera instanceof RenderTarget) {
