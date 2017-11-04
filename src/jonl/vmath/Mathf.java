@@ -351,6 +351,14 @@ public final class Mathf {
         return sum;
     }
     
+    public static float fract(float a) {
+        return a - Mathf.floor(a);
+    }
+    
+    public static float mod(float x, float y) {
+        return x - y * floor(x/y);
+    }
+    
     /**
      * Returns x or min or max if x is out of bounds
      * @param x value to clamp
@@ -790,9 +798,53 @@ public final class Mathf {
     public static <T extends Vector<T>> T add(T u, T v) {
         return u.get().add(v);
     }
-    
+    public static <T extends Vector<T>> T add(T u, float v) {
+        return u.get().add(v);
+    }
     public static <T extends Vector<T>> T sub(T u, T v) {
         return u.get().sub(v);
+    }
+    public static <T extends Vector<T>> T sub(T u, float v) {
+        return u.get().sub(v);
+    }
+    public static <T extends Vector<T>> T mul(T u, T v) {
+        return u.get().multiply(v);
+    }
+    public static <T extends Vector<T>> T mul(T u, float v) {
+        return u.get().multiply(v);
+    }
+    public static <T extends Vector<T>> T div(T u, T v) {
+        return u.get().divide(v);
+    }
+    public static <T extends Vector<T>> T div(T u, float v) {
+        return u.get().divide(v);
+    }
+    
+    public static <T extends Vector<T>> T abs(T v) {
+        return v.get().abs();
+    }
+    
+    public static <T extends Vector<T>> T min(T v, float a) {
+        return v.get().min(a);
+    }
+    public static <T extends Vector<T>> T max(T v, float a) {
+        return v.get().max(a);
+    }
+    
+    public static <T extends Vector<T>> T floor(T v) {
+        return v.get().floor();
+    }
+    public static <T extends Vector<T>> T ceil(T v) {
+        return v.get().ceil();
+    }
+    public static <T extends Vector<T>> T round(T v) {
+        return v.get().round();
+    }
+    public static <T extends Vector<T>> T fract(T v) {
+        return v.get().fract();
+    }
+    public static <T extends Vector<T>> T mod(T v, float a) {
+        return v.get().mod(a);
     }
     
     public static <T extends Vector<T>> T neg(T v) {
@@ -844,6 +896,9 @@ public final class Mathf {
     public static Matrix2 mat2(Matrix2 mat) {
         return new Matrix2(mat);
     }
+    public static Matrix2 mat2(Vector2 x, Vector2 y) {
+        return new Matrix2(x,y);
+    }
     
     public static Matrix3 mat3(
             float m00, float m01, float m02,
@@ -862,6 +917,9 @@ public final class Mathf {
     }
     public static Matrix3 mat3(Matrix3 mat) {
         return new Matrix3(mat);
+    }
+    public static Matrix3 mat3(Vector3 x, Vector3 y, Vector3 z) {
+        return new Matrix3(x,y,z);
     }
     
     public static Matrix4 mat4(
@@ -884,6 +942,9 @@ public final class Mathf {
     }
     public static Matrix4 mat4(Matrix4 mat) {
         return new Matrix4(mat);
+    }
+    public static Matrix4 mat4(Vector4 x, Vector4 y, Vector4 z, Vector4 w) {
+        return new Matrix4(x,y,z,w);
     }
     
     
