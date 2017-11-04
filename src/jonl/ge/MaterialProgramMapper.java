@@ -5,6 +5,7 @@ import java.util.HashMap;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
+import jonl.jutils.io.FileUtils;
 
 class MaterialProgramMapper {
     
@@ -37,6 +38,10 @@ class MaterialProgramMapper {
                 String fragSource = ShaderGeneratorStandard.getFragSource(version, m);
                 String vertSource = ShaderGeneratorStandard.getVertSource(version, m, false); //TODO remove false instance parameter
                 glprogram = AppUtil.createProgramFromSource(gl, vertSource, fragSource);
+                ///*
+                //TODO remove write to file debugging
+                //FileUtils.writeToFile("debug_"+material.shaderKey()+".fs.c", fragSource);
+                //*/
             } else if (material instanceof ShaderMaterial) {
                 ShaderMaterial m = (ShaderMaterial)material;
                 if (m.geometryShader!=null) {

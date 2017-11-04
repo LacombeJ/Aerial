@@ -11,13 +11,23 @@ class ShaderGeneratorStandard {
     static String getFragSource(int version, GeneratedMaterial material) {
         StringBuilder sb = new StringBuilder();
         version(sb,version);
+        sb.append('\n');
+        sb.append(fragGenerated(material));
+        sb.append('\n');
         sb.append(fragStructLight());
+        sb.append('\n');
         sb.append(fragIn(material));
+        sb.append('\n');
         sb.append(fragUniforms(material));
+        sb.append('\n');
         sb.append(fragFuncParallaxMapping(material));
+        sb.append('\n');
         sb.append(fragMainStart());
+        sb.append('\n');
         sb.append(fragMainBody(material));
+        sb.append('\n');
         sb.append(fragMainEnd());
+        sb.append('\n');
         return sb.toString();
     }
     
@@ -29,6 +39,13 @@ class ShaderGeneratorStandard {
     }
     private static String fragMainStart()            { return "void main() {\n"; }
     private static String fragMainEnd()              { return "}"; }
+    
+    private static String fragGenerated(GeneratedMaterial material) {
+        return
+            "// Generated Fragment Shader\n" +
+            "// Shader key: "+material.shaderKey()+"\n" +
+            "";
+    }
     
     private static String fragStructLight() {
         return 
@@ -113,7 +130,7 @@ class ShaderGeneratorStandard {
     
     private static String _____texCooord_E_parallaxTexCoord_vTexCoord_eyeDir_(GeneratedMaterial material) {
         if (material.height!=null) {
-            return "    texCoord = parallaxTexCoord(vTexCoord,eyeDir);\n";
+            return "    texCoord = parallaxTexCoord(fTexCoord,eyeDir);\n";
         }
         return "";
     }
@@ -151,28 +168,37 @@ class ShaderGeneratorStandard {
     
     private static String fragMainBody(GeneratedMaterial material) {
         return
-            "    vec3 normal = normalize(vNormal);\n" +
-            "    vec3 varEyeDir = eye - vFragPos;\n" +
-            "    vec3 eyeDir = normalize(varEyeDir);\n" +
-            "    vec2 texCoord = vTexCoord;\n" +
-            _____texCooord_E_parallaxTexCoord_vTexCoord_eyeDir_(material) +
+            "    vec3 fFragPos = vFragPos;\n" +
+            "    vec3 fNormal = vNormal;\n" +
+            "    vec2 fTexCoord = vTexCoord;\n" +
+            "    vec3 fTangent = vTangent;\n" +
+            "    vec3 fBitangent = vBitangent;\n" +
+            "    \n" +
             _____getShaderFunctionString(material) +
+            "    \n" +
+            "    vec3 normal = normalize(fNormal);\n" +
+            "    vec3 varEyeDir = eye - fFragPos;\n" +
+            "    vec3 eyeDir = normalize(varEyeDir);\n" +
+            "    vec2 texCoord = fTexCoord;\n" +
+            _____texCooord_E_parallaxTexCoord_vTexCoord_eyeDir_(material) +
+            "    \n" +
             _____vec3_materialDiffuse_E_X(material) +
             _____vec3_materialSpecular_E_X(material) +
             _____float_materialRoughness_E_X(material) +
             _____float_materialFresnel_E_X(material) +
             _____normal_E_texture2D_material_normal_vTexCoord_xyz(material) +
+            "    \n" +
             "    vec3 lightSum = vec3(0,0,0);\n" +
             "    \n" +
             "    int i=0;\n" +
             "    for (i=0; i<numLights; i++) {\n" +
             "        \n" +
-            "        float distFromLight = length(light[i].position - vFragPos);\n" +
+            "        float distFromLight = length(light[i].position - fFragPos);\n" +
             "        \n" +
             "        if (distFromLight > light[i].range)\n" +
             "            continue;\n" +
             "        \n" +
-            "        vec3 lightDirection = normalize(light[i].position - vFragPos);\n" +
+            "        vec3 lightDirection = normalize(light[i].position - fFragPos);\n" +
             "        float NdotL = max(dot(normal, lightDirection), 0.0);\n" +
             "        \n" +
             "        if (NdotL <= 0.0)\n" +
@@ -222,18 +248,35 @@ class ShaderGeneratorStandard {
     static String getVertSource(int version, GeneratedMaterial material, boolean instanced) {
         StringBuilder sb = new StringBuilder();
         version(sb,version);
+        sb.append('\n');
+        sb.append(vertGenerated(material));
+        sb.append('\n');
         sb.append(vertIn(version,instanced));
+        sb.append('\n');
         sb.append(vertUniforms(instanced));
+        sb.append('\n');
         sb.append(vertOut(material,instanced));
+        sb.append('\n');
         sb.append(vertFuncUnitTransform(material));
+        sb.append('\n');
         sb.append(vertMainStart());
+        sb.append('\n');
         sb.append(vertBody(material,instanced));
+        sb.append('\n');
         sb.append(vertMainEnd());
+        sb.append('\n');
         return sb.toString();
     }
     
     private static String vertMainStart()            { return "void main() {\n"; }
     private static String vertMainEnd()              { return "}"; } 
+    
+    private static String vertGenerated(GeneratedMaterial material) {
+        return
+            "// Generated Vertex Shader\n" +
+            "// Shader key: "+material.shaderKey()+"\n" +
+            "";
+    }
     
     static String _layout__location_e_5__in_mat4_MVP(boolean instanced) {
         if (instanced)

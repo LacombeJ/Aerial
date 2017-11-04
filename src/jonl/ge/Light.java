@@ -4,6 +4,7 @@ import jonl.vmath.Vector3;
 
 public class Light extends Component {
     
+    //TODO make different classes for different types of lights
     public final static int POINT       = 1;
     public final static int SPOT        = 2;
     public final static int DIRECTIONAL = 3;

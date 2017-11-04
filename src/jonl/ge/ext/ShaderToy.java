@@ -1,27 +1,34 @@
-package jonl.ge;
+package jonl.ge.ext;
 
+import jonl.ge.Input;
+import jonl.ge.Material;
+import jonl.ge.Property;
+import jonl.ge.ShaderMaterial;
 import jonl.jutils.time.Clock;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector4;
 
-/**
- * RenderTexture with ShaderToy uniforms sent
- * 
- * @author Jonathan Lacombe
- *
- */
-public class RenderTextureST extends RenderTexture {
+public class ShaderToy extends Property {
+
+    private Material material;
+    private int width, height;
     
     private float mouseX, mouseY;
     private float mouseClickX, mouseClickY;
     
-    public RenderTextureST(ShaderMaterial material, int width, int height) {
-        super(material, width, height);
+    public ShaderToy(ShaderMaterial material, int width, int height) {
+        this.material = material;
+        this.width = width;
+        this.height = height;
     }
 
     @Override
-    void updateComponent() {
-        super.updateComponent();
+    public void create() {
+        
+    }
+
+    @Override
+    public void update() {
         
         Clock clock = getClock();
         float msdiff = clock.lap() / 1000000.0f;
@@ -38,10 +45,9 @@ public class RenderTextureST extends RenderTexture {
         }
         
         material.setUniform("iTime", sdiff);
-        material.setUniform("iResolution", new Vector2(buffer.width, buffer.height));
+        material.setUniform("iResolution", new Vector2(width, height));
         material.setUniform("iMouse", new Vector4(mouseX, mouseY, mouseClickX, mouseClickY));
         
     }
-    
     
 }

@@ -170,11 +170,11 @@ public class GeneratedMaterialBuilder {
     // -----------------------------------------------------------------------------
     
     
-    
+    public void putStatement(String s) { putString(s); }
     
     private void putIf(MBBool b)        { putString("if ("+b.getName()+") {\n"); }
-    private void putElseIf(MBBool b)    { putString("else if ("+b.getName()+") {\n"); }
-    private void putElse()              { putString("else {\n"); }
+    private void putElseIf(MBBool b)    { putString("} else if ("+b.getName()+") {\n"); }
+    private void putElse()              { putString("} else {\n"); }
     private void putEndIf()             { putString("}\n"); }
     
     public void mbIf(MBBool bool)       { putIf(bool); }
@@ -267,6 +267,11 @@ public class GeneratedMaterialBuilder {
     }
     public MBFloat w(MBVec4 v) { return wp(v); }
 
+    
+    public void discard() {
+        putString("discard;\n");
+    }
+    
     
     
     
@@ -716,6 +721,7 @@ public class GeneratedMaterialBuilder {
     public static class MBMat2V  extends MBVar implements MBMat2 { 
         public String getName() { return name; }
     }
+    
     
     
     

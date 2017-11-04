@@ -2,8 +2,6 @@ package jonl.ge;
 
 import jonl.jutils.structs.FloatArray;
 import jonl.jutils.structs.IntArray;
-import jonl.jutils.structs.IntList;
-import jonl.vmath.Vector3;
 
 // https://github.com/mrdoob/three.js/blob/dev/src/geometries/BoxGeometry.js
 
