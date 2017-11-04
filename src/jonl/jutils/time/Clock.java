@@ -1,7 +1,5 @@
 package jonl.jutils.time;
 
-import jonl.jutils.time.TimeUtils.TimeMetric;
-
 public class Clock {
 
     private StopWatch stopWatch;

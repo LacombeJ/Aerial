@@ -23,7 +23,7 @@ public class FileUtils {
      * of the file
      * @throws IOException
      */
-    public static StringBuilder readFromFile(String file) {
+    public static String readFromFile(String file) {
         
         try {
             String line;
@@ -33,7 +33,7 @@ public class FileUtils {
                 sb.append(line).append(NEW_LINE);
             }
             br.close();
-            return sb;
+            return sb.toString();
         } catch (IOException e) {
             System.err.println("Failed to read from file: "+file);
         }
