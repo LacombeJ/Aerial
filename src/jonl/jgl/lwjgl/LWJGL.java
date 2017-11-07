@@ -30,6 +30,11 @@ class LWJGL extends AbstractGraphicsLibrary {
     }
     
     @Override
+    public void glClearColor(float r, float g, float b, float a) {
+        GL11.glClearColor(r,g,b,a);
+    }
+    
+    @Override
     public void glScissor(int x, int y, int width, int height) {
         GL11.glScissor(x,y,width,height);
     }
@@ -102,11 +107,6 @@ class LWJGL extends AbstractGraphicsLibrary {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
             break;
         }
-    }
-
-    @Override
-    public void glClearColor(float r, float g, float b, float a) {
-        GL11.glClearColor(r,g,b,a);
     }
     
     @Override
