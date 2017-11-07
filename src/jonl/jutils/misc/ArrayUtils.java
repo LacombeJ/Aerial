@@ -178,6 +178,10 @@ public class ArrayUtils {
         return Arrays.copyOf(array, array.length);
     }
     
+    public static void copy(Object[] src, Object[] dst) {
+        System.arraycopy(src, 0, dst, 0, src.length);
+    }
+    
     public static int[] subArray(int[] array, int i, int j) {
         int[] sub = new int[j-i];
         System.arraycopy(array, i, sub, 0, sub.length);
