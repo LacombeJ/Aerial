@@ -61,7 +61,7 @@ class ShaderGeneratorBasic {
     }
     
     private static String getShaderFunctionUniforms(GeneratedMaterial material) {
-        return material.mbUniforms;
+        return material.slUniforms;
     }
     
     private static String fragUniforms(GeneratedMaterial material) {
@@ -81,7 +81,7 @@ class ShaderGeneratorBasic {
     }
     
     private static String _____getShaderFunctionString(GeneratedMaterial material) {
-        return material.mbStatements;
+        return material.slStatements;
     }
     
     private static String fragMainBody(GeneratedMaterial material) {

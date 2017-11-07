@@ -3,7 +3,6 @@
 import java.util.ArrayList;
 
 import jonl.ge.Input.CursorState;
-import jonl.jutils.time.Clock;
 
 public abstract class Scene {
     
@@ -212,8 +211,8 @@ public abstract class Scene {
         return application.getInfo(key);
     }
     
-    public Clock getClock() {
-        return application.getClock();
+    public Time getTime() {
+        return application.getTime();
     }
     
     @Override

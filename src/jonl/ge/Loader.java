@@ -46,4 +46,8 @@ public class Loader {
         return loadTexture(fileLoc,Internal.RGBA16,wrap,Filter.MIPMAP);
     }
     
+    public static Texture loadTexture(String fileLoc) {
+        return loadTexture(fileLoc,Internal.RGBA16,Wrap.CLAMP,Filter.MIPMAP);
+    }
+    
 }

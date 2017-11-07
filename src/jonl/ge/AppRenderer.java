@@ -240,7 +240,9 @@ class AppRenderer implements Renderer {
     private void setUniform(Program p, String name, Object data) {
         if (data instanceof TextureUniform) {
             TextureUniform t = (TextureUniform) data;
-            p.setTexture(name,glm.getOrCreateTexture(t.texture),t.id);
+            if (t.texture!=null) {
+                p.setTexture(name,glm.getOrCreateTexture(t.texture),t.id);
+            }
         } else if (data instanceof Boolean) {
             boolean b = (boolean) data;
             p.setUniformi(name,b ? 1 : 0);
@@ -283,11 +285,11 @@ class AppRenderer implements Renderer {
     
     
     public void renderRenderTexture(RenderTexture rt) {
-        jonl.jgl.FrameBuffer buffer = glm.getOrCreateFrameBuffer(rt.buffer);
+        jonl.jgl.FrameBuffer buffer = glm.getOrCreateFrameBuffer(rt.buffers[0]);
         int width = buffer.getWidth();
         int height = buffer.getHeight();
         
-        gl.glBindFramebuffer(glm.getOrCreateFrameBuffer(rt.buffer));
+        gl.glBindFramebuffer(glm.getOrCreateFrameBuffer(rt.buffers[0]));
         
         gl.glViewport(0,0,width,height);
         gl.glClearColor(0,0,0,1);

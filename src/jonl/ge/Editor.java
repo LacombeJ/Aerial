@@ -42,6 +42,7 @@ public class Editor extends AbstractApp {
         
         gui.window.setLoader(()->{
             putInfo();
+            getTime().update();
             updater.load();
             renderer.load();
         });

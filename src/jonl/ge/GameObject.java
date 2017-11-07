@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import jonl.ge.Input.CursorState;
 import jonl.jutils.func.Callback0D;
-import jonl.jutils.time.Clock;
 import jonl.vmath.Matrix4;
 
 public final class GameObject {
@@ -257,8 +256,8 @@ public final class GameObject {
         return scene.getInfo(key);
     }
     
-    public Clock getClock() {
-        return scene.getClock();
+    public Time getTime() {
+        return scene.getTime();
     }
     
     public void putData(String key, Object data) {

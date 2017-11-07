@@ -26,12 +26,12 @@ class AppUtil {
     }
     
     static GeneratedMaterial defaultMaterial() {
-        GeneratedMaterialBuilder mb = new GeneratedMaterialBuilder();
-        mb.diffuse = mb.vec3u("diffuse",0.5f,0.5f,0.5f);
-        mb.specular = mb.vec3u("specular",0.5f,0.5f,0.5f);
-        mb.roughness = mb.mbFloatu("roughness",0.8f);
-        mb.fresnel = mb.mbFloatu("fresnel",0.3f);
-        return mb.build();
+        GeneratedMaterialBuilder sl = new GeneratedMaterialBuilder();
+        sl.diffuse = sl.vec3u("diffuse",0.5f,0.5f,0.5f);
+        sl.specular = sl.vec3u("specular",0.5f,0.5f,0.5f);
+        sl.roughness = sl.slFloatu("roughness",0.8f);
+        sl.fresnel = sl.slFloatu("fresnel",0.3f);
+        return sl.build();
     }
     
     static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String fragSource) {

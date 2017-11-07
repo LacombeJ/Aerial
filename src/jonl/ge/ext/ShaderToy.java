@@ -4,7 +4,7 @@ import jonl.ge.Input;
 import jonl.ge.Material;
 import jonl.ge.Property;
 import jonl.ge.ShaderMaterial;
-import jonl.jutils.time.Clock;
+import jonl.ge.Time;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector4;
 
@@ -30,8 +30,8 @@ public class ShaderToy extends Property {
     @Override
     public void update() {
         
-        Clock clock = getClock();
-        float msdiff = clock.lap() / 1000000.0f;
+        Time time = getTime();
+        float msdiff = time.time();
         float sdiff = msdiff / 1000.0f;
         
         Input input = getInput();

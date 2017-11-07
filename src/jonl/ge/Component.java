@@ -3,7 +3,6 @@ package jonl.ge;
 import java.util.ArrayList;
 
 import jonl.ge.Input.CursorState;
-import jonl.jutils.time.Clock;
 
 public abstract class Component {
 
@@ -101,8 +100,8 @@ public abstract class Component {
         return gameObject.getInfo(key);
     }
     
-    public Clock getClock() {
-        return gameObject.getClock();
+    public Time getTime() {
+        return gameObject.getTime();
     }
     
 }

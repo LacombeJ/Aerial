@@ -74,6 +74,7 @@ public abstract class Application extends AbstractApp {
                 //TODO find out why this is causing weird rendering issues
                 //when synchronization is not used between two windows
                 synchronized (Application.class) {
+                    getTime().update();
                     updater.update(scene);
                     renderer.render(scene);
                 }

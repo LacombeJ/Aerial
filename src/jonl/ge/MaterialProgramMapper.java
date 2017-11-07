@@ -5,7 +5,6 @@ import java.util.HashMap;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
-import jonl.jutils.io.FileUtils;
 
 class MaterialProgramMapper {
     

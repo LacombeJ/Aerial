@@ -17,6 +17,13 @@ public abstract class Material {
         }
     }
     
+    /**
+     * Available uniform object primitives and classes:
+     * boolean, int, float, Vector2, Vector3, Vector4, Matrix2, Matrix3, Matrix4, TextureUniform
+     * @param name
+     * @param object
+     * 
+     */
     public abstract void setUniform(String name, Object object);
 
     public GeneratedMaterial asGeneratedMaterial() {
