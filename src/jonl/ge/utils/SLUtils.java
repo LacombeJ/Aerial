@@ -26,14 +26,15 @@ public class SLUtils {
         sl.layoutIn(2,"vec2 texCoord");
         
         sl.uniform("mat4 MVP");
+        sl.uniform("mat4 M");
         
-        sl.attributeOut("vec4 vPosition");
+        sl.attributeOut("vec3 vPosition");
         sl.attributeOut("vec3 vNormal");
         sl.attributeOut("vec2 vTexCoord");
         
         sl.putStatement("gl_Position = MVP * vertex");
         
-        sl.putStatement("vPosition = MVP * vertex");
+        sl.putStatement("vPosition = vec3(M * vertex)");
         sl.putStatement("vNormal = normal");
         sl.putStatement("vTexCoord = texCoord");
         
