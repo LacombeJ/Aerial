@@ -354,6 +354,14 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
         return proj;
     }
     
+    /**
+     * 
+     * @param height
+     * @param aspect width/height
+     * @param near
+     * @param far
+     * @return
+     */
     public static Matrix4 orthographic(float height, float aspect, float near, float far) {
         float width = aspect*height;
         float r = (width/2);
