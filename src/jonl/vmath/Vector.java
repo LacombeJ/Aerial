@@ -82,6 +82,24 @@ public abstract class Vector<V extends Vector<V>> {
         return (V) this;
     }
     
+    /** @return this vector after it has been scaled relative to origin */
+    @SuppressWarnings("unchecked")
+    public V scale(float scalar, V origin) {
+    	V dir = get().sub(origin);
+    	dir.multiply(scalar);
+    	set(dir.add(origin));
+    	return (V) this;
+    }
+    
+    /** @return this vector after it has been scaled relative to origin */
+    @SuppressWarnings("unchecked")
+    public V scale(V scalar, V origin) {
+    	V dir = get().sub(origin);
+    	dir.multiply(scalar);
+    	set(dir.add(origin));
+    	return (V) this;
+    }
+    
     public V multiply(float scalar) { return scale(scalar); }
     
     public V divide(float scalar) { return scale(1f/scalar); }

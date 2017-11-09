@@ -912,7 +912,13 @@ public class Quaternion {
     }
     
     
-
+    /**
+     * In degrees
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
     public static Quaternion euler(float x, float y, float z) {
         return new Quaternion().setEulerAnglesDeg(x,y,z);
     }
