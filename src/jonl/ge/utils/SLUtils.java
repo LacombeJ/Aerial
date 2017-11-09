@@ -265,6 +265,23 @@ public class SLUtils {
         sl.slEnd();
         return func;
     }
+
+    
+    /**
+     * Returns floor(gl_FragCoord.xy)
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static SLFunc<SLVec2> getPixelLoc(ShaderLanguage sl) {
+        
+        String body = 
+       "    return floor(gl_FragCoord.xy);\n";
+       
+       SLFunc<SLVec2> func = sl.slFunc(body, SLVec2.class);
+       
+       return func;
+           
+    }
     
     
 

@@ -217,7 +217,7 @@ public class ShaderLanguage {
         
         Object[] args = new Object[argTypes.length];
         for (int i=0; i<argTypes.length; i++) {
-            args[i] = argTypes[i] + arg(i);
+            args[i] = argTypes[i] + ' ' + arg(i);
         }
         String funcPart = funcBuild(f.name, args);
         String declaration = getType(getVar(f.ref)) + " " + funcPart;
@@ -280,7 +280,7 @@ public class ShaderLanguage {
     }
     
     public String arg(int i) {
-        return " _arg"+i;
+        return "_arg"+i;
     }
     
     private void returnStatement(Object o) {
@@ -334,18 +334,31 @@ public class ShaderLanguage {
     public SLVec4 vec4(SLVec4 u)                                    { return vec4p(u); }
     public SLVec4 vec4(SLVec3 u, float w)                           { return vec4p(u,w); }
     public SLVec4 vec4(SLVec2 u, float z, float w)                  { return vec4p(u,z,w); }
-    public SLVec4 vec4(float x, float y, float z, float w)          { return vec4p(x,y,z,w); }
     public SLVec4 vec4(SLVec3 u, SLFloat w)                         { return vec4p(u,w); }
     public SLVec4 vec4(SLVec2 u, SLFloat z, SLFloat w)              { return vec4p(u,z,w); }
-    public SLVec4 vec4(SLFloat x, SLFloat y, SLFloat z, SLFloat w)  { return vec4p(x,y,z,w); }
-    
-    public SLVec4 vec4(SLFloat x, float y, float z, float w)        { return vec4p(x,y,z,w); }
-    public SLVec4 vec4(SLFloat x, SLFloat y, float z, float w)      { return vec4p(x,y,z,w); }
-    public SLVec4 vec4(SLFloat x, SLFloat y, SLFloat z, float w)    { return vec4p(x,y,z,w); }
-    
     public SLVec4 vec4(Vector4 v)                                   { return vec4p(v.x,v.y,v.z,v.w); }
     public SLVec4 vec4(float v)                                     { return vec4p(v,v,v,v); }
     public SLVec4 vec4(SLFloat v)                                   { return vec4p(v,v,v,v); }
+    
+    public SLVec4 vec4(float x, float y, float z, float w)          { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, float y, float z, SLFloat w)        { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, float y, SLFloat z, float w)        { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, float y, SLFloat z, SLFloat w)      { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, SLFloat y, float z, float w)        { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, SLFloat y, float z, SLFloat w)      { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, SLFloat y, SLFloat z, float w)      { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(float x, SLFloat y, SLFloat z, SLFloat w)    { return vec4p(x,y,z,w); }
+    
+    public SLVec4 vec4(SLFloat x, float y, float z, float w)        { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, float y, float z, SLFloat w)      { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, float y, SLFloat z, float w)      { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, float y, SLFloat z, SLFloat w)    { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, SLFloat y, float z, float w)      { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, SLFloat y, float z, SLFloat w)    { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, SLFloat y, SLFloat z, float w)    { return vec4p(x,y,z,w); }
+    public SLVec4 vec4(SLFloat x, SLFloat y, SLFloat z, SLFloat w)  { return vec4p(x,y,z,w); }
+
+    
     
     private SLVec3 vec3p(Object... params) {
         return putVariable(new SLVec3V(),funcBuild("vec3",params));
@@ -443,10 +456,16 @@ public class ShaderLanguage {
     public <T extends SLData> SLBool equals(T u, T v) {
         return (SLBool) putVariable(new SLBoolV(),u+"=="+v);
     }
+    public <T extends SLData> SLBool neq(T u, T v) {
+        return (SLBool) putVariable(new SLBoolV(),u+"!="+v);
+    }
     public <T extends SLData> SLBool less(T u, T v) {
         return (SLBool) putVariable(new SLBoolV(),u+"<"+v);
     }
     public <T extends SLData> SLBool greater(T u, T v) {
+        return (SLBool) putVariable(new SLBoolV(),u+">"+v);
+    }
+    public <T extends SLData> SLBool greater(T u, float v) {
         return (SLBool) putVariable(new SLBoolV(),u+">"+v);
     }
     public <T extends SLData> SLBool leq(T u, T v) {
@@ -462,6 +481,16 @@ public class ShaderLanguage {
     }
     
     @SuppressWarnings("unchecked")
+    public <T extends SLData> T add(float u, SLFloat v) {
+        return (T) putVariable(new SLFloatV(),u+"+"+v);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T add(SLFloat u, float v) {
+        return (T) putVariable(getVar(u),u+"+"+v);
+    }
+    
+    @SuppressWarnings("unchecked")
     public <T extends SLData> T sub(T u, T v) {
         return (T) putVariable(getVar(u),u+"-"+v);
     }
@@ -471,10 +500,6 @@ public class ShaderLanguage {
     }
     
     public SLFloatV sub(SLFloat u, float v) {
-        return putVariable(new SLFloatV(),u+"-"+v);
-    }
-    
-    public SLFloatV sub(SLFloat u, SLFloat v) {
         return putVariable(new SLFloatV(),u+"-"+v);
     }
     
@@ -604,6 +629,23 @@ public class ShaderLanguage {
     public <T extends SLData> T smoothstep(T edge0, T edge1, T u) {
         return (T) putVariable(getVar(u),funcBuild("smoothstep",edge0,edge1,u));
     }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T sin(T u) {
+        return (T) putVariable(getVar(u),funcBuild("cos",u));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T cos(T u) {
+        return (T) putVariable(getVar(u),funcBuild("cos",u));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T tan(T u) {
+        return (T) putVariable(getVar(u),funcBuild("cos",u));
+    }
+    
+    
     
     
     

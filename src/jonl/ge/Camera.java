@@ -57,6 +57,14 @@ public class Camera extends Component {
     
     public float far() { return far; }
     
+    /**
+     * 
+     * @param fov
+     * @param aspect width / height
+     * @param near
+     * @param far
+     * @return
+     */
     public Camera setPerspective(float fov, float aspect, float near, float far) {
         orthographic = false;
         this.fov = fov;
@@ -67,6 +75,14 @@ public class Camera extends Component {
         return this;
     }
     
+    /**
+     * 
+     * @param height
+     * @param aspect width / height
+     * @param near
+     * @param far
+     * @return
+     */
     public Camera setOrthographic(float height, float aspect, float near, float far) {
         orthographic = true;
         this.height = height;

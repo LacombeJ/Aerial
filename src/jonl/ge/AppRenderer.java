@@ -280,11 +280,9 @@ class AppRenderer implements Renderer {
             System.err.println("Uniform type not supported - "+name+" : "+data);
         }
     }
-
     
     
-    
-    public void renderRenderTexture(RenderTexture rt) {
+    void renderRenderTexture(RenderTexture rt) {
         jonl.jgl.FrameBuffer buffer = glm.getOrCreateFrameBuffer(rt.buffers[0]);
         int width = buffer.getWidth();
         int height = buffer.getHeight();

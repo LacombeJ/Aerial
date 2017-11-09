@@ -10,16 +10,20 @@ public class RenderTexture extends Component {
     FrameBuffer[] buffers = null;
     boolean clearOnRender = true;
     
-    public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height, Internal internal) {
+    public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height, Internal internal, Wrap wrap, Filter filter) {
         this.material = material;
         
         buffers = new FrameBuffer[numBuffers];
         for (int i=0; i<buffers.length; i++) {
-            Texture texture = new Texture(width,height,internal,Wrap.CLAMP,Filter.LINEAR);
+            Texture texture = new Texture(width,height,internal,wrap,filter);
             FrameBuffer buffer = new FrameBuffer(texture);
             buffers[i] = buffer;
         }
         
+    }
+    
+    public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height, Internal internal) {
+        this(numBuffers,material,width,height,Internal.RGB16,Wrap.CLAMP,Filter.NEAREST);
     }
     
     public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height) {
@@ -27,12 +31,6 @@ public class RenderTexture extends Component {
     }
     
     public void render() {
-        AppRenderer renderer = (AppRenderer) getGameObject().getScene().application.getRenderer();
-        renderer.renderRenderTexture(this);
-        translate();
-    }
-    
-    public void clear() {
         AppRenderer renderer = (AppRenderer) getGameObject().getScene().application.getRenderer();
         renderer.renderRenderTexture(this);
         translate();
