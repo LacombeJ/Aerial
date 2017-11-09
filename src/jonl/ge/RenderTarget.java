@@ -22,6 +22,8 @@ public class RenderTarget extends Camera {
         buffer = new FrameBuffer(width,height);
         Texture texture = new Texture(width,height,Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
         buffer.attach(texture);
+        
+        gBuffer = new FrameBuffer(width,height);
     }
     
     public Texture getTexture(int type) {

@@ -144,12 +144,44 @@ public class Geometry {
         numVertices = array.length;
     }
     
+    public Vector2[] getTexCoordArray() {
+        return MathUtil.getVectorArray(texCoords,new Vector2(),new Vector2[0]);
+    }
+    
+    public void setTexCoordArray(Vector2[] array) {
+        changed = true;
+        texCoords = MathUtil.getFloatArray(array);
+    }
+    
     void overrideChanged() {
         changed = false;
     }
     
     public int getNumVertices() {
         return numVertices;
+    }
+    
+    public void scaleTexCoords(float x, float y, float ox, float oy) {
+    	Vector2[] uvs = getTexCoordArray();
+    	Vector2 scalar = new Vector2(x,y);
+    	Vector2 origin = new Vector2(ox,oy);
+    	for (Vector2 uv : uvs) {
+    		uv.scale(scalar, origin);
+    	}
+    	setTexCoordArray(uvs);
+    }
+    
+    public void scaleTexCoords(float x, float y) {
+    	scaleTexCoords(x,y,0.5f,0.5f);
+    }
+    
+    public void translateTexCoords(float x, float y) {
+    	Vector2[] uvs = getTexCoordArray();
+    	Vector2 translate = new Vector2(x,y);
+    	for (Vector2 uv : uvs) {
+    		uv.add(translate);
+    	}
+    	setTexCoordArray(uvs);
     }
     
     void calculateTangents() {

@@ -74,9 +74,10 @@ public class GeneratedMaterialBuilder extends ShaderLanguage {
         gm.normal = copyData(normal);
         gm.height = copyData(height);
         gm.roughness = copyData(roughness);
-        gm.fresnel = copyData(fresnel)
-                ;
+        gm.fresnel = copyData(fresnel);
+        
         gm.slStatements = getStatementString(getStatementList());
+        gm.slFunctions = getFunctionString(getFunctionList());
         gm.slUniforms = getUniformString(getUniformList());
         gm.slUniformList = new ArrayList<>();
         gm.slUniformMap = new HashMap<>();

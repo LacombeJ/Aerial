@@ -2,8 +2,10 @@ package jonl.ge;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 import jonl.ge.Material.Uniform;
 import jonl.ge.utils.PresetData;
@@ -55,6 +57,11 @@ class AppRenderer implements Renderer {
         ArrayList<Camera> cameras = scene.findComponentsOfType(Camera.class);
         ArrayList<Light> lights = scene.findComponents(Light.class);
         ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
+        
+        // Sort cameras from lowest to highest rendering order
+        cameras.sort((Camera c0, Camera c1)->{
+        	return Integer.compare(c0.order, c1.order);
+        });
         
         for (Camera camera : cameras) {
             
@@ -149,13 +156,21 @@ class AppRenderer implements Renderer {
         Matrix4 view = Camera.computeViewMatrix(t);
         
         int left=0, bottom=0, right=0, top=0, width=0, height=0;
-        if (camera instanceof RenderTarget) {
+        if (camera instanceof CameraTarget) {
+        	CameraTarget ct = (CameraTarget) camera;
+            right = ct.gBuffer.width;
+            top = ct.gBuffer.height;
+            width = right;
+            height = top;
+            
+            gl.glBindFramebuffer(glm.getOrCreateFrameBuffer(ct.gBuffer));
+        } else if (camera instanceof RenderTarget) {
             RenderTarget rt = (RenderTarget) camera;
             right = rt.buffer.width;
             top = rt.buffer.height;
             width = right;
             height = top;
-
+            
             gl.glBindFramebuffer(glm.getOrCreateFrameBuffer(rt.buffer));
         } else {
             left = (int) (camera.viewLeft * app.getWidth());
@@ -179,7 +194,7 @@ class AppRenderer implements Renderer {
     }
     
     private void detachCamera(Camera camera) {
-        if (camera instanceof RenderTarget) {
+    	if (camera instanceof CameraTarget || camera instanceof RenderTarget) {
             gl.glBindFramebuffer(null);
         }
     }

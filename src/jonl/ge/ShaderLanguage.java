@@ -33,7 +33,7 @@ public class ShaderLanguage {
     private final ArrayList<String> slStatementList = new ArrayList<>();
     private int variableCount = 0;
     
-    private String version = null;
+    private String version = "#version 130\n";
     
     private final ArrayList<String> slFunctionList = new ArrayList<>();
     private ArrayList<String> slFunctionBuilder = new ArrayList<>();
@@ -75,6 +75,10 @@ public class ShaderLanguage {
         return slStatementList;
     }
     
+    protected ArrayList<String> getFunctionList() {
+        return slFunctionList;
+    }
+    
     String getUniformString(ArrayList<SLUniform> uniforms) {
         StringBuilder sb = new StringBuilder();
         for (SLUniform u : uniforms) {
@@ -86,6 +90,14 @@ public class ShaderLanguage {
     String getStatementString(ArrayList<String> statements) {
         StringBuilder sb = new StringBuilder();
         for (String s : statements) {
+            sb.append(s);
+        }
+        return sb.toString();
+    }
+    
+    String getFunctionString(ArrayList<String> functions) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : functions) {
             sb.append(s);
         }
         return sb.toString();
@@ -191,8 +203,8 @@ public class ShaderLanguage {
         f.name = genFuncName();
         f.ref = getData(returnClass);
         
-        String[] argTypes = new String[0];
-        String[] argNames = new String[0];
+        String[] argTypes = new String[arglist.length];
+        String[] argNames = new String[arglist.length];
         Tuple2.rip(arglist,argTypes,argNames);
         
         Object[] args = new Object[argTypes.length];

@@ -8,6 +8,8 @@ import jonl.vmath.Vector4;
 
 public class Camera extends Component {
     
+	int order = 0; //order in which to render cameras
+	
     float height = 10f; //used in orthographic projection
     float fov = 90; //used in perspective projection
     float aspect = 16/9f; //width / height
@@ -56,6 +58,10 @@ public class Camera extends Component {
     public float near() { return near; }
     
     public float far() { return far; }
+    
+    public void setOrder(int order) {
+    	this.order = order;
+    }
     
     /**
      * 

@@ -9,6 +9,12 @@ import jonl.jutils.func.Tuple2;
 
 public class SLUtils {
 
+	/**
+	 * Returns a basic vertex shader
+	 * <p>
+	 * This vs outputs attributes: vec3 vNormal, vec2 vTexCoord
+	 * @return
+	 */
     public static ShaderLanguage basicVert() {
         
         ShaderLanguage sl = new ShaderLanguage();
@@ -21,9 +27,14 @@ public class SLUtils {
         
         sl.uniform("mat4 MVP");
         
+        sl.attributeOut("vec4 vPosition");
+        sl.attributeOut("vec3 vNormal");
         sl.attributeOut("vec2 vTexCoord");
         
         sl.putStatement("gl_Position = MVP * vertex");
+        
+        sl.putStatement("vPosition = MVP * vertex");
+        sl.putStatement("vNormal = normal");
         sl.putStatement("vTexCoord = texCoord");
         
         return sl;
@@ -68,6 +79,25 @@ public class SLUtils {
     
     private static Tuple2<String,String> arg(String type, String name) {
         return new Tuple2<String,String>(type,name);
+    }
+    
+    /**
+     * Based on {@link jonl.ge.Geometry#scaleTexCoords(float,float,float,float) Geometry.scaleTexCoords(float,float,float,float)}
+     * @param sl
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static SLFunc<SLVec2> scaleTexCoord(ShaderLanguage sl) {
+        
+        String body = 
+        "    vec2 dir = uv - vec2(0.5,0.5);\n" +
+        "    dir *= scale;\n" +
+        
+        "    return vec2(0.5,0.5) + dir;";
+        
+        SLFunc<SLVec2> func = sl.slFunc(body, SLVec2.class, arg("vec2","uv"), arg("vec2","scale"));
+        
+        return func;
     }
     
     @SuppressWarnings("unchecked")

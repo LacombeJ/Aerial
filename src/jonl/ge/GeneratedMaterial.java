@@ -19,6 +19,7 @@ public class GeneratedMaterial extends Material {
     HashMap<String,SLUniform> slUniformMap; //TODO different hashCode?s
     String slUniforms;
     String slStatements;
+    String slFunctions;
     
     // Used by shader generator
     SLShader shader      = null; //TODO remove this, unlit materials should be another class

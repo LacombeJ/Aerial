@@ -20,6 +20,8 @@ class ShaderGeneratorStandard {
         sb.append('\n');
         sb.append(fragUniforms(material));
         sb.append('\n');
+        sb.append(fragFunctions(material));
+        sb.append('\n');
         sb.append(fragFuncParallaxMapping(material));
         sb.append('\n');
         sb.append(fragMainStart());
@@ -89,6 +91,16 @@ class ShaderGeneratorStandard {
             "uniform int numLights;\n" +
             //"uniform Material material;\n" +
             getShaderFunctionUniforms(material) +
+            "";
+    }
+    
+    private static String getShaderFunctions(GeneratedMaterial material) {
+        return material.slFunctions;
+    }
+    
+    private static String fragFunctions(GeneratedMaterial material) {
+        return
+            getShaderFunctions(material) +
             "";
     }
     
