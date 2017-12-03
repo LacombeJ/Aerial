@@ -2,6 +2,8 @@ package jonl.ge;
 
 import java.util.List;
 
+import jonl.jutils.misc.TypeUtils;
+
 public abstract class Material {
     
     abstract List<Uniform> uniforms();
@@ -27,19 +29,27 @@ public abstract class Material {
     public abstract void setUniform(String name, Object object);
 
     public GeneratedMaterial asGeneratedMaterial() {
-        return (GeneratedMaterial) this;
+    	return TypeUtils.cast(this, GeneratedMaterial.class);
+    }
+    
+    public GeneratedShader asGeneratedShader() {
+    	return TypeUtils.cast(this, GeneratedShader.class);
+    }
+    
+    public StandardMaterial asStandardMaterial() {
+    	return TypeUtils.cast(this, StandardMaterial.class);
     }
     
     public ShaderMaterial asShaderMaterial() {
-        return (ShaderMaterial) this;
+    	return TypeUtils.cast(this, ShaderMaterial.class);
     }
     
     public SolidMaterial asSolidMaterial() {
-        return (SolidMaterial) this;
+    	return TypeUtils.cast(this, SolidMaterial.class);
     }
     
     public TextureMaterial asTextureMaterial() {
-        return (TextureMaterial) this;
+    	return TypeUtils.cast(this, TextureMaterial.class);
     }
     
 }

@@ -12,20 +12,24 @@ public abstract class Component {
         
     }
     
-    public GameObject getGameObject() {
+    public GameObject gameObject() {
         return gameObject;
     }
     
-    public GameObject getParent() {
-        return gameObject.getParent();
+    public GameObject parent() {
+        return gameObject.parent();
     }
     
     public Transform computeWorldTransform() {
         return gameObject.computeWorldTransform();
     }
     
-    public Transform getTransform() {
-        return gameObject.transform;
+    public Transform transform() {
+        return gameObject.transform();
+    }
+    
+    public Scene scene() {
+        return gameObject.scene();
     }
     
     public GameObject getChild(String name) {
@@ -80,8 +84,8 @@ public abstract class Component {
         return gameObject.findGameObjectOfType(c);
     }
     
-    public Input getInput() {
-        return gameObject.getInput();
+    public Input input() {
+        return gameObject.input();
     }
     
     public CursorState getCursorState() {
@@ -92,16 +96,16 @@ public abstract class Component {
         gameObject.setCursorState(state);
     }
     
-    public Window getWindow() {
-        return gameObject.getWindow();
+    public Window window() {
+        return gameObject.window();
     }
     
-    public String getInfo(String key) {
-        return gameObject.getInfo(key);
+    public String info(String key) {
+        return gameObject.info(key);
     }
     
-    public Time getTime() {
-        return gameObject.getTime();
+    public Time time() {
+        return gameObject.time();
     }
     
 }

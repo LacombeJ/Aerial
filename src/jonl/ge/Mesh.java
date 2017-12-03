@@ -15,6 +15,7 @@ public class Mesh extends Component {
     public enum Mode {
         TRIANGLES(jonl.jgl.GraphicsLibrary.Mode.TRIANGLES),
         LINES(jonl.jgl.GraphicsLibrary.Mode.LINES),
+        LINE_STRIP(jonl.jgl.GraphicsLibrary.Mode.LINE_STRIP),
         POINTS(jonl.jgl.GraphicsLibrary.Mode.POINTS);
         
         final jonl.jgl.GraphicsLibrary.Mode mode;

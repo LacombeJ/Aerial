@@ -19,7 +19,7 @@ public class SLUtils {
         
         ShaderLanguage sl = new ShaderLanguage();
         
-        sl.version("450");
+        sl.version("330");
         
         sl.layoutIn(0,"vec4 vertex");
         sl.layoutIn(1,"vec3 normal");
@@ -35,12 +35,61 @@ public class SLUtils {
         sl.putStatement("gl_Position = MVP * vertex");
         
         sl.putStatement("vPosition = vec3(M * vertex)");
-        sl.putStatement("vNormal = normal");
+        sl.putStatement("vNormal = normalize ( mat3(M) * normal )");
         sl.putStatement("vTexCoord = texCoord");
         
         return sl;
         
     }
+    
+    public static ShaderLanguage normalVert() {
+        
+        ShaderLanguage sl = new ShaderLanguage();
+        
+        sl.version("330");
+        
+        sl.layoutIn(0,"vec4 vertex");
+        sl.layoutIn(1,"vec3 normal");
+        sl.layoutIn(2,"vec2 texCoord");
+        sl.layoutIn(3,"vec3 tangent");
+        sl.layoutIn(4,"vec3 bitangent");
+        
+        sl.uniform("mat4 MVP");
+        sl.uniform("mat4 M");
+        
+        sl.attributeOut("vec3 vPosition");
+        sl.attributeOut("vec3 vNormal");
+        sl.attributeOut("vec2 vTexCoord");
+        sl.attributeOut("vec3 vTangent");
+        sl.attributeOut("vec3 vBitangent");
+        sl.attributeOut("mat3 mTBN");
+        
+        sl.putStatement("gl_Position = MVP * vertex");
+        
+        
+        sl.putStatement("mat3 mNormal = transpose(inverse(mat3(M)))");
+        
+        sl.putStatement("vPosition = vec3(M * vertex)");
+        sl.putStatement("vNormal = normalize ( mNormal * normal )");
+        sl.putStatement("vTexCoord = texCoord");
+        
+        // TODO find out whether tangent and bitangent vectors should be multipled by M or T(I(M))
+        sl.putStatement("vTangent = normalize ( mat3(mNormal) * tangent )");
+        sl.putStatement("vBitangent = normalize ( mat3(mNormal) * bitangent )");
+        
+        sl.putStatement("mTBN = mat3(vTangent,vBitangent,vNormal)");
+        
+        return sl;
+        
+    }
+    
+    // TODO move SLFunc functions to SLImports
+    
+    
+    
+    
+    
+    
     /*
     public static SLFunc<SLFloat> dLine(ShaderLanguage sl) {
         SLFunc<SLFloat> func = sl.slBegin(SLFloat.class, "vec2", "float", "float"); {

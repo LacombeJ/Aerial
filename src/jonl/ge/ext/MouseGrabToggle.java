@@ -21,7 +21,7 @@ public class MouseGrabToggle extends Toggle {
     
     @Override
     public void update() {
-        if (getInput().checkEvent(event)) {
+        if (input().checkEvent(event)) {
             if (getCursorState()==CursorState.GRABBED) {
                 setCursorState(CursorState.NORMAL);
             } else {

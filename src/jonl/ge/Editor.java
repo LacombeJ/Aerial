@@ -45,6 +45,7 @@ public class Editor extends AbstractApp {
             getTime().update();
             updater.load();
             renderer.load();
+            appLoader().f();
         });
         
         gui.editorViewer.addPainter((g)->{
@@ -54,6 +55,7 @@ public class Editor extends AbstractApp {
             //when synchronization is not used between two windows
             synchronized (Editor.class) {
                 updater.update(scene);
+                appUpdater().f();
                 gl.glEnable(Target.CULL_FACE);
                 gl.glEnable(Target.DEPTH_TEST);
                 int[] box = gl.glGetScissor();
@@ -65,6 +67,9 @@ public class Editor extends AbstractApp {
             }
         });
         
+        gui.window.setCloser(()->{
+        	appCloser().f();
+        });
     }
     
     void putInfo() {
@@ -121,12 +126,6 @@ public class Editor extends AbstractApp {
     public void add(Scene scene) {
         scene.application = this;
         scenes.add(scene);
-    }
-
-    @Override
-    public void prepare() {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override

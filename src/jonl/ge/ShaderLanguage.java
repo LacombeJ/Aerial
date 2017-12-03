@@ -3,7 +3,10 @@ package jonl.ge;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import jonl.jutils.func.Callback;
+import jonl.jutils.func.Function0D;
 import jonl.jutils.func.Tuple2;
+import jonl.jutils.misc.StringUtils;
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
 import jonl.vmath.Matrix4;
@@ -22,12 +25,19 @@ public class ShaderLanguage {
     /** List of attributes as strings */
     private final ArrayList<String> slAttributeList = new ArrayList<>();
     
-    /** List of hard-coded uniforms */
-    private final ArrayList<String> slHardUniformList = new ArrayList<>();
-    
     /** List of Uniforms */
+    private final ArrayList<String> slUniformDeclareList = new ArrayList<>();
     private final ArrayList<SLUniform> slUniformList = new ArrayList<>();
+    private int uniformNameId;
     private int textureCount;
+    
+    /** List of consts */
+    private final ArrayList<String> slConstList = new ArrayList<>();
+    private int constCount;
+    
+    /** List of structs */
+    private final ArrayList<String> slStructList = new ArrayList<>();
+    private int structCount;
     
     /** List of Statements to be executed in order */
     private final ArrayList<String> slStatementList = new ArrayList<>();
@@ -67,6 +77,10 @@ public class ShaderLanguage {
         return md;
     }
     
+    protected ArrayList<String> getUniformStringList() {
+        return slUniformDeclareList;
+    }
+    
     protected ArrayList<SLUniform> getUniformList() {
         return slUniformList;
     }
@@ -79,10 +93,10 @@ public class ShaderLanguage {
         return slFunctionList;
     }
     
-    String getUniformString(ArrayList<SLUniform> uniforms) {
+    String getUniformString(ArrayList<String> uniforms) {
         StringBuilder sb = new StringBuilder();
-        for (SLUniform u : uniforms) {
-            sb.append("uniform "+u.type+" "+u.name+";\n");
+        for (String s : uniforms) {
+            sb.append(s); //"uniform "+u.type+" "+u.name+";\n"
         }
         return sb.toString();
     }
@@ -116,16 +130,20 @@ public class ShaderLanguage {
         
         sb.append(version);
         
+        for (String s : slStructList) {
+        	sb.append(s);
+        }
+        
         for (String a : slAttributeList) {
             sb.append(a);
         }
         
-        for (String u : slHardUniformList) {
+        for (String u : slUniformDeclareList) {
             sb.append(u);
         }
         
-        for (SLUniform u : slUniformList) {
-            sb.append("uniform "+u.type+" "+u.name+";\n");
+        for (String c : slConstList) {
+            sb.append(c);
         }
         
         for (String s : slFunctionList) {
@@ -142,12 +160,29 @@ public class ShaderLanguage {
     }
     
     
-    /**
-     * @return a unique name for a generated variable
-     */
+    // Unique generated names
+    
     private String genName() {
         String name = "_gmv_"+variableCount;
         variableCount++;
+        return name;
+    }
+    
+    private String genConstName() {
+        String name = "_gmconst_"+constCount;
+        constCount++;
+        return name;
+    }
+    
+    private String genUniformName() {
+        String name = "_gmuni_"+uniformNameId;
+        uniformNameId++;
+        return name;
+    }
+    
+    private String genStructName() {
+        String name = "_gmstruct_"+structCount;
+        structCount++;
         return name;
     }
     
@@ -176,6 +211,17 @@ public class ShaderLanguage {
         return v;
     }
     
+    private <T extends SLVar> T putConstVariable(T v, String value) {
+        unique_gm_changed++;
+        v.sl = this;
+        v.type = getType(v);
+        v.name = genConstName();
+        v.value = value;
+        String declaration = "const "+v.type+" "+v.name+" = "+v.value+";\n";
+        slConstList.add(declaration);
+        return v;
+    }
+    
     private void putAttribute(String attribute) {
         unique_gm_changed++;
         slAttributeList.add(attribute+";\n");
@@ -183,24 +229,46 @@ public class ShaderLanguage {
     
     private void putHardUniform(String uniform) {
         unique_gm_changed++;
-        slHardUniformList.add(uniform+";\n");
+        slUniformDeclareList.add(uniform+";\n");
     }
     
-    private <T extends SLUniform> T putUniform(T v, String id, Object data) {
-        unique_gm_changed++;
-        v.sl = this;
-        v.type = getType(v);
-        v.name = genName();
-        v.id = id;
-        v.data = data;
-        slUniformList.add(v);
-        return v;
+    private <T extends SLUniform> T putUniform(T u, String type, String name, String id, Object data, boolean declare) {
+    	unique_gm_changed++;
+        u.sl = this;
+        u.type = type;
+        u.name = name;
+        u.id = id;
+        u.data = data;
+        if (declare) {
+        	slUniformDeclareList.add("uniform "+u.type+" "+u.name+";\n");
+        }
+        slUniformList.add(u);
+        return u;
+    }
+    
+    private <T extends SLUniform> T putUniform(T u, String id, Object data) {
+        return putUniform(u, getType(u), genUniformName(), id, data, true);
+    }
+    
+    private <T extends SLDeclare<?>> T putStruct(T s) {
+    	unique_gm_changed++;
+    	s.name = genStructName();
+    	slStructList.add("struct "+s.name+" {\n");
+    	for (String v : s.declares) {
+    		slStructList.add(v);
+    	}
+    	slStructList.add("};\n");
+    	return s;
     }
     
     private <T extends SLData> SLFunc<T> putFunc(String body, SLFunc<T> f, Class<T> returnClass, Tuple2<String,String>[] arglist) {
+        return putFunc(body,genFuncName(),f,returnClass,arglist);
+    }
+    
+    private <T extends SLData> SLFunc<T> putFunc(String body, String fname, SLFunc<T> f, Class<T> returnClass, Tuple2<String,String>[] arglist) {
         unique_gm_changed++;
         f.sl = this;
-        f.name = genFuncName();
+        f.name = fname;
         f.ref = getData(returnClass);
         
         String[] argTypes = new String[arglist.length];
@@ -222,9 +290,13 @@ public class ShaderLanguage {
     }
     
     private <T extends SLData> SLFunc<T> putBegin(SLFunc<T> f, Class<T> returnClass, String... argTypes) {
+        return putBegin(f,genFuncName(),returnClass,argTypes);
+    }
+    
+    private <T extends SLData> SLFunc<T> putBegin(SLFunc<T> f, String name, Class<T> returnClass, String... argTypes) {
         unique_gm_changed++;
         f.sl = this;
-        f.name = genFuncName();
+        f.name = name;
         f.ref = getData(returnClass);
         
         Object[] args = new Object[argTypes.length];
@@ -268,13 +340,115 @@ public class ShaderLanguage {
     
     public void version(String v) { version = "#version "+v+"\n"; }
     
-    public void layoutIn(int index, String a) { putAttribute(String.format("layout (location = %d) in %s",index,a)); }
+    public <T extends SLIncludeLibrary> T include(SLInclude<T> include) {
+        return include.include(this);
+    }
+    
+    
+    
+    @SuppressWarnings("unchecked")
+	private <T extends SLData> T layout(String layoutType, Class<T> returnClass, int index, String name) {
+    	SLVar v = (SLVar) getData(returnClass);
+    	v.sl = this;
+        v.type = getType(v);
+        v.name = name;
+        putAttribute(String.format("layout (location = %d) %s %s %s",layoutType,index,v.type,v.name));
+        return (T) v;
+    }
+	public <T extends SLData> T layoutIn(Class<T> returnClass, int index, String name) {
+    	return layout("in",returnClass,index,name);
+    }
+	public <T extends SLData> T layoutOut(Class<T> returnClass, int index, String name) {
+    	return layout("out",returnClass,index,name);
+    }
+	public void layoutIn(int index, String a) { putAttribute(String.format("layout (location = %d) in %s",index,a)); }
     public void layoutOut(int index, String a) { putAttribute(String.format("layout (location = %d) out %s",index,a)); }
     
-    public void attributeIn(String a) { putAttribute(String.format("in %s",a)); }
+	
+	
+    @SuppressWarnings("unchecked")
+	private <T extends SLData> T attribute(String attributeType, Class<T> returnClass, String name) {
+    	SLVar v = (SLVar) getData(returnClass);
+    	v.sl = this;
+        v.type = getType(v);
+        v.name = name;
+        putAttribute(String.format("%s %s %s",attributeType,v.type,v.name));
+        return (T) v;
+    }
+    public <T extends SLData> T attributeIn(Class<T> returnClass, String name) {
+    	return attribute("in",returnClass,name);
+    }
+	public <T extends SLData> T attributeOut(Class<T> returnClass, String name) {
+    	return attribute("out",returnClass,name);
+    }
+	public void attributeIn(String a) { putAttribute(String.format("in %s",a)); }
     public void attributeOut(String a) { putAttribute(String.format("out %s",a)); }
+	
+	
+    
+    public <T extends SLStruct> SLDeclare<T> declare(Function0D<T> create) {
+    	return putStruct(new SLDeclare<T>(this, create));
+    }
+    
+    
+    
+    @SuppressWarnings("unchecked")
+	public <T extends SLData> T uniform(Class<T> returnClass, String id) {
+    	return (T) putUniform(getUniform(returnClass),id,null);
+	}
     
     public void uniform(String u) { putHardUniform(String.format("uniform %s",u)); }
+    
+    public <T extends SLStruct> T uniform(SLDeclare<T> declare, String name) {
+    	T s = declare.create.f();
+    	s.name = name;
+    	SLStructBuilder sb = new SLStructBuilder(this);
+    	sb.setStruct(s);
+    	sb.setCallback((v) -> {
+    		putUniform(getUniform(v), v.type, v.name, v.name, null, false);
+    	});
+    	s.init(sb);
+    	sb.setCallback(null);
+    	sb.setStruct(null);
+    	putHardUniform(String.format("uniform %s %s",declare.name,name));
+    	return s;
+	}
+    
+    public <T extends SLStruct> SLArray<T> arrayu(SLDeclare<T> declare, String name, int length) {
+    	T s = declare.create.f();
+    	s.name = name;
+    	SLStructBuilder sb = new SLStructBuilder(this);
+    	sb.setStruct(s);
+    	sb.setCallback((v) -> {
+    		for (int i=0; i<length; i++) {
+    			String vname = v.name.replace(".", "["+i+"].");
+    			putUniform(getUniform(v), v.type, vname, vname, null, false);
+    		}
+    	});
+    	s.init(sb);
+    	sb.setCallback(null);
+    	sb.setStruct(null);
+    	putHardUniform(String.format("uniform %s %s[%d]",declare.name,name,length));
+    	return new SLArray<T>(declare,name);
+	}
+    
+    private <T extends SLStruct> T index(SLArray<T> array, String index) {
+    	T s = array.declare.create.f();
+    	s.name = array.name;
+    	SLStructBuilder sb = new SLStructBuilder(this);
+    	sb.setStruct(s);
+    	sb.setIndex(index);
+    	s.init(sb);
+    	sb.setIndex(null);
+    	sb.setStruct(null);
+    	return s;
+    }
+    public <T extends SLStruct> T index(SLArray<T> array, int index) {
+    	return index(array,index+"");
+    }
+    public <T extends SLStruct> T index(SLArray<T> array, SLInt index) {
+    	return index(array,index+"");
+    }
     
     /** Adds string to body */
     public void putString(String s)     { put(s); }
@@ -289,6 +463,10 @@ public class ShaderLanguage {
     
     public <T extends SLData> SLFunc<T> slBegin(Class<T> returnClass, String... argTypes) {
         return putBegin(new SLFunc<T>(), returnClass, argTypes);
+    }
+    
+    public <T extends SLData> SLFunc<T> slBegin(SLFunc<T> f, Class<T> returnClass, String... argTypes) {
+        return putBegin(new SLFunc<T>(), f.name, returnClass, argTypes);
     }
     
     public String arg(int i) {
@@ -312,12 +490,45 @@ public class ShaderLanguage {
     private void putIf(SLBool b)        { putString("if ("+b.getName()+") {\n"); }
     private void putElseIf(SLBool b)    { putString("} else if ("+b.getName()+") {\n"); }
     private void putElse()              { putString("} else {\n"); }
-    private void putEndIf()             { putString("}\n"); }
+    private void putEndBracket()       	{ putString("}\n"); }
     
     public void slIf(SLBool bool)       { putIf(bool); }
     public void slElseIf(SLBool bool)   { putElseIf(bool); }
     public void slElse()                { putElse(); }
-    public void slEndIf()               { putEndIf(); }
+    public void slEndIf()               { putEndBracket(); }
+    
+    public SLInt slLoop(int start, int end, int increment) {
+    	SLInt i = slInt(start);
+    	putString(String.format("for (%s = %s; %s < %s; %s += %s) {\n", i,start, i,end, i,increment));
+    	return i;
+    }
+    public void slEndLoop()            	{ putEndBracket(); }
+    
+    // Const Variables ----------------------------------------------------------------------------------
+    
+    public SLBool   slBoolc  (boolean b) 	{ return putConstVariable(new SLBoolV(),  b+""); }
+    public SLInt    slIntc   (int i)     	{ return putConstVariable(new SLIntV(),   i+""); }
+    public SLFloat  slFloatc (float f)   	{ return putConstVariable(new SLFloatV(), f+""); }
+    
+    private SLVec4 vec4pv(Object... params) {
+        return putConstVariable(new SLVec4V(),funcBuild("vec4",params));
+    }
+    public SLVec4   vec4c  (float x, float y, float z, float w)		{ return vec4pv(x,y,z,w); }
+    public SLVec4   vec4c  (float v)								{ return vec4pv(v,v,v,v); }
+    
+    private SLVec3 vec3pv(Object... params) {
+        return putConstVariable(new SLVec3V(),funcBuild("vec3",params));
+    }
+    public SLVec3   vec3c  (float x, float y, float z)				{ return vec3pv(x,y,z); }
+    public SLVec3   vec3c  (float v)								{ return vec3pv(v,v,v); }
+    
+    private SLVec2 vec2pv(Object... params) {
+        return putConstVariable(new SLVec2V(),funcBuild("vec2",params));
+    }
+    public SLVec2   vec2c  (float x, float y)						{ return vec2pv(x,y); }
+    public SLVec2   vec2c  (float v)								{ return vec2pv(v,v); }
+    
+    // Variables ----------------------------------------------------------------------------------------
     
     public SLBool   slBool(String var)  { return putVariable(new SLBoolV(),     var); }
     public SLInt    slInt(String var)   { return putVariable(new SLIntV(),      var); }
@@ -329,16 +540,6 @@ public class ShaderLanguage {
     public SLBool   slBool  (boolean b) { return putVariable(new SLBoolV(),  b+""); }
     public SLInt    slInt   (int i)     { return putVariable(new SLIntV(),   i+""); }
     public SLFloat  slFloat (float f)   { return putVariable(new SLFloatV(), f+""); }
-    
-    public SLVec4 sample(SLTexU u) {
-        return putVariable(new SLVec4V(),"texture2D("+u.name+",fTexCoord)");
-    }
-    public SLVec4 sample(SLTexU u, String texCoord) {
-        return putVariable(new SLVec4V(),"texture2D("+u.name+","+texCoord+")");
-    }
-    public SLVec4 sample(SLTexU u, SLVec2 texCoord) {
-        return putVariable(new SLVec4V(),"texture2D("+u.name+","+texCoord+")");
-    }
     
     private SLVec4 vec4p(Object... params) {
         return putVariable(new SLVec4V(),funcBuild("vec4",params));
@@ -369,7 +570,7 @@ public class ShaderLanguage {
     public SLVec4 vec4(SLFloat x, SLFloat y, float z, SLFloat w)    { return vec4p(x,y,z,w); }
     public SLVec4 vec4(SLFloat x, SLFloat y, SLFloat z, float w)    { return vec4p(x,y,z,w); }
     public SLVec4 vec4(SLFloat x, SLFloat y, SLFloat z, SLFloat w)  { return vec4p(x,y,z,w); }
-
+    
     
     
     private SLVec3 vec3p(Object... params) {
@@ -394,6 +595,18 @@ public class ShaderLanguage {
     public SLVec2 vec2(float v)                 { return vec2p(v,v); }
     public SLVec2 vec2(SLFloat v)               { return vec2p(v,v); }
     
+    /*
+    public SLVec4 sample(SLTexU u) {
+        return putVariable(new SLVec4V(),"texture2D("+u.name+",fTexCoord)");
+    }*/
+    public SLVec4 sample(SLTexU u, String texCoord) {
+        return putVariable(new SLVec4V(),"texture2D("+u.name+","+texCoord+")");
+    }
+    public SLVec4 sample(SLTexU u, SLVec2 texCoord) {
+        return putVariable(new SLVec4V(),"texture2D("+u.name+","+texCoord+")");
+    }
+    
+    // --------------------------------------------------------------------------------------------------
     
     public SLVec4 xyzw(SLVec4 v) {
         return putVariable(new SLVec4V(),v+".xyzw");
@@ -492,19 +705,31 @@ public class ShaderLanguage {
         return (T) putVariable(getVar(u),u+"+"+v);
     }
     
-    @SuppressWarnings("unchecked")
-    public <T extends SLData> T add(float u, SLFloat v) {
-        return (T) putVariable(new SLFloatV(),u+"+"+v);
+    public SLVec3 add(SLVec3 u, SLFloat v) {
+        return putVariable(new SLVec3V(),u+"+"+v);
     }
     
-    @SuppressWarnings("unchecked")
-    public <T extends SLData> T add(SLFloat u, float v) {
-        return (T) putVariable(getVar(u),u+"+"+v);
+    public SLFloat add(float u, SLFloat v) {
+        return putVariable(new SLFloatV(),u+"+"+v);
+    }
+    
+    public SLFloat add(SLFloat u, float v) {
+        return putVariable(new SLFloatV(),u+"+"+v);
     }
     
     @SuppressWarnings("unchecked")
     public <T extends SLData> T sub(T u, T v) {
         return (T) putVariable(getVar(u),u+"-"+v);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T sub(T u, float v) {
+        return (T) putVariable(getVar(u),u+"-"+v);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T sub(float u, T v) {
+        return (T) putVariable(getVar(v),u+"-"+v);
     }
     
     public SLFloatV sub(float u, SLFloat v) {
@@ -529,6 +754,20 @@ public class ShaderLanguage {
     public <T extends SLData> T mul(float f, T u) {
         return (T) putVariable(getVar(u),f+"*"+u);
     }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T mul(T x, SLFloat y, SLFloat z) {
+        return (T) putVariable(getVar(x),x+"*"+y+"*"+z);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T mul(T x, SLFloat y, SLFloat z, SLFloat w) {
+        return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w);
+    }
+    
+    @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, float y, SLFloat z, SLFloat w) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w); }
+    @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, SLFloat y, float z, SLFloat w) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w); }
+    @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, SLFloat y, SLFloat z, float w) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w); }
     
     @SuppressWarnings("unchecked")
     public <T extends SLData> T mulf(T u, SLFloat f) {
@@ -556,6 +795,11 @@ public class ShaderLanguage {
     }
     
     @SuppressWarnings("unchecked")
+    public <T extends SLData> T neg(T u) {
+        return (T) putVariable(getVar(u),"-"+u);
+    }
+    
+    @SuppressWarnings("unchecked")
     public <T extends SLData> T pow(T u, T v) {
         return (T) putVariable(getVar(u),funcBuild("pow",u,v));
     }
@@ -577,6 +821,11 @@ public class ShaderLanguage {
     
     public <T extends SLData> SLFloat length(T u) {
         return putVariable(new SLFloatV(),funcBuild("length",u));
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <T extends SLData> T normalize(T u) {
+        return (T) putVariable(getVar(u),funcBuild("normalize",u));
     }
     
     public <T extends SLData> SLFloat distance(T u, T v) {
@@ -644,7 +893,7 @@ public class ShaderLanguage {
     
     @SuppressWarnings("unchecked")
     public <T extends SLData> T sin(T u) {
-        return (T) putVariable(getVar(u),funcBuild("cos",u));
+        return (T) putVariable(getVar(u),funcBuild("sin",u));
     }
     
     @SuppressWarnings("unchecked")
@@ -654,12 +903,47 @@ public class ShaderLanguage {
     
     @SuppressWarnings("unchecked")
     public <T extends SLData> T tan(T u) {
-        return (T) putVariable(getVar(u),funcBuild("cos",u));
+        return (T) putVariable(getVar(u),funcBuild("tan",u));
     }
     
     
     
+    public SLVec4 mul(SLMat4 m, SLVec4 v) {
+        return (SLVec4) putVariable(getVar(v),m+"*"+v);
+    }
     
+    public SLVec3 mul(SLMat3 m, SLVec3 v) {
+        return (SLVec3) putVariable(getVar(v),m+"*"+v);
+    }
+    
+    public SLVec2 mul(SLMat2 m, SLVec2 v) {
+        return (SLVec2) putVariable(getVar(v),m+"*"+v);
+    }
+    
+    
+    public SLVec4 mul(SLVec4 u, Vector4 v) {
+        return (SLVec4) putVariable(getVar(u),u+"*"+j(v));
+    }
+    public SLVec3 mul(SLVec3 u, Vector3 v) {
+        return (SLVec3) putVariable(getVar(u),u+"*"+j(v));
+    }
+    public SLVec2 mul(SLVec2 u, Vector2 v) {
+        return (SLVec2) putVariable(getVar(u),u+"*"+j(v));
+    }
+    
+    private String jvec4(float x, float y, float z, float w) {
+    	return StringUtils.f("vec4(%,%,%,%)", x, y,z,w);
+    }
+    private String jvec3(float x, float y, float z) {
+    	return StringUtils.f("vec3(%,%,%)", x, y,z);
+    }
+    private String jvec2(float x, float y) {
+    	return StringUtils.f("vec2(%,%)", x, y);
+    }
+    
+    private String j(Vector4 v) { return jvec4(v.x,v.y,v.z,v.w); }
+    private String j(Vector3 v) { return jvec3(v.x,v.y,v.z); }
+    private String j(Vector2 v) { return jvec2(v.x,v.y); }
     
     public SLBool castBool(Object u) {
         return putVariable(new SLBoolV(),funcBuild("bool",u));
@@ -768,7 +1052,31 @@ public class ShaderLanguage {
         return null;
     }
     
+    private static SLUniform getUniform(SLVar v) {
+        if (v instanceof SLBoolV)    return new SLBoolU();
+        if (v instanceof SLIntV)     return new SLIntU();
+        if (v instanceof SLFloatV)   return new SLFloatU();
+        if (v instanceof SLVec4V)    return new SLVec4U();
+        if (v instanceof SLVec3V)    return new SLVec3U();
+        if (v instanceof SLVec2V)    return new SLVec2U();
+        if (v instanceof SLMat4V)    return new SLMat4U();
+        if (v instanceof SLMat3V)    return new SLMat3U();
+        if (v instanceof SLMat2V)    return new SLMat2U();
+        return null;
+    }
     
+    private static SLUniform getUniform(Class<? extends SLData> c) {
+        if (SLBool.class == c)    return new SLBoolU();
+        if (SLInt.class == c)     return new SLIntU();
+        if (SLFloat.class == c)   return new SLFloatU();
+        if (SLVec4.class == c)    return new SLVec4U();
+        if (SLVec3.class == c)    return new SLVec3U();
+        if (SLVec2.class == c)    return new SLVec2U();
+        if (SLMat4.class == c)    return new SLMat4U();
+        if (SLMat3.class == c)    return new SLMat3U();
+        if (SLMat2.class == c)    return new SLMat2U();
+        return null;
+    }
     
     
     
@@ -796,9 +1104,9 @@ public class ShaderLanguage {
         
     }
     public static interface SLVec4  extends SLData {
-        SLVec4 mult(float f);
-        SLVec4 mult(SLFloat f);
-        SLVec4 mult(SLVec4 v);
+        SLVec4 mul(float f);
+        SLVec4 mul(SLFloat f);
+        SLVec4 mul(SLVec4 v);
         SLVec4 xyzw();
         SLVec3 xyz();
         SLVec2 xy();
@@ -808,9 +1116,9 @@ public class ShaderLanguage {
         SLFloat w();
     }
     public static interface SLVec3  extends SLData {
-        SLVec3 mult(float f);
-        SLVec3 mult(SLFloat f);
-        SLVec3 mult(SLVec3 v);
+        SLVec3 mul(float f);
+        SLVec3 mul(SLFloat f);
+        SLVec3 mul(SLVec3 v);
         SLVec3 xyz();
         SLVec2 xy();
         SLFloat x();
@@ -818,15 +1126,15 @@ public class ShaderLanguage {
         SLFloat z();
     }
     public static interface SLVec2  extends SLData {
-        SLVec2 mult(float f);
-        SLVec2 mult(SLFloat f);
-        SLVec2 mult(SLVec2 v);
+        SLVec2 mul(float f);
+        SLVec2 mul(SLFloat f);
+        SLVec2 mul(SLVec2 v);
         SLVec2 xy();
         SLFloat x();
         SLFloat y();
     }
     public static interface SLMat4  extends SLData {
-        
+        SLVec4 mul(SLVec4 v);
     }
     public static interface SLMat3  extends SLData {
         
@@ -880,9 +1188,9 @@ public class ShaderLanguage {
         public String getName() { return name; }
         
         //Override
-        public SLVec4 mult(float f) { return sl.mul(this,f); }
-        public SLVec4 mult(SLFloat f) { return sl.mulf(this,f); }
-        public SLVec4 mult(SLVec4 v) { return sl.mul(this,v); }
+        public SLVec4 mul(float f) { return sl.mul(this,f); }
+        public SLVec4 mul(SLFloat f) { return sl.mulf(this,f); }
+        public SLVec4 mul(SLVec4 v) { return sl.mul(this,v); }
         public SLVec4 xyzw() { return sl.xyzw(this); }
         public SLVec3 xyz() { return sl.xyz(this); }
         public SLVec2 xy() { return sl.xy(this); }
@@ -898,9 +1206,9 @@ public class ShaderLanguage {
         public String getName() { return name; }
         
         //Override
-        public SLVec3 mult(float f) { return sl.mul(this,f); }
-        public SLVec3 mult(SLFloat f) { return sl.mulf(this,f); }
-        public SLVec3 mult(SLVec3 v) { return sl.mul(this,v); }
+        public SLVec3 mul(float f) { return sl.mul(this,f); }
+        public SLVec3 mul(SLFloat f) { return sl.mulf(this,f); }
+        public SLVec3 mul(SLVec3 v) { return sl.mul(this,v); }
         public SLVec3 xyz() { return sl.xyz(this); }
         public SLVec2 xy() { return sl.xy(this); }
         public SLFloat x() { return sl.x(this); }
@@ -914,9 +1222,9 @@ public class ShaderLanguage {
         public String getName() { return name; }
         
         //Override
-        public SLVec2 mult(float f) { return sl.mul(this,f); }
-        public SLVec2 mult(SLFloat f) { return sl.mulf(this,f); }
-        public SLVec2 mult(SLVec2 v) { return sl.mul(this,v); }
+        public SLVec2 mul(float f) { return sl.mul(this,f); }
+        public SLVec2 mul(SLFloat f) { return sl.mulf(this,f); }
+        public SLVec2 mul(SLVec2 v) { return sl.mul(this,v); }
         public SLVec2 xy() { return sl.xy(this); }
         public SLFloat x() { return sl.x(this); }
         public SLFloat y() { return sl.y(this); }
@@ -925,6 +1233,9 @@ public class ShaderLanguage {
         public Matrix4 get() { return (Matrix4) data; }
         public void set(Matrix4 m)  { data = m.get(); }
         public String getName() { return name; }
+        
+        //Override
+        public SLVec4 mul(SLVec4 v) { return sl.mul(this, v); }
     }
     public static class SLMat3U  extends SLUniform implements SLMat3 { 
         public Matrix3 get() { return (Matrix3) data; }
@@ -947,6 +1258,7 @@ public class ShaderLanguage {
     public static class SLIntV   extends SLVar implements SLInt { 
         public String getName() { return name; }
     }
+    public static class SLIntC extends SLIntV { }
     public static class SLFloatV extends SLVar implements SLFloat { 
         public String getName() { return name; }
     }
@@ -954,9 +1266,9 @@ public class ShaderLanguage {
         public String getName() { return name; }
         
         //Override
-        public SLVec4 mult(float f) { return sl.mul(this,f); }
-        public SLVec4 mult(SLFloat f) { return sl.mulf(this,f); }
-        public SLVec4 mult(SLVec4 v) { return sl.mul(this,v); }
+        public SLVec4 mul(float f) { return sl.mul(this,f); }
+        public SLVec4 mul(SLFloat f) { return sl.mulf(this,f); }
+        public SLVec4 mul(SLVec4 v) { return sl.mul(this,v); }
         public SLVec4 xyzw() { return sl.xyzw(this); }
         public SLVec3 xyz() { return sl.xyz(this); }
         public SLVec2 xy() { return sl.xy(this); }
@@ -969,9 +1281,9 @@ public class ShaderLanguage {
         public String getName() { return name; }
         
         //Override
-        public SLVec3 mult(float f) { return sl.mul(this,f); }
-        public SLVec3 mult(SLFloat f) { return sl.mulf(this,f); }
-        public SLVec3 mult(SLVec3 v) { return sl.mul(this,v); }
+        public SLVec3 mul(float f) { return sl.mul(this,f); }
+        public SLVec3 mul(SLFloat f) { return sl.mulf(this,f); }
+        public SLVec3 mul(SLVec3 v) { return sl.mul(this,v); }
         public SLVec3 xyz() { return sl.xyz(this); }
         public SLVec2 xy() { return sl.xy(this); }
         public SLFloat x() { return sl.x(this); }
@@ -982,15 +1294,18 @@ public class ShaderLanguage {
         public String getName() { return name; }
         
         //Override
-        public SLVec2 mult(float f) { return sl.mul(this,f); }
-        public SLVec2 mult(SLFloat f) { return sl.mulf(this,f); }
-        public SLVec2 mult(SLVec2 v) { return sl.mul(this,v); }
+        public SLVec2 mul(float f) { return sl.mul(this,f); }
+        public SLVec2 mul(SLFloat f) { return sl.mulf(this,f); }
+        public SLVec2 mul(SLVec2 v) { return sl.mul(this,v); }
         public SLVec2 xy() { return sl.xy(this); }
         public SLFloat x() { return sl.x(this); }
         public SLFloat y() { return sl.y(this); }
     }
     public static class SLMat4V  extends SLVar implements SLMat4 { 
         public String getName() { return name; }
+        
+        //Override
+        public SLVec4 mul(SLVec4 v) { return sl.mul(this, v); }
     }
     public static class SLMat3V  extends SLVar implements SLMat3 { 
         public String getName() { return name; }
@@ -998,8 +1313,6 @@ public class ShaderLanguage {
     public static class SLMat2V  extends SLVar implements SLMat2 { 
         public String getName() { return name; }
     }
-    
-    
     
     public static class SLFunc<T extends SLData> {
         
@@ -1011,13 +1324,132 @@ public class ShaderLanguage {
             sl.returnStatement(r);
         }
         
+        @SuppressWarnings("unchecked")
+		public <V extends SLData> SLFunc<V> append(String body, Class<V> returnClass, Tuple2<String,String>... args) {
+            return sl.putFunc(body, this.name, new SLFunc<V>(), returnClass, args);
+        }
+        
+        @Override
+        public String toString() {
+        	return name;
+        }
+        
+    }
+    
+    public static class SLDeclare<T extends SLStruct> {
+    	String name;
+    	Function0D<T> create;
+    	ArrayList<String> declares = new ArrayList<>();
+    	SLDeclare(ShaderLanguage sl, Function0D<T> create) {
+    		this.create = create;
+    		T struct = this.create.f();
+    		SLStructBuilder sb = new SLStructBuilder(sl);
+    		sb.setDeclare(this);
+    		struct.init(sb);
+    		sb.setDeclare(null);
+    	}
+    }
+    public static abstract class SLStruct {
+    	String name;
+    	public abstract void init(SLStructBuilder sb);
+    }
+    public static class SLStructBuilder {
+    	private SLDeclare<?> sd;
+    	private ShaderLanguage sl;
+    	private SLStruct struct;
+    	private Callback<SLVar> cbDeclare;
+    	private String index = null; //can be an integer or a glsl int variable name
+    	SLStructBuilder(ShaderLanguage sl) {
+    		this.sl = sl;
+    	}
+    	/** This method should only be called by an SLDeclare itself to grab struct members before init is called */
+    	void setDeclare(SLDeclare<?> sd) {
+    		this.sd = sd;
+    	}
+    	/** This method should only be called when declaring a variable of type struct, before init is called */
+    	void setStruct(SLStruct struct) {
+    		this.struct = struct;
+    	}
+    	/** This method should only be called to set a callback before init is called */
+    	void setCallback(Callback<SLVar> cbDeclare) {
+    		this.cbDeclare = cbDeclare;
+    	}
+    	/** This method is called for array initialization before init is called */
+    	void setIndex(String index) {
+    		this.index = index;
+    	}
+    	@SuppressWarnings("unchecked")
+		private <T extends SLData> T declare(Class<T> c, String name) {
+    		SLVar v = (SLVar) getData(c);
+    		v.sl = sl;
+    		v.type = getType(v);
+    		if (struct==null) {
+    			v.name = name;
+    		} else {
+    			if (index==null) {
+    				v.name = String.format("%s.%s", struct.name, name);
+        		} else {
+        			v.name = String.format("%s[%s].%s", struct.name, index, name);
+        		}
+    		}
+    		if (sd != null) {
+    			sd.declares.add(String.format("%s %s;\n", v.type, v.name));
+    		}
+    		if (cbDeclare != null) {
+    			cbDeclare.f(v);
+    		}
+    		return (T) v;
+    	}
+    	public SLBool slBool(String name) {
+    		return declare(SLBool.class, name);
+    	}
+    	public SLInt slInt(String name) {
+    		return declare(SLInt.class, name);
+    	}
+    	public SLFloat slFloat(String name) {
+    		return declare(SLFloat.class, name);
+    	}
+    	public SLVec4 vec4(String name) {
+    		return declare(SLVec4.class, name);
+    	}
+    	public SLVec3 vec3(String name) {
+    		return declare(SLVec3.class, name);
+    	}
+    	public SLVec2 vec2(String name) {
+    		return declare(SLVec2.class, name);
+    	}
+    	public SLMat4 mat4(String name) {
+    		return declare(SLMat4.class, name);
+    	}
+    	public SLMat3 mat3(String name) {
+    		return declare(SLMat3.class, name);
+    	}
+    	public SLMat2 mat2(String name) {
+    		return declare(SLMat2.class, name);
+    	}
+    	
     }
     
     
+    public static class SLArray<T extends SLStruct> {
+    	
+    	String name;
+    	SLDeclare<T> declare;
+    	
+    	SLArray(SLDeclare<T> declare, String name) {
+    		this.declare = declare;
+    		this.name = name;
+    	}
+    	
+    }
     
     
-    
-    
+    public interface SLIncludeLibrary {
+    	
+    }
+    public interface SLInclude<T extends SLIncludeLibrary> {
+    	T include(ShaderLanguage sl);
+    }
     
     
 }

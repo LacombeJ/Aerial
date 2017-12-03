@@ -22,7 +22,7 @@ public class FPCToggle extends Property {
     @Override
     public void create() {
         fpc = getComponent(FirstPersonControl.class);
-        input = getInput();
+        input = input();
         fpc.update = false;
     }
     

@@ -22,10 +22,12 @@ class GLMap {
         if (glmesh==null) {
             glmesh = gl.glGenMesh(mesh.getVertices(),mesh.getNormals(),mesh.getTexCoords(),mesh.getIndices());
             mesh.calculateTangents();
-            glmesh.setCustomAttrib(3,mesh.getTangents(),3);
-            glmesh.setCustomAttrib(4,mesh.getBiTangents(),3);
-            mesh.setTangentsNull();
-            mesh.setBiTangentsNull();
+            if (mesh.shouldCalculateTangents()) {
+            	glmesh.setCustomAttrib(3,mesh.getTangents(),3);
+            	glmesh.setCustomAttrib(4,mesh.getBiTangents(),3);
+            	mesh.setTangentsNull();
+                mesh.setBiTangentsNull();
+            }
             if (mesh.isStatic()) { //TODO ?
                 mesh.setVerticesNull();
                 mesh.setNormalsNull();

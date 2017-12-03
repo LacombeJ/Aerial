@@ -11,8 +11,8 @@ public class GeneratedShader extends ShaderMaterial {
     ArrayList<SLUniform> slUniformList = new ArrayList<>();
     HashMap<String,SLUniform> slUniformMap = new HashMap<>(); //TODO different hashCode?s
     
-    public GeneratedShader() {
-        super();
+    protected GeneratedShader() {
+    	
     }
     
     public GeneratedShader(ShaderLanguage slVert, ShaderLanguage slFrag ) {

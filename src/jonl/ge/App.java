@@ -1,11 +1,14 @@
 package jonl.ge;
 
 import jonl.ge.Input.CursorState;
+import jonl.jutils.func.Callback0D;
 
 interface App {
     
     void add(Scene scene);
-    void prepare();
+    
+    void removeModule(String name);
+    void addModule(String name, Module module);
     
     void start();
     void close();
@@ -26,6 +29,10 @@ interface App {
     void setSize(int width, int height);
     void setResizable(boolean resizable);
     void setFullscreen(boolean fullscreen);
+    
+    void setLoader(Callback0D load);
+    void setUpdater(Callback0D update);
+    void setCloser(Callback0D close);
     
     Platform getPlatform();
     String getInfo(String key);

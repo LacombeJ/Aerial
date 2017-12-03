@@ -4,6 +4,8 @@ package jonl.ge;
 
 public class ConeGeometry extends CylinderGeometry {
 
+	//TODO fix cone normal calculations
+	
     public ConeGeometry() {
         this(0.5f,1f);
     }

@@ -10,6 +10,7 @@ public abstract class Scene {
     App application;
     boolean persistent = false;
     ArrayList<GameObject> gameObjects = null;
+    boolean created = false;
     
     public String getName() {
         return name;
@@ -22,10 +23,12 @@ public abstract class Scene {
     /** Adds GameObjects and assigns Components to them */
     protected abstract void prepare();
     
-    protected void add(GameObject g) {
-        GameObject gameObject = g;
-        gameObject.setScene(this);
+    public void add(GameObject g) {
+    	g.setScene(this);
         gameObjects.add(g);
+        if (created) {
+        	g.create();
+        }
     }
 
     /**
@@ -39,6 +42,7 @@ public abstract class Scene {
             for (GameObject g : gcreate) { //To prevent concurrent modification
                 g.create();
             }
+            created = true;
         }
     }
     
@@ -49,7 +53,7 @@ public abstract class Scene {
         }
     }
     
-    <T extends Component> ArrayList<T> findComponents(Class<T> c) {
+    public  <T extends Component> ArrayList<T> findComponents(Class<T> c) {
         ArrayList<T> array = new ArrayList<>();
         for (GameObject g : gameObjects) {
             findComponents(c,g,array);
@@ -57,14 +61,14 @@ public abstract class Scene {
         return array;
     }
     
-    <T extends Component> void findComponents(Class<T> c, GameObject g, ArrayList<T> array) {
+    public <T extends Component> void findComponents(Class<T> c, GameObject g, ArrayList<T> array) {
         array.addAll(g.getComponents(c));
         for (GameObject child : g.children) {
             findComponents(c,child,array);
         }
     }
     
-    <T extends Component> ArrayList<T> findComponentsOfType(Class<T> c) {
+    public <T extends Component> ArrayList<T> findComponentsOfType(Class<T> c) {
         ArrayList<T> array = new ArrayList<>();
         for (GameObject g : gameObjects) {
             findComponentsOfType(c,g,array);
@@ -72,7 +76,7 @@ public abstract class Scene {
         return array;
     }
     
-    <T extends Component> void findComponentsOfType(Class<T> c, GameObject g, ArrayList<T> array) {
+    public <T extends Component> void findComponentsOfType(Class<T> c, GameObject g, ArrayList<T> array) {
         array.addAll(g.getComponentsOfType(c));
         for (GameObject child : g.children) {
             findComponentsOfType(c,child,array);
@@ -81,7 +85,7 @@ public abstract class Scene {
     
     
     
-    GameObject findGameObject(String name) {
+    public GameObject findGameObject(String name) {
         for (GameObject g : gameObjects) {
             GameObject ret = findGameObject(name,g);
             if (ret!=null) {
@@ -91,7 +95,7 @@ public abstract class Scene {
         return null;
     }
     
-    private GameObject findGameObject(String name, GameObject gameObject) {
+    public  GameObject findGameObject(String name, GameObject gameObject) {
         if (gameObject.name.equals(name)) {
             return gameObject;
         }
@@ -104,7 +108,7 @@ public abstract class Scene {
         return null;
     }
     
-    GameObject findGameObjectWithData(String key) {
+    public GameObject findGameObjectWithData(String key) {
         for (GameObject g : gameObjects) {
             GameObject ret = findGameObjectWithData(key,g);
             if (ret!=null) {
@@ -114,7 +118,7 @@ public abstract class Scene {
         return null;
     }
     
-    private GameObject findGameObjectWithData(String key, GameObject gameObject) {
+    public  GameObject findGameObjectWithData(String key, GameObject gameObject) {
         if (gameObject.hasData(key)) {
             return gameObject;
         }
@@ -127,7 +131,7 @@ public abstract class Scene {
         return null;
     }
     
-    <T extends Component> GameObject findGameObject(Class<T> c) {
+    public <T extends Component> GameObject findGameObject(Class<T> c) {
         for (GameObject g : gameObjects) {
             GameObject ret = findGameObject(c,g);
             if (ret!=null) {
@@ -137,7 +141,7 @@ public abstract class Scene {
         return null;
     }
     
-    <T extends Component> GameObject findGameObject(Class<T> c, GameObject gameObject) {
+    public <T extends Component> GameObject findGameObject(Class<T> c, GameObject gameObject) {
         if (gameObject.getComponent(c)!=null) {
             return gameObject;
         }
@@ -150,7 +154,7 @@ public abstract class Scene {
         return null;
     }
     
-    <T extends Component> GameObject findGameObjectOfType(Class<T> c) {
+    public <T extends Component> GameObject findGameObjectOfType(Class<T> c) {
         for (GameObject g : gameObjects) {
             GameObject ret = findGameObjectOfType(c,g);
             if (ret!=null) {
@@ -160,7 +164,7 @@ public abstract class Scene {
         return null;
     }
     
-    <T extends Component> GameObject findGameObjectOfType(Class<T> c, GameObject gameObject) {
+    public <T extends Component> GameObject findGameObjectOfType(Class<T> c, GameObject gameObject) {
         if (gameObject.getComponentOfType(c)!=null) {
             return gameObject;
         }
@@ -176,7 +180,7 @@ public abstract class Scene {
     /**
      * @return all game objects in scene found recursively
      */
-    ArrayList<GameObject> getAllGameObjects() {
+    public ArrayList<GameObject> getAllGameObjects() {
         ArrayList<GameObject> array = new ArrayList<>();
         for (GameObject g : gameObjects) {
             getAllGameObjects(g,array);
@@ -184,7 +188,7 @@ public abstract class Scene {
         return array;
     }
     
-    private void getAllGameObjects(GameObject g, ArrayList<GameObject> array) {
+    public  void getAllGameObjects(GameObject g, ArrayList<GameObject> array) {
         array.add(g);
         for (GameObject gameObject : g.children) {
             getAllGameObjects(gameObject,array);

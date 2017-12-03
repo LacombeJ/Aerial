@@ -46,8 +46,8 @@ class EditorAssets {
         
         @Override
         public void create() {
-            input = (EditorInput) getInput();
-            transform = getTransform();
+            input = (EditorInput) input();
+            transform = transform();
         }
         
         @Override
@@ -160,7 +160,7 @@ class EditorAssets {
                 close = false;
             }
             
-            EditorInput i = (EditorInput) getInput();
+            EditorInput i = (EditorInput) input();
             if (i.isButtonPressed(Input.MB_RIGHT)) {
                 if (getCursorState()==CursorState.NORMAL) {
                     setCursorState(CursorState.GRABBED);

@@ -2,10 +2,8 @@ package jonl.ge;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 import jonl.ge.Material.Uniform;
 import jonl.ge.utils.PresetData;
@@ -25,14 +23,14 @@ import jonl.vmath.Vector4;
 
 class AppRenderer implements Renderer {
     
-    private App app;
+    private AbstractApp app;
     private Updater updater;
     private GraphicsLibrary gl;
     private GLMap glm;
     private MaterialProgramMapper mpm;
     private Geometry rectGeometry;
     
-    AppRenderer(App app, GraphicsLibrary gl) {
+    AppRenderer(AbstractApp app, GraphicsLibrary gl) {
         this.app = app;
         updater = app.getUpdater();
         this.gl = gl;
@@ -53,7 +51,9 @@ class AppRenderer implements Renderer {
     
     @Override
     public void render(Scene scene) {
-        
+    	
+        ModuleRender.renderPrepare(app.getModule(ModuleRender.class), scene);
+    	
         ArrayList<Camera> cameras = scene.findComponentsOfType(Camera.class);
         ArrayList<Light> lights = scene.findComponents(Light.class);
         ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
@@ -84,6 +84,9 @@ class AppRenderer implements Renderer {
         Matrix4 VP = P.get().multiply(V);
         
         for (GameObject g : gameObjects) {
+        	
+        	ModuleRender.renderUpdate(app.getModule(ModuleRender.class), camera, g);
+        	
             if (targetInvalid(camera,g)) {
                 continue;
             }
@@ -103,9 +106,12 @@ class AppRenderer implements Renderer {
                 
                 gl.glUseProgram(program);
                 
+                //TODO meshes should be able to choose which uniforms it needs?
                 program.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
-                program.setUniformMat4("M",M.toFloatBuffer(fb));
                 program.setUniformMat4("MV",V.get().multiply(M).toFloatBuffer(fb));
+                program.setUniformMat4("M",M.toFloatBuffer(fb));
+                program.setUniformMat4("V",V.toFloatBuffer(fb));
+                program.setUniformMat4("P",P.toFloatBuffer(fb));
                 
                 List<Uniform> uniforms = mat.uniforms();
                 for (Uniform u : uniforms) {
@@ -113,7 +119,7 @@ class AppRenderer implements Renderer {
                 }
                 
                 if (mesh.recieveLight) {
-                    setLightUniforms(program,lights,camera);
+                	ModuleLight.setUniforms(app.getModule(ModuleLight.class), updater, program, lights, camera);
                 }
                 
                 if (mesh.cullFace) {
@@ -233,26 +239,10 @@ class AppRenderer implements Renderer {
         return model;
     }
     
-    private void setLightUniforms(Program program, List<Light> lights, Camera camera) {
-        Vector3 eye = updater.getWorldTransform(camera.gameObject).translation;
-        AppUtil.setUniform(program,"eye",eye);
-        
-        int numLights = 0;
-        for (int i=0; i<lights.size(); i++) {
-            Light light = lights.get(i);
-            Vector3 p = updater.getWorldTransform(light.gameObject).translation;
-            program.setUniformi("light["+i+"].type",light.type);
-            AppUtil.setUniform(program,"light["+i+"].position",p);
-            program.setUniform("light["+i+"].range",light.range);
-            AppUtil.setUniform(program,"light["+i+"].color",light.color);
-            program.setUniform("light["+i+"].intensity",light.intensity);
-            program.setUniform("light["+i+"].angle",light.angle);
-            numLights++;
-        }
-        program.setUniformi("numLights",numLights);
-    }
-    
     private void setUniform(Program p, String name, Object data) {
+    	if (data == null) {
+    		return;
+    	}
         if (data instanceof TextureUniform) {
             TextureUniform t = (TextureUniform) data;
             if (t.texture!=null) {
@@ -292,7 +282,7 @@ class AppRenderer implements Renderer {
             p.setUniformMat2(name,m.toFloatBuffer(fb));
             BufferPool.returnFloatBuffer(fb);
         } else {
-            System.err.println("Uniform type not supported - "+name+" : "+data);
+            System.err.println("AppRenderer: Uniform type not supported - "+name+" : "+data);
         }
     }
     

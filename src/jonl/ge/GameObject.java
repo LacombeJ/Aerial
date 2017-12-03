@@ -35,11 +35,11 @@ public final class GameObject {
         this.name = name;
     }
     
-    public Transform getTransform() {
+    public Transform transform() {
         return transform;
     }
     
-    public Scene getScene() {
+    public Scene scene() {
         return scene;
     }
     
@@ -64,11 +64,7 @@ public final class GameObject {
     }
     
     /** Adds a new property component that calls these function on create and update */
-    public void addProperty(Callback0D lamdaCreate, Callback0D lamdaUpdate) {
-        Property p = new Property() {
-            @Override public void create() { lamdaCreate.f(); }
-            @Override public void update() { lamdaUpdate.f(); }
-        };
+    public void addProperty(Property p) {
         addComponent(p);
     }
     
@@ -130,7 +126,7 @@ public final class GameObject {
         }
     }
     
-    public GameObject getParent() {
+    public GameObject parent() {
         return parent;
     }
     
@@ -236,7 +232,7 @@ public final class GameObject {
         return parent.computeWorldMatrix().multiply(matrix);
     }
     
-    public Input getInput() {
+    public Input input() {
         return scene.getInput();
     }
     
@@ -248,15 +244,15 @@ public final class GameObject {
         scene.setCursorState(state);
     }
     
-    public Window getWindow() {
+    public Window window() {
         return scene.getWindow();
     }
     
-    public String getInfo(String key) {
+    public String info(String key) {
         return scene.getInfo(key);
     }
     
-    public Time getTime() {
+    public Time time() {
         return scene.getTime();
     }
     

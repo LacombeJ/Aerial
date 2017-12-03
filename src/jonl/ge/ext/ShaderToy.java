@@ -30,11 +30,11 @@ public class ShaderToy extends Property {
     @Override
     public void update() {
         
-        Time time = getTime();
-        float msdiff = time.time();
+        Time time = time();
+        float msdiff = time.ms();
         float sdiff = msdiff / 1000.0f;
         
-        Input input = getInput();
+        Input input = input();
         if (input.isButtonPressed(Input.MB_LEFT)) {
             mouseClickX = input.getX();
             mouseClickY = input.getY();

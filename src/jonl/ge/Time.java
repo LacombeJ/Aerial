@@ -18,12 +18,15 @@ public class Time {
         timeSinceStart = clock.lap();
     }
     
-    /** Return time since start of app im milliseonds */
-    public float time() {
+    /** Return time since start of app in milliseonds */
+    public float ms() {
         return (float) TimeUtils.timeConvert(timeSinceStart, TimeMetric.NANO, TimeMetric.MILLI);
     }
     
-    
+    /** Return time since start of app in seconds */
+    public float seconds() {
+        return (float) TimeUtils.timeConvert(timeSinceStart, TimeMetric.NANO, TimeMetric.SECOND);
+    }
     
     
 }

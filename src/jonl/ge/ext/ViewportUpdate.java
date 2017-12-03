@@ -26,7 +26,7 @@ public class ViewportUpdate extends Property {
     }
     
     private void viewport() {
-        Window window = getWindow();
+        Window window = window();
         camera.setViewport(0,0,window.width(),window.height());
     }
     

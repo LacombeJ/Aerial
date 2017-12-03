@@ -10,9 +10,9 @@ public class CameraRenderer extends Component {
 
     public void render() {
         
-        Scene scene = getGameObject().getScene();
+        Scene scene = gameObject().scene();
         AppRenderer renderer = (AppRenderer) scene.application.getRenderer();
-        renderer.renderCameraSeparately(getGameObject().getComponentOfType(Camera.class),scene);
+        renderer.renderCameraSeparately(gameObject().getComponentOfType(Camera.class),scene);
         
     }
     

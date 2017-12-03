@@ -23,8 +23,8 @@ public class OrbitControl extends Property {
     
     @Override
     public void create() {
-        input = getInput();
-        transform = getTransform();
+        input = input();
+        transform = transform();
         transform.translation.set(iPos.get().multiply(distance));
         transform.rotation.set(iRot);
     }

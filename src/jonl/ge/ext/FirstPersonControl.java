@@ -22,8 +22,8 @@ public class FirstPersonControl extends Property {
     
     @Override
     public void create() {
-        input = getInput();
-        transform = getTransform();
+        input = input();
+        transform = transform();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class RenderTexture extends Component {
     }
     
     public void render() {
-        AppRenderer renderer = (AppRenderer) getGameObject().getScene().application.getRenderer();
+        AppRenderer renderer = (AppRenderer) gameObject().scene().application.getRenderer();
         renderer.renderRenderTexture(this);
         translate();
     }

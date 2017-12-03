@@ -10,7 +10,7 @@ import jonl.jgl.AudioLibrary;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
 
-public abstract class Application extends AbstractApp {
+public class Application extends AbstractApp {
 
     private String title = "Application";
     private int width = 1024;
@@ -43,8 +43,6 @@ public abstract class Application extends AbstractApp {
     @Override
     public void start() {
         
-        prepare();
-        
         glWindow = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,4,true);
         
         width = glWindow.getWidth();
@@ -62,6 +60,7 @@ public abstract class Application extends AbstractApp {
             putInfo();
             updater.load();
             renderer.load();
+            appLoader().f();
             Scene scene = scenes.get(currentScene);
             scene.create();
             updater.update(scene);
@@ -76,6 +75,7 @@ public abstract class Application extends AbstractApp {
                 synchronized (Application.class) {
                     getTime().update();
                     updater.update(scene);
+                    appUpdater().f();
                     renderer.render(scene);
                 }
             }
@@ -83,6 +83,7 @@ public abstract class Application extends AbstractApp {
         
         glWindow.setCloser(()->{
             audio.destroy();
+            appCloser().f();
         });
         
         glWindow.addSizeListener((w,h,pw,ph)->{

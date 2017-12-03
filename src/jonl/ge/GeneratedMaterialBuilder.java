@@ -78,7 +78,7 @@ public class GeneratedMaterialBuilder extends ShaderLanguage {
         
         gm.slStatements = getStatementString(getStatementList());
         gm.slFunctions = getFunctionString(getFunctionList());
-        gm.slUniforms = getUniformString(getUniformList());
+        gm.slUniforms = getUniformString(getUniformStringList());
         gm.slUniformList = new ArrayList<>();
         gm.slUniformMap = new HashMap<>();
         addUniformListAndMap(gm.slUniformList, gm.slUniformMap);
@@ -86,7 +86,9 @@ public class GeneratedMaterialBuilder extends ShaderLanguage {
     }
     
     
-    
+    public SLVec4 sample(SLTexU u) {
+    	return this.sample(u, "fTexCoord");
+    }
     
     
     

@@ -162,7 +162,7 @@ public class Camera extends Component {
     @Override
     void updateComponent() {
         if (scaleProjection) {
-            aspect = getWindow().aspect();
+            aspect = window().aspect();
             setPerspective();
         }
     }

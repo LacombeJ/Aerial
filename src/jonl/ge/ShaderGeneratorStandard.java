@@ -152,6 +152,11 @@ class ShaderGeneratorStandard {
             return "    vec3 materialDiffuse = "+material.diffuse.getName()+";\n";
         return "    vec3 materialDiffuse = vec3(0,0,0);\n";
     }
+    private static String _____vec3_materialNormal_E_X(GeneratedMaterial material) {
+        if (material.normal!=null)
+            return "    vec3 materialNormal = "+material.normal.getName()+";\n";
+        return "    vec3 materialNormal = vec3(1,0,0);\n";
+    }
     private static String _____vec3_materialSpecular_E_X(GeneratedMaterial material) {
         if (material.specular!=null)
             return "    vec3 materialSpecular = "+material.specular.getName()+";\n";
@@ -170,12 +175,83 @@ class ShaderGeneratorStandard {
     
     private static String _____normal_E_texture2D_material_normal_vTexCoord_xyz(GeneratedMaterial material) {
         if (material.normal!=null) {
-            return "    normal = mTBN * (("+material.normal+"-0.5) * 2);\n";
+            return "    normal =  mTBN * (("+material.normal+"*2) - 1) ;\n";
         }
         return "";
     }
     private static String _____getShaderFunctionString(GeneratedMaterial material) {
         return material.slStatements;
+    }
+    
+    
+    // TODO fix light equation for point light (range is limited ? )
+    // http://liuqimin323.blogspot.com/
+    // TODO https://github.com/stackgl/glsl-lighting-walkthrough
+    private static String pointLight() {
+    	return 
+    			// Initialize light to frag pos vector and distance
+    			"		 vec3 Lu = light[i].position - fFragPos;\n" + 	// light unit vector (is normalized later)
+    			"		 float Ld = length(Lu);\n" + 					// light distance
+    			
+    			// Check if light distance is out of range
+				"        if (Ld > light[i].range)\n" +
+				"            continue;\n" +
+				"        \n" +
+    			
+				// Set light unit vector
+    			"		 Lu = normalize(Lu);\n" +
+    			
+    			// Angle between light vector and normal vector
+    			// We don't have to to set NdotL to a valid value (ex: max(NdotL, 0.0)) because of the next NdotL <= 0 check
+    			"        float NdotL = dot(normal, Lu);\n" +
+    			
+    			// Check if NdotL is valid
+				"        if (NdotL <= 0.0)\n" +
+				"            continue;\n" +
+				"        \n" +
+				
+				// Light ratio / intensity relative to distance from light
+				// We don't have to check if valid (ex: max(1-Ld/Lrange,0)) because of the previos Ld > Lrange check
+				"        float ratio = 1 - Ld / light[i].range;\n" +
+    			
+				// Half vector (normal vector between Lu and eye to frag (Eu) normal vector)
+				"        vec3 Hu = normalize(Lu + eyeDir);\n" +
+				
+				// Angle between plane normal and half vector
+				"        float NdotH = max(dot(normal, Hu), 0.0); \n" +
+				
+				// Angle between eye to frag vector and the half vector
+				// Also equal to max(dot(normal, Hu), 0.0)
+				"        float EdotH = max(dot(eyeDir, Hu), 0.0); \n" +
+
+				// NdotH squared
+				"        float NdotH_2 = NdotH * NdotH;\n" +
+				
+				// Roughness squared
+				"        float mr_2 = materialRoughness * materialRoughness;\n" +
+                
+				// Roughness (or: microfacet distribution function ?)
+				// Beckmann distribution function
+				"        float r1 = 1.0 / ( 4.0 * mr_2 * NdotH_2 * NdotH_2);\n" + // pow(NdotH, 4)
+                "        float r2 = (NdotH_2 - 1.0) / (mr_2 * NdotH_2);\n" +
+                "        float roughness = r1 * exp(r2);\n" +
+                
+                // Schlick approximation
+                "        float fresnel = pow(1.0 - EdotH, 3.0);\n" + //changed from 5 to 3, because of black artifacts, why?
+                "        fresnel *= (1.0 - materialFresnel);\n" +
+                "        fresnel += materialFresnel;\n" +
+                "        float specular = fresnel * roughness;\n" +
+                
+                // Angular intensity
+                "        float AI = NdotL * ratio;\n" +
+                
+                // Light diffuse and specular
+                "        vec3 diffuseV = AI * materialDiffuse;\n" +
+                "        vec3 specularV = specular * materialSpecular;\n" +
+                "        vec3 lightV = AI*light[i].color * ( diffuseV + specularV );\n" + // TODO add specularV
+                
+                // Sum light
+                "        lightSum += lightV;\n";
     }
     
     private static String fragMainBody(GeneratedMaterial material) {
@@ -195,6 +271,7 @@ class ShaderGeneratorStandard {
             _____texCooord_E_parallaxTexCoord_vTexCoord_eyeDir_(material) +
             "    \n" +
             _____vec3_materialDiffuse_E_X(material) +
+            _____vec3_materialNormal_E_X(material) +
             _____vec3_materialSpecular_E_X(material) +
             _____float_materialRoughness_E_X(material) +
             _____float_materialFresnel_E_X(material) +
@@ -205,49 +282,11 @@ class ShaderGeneratorStandard {
             "    int i=0;\n" +
             "    for (i=0; i<numLights; i++) {\n" +
             "        \n" +
-            "        float distFromLight = length(light[i].position - fFragPos);\n" +
-            "        \n" +
-            "        if (distFromLight > light[i].range)\n" +
-            "            continue;\n" +
-            "        \n" +
-            "        vec3 lightDirection = normalize(light[i].position - fFragPos);\n" +
-            "        float NdotL = max(dot(normal, lightDirection), 0.0);\n" +
-            "        \n" +
-            "        if (NdotL <= 0.0)\n" +
-            "            continue;\n" +
-            "        \n" +
-            "        float ratio = max(1-distFromLight/light[i].range,0);\n" +
-            "        \n" +
-            "        // calculate intermediary values\n" +
-            "        vec3 halfVector = normalize(lightDirection + eyeDir);\n" +
-            "        float NdotH = max(dot(normal, halfVector), 0.0); \n" +
-            "        float VdotH = max(dot(eyeDir, halfVector), 0.0);\n" +
-            "        float mSquared = materialRoughness * materialRoughness;\n" +
-            "        float NdotHSquared = NdotH * NdotH;\n" +
-            "        \n" +
-            "        // roughness (or: microfacet distribution function)\n" +
-            "        // beckmann distribution function\n" +
-            "        float r1 = 1.0 / ( 4.0 * mSquared * pow(NdotH, 4.0));\n" +
-            "        float r2 = (NdotHSquared - 1.0) / (mSquared * NdotHSquared);\n" +
-            "        float roughness = r1 * exp(r2);\n" +
-            "        \n" +
-            "        // Schlick approximation\n" +
-            "        float fresnel = pow(1.0 - VdotH, 3.0);\n" + //changed from 5 to 3, because of black artifacts, why?
-            "        fresnel *= (1.0 - materialFresnel);\n" +
-            "        fresnel += materialFresnel;\n" +
-            "        \n" +
-            "        float specular = fresnel * roughness;\n" +
-            "        \n" +
-            "        NdotL *= ratio;\n" +
-            "        \n" +
-            "        vec3 diffuse = NdotL * materialDiffuse;\n" +
-            "        //float specularC = specular * materialSpecular;\n" +
-            "        \n" +
-            "        vec3 finalValue = NdotL*light[i].color * ( materialSpecular*specular + diffuse );\n" +
-            "        lightSum += finalValue;\n" +
+            pointLight() +
             "        \n" +
             "    }\n" +
             "    gl_FragColor = vec4(lightSum, 1.0);\n" +
+            //"    gl_FragColor = vec4(normal, 1.0);\n" +
             "";
     }
     
@@ -397,10 +436,10 @@ class ShaderGeneratorStandard {
             _____MVP_instance(instanced) +
             "    gl_Position = MVP * vertex;\n" +
             "    vFragPos = vec3(M * vertex);\n" +
-            "    vNormal = mat3(M) * normal;\n" +
+            "    vNormal = normalize ( mat3(M) * normal );\n" +
             "    vTexCoord = texCoord;\n" +
-            "    vTangent = mat3(M) * tangent;\n" +
-            "    vBitangent = mat3(M) * bitangent;\n" +
+            "    vTangent = normalize (mat3(M) * tangent );\n" +
+            "    vBitangent = normalize (mat3(M) * bitangent );\n" +
             _____mTBN_E_mat3_vTangent_vBitangent_vNormal_(material) +
             "";
     }

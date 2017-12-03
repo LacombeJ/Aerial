@@ -23,7 +23,7 @@ public class ProjectionToggle extends Toggle {
     
     @Override
     public void update() {
-        if (getInput().checkEvent(event)
+        if (input().checkEvent(event)
                 ) {
             if (camera.isOrthograpic()) {
                 camera.setPerspective();
