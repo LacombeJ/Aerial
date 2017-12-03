@@ -133,6 +133,39 @@ public class Matrix3 extends SquareMatrix<Matrix3,Vector3> {
         return (S) new Matrix2();
     }
     
+    /** @return rotation matrix about x axis */
+    public static Matrix3 rotationX(float theta) {
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        return new Matrix3(
+    		  1,    0,    0,
+    		  0,  cos, -sin,
+    		  0,  sin,  cos
+		);
+    }
+    
+    /** @return rotation matrix about y axis */
+    public static Matrix3 rotationY(float theta) {
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        return new Matrix3(
+    		 cos,    0,  sin,
+    		   0,    1,    0,
+    		-sin,    0,  cos
+		);
+    }
+    
+    /** @return rotation matrix about z axis */
+    public static Matrix3 rotationZ(float theta) {
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        return new Matrix3(
+    		cos, -sin,   0,
+    		sin,  cos,   0,
+    		  0,    0,   1
+		);
+    }
+    
     /** @return the identity matrix */
     public static Matrix3 identity() {
         return new Matrix3(1,1,1);

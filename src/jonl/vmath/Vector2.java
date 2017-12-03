@@ -123,12 +123,6 @@ public class Vector2 extends Vector<Vector2> {
         return new Vector2(-u.y/mag,u.x/mag);
     }
     
-    public static Vector2 toThetaPhi(Vector3 u) {
-        float theta = -Mathf.toDegrees(Mathf.atan(u.y/Mathf.sqrt(u.x*u.x+u.z*u.z)));
-        float phi = Mathf.deg(-u.x,-u.z)-90;
-        return new Vector2(theta,phi);
-    }
-    
     public boolean slopeEquals(Vector2 v, float epsilon) {
         float costheta = dot(v)/(magnitude()*v.magnitude());
         if (Mathf.eq(costheta,1,epsilon)) return true;

@@ -407,6 +407,42 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
         return v.xyz();
     }
     
+    /** @return 3d rotation matrix about x axis */
+    public static Matrix4 rotationX(float theta) {
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        return new Matrix4(
+    		  1,    0,    0,   0,
+    		  0,  cos, -sin,   0,
+    		  0,  sin,  cos,   0,
+    		  0,    0,    0,   1
+		);
+    }
+    
+    /** @return 3d rotation matrix about y axis */
+    public static Matrix4 rotationY(float theta) {
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        return new Matrix4(
+    		 cos,    0,  sin,   0,
+    		   0,    1,    0,   0,
+    		-sin,    0,  cos,   0,
+    		   0,    0,    0,   1
+		);
+    }
+    
+    /** @return 3d rotation matrix about z axis */
+    public static Matrix4 rotationZ(float theta) {
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        return new Matrix4(
+    		cos, -sin,   0,   0,
+    		sin,  cos,   0,   0,
+    		  0,    0,   1,   0,
+    		  0,    0,   0,   1
+		);
+    }
+    
     /** @return the identity matrix */
     public static Matrix4 identity() {
         return new Matrix4(1,1,1,1);

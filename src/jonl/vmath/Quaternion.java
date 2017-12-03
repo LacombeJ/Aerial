@@ -18,6 +18,8 @@
  */
 package jonl.vmath;
 
+// TODO jonathan rewrite class to resemble other vmath libraries (eg: static variables, do not modify arguments, etc)
+
 /** A simple quaternion class.
  * @see <a href="http://en.wikipedia.org/wiki/Quaternion">http://en.wikipedia.org/wiki/Quaternion</a>
  * @author badlogicgames@gmail.com

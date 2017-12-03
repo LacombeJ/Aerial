@@ -268,7 +268,7 @@ public final class Mathf {
     }
     
     public static float rand(float min, float max) {
-        return (rand(max-min) + min);
+        return rand(max-min) + min;
     }
     
     public static float random() { return rand(); }
@@ -287,6 +287,10 @@ public final class Mathf {
     
     public static int randInt(int a) {
         return (int) Math.round(Math.random()*a);
+    }
+    
+    public static int randInt(int min, int max) {
+        return randInt(max-min) + min;
     }
     
     public static int round(float a) {

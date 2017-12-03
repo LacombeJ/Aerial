@@ -90,6 +90,22 @@ public class Vector3 extends Vector<Vector3> {
         return this;
     }
     
+    public float theta() {
+    	return - Mathf.atan( y / Mathf.sqrt(x*x+z*z) );
+    }
+    
+    public float phi() {
+    	return Mathf.rad(-x,-z) - Mathf.PI_OVER_4;
+    }
+    
+    public static float thetaBetween(Vector3 u, Vector3 v) {
+    	return v.get().sub(u).theta();
+    }
+    
+    public static float phiBetween(Vector3 u, Vector3 v) {
+    	return v.get().sub(u).phi();
+    }
+    
     /**
      * Returns the cross product
      * <p>

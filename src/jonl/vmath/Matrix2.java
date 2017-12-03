@@ -126,10 +126,14 @@ public class Matrix2 extends SquareMatrix<Matrix2,Vector2> {
         return multiply(1/det);
     }
     
+    /** @return rotation matrix about "z" axis */
     public static Matrix2 rotation(float theta) {
         float cos = Mathf.cos(theta);
         float sin = Mathf.sin(theta);
-        return new Matrix2(cos,-sin,sin,cos);
+        return new Matrix2(
+    		cos, -sin,
+    		sin,  cos
+		);
     }
     
     /** @return the identity matrix */
