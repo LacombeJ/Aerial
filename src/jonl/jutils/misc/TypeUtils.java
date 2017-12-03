@@ -41,4 +41,13 @@ public class TypeUtils {
     	return (x < y) ? -1 : ((x == y) ? 0 : 1);
     }
     
+    /** @return object casted if it is of instance or null if not */
+    @SuppressWarnings("unchecked")
+	public static <T> T cast(Object o, Class<T> c) {
+    	if (c.isInstance(o)) {
+    		return (T) o;
+    	}
+    	return null;
+    }
+    
 }

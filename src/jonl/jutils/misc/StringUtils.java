@@ -2,6 +2,18 @@ package jonl.jutils.misc;
 
 public class StringUtils {
 
+	public static String format(String targ, String string, Object... args) {
+		String ret = string.replace(targ, "%s");
+		return String.format(ret, args);
+	}
+	
+	public static String format(String string, Object... args) {
+		return format("%",string,args);
+	}
+	public static String f(String string, Object... args) {
+		return format(string,args);
+	}
+	
     public static String padFront(String str, char pad, int n) {
         for (int i=0; i<n; i++) {
             str = pad+str;
