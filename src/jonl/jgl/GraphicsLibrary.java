@@ -222,6 +222,7 @@ public interface GraphicsLibrary {
     public static enum Mode {
         POINTS,
         LINES,
+        LINE_STRIP,
         TRIANGLES
     }
     

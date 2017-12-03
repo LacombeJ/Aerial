@@ -44,7 +44,6 @@ import org.lwjgl.opengl.GL20;
 import jonl.jgl.AbstractProgram;
 import jonl.jgl.Shader;
 import jonl.jgl.Texture;
-import jonl.jutils.misc.StringUtils;
 
 
 /**

@@ -298,6 +298,7 @@ class LWJGL extends AbstractGraphicsLibrary {
         switch(m) {
         case POINTS:                return GL11.GL_POINTS;
         case LINES:                 return GL11.GL_LINES;
+        case LINE_STRIP:            return GL11.GL_LINE_STRIP;
         case TRIANGLES:             return GL11.GL_TRIANGLES;
         default:                    throw new IllegalStateException("Unknown mode");
         }
