@@ -17,6 +17,7 @@ import jonl.aui.sui.WindowEvent.Move;
 import jonl.aui.sui.WindowEvent.Resize;
 import jonl.aui.sui.WindowEvent.SetResizable;
 import jonl.aui.sui.WindowEvent.SetVisible;
+import jonl.jgl.Closer;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
@@ -54,6 +55,7 @@ public class SWindow extends AWindow {
     Matrix4 ortho;
     
     Loader loader;
+    Closer closer;
     
     boolean inClickState = false;
     
@@ -149,7 +151,7 @@ public class SWindow extends AWindow {
                 }
             });
             window.setCloser(()->{
-                
+                closer.close();
             });
             window.start();
         });
@@ -329,6 +331,10 @@ public class SWindow extends AWindow {
 
     public void setLoader(Loader loader) {
         this.loader = loader;
+    }
+    
+    public void setCloser(Closer closer) {
+    	this.closer = closer;
     }
     
     boolean inputOpen = true;
