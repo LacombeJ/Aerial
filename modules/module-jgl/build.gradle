@@ -1,6 +1,7 @@
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
+
 // ----------------------------------------------------------------------------
 
 /* LWJGL dependencies */
@@ -56,18 +57,27 @@ dependencies {
     
 }
 
+// Extracts contents of libs into the generated jar
+processResources {
+    for (int i=0; i<ref.length; i++) {
+        from(zipTree(ref[i][0]))
+    }
+    
+}
 
-task extractNatives(type: Copy) {
+// Extracts natives into a folder in the root project build directory
+task extractNatives {
     
     for (int i=0; i<ref.length; i++) {
-        String jarFile = ref[i][0]
-        String nativeFile = ref[i][1]
         
-        def fromDir = project.file(nativeFile)
-        def toDir = new File(rootProject.buildDir, 'natives/')
-        from fromDir
-        into toDir
+        String nativeFile = ref[i][1]
+        copy {
+            from project.file(nativeFile)
+            into new File(rootProject.buildDir, 'natives/')
+        }
+        
     }
+    
 }
 
 build.finalizedBy(extractNatives)
