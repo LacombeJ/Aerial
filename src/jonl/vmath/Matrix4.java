@@ -315,6 +315,39 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
         }
     }
     
+    
+    
+    // =============================================================================
+    // Extracting components
+    // https://forum.unity.com/threads/how-to-assign-matrix4x4-to-transform.121966/
+    
+    
+    public Vector3 getTranslation() {
+    	Vector3 translation = new Vector3();
+    	translation.x = m03;
+    	translation.y = m13;
+    	translation.z = m23;
+    	return translation;
+    }
+    
+    public Quaternion getRotation() {
+    	Quaternion rotation = new Quaternion();
+    	rotation.setFromMatrix(true, this);
+    	return rotation;
+    }
+    
+    public Vector3 getScale() {
+    	Vector3 scale = new Vector3();
+    	scale.x = new Vector4(m00,m10,m20,m30).mag();
+    	scale.y = new Vector4(m01,m11,m21,m31).mag();
+    	scale.z = new Vector4(m02,m12,m22,m32).mag();
+    	return scale;
+    }
+    
+    // =============================================================================
+    
+    
+    
     /** @return the Matrix representation of the given axis rotation */
     public static Matrix4 axisRotation(Vector3 axis, float rad) {
         float c = Mathf.cos(rad);
