@@ -1,4 +1,74 @@
 
-dependencies {
-    compile project(':modules:module-utils')
+import org.apache.tools.ant.taskdefs.condition.Os
+
+// ----------------------------------------------------------------------------
+
+/* LWJGL dependencies */
+
+String[][] libs = [
+    ['',        'lwjgl'         ,'lwjgl' ],
+    ['_glfw',   'lwjgl-glfw'    ,'glfw' ],
+    ['_openal', 'lwjgl-openal'  ,'OpenAL' ],
+    ['_opengl', 'lwjgl-opengl'  ,'lwjgl_opengl' ],
+    ['_stb',    'lwjgl-stb'     ,'lwjgl_stb' ]
+]
+
+//String arch = System.properties['sun.arch.data.model'] //arch type (32 or 64)
+
+String os = "windows"
+String ext = ".dll"
+if (Os.isFamily(Os.FAMILY_UNIX)) {
+    os = "linux"
+    ext = ".so"
+} else if (Os.isFamily(Os.FAMILY_MAC)) {
+    os = "macos"
+    ext = ".dylib"
 }
+
+String[][] ref = new String[libs.length][2]
+for (int i=0; i<ref.length; i++) {
+    
+    String postfix = libs[i][0]
+    String name = libs[i][1]
+    String nlib = libs[i][2]
+    
+    String jarFile = 'lib/lwjgl_3.1.1'+postfix+'/'+name+'.jar'
+    String nativeFile = 'lib/lwjgl_3.1.1'+postfix+'/'+name+'-natives-'+os+'/'+nlib+ext
+    
+    ref[i][0] = jarFile
+    ref[i][1] = nativeFile
+    
+}
+
+// ----------------------------------------------------------------------------
+
+dependencies {
+    
+    compile project(':modules:module-utils')
+    
+    for (int i=0; i<ref.length; i++) {
+        String jarFile = ref[i][0]
+        String nativeFile = ref[i][1]
+        
+        compile files(jarFile)
+        //compile files(nativeFile)
+    }
+    
+}
+
+
+task extractNatives(type: Copy) {
+    
+    for (int i=0; i<ref.length; i++) {
+        String jarFile = ref[i][0]
+        String nativeFile = ref[i][1]
+        
+        def fromDir = project.file(nativeFile)
+        def toDir = new File(rootProject.buildDir, 'natives/')
+        from fromDir
+        into toDir
+    }
+}
+
+build.finalizedBy(extractNatives)
+

@@ -3,8 +3,6 @@ subprojects {
     
     apply plugin: 'java'
 
-    buildDir = rootProject.buildDir
-
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 

@@ -263,7 +263,7 @@ public class List<X> extends ArrayList<X>
 	public int[] toIntArray() {
 	    int[] array = new int[size()];
 	    for (int i=0; i<array.length; i++) {
-	        array[i] = (int) get(i);
+	        array[i] = (int)(Integer) get(i);
 	    }
 	    return array;
 	}
@@ -271,7 +271,7 @@ public class List<X> extends ArrayList<X>
 	public float[] toFloatArray() {
         float[] array = new float[size()];
         for (int i=0; i<array.length; i++) {
-            array[i] = (float) get(i);
+            array[i] = (float)(Float) get(i);
         }
         return array;
     }

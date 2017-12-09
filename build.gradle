@@ -5,3 +5,5 @@ description = 'Java Game Engine'
 
 version = '0.0.1'
 
+apply plugin: "eclipse"
+
