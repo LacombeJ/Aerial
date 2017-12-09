@@ -47,7 +47,7 @@ class EditorGUI {
         
         //Window
         window = ui.window();
-        window.setTitle("Nexus Engine");
+        window.setTitle("Engine");
         window.setWidth(1024);
         window.setHeight(576);
         window.setPosition(HAlign.CENTER,VAlign.MIDDLE);

@@ -29,6 +29,12 @@ public class Transform {
         this.translation = new Vector3(t.translation);
     }
     
+    public Transform(Matrix4 m) {
+    	this.scale = m.getScale();
+    	this.rotation = m.getRotation();
+    	this.translation = m.getTranslation();
+    }
+    
     public Transform get() {
         return new Transform(this);
     }
@@ -47,6 +53,7 @@ public class Transform {
     }
     
     /**
+     * Multiplication
      * @return this transform after it has been multiplied by the given transform parent
      */
     public Transform multiply(Transform parent) {
@@ -55,6 +62,21 @@ public class Transform {
         translation.multiply(parent.scale);
         translation.set(parent.rotation.transform(translation));
         translation.add(parent.translation);
+        return this;
+    }
+    
+    /**
+     * Reverse multiplication
+     * @return this transform after it has been multiplied by the inverse transform of the parent (parent-1 * this)
+     */
+    public Transform inverse(Transform parent) {
+    	
+    	translation.sub(parent.translation);
+    	translation.set(parent.rotation.get().conjugate().transform(translation));
+    	translation.divide(parent.scale);
+    	rotation.mul(parent.rotation.get().conjugate());
+    	scale.divide(parent.scale);
+    	
         return this;
     }
     

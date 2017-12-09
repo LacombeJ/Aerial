@@ -34,7 +34,7 @@ public class Editor extends AbstractApp {
         glWindow = gui.window.getWindow();
         gl = glWindow.getGraphicsLibrary();
         input = new EditorInput(gui.editorViewer,gui.window.getInput());
-        updater = new AppUpdater();
+        updater = new AppUpdater(this);
         renderer = new AppRenderer(this,gl);
         window = new AppWindow(this);
         

@@ -12,7 +12,8 @@ public class StandardMaterial extends GeneratedShader {
 		
 	}
 	
-	public StandardMaterial() {
+	//TODO make default construct public (look at GeneratedMaterial) and it's apply function
+	StandardMaterial() {
 		
 	}
 	

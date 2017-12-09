@@ -155,6 +155,7 @@ public final class GameObject {
         }
     }
     
+    /** @return Component of the exact class */
     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponent(Class<T> c) {
         for (Component comp : components) {
@@ -165,6 +166,7 @@ public final class GameObject {
         return null;
     }
     
+    /** @return Components of the exact class */
     @SuppressWarnings("unchecked")
     public <T extends Component> ArrayList<T> getComponents(Class<T> c) {
         ArrayList<T> array = new ArrayList<>();
@@ -176,6 +178,7 @@ public final class GameObject {
         return (ArrayList<T>) array;
     }
     
+    /** @return Component which are an instance of this class */
     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponentOfType(Class<T> c) {
         for (Component comp : components) {
@@ -186,6 +189,7 @@ public final class GameObject {
         return null;
     }
     
+    /** @return Components which are an instance of this class */
     @SuppressWarnings("unchecked")
     public <T extends Component> ArrayList<T> getComponentsOfType(Class<T> c) {
         ArrayList<T> array = new ArrayList<>();
@@ -197,6 +201,7 @@ public final class GameObject {
         return (ArrayList<T>) array;
     }
     
+    /** @return all components */
     public Component[] getComponents() {
         return components.toArray(new Component[0]);
     }

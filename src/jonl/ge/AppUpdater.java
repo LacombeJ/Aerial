@@ -4,10 +4,11 @@ import java.util.HashMap;
 
 class AppUpdater implements Updater {
 
+	private AbstractApp app;
     private HashMap<GameObject,Transform> multiplied = new HashMap<>();
     
-    AppUpdater() {
-        
+    AppUpdater(AbstractApp app) {
+        this.app = app;
     }
     
     @Override
@@ -22,7 +23,9 @@ class AppUpdater implements Updater {
     
     @Override
     public void update(Scene scene) {
+    	ModuleUpdate.preUpdate(app.getModule(ModuleUpdate.class));
         scene.update();
+        ModuleUpdate.postUpdate(app.getModule(ModuleUpdate.class));
         recurseTransform(scene);
     }
 
@@ -46,6 +49,7 @@ class AppUpdater implements Updater {
     private void recurseTransform(GameObject gameObject, Transform transform) {
         //TODO dont compute matrix for static objects?
         //TODO keep premultiplied matrices for static objects and static children?
+    	ModuleUpdate.update(app.getModule(ModuleUpdate.class), gameObject, transform.get());
         Transform mult = gameObject.transform.get().multiply(transform);
         multiplied.put(gameObject,mult);
         for (GameObject g : gameObject.children) {

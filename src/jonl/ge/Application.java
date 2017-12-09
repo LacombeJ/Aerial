@@ -52,7 +52,7 @@ public class Application extends AbstractApp {
         al = audio.getAudioLibrary();
         
         input = new AppInput(glWindow.getInput());
-        updater = new AppUpdater();
+        updater = new AppUpdater(this);
         renderer = new AppRenderer(this,glWindow.getGraphicsLibrary());
         window = new AppWindow(this);
         
