@@ -1,0 +1,11 @@
+
+// Gradle settings file
+
+include "jge"
+
+include "modules:module-jgl"
+include "modules:module-sui"
+include "modules:module-utils"
+include "modules:module-vmath"
+
+rootProject.name = 'javage'

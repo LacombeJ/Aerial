@@ -1,0 +1,6 @@
+
+dependencies {
+    compile project(':modules:module-jgl')
+    compile project(':modules:module-utils')
+    compile project(':modules:module-vmath')
+}

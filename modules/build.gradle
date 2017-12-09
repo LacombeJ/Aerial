@@ -1,0 +1,19 @@
+
+subprojects {
+    
+    apply plugin: 'java'
+
+    buildDir = rootProject.buildDir
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    sourceSets.main.java.srcDirs = ["src"]
+    sourceSets.main.resources.srcDirs = ["src"]
+
+    compileJava {
+        options.fork = true
+        options.incremental = true
+    }
+    
+}
