@@ -1,6 +1,9 @@
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
+dependencies {
+    compile project(':modules:module-utils')
+}
 
 // ----------------------------------------------------------------------------
 
@@ -45,27 +48,19 @@ for (int i=0; i<ref.length; i++) {
 
 dependencies {
     
-    compile project(':modules:module-utils')
-    
     for (int i=0; i<ref.length; i++) {
         String jarFile = ref[i][0]
         String nativeFile = ref[i][1]
         
         compile files(jarFile)
-        //compile files(nativeFile)
     }
     
 }
 
-// Extracts contents of libs into the generated jar
-processResources {
-    for (int i=0; i<ref.length; i++) {
-        from(zipTree(ref[i][0]))
-    }
-    
+jar {
+    from configurations.compile.collect { zipTree it }
 }
 
-// Extracts natives into a folder in the root project build directory
 task extractNatives {
     
     for (int i=0; i<ref.length; i++) {

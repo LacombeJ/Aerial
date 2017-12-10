@@ -5,5 +5,36 @@ description = 'Java Game Engine'
 
 version = '0.0.1'
 
-apply plugin: "eclipse"
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+subprojects {
+
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    sourceSets.main.java.srcDirs = ["src"]
+    sourceSets.main.resources.srcDirs = ["src"]
+
+    compileJava {
+        options.fork = true
+        options.incremental = true
+    }
+
+}
+
+dependencies {
+    compile project(':jge')
+    compile project(':modules:module-jgl')
+    compile project(':modules:module-sui')
+    compile project(':modules:module-utils')
+    compile project(':modules:module-vmath')
+}
+
+jar {
+    from configurations.compile.collect { zipTree it }
+}
+
 
