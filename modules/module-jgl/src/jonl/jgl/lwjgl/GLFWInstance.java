@@ -145,7 +145,7 @@ class GLFWInstance {
     private static void initializeInstance() {
     	
     	// Performing a time out check because program will hang if native libraries aren't found
-    	TimeOut timeOut = new TimeOut(10);
+    	TimeOut timeOut = new TimeOut(1);
     	
         Processor.thread(()->{
         	
@@ -170,7 +170,7 @@ class GLFWInstance {
                     	
                     	// Program will time out if a request is not received in alloted time
                     	if (initTimeOut == null) {
-                    		initTimeOut = new TimeOut(10);
+                    		initTimeOut = new TimeOut(1);
                     	} else {
                     		if (initTimeOut.check()) {
                     			continue; // Keep waiting for a request
