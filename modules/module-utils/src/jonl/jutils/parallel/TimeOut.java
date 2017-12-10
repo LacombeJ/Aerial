@@ -14,8 +14,12 @@ public class TimeOut {
 	/** When set to true, thread has failed to have timed out and will continue */
 	private boolean safe = false;
 	
-	public TimeOut() {
-		
+	StopWatch watch;
+	private double seconds = 0;
+	
+	public TimeOut(double seconds) {
+		watch = new StopWatch();
+		this.seconds = seconds;
 	}
 	
 	/**
@@ -28,17 +32,30 @@ public class TimeOut {
 	/**
 	 * Holds thread until given time has elapsed or until pass is called
 	 * @param seconds time in seconds
-	 * @return true if pass was called by another thread or false if time out duration is reached
+	 * @return false if there was a time out or true if pass was called by another thread
 	 */
-	public boolean hold(double seconds) {
-		StopWatch watch = new StopWatch();
+	public boolean hold() {
 		while (!safe) {
-			long elapsed = (long) TimeUtils.timeConvert(watch.lap(), TimeMetric.NANO, TimeMetric.SECOND);
+			double elapsed = TimeUtils.timeConvert(watch.lap(), TimeMetric.NANO, TimeMetric.SECOND);
 			if (elapsed > seconds) {
 				return false; // Time out detected
 			}
 		}
 		return true; // Time out failed, pass was called
+	}
+	
+	/**
+	 * Similar to hold but will not stop thread
+	 * @return false if there was a time out or true if time not reached yet
+	 */
+	public boolean check() {
+		if (!safe) {
+			double elapsed = TimeUtils.timeConvert(watch.lap(), TimeMetric.NANO, TimeMetric.SECOND);
+			if (elapsed > seconds) {
+				return false; // Time out detected
+			}
+		}
+		return true;
 	}
 	
 }

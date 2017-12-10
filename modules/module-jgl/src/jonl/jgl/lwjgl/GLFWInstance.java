@@ -141,10 +141,11 @@ class GLFWInstance {
         }
     }
     
+    static TimeOut initTimeOut;
     private static void initializeInstance() {
     	
     	// Performing a time out check because program will hang if native libraries aren't found
-    	TimeOut timeOut = new TimeOut();
+    	TimeOut timeOut = new TimeOut(10);
     	
         Processor.thread(()->{
         	
@@ -157,14 +158,35 @@ class GLFWInstance {
             timeOut.pass(); // Initialization succeeded and no errors have occurred so far
             
             while (true) {
-                if (STARTED_WINDOWS.size()>0) {                 
+            	
+                if (STARTED_WINDOWS.size()>0) {   
+                	
                     GLFW.glfwPollEvents();
+                    
                 } else if (CREATED_WINDOWS.size()==0) {
+                	
+                	// If there are no windows and no requests in queue
                     if (!isAnyRequestLeft()) {
-                    	System.out.println("Time");
-                        break;
+                    	
+                    	// Program will time out if a request is not received in alloted time
+                    	if (initTimeOut == null) {
+                    		initTimeOut = new TimeOut(10);
+                    	} else {
+                    		if (initTimeOut.check()) {
+                    			continue; // Keep waiting for a request
+                    		} else {
+                    			System.out.println("No more requests. Exiting program.");
+                    			break; // Break loop and exit program
+                    		}
+                    	}
+                    	
+                	// A request was found (maybe a window creation request?)
+                    } else {
+                    	initTimeOut = null; //reset time out check
                     }
+                    
                 }
+                
                 ArrayList<GLFWWindow> remove = new ArrayList<>();
                 for (GLFWWindow w : STARTED_WINDOWS) {
                     if (w.isClosing()) {
@@ -173,6 +195,7 @@ class GLFWInstance {
                         remove.add(w);
                     }
                 }
+                
                 for (GLFWWindow w : remove) {
                     STARTED_WINDOWS.remove(w);
                     CREATED_WINDOWS.remove(w.getID());
@@ -187,7 +210,7 @@ class GLFWInstance {
             resetInstance();
         });
         
-        if (!timeOut.hold(5)) {
+        if (!timeOut.hold()) {
         	System.err.println("Error: Time out reached! Exiting.");
         	System.exit(0); // Stop program if we reach a time out (there is a hanging thread)
         }
