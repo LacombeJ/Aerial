@@ -15,6 +15,7 @@ import jonl.jutils.parallel.Processor;
 import jonl.jutils.parallel.Request;
 import jonl.jutils.parallel.RequestQueue;
 import jonl.jutils.parallel.Response;
+import jonl.jutils.parallel.TimeOut;
 
 /**
  * This class is a utility class used to hold static data and functions
@@ -141,19 +142,26 @@ class GLFWInstance {
     }
     
     private static void initializeInstance() {
+    	
+    	// Performing a time out check because program will hang if native libraries aren't found
+    	TimeOut timeOut = new TimeOut();
+    	
         Processor.thread(()->{
-            
+        	
             GLFWErrorCallback.createPrint().set();
             
             if (!GLFW.glfwInit()) {
                 throw new IllegalStateException("Failed to initialize GLFW.");
             }
             
+            timeOut.pass(); // Initialization succeeded and no errors have occurred so far
+            
             while (true) {
                 if (STARTED_WINDOWS.size()>0) {                 
                     GLFW.glfwPollEvents();
                 } else if (CREATED_WINDOWS.size()==0) {
                     if (!isAnyRequestLeft()) {
+                    	System.out.println("Time");
                         break;
                     }
                 }
@@ -178,6 +186,12 @@ class GLFWInstance {
             
             resetInstance();
         });
+        
+        if (!timeOut.hold(5)) {
+        	System.err.println("Error: Time out reached! Exiting.");
+        	System.exit(0); // Stop program if we reach a time out (there is a hanging thread)
+        }
+        
     }
     
     private static void requestRespond() {
