@@ -34,10 +34,6 @@ dependencies {
     compile project(':modules:module-vmath')
 }
 
-artifacts {
-    compile jar
-}
-
 jar {
     from configurations.compile.collect { zipTree it }
 }
@@ -45,6 +41,13 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            
+            // Remove dependencies since we already included them in jar
+            pom.withXml {
+                def node = it.asNode()
+                node.remove(node.get("dependencies"))
+            }
+            
             from components.java
         }
     }
