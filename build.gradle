@@ -2,11 +2,12 @@
 // Gradle build file
 
 description = 'Java Game Engine'
-
+group 'jonl.jge'
 version = '0.0.1'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 subprojects {
 
@@ -33,8 +34,22 @@ dependencies {
     compile project(':modules:module-vmath')
 }
 
+artifacts {
+    compile jar
+}
+
 jar {
     from configurations.compile.collect { zipTree it }
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
 
