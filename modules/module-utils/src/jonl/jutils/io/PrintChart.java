@@ -1,5 +1,7 @@
 package jonl.jutils.io;
 
+import java.util.ArrayList;
+
 import jonl.jutils.func.List;
 import jonl.jutils.misc.StringUtils;
 import jonl.jutils.structs.Array2D;
@@ -13,7 +15,7 @@ public class PrintChart extends Array2D<String> {
     final String[] colBorder;
     
     public PrintChart(int rows, int columns) {
-        super(new List<>(rows*columns,i -> "").toArray(new String[0]), rows);
+        super(List.comprehension(rows*columns,i -> "").toArray(new String[0]), rows);
         rowHasBorder = new boolean[rows+1];
         colHasBorder = new boolean[columns+1];
         rowBorder = new char[rows+1];
@@ -53,13 +55,14 @@ public class PrintChart extends Array2D<String> {
     }
     
     public void print() {
-        List<Integer> maxLenColumns =
-                new List<>(
+        ArrayList<Integer> maxLenColumns =
+                List.comprehension(
                     getColumns(),
-                    j -> new List<>( getRows(), i->get(i,j) )
-                        .accumulate( (x,y) -> (x.length()>y) ? x.length() : y, 0 )
+                    j -> List.accumulate(
+                    		List.comprehension( getRows(), i->get(i,j) ),
+                    		(x,y) -> (x.length()>y) ? x.length() : y, 0 )
                 );
-        int rowLen = maxLenColumns.accumulate((x,y) -> x + y + 1, 0) + getColBorderTotal();
+        int rowLen = List.accumulate(maxLenColumns, (x,y) -> x + y + 1, 0) + getColBorderTotal();
         for (int i=0; i<getRows(); i++) {
             checkPrintRowBorder(i,rowLen);
             for (int j=0; j<getColumns(); j++) {

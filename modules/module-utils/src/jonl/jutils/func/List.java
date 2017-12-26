@@ -1,58 +1,49 @@
 package jonl.jutils.func;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 
 import jonl.jutils.misc.TypeUtils;
 
-import static jonl.jutils.func.ListUtils.*;
-
-@SuppressWarnings("serial") //TODO ?
-public class List<X> extends ArrayList<X>
+public class List
 {
 	
-	public List() {
-		super();
-	}
-
-	public List(int size) {
-		super(size);
-	}
-	
-	public List(Collection<? extends X> c) {
-		super(c);
+	@SuppressWarnings("unchecked")
+	public static <X> ArrayList<X> list(X... list) {
+		ArrayList<X> ret = new ArrayList<>();
+		for (X x : list) {
+			ret.add(x);
+		}
+		return ret;
 	}
 	
-	public List(int size, Function<Integer,X> comprehension) {
-	    super(size);
-	    for (int i=0; i<size; i++) {
-	        add(comprehension.f(i));
-	    }
+	public static <X> ArrayList<X> wrap(X x) {
+		ArrayList<X> ret = new ArrayList<>(1);
+		ret.add(x);
+		return ret;
 	}
 	
-	public <Y> List(List<Y> list, Function<Y,List<X>> grow) {
-	    super();
-	    for (Y y : list) {
-	        addAll(grow.f(y));
-	    }
-	}
-	
-	
-	public ArrayList<X> array() {
-		return new ArrayList<X>(this);
-	}
-
-	public <Y> List<Y> map(Function<X,Y> function) {
-		List<Y> ret = new List<>(size());
-		for (X x : this) {
+	public static <X,Y> ArrayList<Y> map(ArrayList<X> list, Function<X,Y> function) {
+		ArrayList<Y> ret = new ArrayList<>(list.size());
+		for (X x : list) {
 			ret.add(function.f(x));
 		}
 		return ret;
 	}
 	
-	public List<X> filter(Function<X,Boolean> condition) {
-		List<X> ret = new List<>();
-		for (X x : this) {
+	public static <X> ArrayList<X> comprehension(int size, Function<Integer,X> comprehension) {
+		ArrayList<X> ret = new ArrayList<>(size);
+		for (int i=0; i<size; i++) {
+			ret.add(comprehension.f(i));
+		}
+		return ret;
+	}
+	
+	
+	
+	public static <X> ArrayList<X> filter(ArrayList<X> list, Function<X,Boolean> condition) {
+		ArrayList<X> ret = new ArrayList<>();
+		for (X x : list) {
 			if (condition.f(x)) {
 				ret.add(x);
 			}
@@ -60,96 +51,91 @@ public class List<X> extends ArrayList<X>
 		return ret;
 	}
 	
-	public List<X> repeat(int n) {
-	    List<X> list = new List<>();
+	public static <X> ArrayList<X> repeat(ArrayList<X> list, int n) {
+	    ArrayList<X> ret = new ArrayList<>();
 	    for (int i=0; i<n; i++) {
-	        list.addAll(this);
+	        ret.addAll(list);
 	    }
-	    return list;
+	    return ret;
 	}
 	
-	public <Y> Y accumulate(Function2D<X,Y,Y> function, Y y) {
-	    if (size()==0) return null;
+	public static <X,Y> Y accumulate(ArrayList<X> list, Function2D<X,Y,Y> function, Y y) {
+	    if (list.size()==0) return null;
 	    Y accum = y;
-	    for (int i=0; i<size(); i++) {
-	        accum = function.f(get(i), accum);
+	    for (int i=0; i<list.size(); i++) {
+	        accum = function.f(list.get(i), accum);
 	    }
 	    return accum;
 	}
 	
-	public X reduce(Function2D<X,X,X> function) {
-	    if (size()==0) return null;
-		X accum = get(0);
-		for (int i=1; i<size(); i++) {
-			accum = function.f(accum, get(i));
+	public static <X> X reduce(ArrayList<X> list, Function2D<X,X,X> function) {
+	    if (list.size()==0) return null;
+		X accum = list.get(0);
+		for (int i=1; i<list.size(); i++) {
+			accum = function.f(accum, list.get(i));
 		}
 		return accum;
 	}
 
-	public Tuple2<List<X>,List<X>> split(Function<X,Boolean> condition) {
-		List<X> trueGroup = new List<>();
-		List<X> falseGroup = new List<>();
-		for (X x : this) {
+	public static <X> Tuple2<ArrayList<X>,ArrayList<X>> split(ArrayList<X> list, Function<X,Boolean> condition) {
+		ArrayList<X> trueGroup = new ArrayList<>();
+		ArrayList<X> falseGroup = new ArrayList<>();
+		for (X x : list) {
 			if (condition.f(x)) {
 				trueGroup.add(x);
 			} else {
 				falseGroup.add(x);
 			}
 		}
-		return new Tuple2<List<X>,List<X>>(trueGroup,falseGroup);
+		return new Tuple2<ArrayList<X>,ArrayList<X>>(trueGroup,falseGroup);
 	}
 	
-	public X first() {
-		return get(0);
+	public static <X> X first(ArrayList<X> list) {
+		return list.get(0);
 	}
 	
-	public X last() {
-		return get(size()-1);
+	public static <X> X last(ArrayList<X> list) {
+		return list.get(list.size()-1);
 	}
 	
-	public List<X> first(int n) {
-        return sub(0,n);
+	public static <X> ArrayList<X> first(ArrayList<X> list, int n) {
+        return sub(list,0,n);
     }
     
-	public List<X> last(int n) {
-        return sub(size()-n,size());
+	public static <X> ArrayList<X> last(ArrayList<X> list, int n) {
+        return sub(list, list.size()-n, list.size());
     }
 	
-   public void setFirst(X x) {
-        set(0, x);
+	public static <X> void setFirst(ArrayList<X> list, X x) {
+        list.set(0, x);
     }
     
-    public void setFirst(List<X> x) {
+    public static <X> void setFirst(ArrayList<X> list, ArrayList<X> x) {
         int addLen = x.size();
         for (int i=0; i<addLen; i++) {
-            set(i,x.get(i));
+            list.set(i,x.get(i));
         }
     }
 
-    public void setLast(X x) {
-        set(size()-1, x);
+    public static <X> void setLast(ArrayList<X> list, X x) {
+        list.set(list.size()-1, x);
     }
     
-    public void setLast(List<X> x) {
-        int listLen = size();
+    public static <X> void setLast(ArrayList<X> list, ArrayList<X> x) {
+        int listLen = list.size();
         int addLen = x.size();
         for (int i=listLen-addLen, j=0; i<listLen; i++, j++) {
-            set(i,x.get(j));
+            list.set(i,x.get(j));
         }
     }
 	
-    private List<X> sub(int fromIndex, int toIndex) {
-        subListRangeCheck(fromIndex, toIndex, size());
-        List<X> list = new List<X>();
+    public static <X> ArrayList<X> sub(ArrayList<X> list, int fromIndex, int toIndex) {
+        subListRangeCheck(fromIndex, toIndex, list.size());
+        ArrayList<X> ret = new ArrayList<X>();
         for (int i=fromIndex; i<toIndex; i++) {
-            list.add(get(i));
+            ret.add(list.get(i));
         }
-        return list;
-    }
-	
-	@Override
-	public List<X> subList(int fromIndex, int toIndex) {
-        return sub(fromIndex,toIndex);
+        return ret;
     }
 
     static void subListRangeCheck(int fromIndex, int toIndex, int size) {
@@ -162,8 +148,8 @@ public class List<X> extends ArrayList<X>
                                                ") > toIndex(" + toIndex + ")");
     }
 	
-	public boolean contains(Function<X,Boolean> contains) {
-		for (X x : this) {
+	public static <X> boolean contains(ArrayList<X> list, Function<X,Boolean> contains) {
+		for (X x : list) {
 			if (contains.f(x)) {
 				return true;
 			}
@@ -171,79 +157,86 @@ public class List<X> extends ArrayList<X>
 		return false;
 	}
 	
-	public List<X> addFirst(X first) {
-		List<X> concat = new List<>();
+	public static <X> ArrayList<X> addFirst(ArrayList<X> list, X first) {
+		ArrayList<X> concat = new ArrayList<>();
 		concat.add(first);
-		concat.addAll(this);
+		concat.addAll(list);
 		return concat;
 	}
 	
-	public List<X> addLast(X last) {
-		List<X> concat = new List<>();
-		concat.addAll(this);
+	public static <X> ArrayList<X> addLast(ArrayList<X> list, X last) {
+		ArrayList<X> concat = new ArrayList<>();
+		concat.addAll(list);
 		concat.add(last);
 		return concat;
 	}
 	
-	public <Y> List<Y> enumerate(Function2D<X,Integer,Y> function) {
-		List<Y> ret = new List<>(size());
-		for (int i=0; i<size(); i++) {
-			X x = get(i);
+	public static <X,Y> ArrayList<Y> enumerate(ArrayList<X> list, Function2D<X,Integer,Y> function) {
+		ArrayList<Y> ret = new ArrayList<>(list.size());
+		for (int i=0; i<list.size(); i++) {
+			X x = list.get(i);
 			ret.add(function.f(x,i));
 		}
 		return ret;
 	}
 	
-	public List<List<X>> divide(Function2D<X,X,Boolean> condition) {
-		List<List<X>> map = map(x -> wrap(wrap(x))).reduce(
+	public static <X> ArrayList<ArrayList<X>> divide(ArrayList<X> list, Function2D<X,X,Boolean> condition) {
+		
+		ArrayList<ArrayList<X>> map = reduce(
+			map(list, x -> wrap(wrap(x))) ,
 			(x,y) -> {
-				if (condition.f(x.last().last(), y.first().first())) {
-					x.last().add(y.first().first());
+				if (condition.f(last(last(x)), first(first(y)))) {
+					last(x).add(first(first(y)));
 				} else {
-					x.add(y.first());
+					x.add(first(y));
 				}
 				return x;
-		});
-		return map==null ? new List<List<X>>() : map;
+			}
+		);
+		return map==null ? new ArrayList<ArrayList<X>>() : map;
 	}
 	
-	public List<X> copy() {
-		return map(x -> x);
+	public static <X> ArrayList<X> copy(ArrayList<X> list) {
+		return map(list, x -> x);
 	}
 	
-	public List<X> copy(Function<X,X> copy) {
-		return map(copy);
+	public static <X> ArrayList<X> copy(ArrayList<X> list, Function<X,X> copy) {
+		return map(list, copy);
 	}
 	
-	public List<X> order(Function2D<X,X,Integer> compare) {
-		List<X> sorted = copy(x->x);
+	public static <X> ArrayList<X> order(ArrayList<X> list, Function2D<X,X,Integer> compare) {
+		ArrayList<X> sorted = copy(list, x->x);
 		sorted.sort(new FunctionComparator<X>(compare));
 		return sorted;
 	}
 	
-	public List<List<X>> bin(Function<X,Integer> generator) {
-		 return map(x -> tuple(x,generator.f(x)))
-				.order((t0,t1) -> TypeUtils.compare(t0.y,t1.y))
-				.divide((t0,t1) -> t0.y==t1.y)
-				.map(x -> x.map(y->y.x));
+	public static <X> ArrayList<ArrayList<X>> bin(ArrayList<X> list, Function<X,Integer> generator) {
+		ArrayList<Tuple2<X,Integer>> list0 = map(list, x -> new Tuple2<>(x,generator.f(x)));
+		ArrayList<Tuple2<X,Integer>> list1 = order(list0, (t0,t1) -> TypeUtils.compare(t0.y,t1.y));
+		ArrayList<ArrayList<Tuple2<X,Integer>>> list2 = divide(list1, (t0,t1) -> t0.y==t1.y);
+		ArrayList<ArrayList<X>> list3 = map(list2, x -> map(x, y->y.x));
+		return list3;
 	}
 	
-	public List<List<X>> bin(Function2D<X,X,Boolean> unique) {
-	    List<List<X>> map = map(x -> wrap(wrap(x))).reduce(
+	public static <X> ArrayList<ArrayList<X>> bin(ArrayList<X> list, Function2D<X,X,Boolean> unique) {
+	    ArrayList<ArrayList<X>> ret =
+    		reduce(
+	    		map(list, x -> wrap(wrap(x))),
 	            (x,y) -> {
-	                List<X> find = x.find(u -> unique.f(u.get(0),y.first().first()));
+	                ArrayList<X> find = find(x, u -> unique.f(u.get(0),first(first(y))));
 	                if (find!=null) {
-	                    find.add(y.first().first());
+	                    find.add(first(first(y)));
 	                } else {
-	                    x.add(y.first());
+	                    x.add(first(y));
 	                }
 	                return x;
-	        });
-	    return map==null ? new List<List<X>>() : map;
+	            }
+            );
+	    return ret==null ? new ArrayList<ArrayList<X>>() : ret;
 	}
 	
-	public X find(Function<X,Boolean> function) {
-	    for (X x : this) {
+	public static <X> X find(ArrayList<X> list, Function<X,Boolean> function) {
+	    for (X x : list) {
 	        if (function.f(x)) {
 	            return x;
 	        }
@@ -251,29 +244,40 @@ public class List<X> extends ArrayList<X>
 	    return null;
 	}
 	
-	public int index(Function<X,Boolean> function) {
-	    for (int i=0; i<size(); i++) {
-	        if (function.f(get(i))) {
+	public static <X> int index(ArrayList<X> list, Function<X,Boolean> function) {
+	    for (int i=0; i<list.size(); i++) {
+	        if (function.f(list.get(i))) {
                 return i;
             }
 	    }
 	    return -1;
 	}
 	
-	public int[] toIntArray() {
-	    int[] array = new int[size()];
+	public static <X> int[] toIntArray(ArrayList<X> list) {
+	    int[] array = new int[list.size()];
 	    for (int i=0; i<array.length; i++) {
-	        array[i] = (int)(Integer) get(i);
+	        array[i] = (int)(Integer) list.get(i);
 	    }
 	    return array;
 	}
 	
-	public float[] toFloatArray() {
-        float[] array = new float[size()];
+	public static <X> float[] toFloatArray(ArrayList<X> list) {
+        float[] array = new float[list.size()];
         for (int i=0; i<array.length; i++) {
-            array[i] = (float)(Float) get(i);
+            array[i] = (float)(Float) list.get(i);
         }
         return array;
     }
+	
+	public static final class FunctionComparator<X> implements Comparator<X> {
+		private final Function2D<X,X,Integer> comparator;
+		public FunctionComparator(Function2D<X,X,Integer> compare) {
+			comparator = compare;
+		}
+		@Override
+		public int compare(X x, X y) {
+			return comparator.f(x, y);
+		}
+	}
 	
 }

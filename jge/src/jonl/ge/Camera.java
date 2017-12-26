@@ -8,7 +8,7 @@ import jonl.vmath.Vector4;
 
 public class Camera extends Component {
     
-	int order = 0; //order in which to render cameras
+	int order = 0; //order in which to render cameras (higher order renders last)
 	
     float height = 10f; //used in orthographic projection
     float fov = 90; //used in perspective projection
@@ -27,7 +27,7 @@ public class Camera extends Component {
     float[] clearColor = { 0, 0, 0, 1 };
     boolean scissor = true;
     boolean scaleProjection = false;
-    
+    boolean shouldClearColor = true;
     
     public enum Target {
         ALL,
@@ -147,9 +147,12 @@ public class Camera extends Component {
         clearColor = new float[]{r,g,b,a};
     }
     
-    public Camera setScissor(boolean scissor) {
+    public void setScissor(boolean scissor) {
         this.scissor = scissor;
-        return this;
+    }
+    
+    public void enableClearColor(boolean clearColor) {
+    	shouldClearColor = clearColor;
     }
     
     /** @return copy of this matrix projection */

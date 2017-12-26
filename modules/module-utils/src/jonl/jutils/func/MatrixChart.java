@@ -1,5 +1,7 @@
 package jonl.jutils.func;
 
+import java.util.ArrayList;
+
 import jonl.jutils.io.PrintChart;
 import jonl.jutils.structs.Array2D;
 import jonl.jutils.structs.BijectiveMap;
@@ -11,7 +13,7 @@ public class MatrixChart<X,Y,Z>
     private final BijectiveMap<Y,Integer> colMap;
     private final Array2D<Z> matrix;
     
-    public MatrixChart(List<X> row, List<Y> col, Function2D<X,Y,Z> f) {
+    public MatrixChart(ArrayList<X> row, ArrayList<Y> col, Function2D<X,Y,Z> f) {
         rowMap = new BijectiveMap<>(row.size());
         colMap = new BijectiveMap<>(col.size());
         for (int i=0; i<row.size(); i++) {
@@ -29,8 +31,8 @@ public class MatrixChart<X,Y,Z>
     }
     
     @SuppressWarnings("unchecked")
-    public MatrixChart(List<X> list, Function2D<X,X,Z> f) {
-        this(list, (List<Y>) list, (x,y) -> f.f(x,(X) y) );
+    public MatrixChart(ArrayList<X> list, Function2D<X,X,Z> f) {
+        this(list, (ArrayList<Y>) list, (x,y) -> f.f(x,(X) y) );
     }
     
     

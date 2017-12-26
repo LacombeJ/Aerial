@@ -1,5 +1,6 @@
 package jonl.jutils.structs;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,7 +12,7 @@ import jonl.jutils.func.List;
 public class ObjectSet<X> implements Set<X> {
 
     //TODO change backed structure
-    List<X> list = new List<X>();
+    ArrayList<X> list = new ArrayList<X>();
     
     @Override
     public int size() {
@@ -58,7 +59,7 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean remove(Object o) {
-        int index = list.index(x -> x==o);
+        int index = List.index(list, x -> x==o);
         if (index!=-1) {
             list.remove(index);
             return true;

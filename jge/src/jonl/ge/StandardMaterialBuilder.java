@@ -36,11 +36,10 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     // Build only occurs once
     public StandardMaterial build() {
     	
-    	if (build != null) {
-    		return build;
-    	}
-    	
-    	build_1();
+    	//TODO find a better way to do this (multiple shaders with different build calls)
+    	if (build == null) {
+    		build_1();
+    	}    	
     	
         StandardMaterial mat = new StandardMaterial(Construct.UNINITIALIZED);
         
