@@ -17,6 +17,12 @@ public class List
 		return ret;
 	}
 	
+	public static <X> ArrayList<X> list(ArrayList<X> list) {
+		ArrayList<X> ret = new ArrayList<>();
+		ret.addAll(list);
+		return ret;
+	}
+	
 	public static <X> ArrayList<X> wrap(X x) {
 		ArrayList<X> ret = new ArrayList<>(1);
 		ret.add(x);
@@ -88,6 +94,20 @@ public class List
 			}
 		}
 		return new Tuple2<ArrayList<X>,ArrayList<X>>(trueGroup,falseGroup);
+	}
+	
+	public static <X,Y> ArrayList<Y> gather(ArrayList<X> list, Function<X,ArrayList<Y>> function) {
+		ArrayList<Y> ret = new ArrayList<>();
+		for (X x : list) {
+			ret.addAll(function.f(x));
+		}
+		return ret;
+	}
+	
+	public static <X> void iterate(ArrayList<X> list, Callback<X> callback) {
+		for (X x : list) {
+			callback.f(x);
+		}
 	}
 	
 	public static <X> X first(ArrayList<X> list) {

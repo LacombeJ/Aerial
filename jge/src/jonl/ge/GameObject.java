@@ -5,16 +5,16 @@ import java.util.HashMap;
 
 import jonl.ge.Input.CursorState;
 import jonl.jutils.func.Callback0D;
+import jonl.jutils.func.List;
+import jonl.jutils.structs.TreeNode;
 import jonl.vmath.Matrix4;
 
-public final class GameObject {
+public final class GameObject extends TreeNode<GameObject> {
     
     String name = "GameObject";
     final Transform transform = new Transform();
     
     private Scene scene;
-    private GameObject parent = null;
-    final ArrayList<GameObject> children = new ArrayList<>();
     final ArrayList<Component> components = new ArrayList<>();
     
     private final HashMap<String,Object> dataMap = new HashMap<>();
@@ -45,9 +45,17 @@ public final class GameObject {
     
     void setScene(Scene scene) {
         this.scene = scene;
-        for (GameObject g : children) {
+        for (GameObject g : this) {
             g.setScene(scene);
         }
+    }
+    
+    public GameObject parent() {
+    	return getParent();
+    }
+    
+    public ArrayList<GameObject> children() {
+    	return getChildren();
     }
     
     public void addComponent(Component c) {
@@ -87,118 +95,47 @@ public final class GameObject {
     }
     
     public GameObject getChild(String name) {
-        for (GameObject g : children) {
-            if (g.name.equals(name)) {
-                return g;
-            }
-        }
-        return null;
-    }
-    
-    public GameObject getChildAt(int index) {
-        return children.get(index);
-    }
-    
-    public int getChildrenCount() {
-        return children.size();
-    }
-    
-    public GameObject[] getChildren() {
-        return children.toArray(new GameObject[0]);
-    }
-    
-    public void addChild(GameObject g) {
-        g.parent = this;
-        children.add(g);
-    }
-    
-    public GameObject removeChildAt(int index) {
-        GameObject g = children.remove(index);
-        if (g!=null) {
-            g.parent = null;
-        }
-        return g;
-    }
-    
-    public void removeChild(GameObject g) {
-        if (children.remove(g)) {
-            g.parent = null;
-        }
-    }
-    
-    public GameObject parent() {
-        return parent;
+    	return getChild((g) -> g.name.equals(name));
     }
     
     void create() {
-        Component[] ccreate = components.toArray(new Component[0]);
-        for (Component c : ccreate) { //To prevent concurrent modification
-            if (c instanceof Property) {
-                Property p = (Property) c;
+        List.iterate(List.list(components), (c) -> {
+        	if (c instanceof Property) {
+        		Property p = (Property) c;
                 p.create();
-            }
-        }
-        GameObject[] gcreate = children.toArray(new GameObject[0]);
-        for (GameObject g : gcreate) { //To prevent concurrent modification
-            g.create();
-        }
+        	}
+    	} );
+        List.iterate(List.list(children()), (g) -> g.create());
     }
     
     void update() {
-        Component[] cupdate = components.toArray(new Component[0]);
-        for (Component c : cupdate) { //To prevent concurrent modification
-            c.updateComponent();
-        }
-        GameObject[] gupdate = children.toArray(new GameObject[0]);
-        for (GameObject g : gupdate) { //To prevent concurrent modification
-            g.update();
-        }
+        //Make a copy of lists to prevent concurrent modification
+        List.iterate(List.list(components), (c) -> c.updateComponent());
+        List.iterate(List.list(children()), (g) -> g.update());
     }
     
     /** @return Component of the exact class */
     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponent(Class<T> c) {
-        for (Component comp : components) {
-            if (comp.getClass().equals(c)) {
-                return (T) comp;
-            }
-        }
-        return null;
+    	return (T) List.find(components, (comp)->comp.getClass().equals(c));
     }
     
     /** @return Components of the exact class */
     @SuppressWarnings("unchecked")
     public <T extends Component> ArrayList<T> getComponents(Class<T> c) {
-        ArrayList<T> array = new ArrayList<>();
-        for (Component comp : components) {
-            if (comp.getClass().equals(c)) {
-                array.add((T) comp);
-            }
-        }
-        return (ArrayList<T>) array;
+        return List.map(List.filter(components, (comp)->comp.getClass().equals(c)), (comp)->(T)comp);
     }
     
     /** @return Component which are an instance of this class */
     @SuppressWarnings("unchecked")
     public <T extends Component> T getComponentOfType(Class<T> c) {
-        for (Component comp : components) {
-            if (c.isInstance(comp)) {
-                return (T) comp;
-            }
-        }
-        return null;
+        return (T) List.find(components, (comp)->c.isInstance(comp));
     }
     
     /** @return Components which are an instance of this class */
     @SuppressWarnings("unchecked")
     public <T extends Component> ArrayList<T> getComponentsOfType(Class<T> c) {
-        ArrayList<T> array = new ArrayList<>();
-        for (Component comp : components) {
-            if (c.isInstance(comp)) {
-                array.add((T) comp);
-            }
-        }
-        return (ArrayList<T>) array;
+    	return List.map(List.filter(components, (comp)->c.isInstance(comp)), (comp)->(T)comp);
     }
     
     /** @return all components */
@@ -223,18 +160,18 @@ public final class GameObject {
     }
     
     public Transform computeWorldTransform() {
-        if (parent==null) {
+        if (parent()==null) {
             return transform.get();
         }
-        return transform.get().multiply(parent.computeWorldTransform());
+        return transform.get().multiply(parent().computeWorldTransform());
     }
     
     public Matrix4 computeWorldMatrix() {
         Matrix4 matrix = transform.computeMatrix();
-        if (parent==null) {
+        if (parent()==null) {
             return matrix;
         }
-        return parent.computeWorldMatrix().multiply(matrix);
+        return parent().computeWorldMatrix().multiply(matrix);
     }
     
     public Input input() {

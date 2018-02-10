@@ -2,6 +2,8 @@ package jonl.ge;
 
 import java.util.HashMap;
 
+import jonl.jutils.func.List;
+
 class AppUpdater implements Updater {
 
 	private AbstractApp app;
@@ -41,9 +43,7 @@ class AppUpdater implements Updater {
     private void recurseTransform(Scene scene) {
         //TODO keep premultiplied transforms for static objects and objects not moving
         multiplied = new HashMap<>();
-        for (GameObject g : scene.gameObjects) {
-            recurseTransform(g,new Transform());
-        }
+        scene.root.iterate((g) -> recurseTransform(g,new Transform()));
     }
     
     private void recurseTransform(GameObject gameObject, Transform transform) {
@@ -52,9 +52,8 @@ class AppUpdater implements Updater {
     	ModuleUpdate.update(app.getModule(ModuleUpdate.class), gameObject, transform.get());
         Transform mult = gameObject.transform.get().multiply(transform);
         multiplied.put(gameObject,mult);
-        for (GameObject g : gameObject.children) {
-            recurseTransform(g,mult);
-        }
+        gameObject.iterate((g) -> recurseTransform(g,mult));
+        gameObject.children();
     }
     
 

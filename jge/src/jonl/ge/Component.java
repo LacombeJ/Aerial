@@ -20,6 +20,10 @@ public abstract class Component {
         return gameObject.parent();
     }
     
+    public GameObject getParent() {
+    	return gameObject.getParent();
+    }
+    
     public Transform computeWorldTransform() {
         return gameObject.computeWorldTransform();
     }
@@ -40,7 +44,11 @@ public abstract class Component {
         return gameObject.getChildAt(index);
     }
     
-    public GameObject[] getChildren() {
+    public ArrayList<GameObject> children() {
+    	return gameObject.children();
+    }
+    
+    public ArrayList<GameObject> getChildren() {
         return gameObject.getChildren();
     }
     
