@@ -1,13 +1,19 @@
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
+plugins {
+    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'  
+}
+
+javaModule.name = 'jonl.jgl'
+
 dependencies {
     compile project(':modules:module-utils')
 }
 
 // ----------------------------------------------------------------------------
 
-/* LWJGL dependencies */
+// LWJGL dependencies //
 
 String[][] libs = [
     ['',        'lwjgl'         ,'lwjgl' ],
@@ -16,6 +22,8 @@ String[][] libs = [
     ['_opengl', 'lwjgl-opengl'  ,'lwjgl_opengl' ],
     ['_stb',    'lwjgl-stb'     ,'lwjgl_stb' ]
 ]
+
+FileCollection[] libFiles = new FileCollection[libs.length]
 
 //String arch = System.properties['sun.arch.data.model'] //arch type (32 or 64)
 
@@ -53,12 +61,17 @@ dependencies {
         String nativeFile = ref[i][1]
         
         compile files(jarFile)
+        libFiles[i] = files(jarFile)
     }
     
 }
 
 jar {
-    from configurations.compile.collect { zipTree it }
+    for (int i=0; i<ref.length; i++) {
+        from libFiles[i].collect {
+	        zipTree it
+        }
+    }
 }
 
 task extractNatives {

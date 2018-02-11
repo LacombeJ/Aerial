@@ -7,14 +7,19 @@ version = '0.0.1'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+
+boolean isModule(entry) {
+    //TODO find a better way to find a module
+    //Look at .classpath for eclipse entry kind
+    return entry.kind == 'src'
+}
 
 subprojects {
 
     apply plugin: 'java'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 9
+    targetCompatibility = 9
 
     sourceSets.main.java.srcDirs = ["src"]
     sourceSets.main.resources.srcDirs = ["src"]
@@ -22,6 +27,10 @@ subprojects {
     compileJava {
         options.fork = true
         options.incremental = true
+    }
+    
+    eclipse.classpath.file.whenMerged {
+        entries.findAll { isModule(it) }.each { it.entryAttributes['module'] = 'true' }
     }
 
 }
@@ -37,6 +46,8 @@ dependencies {
 jar {
     from configurations.compile.collect { zipTree it }
 }
+
+apply plugin: 'maven-publish'
 
 publishing {
     publications {
