@@ -11,13 +11,14 @@ apply plugin: 'eclipse'
 boolean isModule(entry) {
     //TODO find a better way to find a module
     //Look at .classpath for eclipse entry kind
-    return entry.kind == 'src'
+    return entry.kind == 'src' || entry.kind == 'lib'
 }
 
 subprojects {
 
     apply plugin: 'java'
-
+    apply plugin: 'eclipse'
+    
     sourceCompatibility = 9
     targetCompatibility = 9
 
@@ -27,6 +28,11 @@ subprojects {
     compileJava {
         options.fork = true
         options.incremental = true
+        doFirst {
+	        options.compilerArgs = [
+	            '--module-path', classpath.asPath,
+	        ]
+        }
     }
     
     eclipse.classpath.file.whenMerged {

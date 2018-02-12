@@ -1,11 +1,7 @@
 
+
+
 import org.apache.tools.ant.taskdefs.condition.Os
-
-plugins {
-    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'  
-}
-
-javaModule.name = 'jonl.jgl'
 
 dependencies {
     compile project(':modules:module-utils')

@@ -1,6 +1,4 @@
 
-plugins {
-    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'  
-}
+dependencies {
 
-javaModule.name = 'jonl.vmath'
+}
