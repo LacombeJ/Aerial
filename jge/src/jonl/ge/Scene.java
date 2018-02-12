@@ -28,7 +28,6 @@ public abstract class Scene {
     public void add(GameObject g) {
     	g.setScene(this);
         root.addChild(g);
-        System.out.println(root.getChildrenCount());
         if (created) {
         	g.create();
         }
