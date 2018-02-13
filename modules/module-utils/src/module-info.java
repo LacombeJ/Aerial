@@ -11,6 +11,7 @@ module jonl.utils {
 	exports jonl.jutils.func;
 	exports jonl.jutils.parallel;
 
-	requires java.desktop;
+	requires java.base;
+	requires transitive java.desktop;
     
 }
