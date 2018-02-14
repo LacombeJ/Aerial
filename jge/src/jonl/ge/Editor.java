@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import jonl.aui.Widget;
 import jonl.ge.Input.CursorState;
+import jonl.ge.base.Renderer;
+import jonl.ge.base.Updater;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jutils.misc.DataMap;

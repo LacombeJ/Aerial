@@ -1,5 +1,7 @@
 package jonl.ge;
 
+import jonl.ge.base.App;
+
 class AppWindow extends AbstractWindow {
 
     private App app;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import jonl.ge.base.App;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.misc.SystemUtils;
 

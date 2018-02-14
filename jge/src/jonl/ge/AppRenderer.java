@@ -6,6 +6,8 @@ import java.util.List;
 
 import jonl.jutils.misc.BufferPool;
 import jonl.ge.Material.Uniform;
+import jonl.ge.base.Renderer;
+import jonl.ge.base.Updater;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Blend;

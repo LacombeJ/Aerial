@@ -2,6 +2,7 @@ package jonl.ge;
 
 import java.util.List;
 
+import jonl.ge.base.Updater;
 import jonl.jgl.Program;
 import jonl.vmath.Vector3;
 

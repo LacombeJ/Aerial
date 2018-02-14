@@ -1,9 +1,15 @@
-package jonl.ge;
+package jonl.ge.base;
 
+import jonl.ge.Input;
+import jonl.ge.Module;
+import jonl.ge.Platform;
+import jonl.ge.Scene;
+import jonl.ge.Time;
+import jonl.ge.Window;
 import jonl.ge.Input.CursorState;
 import jonl.jutils.func.Callback0D;
 
-interface App {
+public interface App {
     
     void add(Scene scene);
     

@@ -1,4 +1,6 @@
-package jonl.ge;
+package jonl.ge.base;
+
+import jonl.ge.Scene;
 
 /**
  * Handles rendering a scene and should not modify the scene
@@ -6,7 +8,7 @@ package jonl.ge;
  * @author Jonathan Lacombe
  *
  */
-interface Renderer {
+public interface Renderer {
     
     /** Loads before window is shown */
     void load();

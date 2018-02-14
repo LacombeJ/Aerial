@@ -2,6 +2,7 @@ package jonl.ge;
 
 import java.util.HashMap;
 
+import jonl.ge.base.Updater;
 import jonl.jutils.func.List;
 
 class AppUpdater implements Updater {

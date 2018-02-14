@@ -1,4 +1,8 @@
-package jonl.ge;
+package jonl.ge.base;
+
+import jonl.ge.GameObject;
+import jonl.ge.Scene;
+import jonl.ge.Transform;
 
 /**
  * Updates the scene
@@ -6,7 +10,7 @@ package jonl.ge;
  * @author Jonathan Lacombe
  *
  */
-interface Updater {
+public interface Updater {
     
     /** Loads before window is shown */
     void load();

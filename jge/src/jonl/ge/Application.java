@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import jonl.jutils.io.Console;
 import jonl.jutils.misc.DataMap;
 import jonl.ge.Input.CursorState;
+import jonl.ge.base.Renderer;
+import jonl.ge.base.Updater;
 import jonl.jgl.AudioDevice;
 import jonl.jgl.AudioLibrary;
 import jonl.jgl.lwjgl.ALDevice;
