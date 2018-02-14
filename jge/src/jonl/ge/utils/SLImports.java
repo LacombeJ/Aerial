@@ -1,14 +1,14 @@
 package jonl.ge.utils;
 
-import jonl.ge.ShaderLanguage;
-import jonl.ge.ShaderLanguage.SLFloat;
-import jonl.ge.ShaderLanguage.SLFunc;
-import jonl.ge.ShaderLanguage.SLInclude;
-import jonl.ge.ShaderLanguage.SLIncludeLibrary;
-import jonl.ge.ShaderLanguage.SLMat3;
-import jonl.ge.ShaderLanguage.SLVec2;
-import jonl.ge.ShaderLanguage.SLVec3;
-import jonl.ge.ShaderLanguage.SLVec4;
+import jonl.ge.core.ShaderLanguage;
+import jonl.ge.core.ShaderLanguage.SLFloat;
+import jonl.ge.core.ShaderLanguage.SLFunc;
+import jonl.ge.core.ShaderLanguage.SLInclude;
+import jonl.ge.core.ShaderLanguage.SLIncludeLibrary;
+import jonl.ge.core.ShaderLanguage.SLMat3;
+import jonl.ge.core.ShaderLanguage.SLVec2;
+import jonl.ge.core.ShaderLanguage.SLVec3;
+import jonl.ge.core.ShaderLanguage.SLVec4;
 import jonl.jutils.func.Tuple2;
 
 public class SLImports {

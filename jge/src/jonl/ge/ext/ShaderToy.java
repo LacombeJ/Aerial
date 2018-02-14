@@ -1,10 +1,10 @@
 package jonl.ge.ext;
 
-import jonl.ge.Input;
-import jonl.ge.Material;
-import jonl.ge.Property;
-import jonl.ge.ShaderMaterial;
-import jonl.ge.Time;
+import jonl.ge.core.Input;
+import jonl.ge.core.Material;
+import jonl.ge.core.Property;
+import jonl.ge.core.ShaderMaterial;
+import jonl.ge.core.Time;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector4;
 

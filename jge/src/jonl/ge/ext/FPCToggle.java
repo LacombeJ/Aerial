@@ -1,8 +1,8 @@
 package jonl.ge.ext;
 
-import jonl.ge.Input;
-import jonl.ge.Input.CursorState;
-import jonl.ge.Property;
+import jonl.ge.core.Input;
+import jonl.ge.core.Property;
+import jonl.ge.core.Input.CursorState;
 
 public class FPCToggle extends Property {
     

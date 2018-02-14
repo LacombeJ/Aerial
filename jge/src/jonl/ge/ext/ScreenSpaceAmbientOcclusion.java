@@ -1,18 +1,17 @@
 package jonl.ge.ext;
 
+import jonl.ge.core.CameraExtension;
+import jonl.ge.core.RenderTarget;
+import jonl.ge.core.Texture;
+import jonl.ge.core.Transform;
+import jonl.ge.core.Texture.Filter;
+import jonl.ge.core.Texture.Internal;
+import jonl.ge.core.Texture.Wrap;
 import jonl.jutils.io.FileUtils;
 import jonl.vmath.MathUtil;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
-
-import jonl.ge.CameraExtension;
-import jonl.ge.RenderTarget;
-import jonl.ge.Texture;
-import jonl.ge.Transform;
-import jonl.ge.Texture.Filter;
-import jonl.ge.Texture.Internal;
-import jonl.ge.Texture.Wrap;
 
 /**
  * https://learnopengl.com/#!Advanced-Lighting/SSAO

@@ -1,8 +1,8 @@
 package jonl.ge.base;
 
-import jonl.ge.GameObject;
-import jonl.ge.Scene;
-import jonl.ge.Transform;
+import jonl.ge.core.GameObject;
+import jonl.ge.core.Scene;
+import jonl.ge.core.Transform;
 
 /**
  * Updates the scene

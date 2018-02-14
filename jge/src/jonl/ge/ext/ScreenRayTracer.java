@@ -1,7 +1,7 @@
 package jonl.ge.ext;
 
-import jonl.ge.Camera;
-import jonl.ge.Transform;
+import jonl.ge.core.Camera;
+import jonl.ge.core.Transform;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;

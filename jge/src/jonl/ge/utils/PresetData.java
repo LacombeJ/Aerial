@@ -1,6 +1,6 @@
 package jonl.ge.utils;
 
-import jonl.ge.MeshData;
+import jonl.ge.core.MeshData;
 import jonl.jgl.utils.Presets;
 
 public class PresetData {

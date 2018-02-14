@@ -1,8 +1,8 @@
 package jonl.ge.ext;
 
-import jonl.ge.Camera;
-import jonl.ge.Property;
-import jonl.ge.Window;
+import jonl.ge.core.Camera;
+import jonl.ge.core.Property;
+import jonl.ge.core.Window;
 
 /**
  * Camera property that updates viewport from updated window dimensions

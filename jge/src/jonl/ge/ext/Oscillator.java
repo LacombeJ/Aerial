@@ -1,6 +1,6 @@
 package jonl.ge.ext;
 
-import jonl.ge.Property;
+import jonl.ge.core.Property;
 
 /**
  * Class that oscillates value from min to max with given speed each step

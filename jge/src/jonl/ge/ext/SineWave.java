@@ -1,6 +1,6 @@
 package jonl.ge.ext;
 
-import jonl.ge.Property;
+import jonl.ge.core.Property;
 import jonl.vmath.Mathf;
 
 /**

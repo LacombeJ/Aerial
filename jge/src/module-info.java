@@ -3,8 +3,8 @@ module jonl.ge {
     
 	exports jonl.ge.ext;
 	exports jonl.ge.utils;
-	exports jonl.ge;
-
+	exports jonl.ge.core;
+	
 	requires java.base;
 	requires java.desktop;
 	

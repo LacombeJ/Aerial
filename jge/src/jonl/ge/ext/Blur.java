@@ -1,10 +1,10 @@
 package jonl.ge.ext;
 
+import jonl.ge.core.CameraExtension;
+import jonl.ge.core.RenderTarget;
 import jonl.jutils.io.FileUtils;
 import jonl.vmath.Mathf;
 import jonl.vmath.Vector3;
-import jonl.ge.CameraExtension;
-import jonl.ge.RenderTarget;
 
 /**
  * https://learnopengl.com/#!Advanced-Lighting/SSAO

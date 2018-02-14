@@ -1,7 +1,7 @@
 package jonl.ge.ext;
 
-import jonl.ge.Camera;
-import jonl.ge.Property;
+import jonl.ge.core.Camera;
+import jonl.ge.core.Property;
 
 /**
  * Camera property that updates aspect ratio of perspective from updated window dimensions

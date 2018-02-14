@@ -1,12 +1,12 @@
 package jonl.ge.base;
 
-import jonl.ge.Input;
-import jonl.ge.Module;
-import jonl.ge.Platform;
-import jonl.ge.Scene;
-import jonl.ge.Time;
-import jonl.ge.Window;
-import jonl.ge.Input.CursorState;
+import jonl.ge.core.Input;
+import jonl.ge.core.Module;
+import jonl.ge.core.Platform;
+import jonl.ge.core.Scene;
+import jonl.ge.core.Time;
+import jonl.ge.core.Window;
+import jonl.ge.core.Input.CursorState;
 import jonl.jutils.func.Callback0D;
 
 public interface App {

@@ -1,6 +1,6 @@
 package jonl.ge.base;
 
-import jonl.ge.Scene;
+import jonl.ge.core.Scene;
 
 /**
  * Handles rendering a scene and should not modify the scene

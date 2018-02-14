@@ -1,8 +1,8 @@
 package jonl.ge.ext;
 
-import jonl.ge.Camera;
-import jonl.ge.Input;
-import jonl.ge.InputEvent;
+import jonl.ge.core.Camera;
+import jonl.ge.core.Input;
+import jonl.ge.core.InputEvent;
 
 public class ProjectionToggle extends Toggle {
     
