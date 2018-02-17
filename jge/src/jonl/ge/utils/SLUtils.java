@@ -1,10 +1,10 @@
 package jonl.ge.utils;
 
-import jonl.ge.core.ShaderLanguage;
-import jonl.ge.core.ShaderLanguage.SLBool;
-import jonl.ge.core.ShaderLanguage.SLFloat;
-import jonl.ge.core.ShaderLanguage.SLFunc;
-import jonl.ge.core.ShaderLanguage.SLVec2;
+import jonl.ge.core.material.ShaderLanguage;
+import jonl.ge.core.material.ShaderLanguage.SLBool;
+import jonl.ge.core.material.ShaderLanguage.SLFloat;
+import jonl.ge.core.material.ShaderLanguage.SLFunc;
+import jonl.ge.core.material.ShaderLanguage.SLVec2;
 import jonl.jutils.func.Tuple2;
 
 public class SLUtils {

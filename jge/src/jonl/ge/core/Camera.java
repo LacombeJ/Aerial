@@ -3,6 +3,7 @@ package jonl.ge.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import jonl.jutils.misc.ArrayUtils;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
@@ -59,6 +60,10 @@ public class Camera extends Component {
     
     public float far() { return far; }
     
+    public int getOrder() {
+    	return order;
+    }
+    
     public void setOrder(int order) {
     	this.order = order;
     }
@@ -71,14 +76,13 @@ public class Camera extends Component {
      * @param far
      * @return
      */
-    public Camera setPerspective(float fov, float aspect, float near, float far) {
+    public void setPerspective(float fov, float aspect, float near, float far) {
         orthographic = false;
         this.fov = fov;
         this.aspect = aspect;
         this.near = near;
         this.far = far;
         projection = Matrix4.perspective(fov,aspect,near,far);
-        return this;
     }
     
     /**
@@ -89,30 +93,27 @@ public class Camera extends Component {
      * @param far
      * @return
      */
-    public Camera setOrthographic(float height, float aspect, float near, float far) {
+    public void setOrthographic(float height, float aspect, float near, float far) {
         orthographic = true;
         this.height = height;
         this.aspect = aspect;
         this.near = near;
         this.far = far;
         projection = Matrix4.orthographic(height,aspect,near,far);
-        return this;
     }
     
-    public Camera setOrthographicBox(float height, float width, float near, float far) {
-        return setOrthographic(height,width/height,near,far);
+    public void setOrthographicBox(float height, float width, float near, float far) {
+        setOrthographic(height,width/height,near,far);
     }
     
-    public Camera setPerspective() {
+    public void setPerspective() {
         orthographic = false;
         projection = Matrix4.perspective(fov,aspect,near,far);
-        return this;
     }
     
-    public Camera setOrthographic() {
+    public void setOrthographic() {
         orthographic = true;
         projection = Matrix4.orthographic(height,aspect,near,far);
-        return this;
     }
     
     public boolean isOrthograpic() {
@@ -134,17 +135,25 @@ public class Camera extends Component {
         viewTop = top;
     }
     
+    /** @return Vector4(left, bottom, right, top) */
     public Vector4 getViewport() {
         return new Vector4(viewLeft,viewBottom,viewRight,viewTop);
     }
     
-    public Camera setClearColor(float[] color) {
+    public float[] getClearColor() {
+    	return ArrayUtils.copy(clearColor);
+    }
+    
+    public void setClearColor(float[] color) {
         clearColor = color;
-        return this;
     }
     
     public void setClearColor(float r, float g, float b, float a) {
         clearColor = new float[]{r,g,b,a};
+    }
+    
+    public boolean scissorEnabled() {
+    	return scissor;
     }
     
     public void setScissor(boolean scissor) {

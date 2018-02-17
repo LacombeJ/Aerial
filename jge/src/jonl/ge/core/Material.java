@@ -1,23 +1,17 @@
 package jonl.ge.core;
 
-import java.util.List;
-
+import jonl.ge.base.BaseMaterial;
+import jonl.ge.core.material.GeneratedMaterial;
+import jonl.ge.core.material.GeneratedShader;
+import jonl.ge.core.material.ShaderMaterial;
+import jonl.ge.core.material.SolidMaterial;
+import jonl.ge.core.material.StandardMaterial;
+import jonl.ge.core.material.TextureMaterial;
 import jonl.jutils.misc.TypeUtils;
 
-public abstract class Material {
+public abstract class Material extends BaseMaterial {
     
-    abstract List<Uniform> uniforms();
     
-    abstract String shaderKey();
-    
-    class Uniform {
-        String name;
-        Object data;
-        Uniform(String name, Object data) {
-            this.name = name;
-            this.data = data;
-        }
-    }
     
     /**
      * Available uniform object primitives and classes:

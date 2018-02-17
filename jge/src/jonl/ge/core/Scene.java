@@ -2,18 +2,23 @@
 
 import java.util.ArrayList;
 
-import jonl.ge.base.App;
+import jonl.ge.base.BaseScene;
+import jonl.ge.base.app.AbstractApplication;
 import jonl.ge.core.Input.CursorState;
 import jonl.jutils.func.List;
 import jonl.jutils.structs.TreeForest;
 
-public abstract class Scene {
+public class Scene extends BaseScene {
     
-	TreeForest<GameObject> root = null;
     String name = "Scene";
-    App application;
+    AbstractApplication application;
     boolean persistent = false;
     boolean created = false;
+    ArrayList<GameObject> priors = new ArrayList<>();
+    
+    public Scene() {
+    	root = new TreeForest<>();
+    }
     
     public String getName() {
         return name;
@@ -22,31 +27,31 @@ public abstract class Scene {
     public void setName(String name) {
         this.name = name;
     }
-
-    /** Adds GameObjects and assigns Components to them */
-    protected abstract void prepare();
     
     public void add(GameObject g) {
     	g.setScene(this);
         root.addChild(g);
         if (created) {
         	g.create();
+        } else {
+        	priors.add(g);
         }
     }
 
     /**
      * Resets scene unless persistent
      */
-    void create() {
+    @Override
+    protected void create() {
         if (root==null || !persistent) {
-            root = new TreeForest<>();
-            prepare();
-            List.iterate(root.getChildren(), (g)->g.create()); //copy of children to prevent concurrent modification
+            List.iterate(priors, (g)->g.create());
+            priors = new ArrayList<>();
             created = true;
         }
     }
     
-    void update() {
+    @Override
+    protected void update() {
     	List.iterate(root.getChildren(), (g)->g.update()); //copy of children to prevent concurrent modification
     }
     
@@ -89,8 +94,8 @@ public abstract class Scene {
     	return root.getDescendants((g)->true);
     }
     
-    public Input getInput() {
-        return application.getInput();
+    public Input input() {
+        return application.input();
     }
     
     public CursorState getCursorState() {
@@ -101,16 +106,24 @@ public abstract class Scene {
         application.setCursorState(state);
     }
     
-    public Window getWindow() {
-        return application.getWindow();
+    public Window window() {
+        return application.window();
     }
     
-    public String getInfo(String key) {
-        return application.getInfo(key);
+    public String info(String key) {
+        return application.info(key);
     }
     
-    public Time getTime() {
-        return application.getTime();
+    public Time time() {
+        return application.time();
+    }
+    
+    public Delegate delegate() {
+    	return application.delegate();
+    }
+    
+    public Service service() {
+    	return application.service();
     }
     
     @Override

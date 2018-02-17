@@ -1,20 +1,21 @@
 package jonl.ge.core;
 
+import jonl.ge.base.BaseTime;
 import jonl.jutils.time.Clock;
 import jonl.jutils.time.TimeMetric;
 import jonl.jutils.time.TimeUtils;
 
-public class Time {
+public class Time extends BaseTime {
 
     private Clock clock;
     private long timeSinceStart;
     
-    Time() {
+    public Time() {
         clock = new Clock();
     }
     
-    /** Call this only once per frame by application */
-    void update() {
+    @Override
+    protected void update() {
         timeSinceStart = clock.lap();
     }
     

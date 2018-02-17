@@ -3,16 +3,15 @@ package jonl.ge.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import jonl.ge.base.BaseSceneObject;
 import jonl.ge.core.Input.CursorState;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.List;
-import jonl.jutils.structs.TreeNode;
 import jonl.vmath.Matrix4;
 
-public final class GameObject extends TreeNode<GameObject> {
+public final class GameObject extends BaseSceneObject<GameObject> {
     
     String name = "GameObject";
-    final Transform transform = new Transform();
     
     private Scene scene;
     final ArrayList<Component> components = new ArrayList<>();
@@ -20,10 +19,11 @@ public final class GameObject extends TreeNode<GameObject> {
     private final HashMap<String,Object> dataMap = new HashMap<>();
     
     public GameObject() {
-        
+        transform = new Transform();
     }
     
     public GameObject(String name) {
+    	super();
         setName(name);
     }
     
@@ -175,7 +175,7 @@ public final class GameObject extends TreeNode<GameObject> {
     }
     
     public Input input() {
-        return scene.getInput();
+        return scene.input();
     }
     
     public CursorState getCursorState() {
@@ -187,15 +187,23 @@ public final class GameObject extends TreeNode<GameObject> {
     }
     
     public Window window() {
-        return scene.getWindow();
+        return scene.window();
     }
     
     public String info(String key) {
-        return scene.getInfo(key);
+        return scene.info(key);
     }
     
     public Time time() {
-        return scene.getTime();
+        return scene.time();
+    }
+    
+    public Delegate delegate() {
+    	return scene.delegate();
+    }
+    
+    public Service service() {
+    	return scene.service();
     }
     
     public void putData(String key, Object data) {

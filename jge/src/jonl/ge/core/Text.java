@@ -1,5 +1,6 @@
 package jonl.ge.core;
 
+import jonl.ge.base.app.AppUtil;
 import jonl.jgl.utils.FontUtils;
 import jonl.jutils.misc.ArrayUtils;
 

@@ -116,4 +116,12 @@ public abstract class Component {
         return gameObject.time();
     }
     
+    public Delegate delegate() {
+    	return gameObject.delegate();
+    }
+    
+    public Service service() {
+    	return gameObject.service();
+    }
+    
 }

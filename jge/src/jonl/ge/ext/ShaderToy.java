@@ -3,8 +3,8 @@ package jonl.ge.ext;
 import jonl.ge.core.Input;
 import jonl.ge.core.Material;
 import jonl.ge.core.Property;
-import jonl.ge.core.ShaderMaterial;
 import jonl.ge.core.Time;
+import jonl.ge.core.material.ShaderMaterial;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector4;
 

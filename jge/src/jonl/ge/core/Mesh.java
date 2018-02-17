@@ -13,16 +13,10 @@ public class Mesh extends Component {
     boolean wireframe = false;
     
     public enum Mode {
-        TRIANGLES(jonl.jgl.GraphicsLibrary.Mode.TRIANGLES),
-        LINES(jonl.jgl.GraphicsLibrary.Mode.LINES),
-        LINE_STRIP(jonl.jgl.GraphicsLibrary.Mode.LINE_STRIP),
-        POINTS(jonl.jgl.GraphicsLibrary.Mode.POINTS);
-        
-        final jonl.jgl.GraphicsLibrary.Mode mode;
-        
-        Mode(jonl.jgl.GraphicsLibrary.Mode mode) {
-            this.mode = mode;
-        }
+        TRIANGLES,
+        LINES,
+        LINE_STRIP,
+        POINTS;
     }
     
     public Mesh(Geometry mesh, Material material) {
@@ -52,6 +46,10 @@ public class Mesh extends Component {
     
     public void setMode(Mode mode) {
         this.mode = mode;
+    }
+    
+    public boolean isWireframe() {
+    	return wireframe;
     }
     
     public void setWireframe(boolean wireframe) {

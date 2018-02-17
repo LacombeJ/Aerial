@@ -2,6 +2,8 @@ package jonl.ge.core;
 
 import java.util.ArrayList;
 
+import jonl.jutils.func.List;
+
 public class FrameBuffer {
 
     final ArrayList<Texture> textures = new ArrayList<>();
@@ -16,6 +18,18 @@ public class FrameBuffer {
     public FrameBuffer(Texture texture) {
         this(texture.width,texture.height);
         textures.add(texture);
+    }
+    
+    public int width() {
+    	return width;
+    }
+    
+    public int height() {
+    	return height;
+    }
+    
+    public ArrayList<Texture> textures() {
+    	return List.copy(textures);
     }
     
     public void attach(Texture texture) {

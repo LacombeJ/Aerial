@@ -18,6 +18,22 @@ public final class Font {
         this.antialias = antialias;
     }
     
+    public String font() {
+    	return font;
+    }
+    
+    public int type() {
+    	return type;
+    }
+    
+    public int size() {
+    	return size;
+    }
+    
+    public boolean antialias() {
+    	return antialias;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Font) {
@@ -32,7 +48,5 @@ public final class Font {
     public int hashCode() {
         return font.hashCode() + type + size + (antialias ? 1 : 0);
     }
-    
-    
     
 }
