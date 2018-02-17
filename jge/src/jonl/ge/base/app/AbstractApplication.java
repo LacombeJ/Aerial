@@ -1,5 +1,9 @@
 package jonl.ge.base.app;
 
+import java.util.HashMap;
+
+import jonl.ge.base.render.LightModule;
+import jonl.ge.core.Attachment;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Input;
 import jonl.ge.core.Platform;
@@ -20,6 +24,7 @@ public abstract class AbstractApplication {
     protected Delegate delegate;
     protected Service service;
     protected DataMap info;
+    protected HashMap<String,Attachment> attachments;
 	
     protected AbstractApplication() {
     	if (SystemUtils.isWindows()) {
@@ -31,6 +36,9 @@ public abstract class AbstractApplication {
         delegate = new Delegate();
         service = new Service();
         info = new DataMap();
+        attachments = new HashMap<>();
+        
+        add(new LightModule());
     }
     
     // -------------------------------------------------------
@@ -67,6 +75,28 @@ public abstract class AbstractApplication {
     
     public Service service() {
     	return service;
+    }
+    
+    public void add(Attachment attach) {
+    	Attachment prev = attachments.put(attach.getName(), attach);
+    	if (prev != null) {
+    	    prev.remove(delegate, service);
+    	}
+    	attach.add(delegate, service);
+    }
+    
+    public void remove(String key) {
+    	Attachment attach = attachments.remove(key);
+    	if (attach != null) {
+    	    attach.remove(delegate, service);
+    	}
+    }
+    
+    public void remove(Attachment attach) {
+        boolean removed = attachments.remove(attach.getName(), attach);
+        if (removed) {
+            attach.remove(delegate, service);
+        }
     }
     
     public Platform platform() {

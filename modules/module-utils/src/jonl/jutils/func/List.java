@@ -17,7 +17,7 @@ public class List
 		return ret;
 	}
 	
-	public static <X> ArrayList<X> list(ArrayList<X> list) {
+	public static <X> ArrayList<X> list(java.util.List<X> list) {
 		ArrayList<X> ret = new ArrayList<>();
 		ret.addAll(list);
 		return ret;
@@ -29,7 +29,7 @@ public class List
 		return ret;
 	}
 	
-	public static <X,Y> ArrayList<Y> map(ArrayList<X> list, Function<X,Y> function) {
+	public static <X,Y> ArrayList<Y> map(java.util.List<X> list, Function<X,Y> function) {
 		ArrayList<Y> ret = new ArrayList<>(list.size());
 		for (X x : list) {
 			ret.add(function.f(x));
@@ -47,7 +47,7 @@ public class List
 	
 	
 	
-	public static <X> ArrayList<X> filter(ArrayList<X> list, Function<X,Boolean> condition) {
+	public static <X> ArrayList<X> filter(java.util.List<X> list, Function<X,Boolean> condition) {
 		ArrayList<X> ret = new ArrayList<>();
 		for (X x : list) {
 			if (condition.f(x)) {
@@ -57,7 +57,7 @@ public class List
 		return ret;
 	}
 	
-	public static <X> ArrayList<X> repeat(ArrayList<X> list, int n) {
+	public static <X> ArrayList<X> repeat(java.util.List<X> list, int n) {
 	    ArrayList<X> ret = new ArrayList<>();
 	    for (int i=0; i<n; i++) {
 	        ret.addAll(list);
@@ -65,7 +65,7 @@ public class List
 	    return ret;
 	}
 	
-	public static <X,Y> Y accumulate(ArrayList<X> list, Function2D<X,Y,Y> function, Y y) {
+	public static <X,Y> Y accumulate(java.util.List<X> list, Function2D<X,Y,Y> function, Y y) {
 	    if (list.size()==0) return null;
 	    Y accum = y;
 	    for (int i=0; i<list.size(); i++) {
@@ -74,7 +74,7 @@ public class List
 	    return accum;
 	}
 	
-	public static <X> X reduce(ArrayList<X> list, Function2D<X,X,X> function) {
+	public static <X> X reduce(java.util.List<X> list, Function2D<X,X,X> function) {
 	    if (list.size()==0) return null;
 		X accum = list.get(0);
 		for (int i=1; i<list.size(); i++) {
@@ -83,7 +83,7 @@ public class List
 		return accum;
 	}
 
-	public static <X> Tuple2<ArrayList<X>,ArrayList<X>> split(ArrayList<X> list, Function<X,Boolean> condition) {
+	public static <X> Tuple2<ArrayList<X>,ArrayList<X>> split(java.util.List<X> list, Function<X,Boolean> condition) {
 		ArrayList<X> trueGroup = new ArrayList<>();
 		ArrayList<X> falseGroup = new ArrayList<>();
 		for (X x : list) {
@@ -96,7 +96,7 @@ public class List
 		return new Tuple2<ArrayList<X>,ArrayList<X>>(trueGroup,falseGroup);
 	}
 	
-	public static <X,Y> ArrayList<Y> gather(ArrayList<X> list, Function<X,ArrayList<Y>> function) {
+	public static <X,Y> ArrayList<Y> gather(java.util.List<X> list, Function<X,java.util.List<Y>> function) {
 		ArrayList<Y> ret = new ArrayList<>();
 		for (X x : list) {
 			ret.addAll(function.f(x));
@@ -104,44 +104,44 @@ public class List
 		return ret;
 	}
 	
-	public static <X> void iterate(ArrayList<X> list, Callback<X> callback) {
+	public static <X> void iterate(java.util.List<X> list, Callback<X> callback) {
 		for (X x : list) {
 			callback.f(x);
 		}
 	}
 	
-	public static <X> X first(ArrayList<X> list) {
+	public static <X> X first(java.util.List<X> list) {
 		return list.get(0);
 	}
 	
-	public static <X> X last(ArrayList<X> list) {
+	public static <X> X last(java.util.List<X> list) {
 		return list.get(list.size()-1);
 	}
 	
-	public static <X> ArrayList<X> first(ArrayList<X> list, int n) {
+	public static <X> ArrayList<X> first(java.util.List<X> list, int n) {
         return sub(list,0,n);
     }
     
-	public static <X> ArrayList<X> last(ArrayList<X> list, int n) {
+	public static <X> ArrayList<X> last(java.util.List<X> list, int n) {
         return sub(list, list.size()-n, list.size());
     }
 	
-	public static <X> void setFirst(ArrayList<X> list, X x) {
+	public static <X> void setFirst(java.util.List<X> list, X x) {
         list.set(0, x);
     }
     
-    public static <X> void setFirst(ArrayList<X> list, ArrayList<X> x) {
+    public static <X> void setFirst(java.util.List<X> list, java.util.List<X> x) {
         int addLen = x.size();
         for (int i=0; i<addLen; i++) {
             list.set(i,x.get(i));
         }
     }
 
-    public static <X> void setLast(ArrayList<X> list, X x) {
+    public static <X> void setLast(java.util.List<X> list, X x) {
         list.set(list.size()-1, x);
     }
     
-    public static <X> void setLast(ArrayList<X> list, ArrayList<X> x) {
+    public static <X> void setLast(java.util.List<X> list, java.util.List<X> x) {
         int listLen = list.size();
         int addLen = x.size();
         for (int i=listLen-addLen, j=0; i<listLen; i++, j++) {
@@ -149,7 +149,7 @@ public class List
         }
     }
 	
-    public static <X> ArrayList<X> sub(ArrayList<X> list, int fromIndex, int toIndex) {
+    public static <X> ArrayList<X> sub(java.util.List<X> list, int fromIndex, int toIndex) {
         subListRangeCheck(fromIndex, toIndex, list.size());
         ArrayList<X> ret = new ArrayList<X>();
         for (int i=fromIndex; i<toIndex; i++) {
@@ -168,7 +168,7 @@ public class List
                                                ") > toIndex(" + toIndex + ")");
     }
 	
-	public static <X> boolean contains(ArrayList<X> list, Function<X,Boolean> contains) {
+	public static <X> boolean contains(java.util.List<X> list, Function<X,Boolean> contains) {
 		for (X x : list) {
 			if (contains.f(x)) {
 				return true;
@@ -177,21 +177,21 @@ public class List
 		return false;
 	}
 	
-	public static <X> ArrayList<X> addFirst(ArrayList<X> list, X first) {
+	public static <X> ArrayList<X> addFirst(java.util.List<X> list, X first) {
 		ArrayList<X> concat = new ArrayList<>();
 		concat.add(first);
 		concat.addAll(list);
 		return concat;
 	}
 	
-	public static <X> ArrayList<X> addLast(ArrayList<X> list, X last) {
+	public static <X> ArrayList<X> addLast(java.util.List<X> list, X last) {
 		ArrayList<X> concat = new ArrayList<>();
 		concat.addAll(list);
 		concat.add(last);
 		return concat;
 	}
 	
-	public static <X,Y> ArrayList<Y> enumerate(ArrayList<X> list, Function2D<X,Integer,Y> function) {
+	public static <X,Y> ArrayList<Y> enumerate(java.util.List<X> list, Function2D<X,Integer,Y> function) {
 		ArrayList<Y> ret = new ArrayList<>(list.size());
 		for (int i=0; i<list.size(); i++) {
 			X x = list.get(i);
@@ -200,7 +200,7 @@ public class List
 		return ret;
 	}
 	
-	public static <X> ArrayList<ArrayList<X>> divide(ArrayList<X> list, Function2D<X,X,Boolean> condition) {
+	public static <X> ArrayList<ArrayList<X>> divide(java.util.List<X> list, Function2D<X,X,Boolean> condition) {
 		
 		ArrayList<ArrayList<X>> map = reduce(
 			map(list, x -> wrap(wrap(x))) ,
@@ -216,21 +216,21 @@ public class List
 		return map==null ? new ArrayList<ArrayList<X>>() : map;
 	}
 	
-	public static <X> ArrayList<X> copy(ArrayList<X> list) {
+	public static <X> ArrayList<X> copy(java.util.List<X> list) {
 		return map(list, x -> x);
 	}
 	
-	public static <X> ArrayList<X> copy(ArrayList<X> list, Function<X,X> copy) {
+	public static <X> ArrayList<X> copy(java.util.List<X> list, Function<X,X> copy) {
 		return map(list, copy);
 	}
 	
-	public static <X> ArrayList<X> order(ArrayList<X> list, Function2D<X,X,Integer> compare) {
+	public static <X> ArrayList<X> order(java.util.List<X> list, Function2D<X,X,Integer> compare) {
 		ArrayList<X> sorted = copy(list, x->x);
 		sorted.sort(new FunctionComparator<X>(compare));
 		return sorted;
 	}
 	
-	public static <X> ArrayList<ArrayList<X>> bin(ArrayList<X> list, Function<X,Integer> generator) {
+	public static <X> ArrayList<ArrayList<X>> bin(java.util.List<X> list, Function<X,Integer> generator) {
 		ArrayList<Tuple2<X,Integer>> list0 = map(list, x -> new Tuple2<>(x,generator.f(x)));
 		ArrayList<Tuple2<X,Integer>> list1 = order(list0, (t0,t1) -> TypeUtils.compare(t0.y,t1.y));
 		ArrayList<ArrayList<Tuple2<X,Integer>>> list2 = divide(list1, (t0,t1) -> t0.y==t1.y);
@@ -238,7 +238,7 @@ public class List
 		return list3;
 	}
 	
-	public static <X> ArrayList<ArrayList<X>> bin(ArrayList<X> list, Function2D<X,X,Boolean> unique) {
+	public static <X> ArrayList<ArrayList<X>> bin(java.util.List<X> list, Function2D<X,X,Boolean> unique) {
 	    ArrayList<ArrayList<X>> ret =
     		reduce(
 	    		map(list, x -> wrap(wrap(x))),
@@ -255,7 +255,7 @@ public class List
 	    return ret==null ? new ArrayList<ArrayList<X>>() : ret;
 	}
 	
-	public static <X> X find(ArrayList<X> list, Function<X,Boolean> function) {
+	public static <X> X find(java.util.List<X> list, Function<X,Boolean> function) {
 	    for (X x : list) {
 	        if (function.f(x)) {
 	            return x;
@@ -264,7 +264,7 @@ public class List
 	    return null;
 	}
 	
-	public static <X> int index(ArrayList<X> list, Function<X,Boolean> function) {
+	public static <X> int index(java.util.List<X> list, Function<X,Boolean> function) {
 	    for (int i=0; i<list.size(); i++) {
 	        if (function.f(list.get(i))) {
                 return i;
@@ -273,7 +273,7 @@ public class List
 	    return -1;
 	}
 	
-	public static <X> int[] toIntArray(ArrayList<X> list) {
+	public static <X> int[] toIntArray(java.util.List<X> list) {
 	    int[] array = new int[list.size()];
 	    for (int i=0; i<array.length; i++) {
 	        array[i] = (int)(Integer) list.get(i);
@@ -281,7 +281,7 @@ public class List
 	    return array;
 	}
 	
-	public static <X> float[] toFloatArray(ArrayList<X> list) {
+	public static <X> float[] toFloatArray(java.util.List<X> list) {
         float[] array = new float[list.size()];
         for (int i=0; i<array.length; i++) {
             array[i] = (float)(Float) list.get(i);

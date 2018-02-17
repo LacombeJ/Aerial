@@ -1,9 +1,9 @@
 package jonl.ge.core;
 
 import jonl.aui.Widget;
-import jonl.ge.base.SceneManager;
 import jonl.ge.base.app.AppUtil;
 import jonl.ge.base.app.ApplicationWindow;
+import jonl.ge.base.SceneManager;
 import jonl.ge.base.app.AbstractApplication;
 import jonl.ge.base.app.EditorAssets;
 import jonl.ge.base.app.EditorGUI;
@@ -11,7 +11,6 @@ import jonl.ge.base.app.EditorInput;
 import jonl.ge.core.Input.CursorState;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Target;
-import jonl.jutils.func.List;
 
 public class Editor extends AbstractApplication {
 
@@ -36,14 +35,13 @@ public class Editor extends AbstractApplication {
         gl = glWindow.getGraphicsLibrary();
         input = new EditorInput(gui.editorViewer,gui.window.getInput());
         window = new ApplicationWindow(this);
-        manager.create(service, glWindow.getGraphicsLibrary());
+        manager.create(delegate, service, glWindow.getGraphicsLibrary());
         
         initialize();
         
         gui.window.setLoader(()->{
             putInfo();
             manager.load();
-            List.iterate(delegate().onLoad(), (cb) -> cb.f() );
         });
         
         gui.editorViewer.addPainter((g)->{
@@ -55,7 +53,6 @@ public class Editor extends AbstractApplication {
                 gl.glEnable(Target.DEPTH_TEST);
                 int[] box = gl.glGetScissor();
                 manager.update();
-                List.iterate(delegate().onUpdate(), (cb) -> cb.f() );
                 gl.glScissor(box);
                 gl.glDisable(Target.CULL_FACE);
                 gl.glDisable(Target.DEPTH_TEST);
@@ -64,7 +61,7 @@ public class Editor extends AbstractApplication {
         });
         
         gui.window.setCloser(()->{
-        	List.iterate(delegate().onClose(), (cb) -> cb.f() );
+        	manager.close();
         });
 	}
 	

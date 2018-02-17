@@ -66,6 +66,8 @@ public class SceneRenderer {
         ArrayList<Light> lights = scene.findComponents(Light.class);
         ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
         
+        jonl.jutils.func.List.iterate(manager.delegate().onFindLights(), (cb) -> cb.f(lights) );
+        
         // Sort cameras from lowest to highest rendering order
         cameras.sort((Camera c0, Camera c1)->{
         	return Integer.compare(c0.getOrder(), c1.getOrder());
@@ -87,6 +89,10 @@ public class SceneRenderer {
         renderCamera(camera,lights,gameObjects);
     }
     
+    ArrayList<Light> copy(List<Light> lights) {
+        return jonl.jutils.func.List.copy(lights);
+    }
+    
     private void renderCamera(Camera camera, List<Light> lights, List<GameObject> gameObjects) {
         Matrix4 V = setupCamera(camera);
         Matrix4 P = camera.getProjection();
@@ -97,6 +103,8 @@ public class SceneRenderer {
             if (targetInvalid(camera,g)) {
                 continue;
             }
+            
+            jonl.jutils.func.List.iterate(manager.delegate().onGameObjectRender(), (cb) -> cb.f(g,camera) );
             
             Matrix4 M = gameObjectTransform(g);
             
@@ -125,9 +133,7 @@ public class SceneRenderer {
                     glr.setUniform(program,u.name,u.data);
                 }
                 
-                if (mesh.recieveLight) {
-                	//ModuleLight.setUniforms(app.getModule(ModuleLight.class), updater, program, lights, camera);
-                }
+                jonl.jutils.func.List.iterate(manager.delegate().onProgramUpdate(), (cb) -> cb.f(program,mat,camera) );
                 
                 if (mesh.cullFace) {
                     gl.glEnable(Target.CULL_FACE);

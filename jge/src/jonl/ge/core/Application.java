@@ -9,7 +9,6 @@ import jonl.jgl.AudioDevice;
 import jonl.jgl.AudioLibrary;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
-import jonl.jutils.func.List;
 import jonl.jutils.io.Console;
 
 public class Application extends AbstractApplication {
@@ -48,14 +47,12 @@ public class Application extends AbstractApplication {
         
         input = new ApplicationInput(glWindow.getInput());
         window = new ApplicationWindow(this);
-        manager.create(service, glWindow.getGraphicsLibrary());
+        manager.create(delegate, service, glWindow.getGraphicsLibrary());
         
         glWindow.setLoader(()->{
             putInfo();
             manager.load();
-            List.iterate(delegate().onLoad(), (cb) -> cb.f() );
             manager.update();
-            List.iterate(delegate().onUpdate(), (cb) -> cb.f() );
         });
         
         glWindow.setRunner(()->{
@@ -64,14 +61,13 @@ public class Application extends AbstractApplication {
                 //when synchronization is not used between two windows
                 synchronized (Application.class) {
                     manager.update();
-                    List.iterate(delegate().onUpdate(), (cb) -> cb.f() );
                 }
             }
         });
         
         glWindow.setCloser(()->{
+            manager.close();
             audio.destroy();
-            List.iterate(delegate().onClose(), (cb) -> cb.f() );
         });
         
         glWindow.addSizeListener((w,h,pw,ph)->{

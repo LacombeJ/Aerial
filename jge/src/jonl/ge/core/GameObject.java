@@ -23,7 +23,7 @@ public final class GameObject extends BaseSceneObject<GameObject> {
     }
     
     public GameObject(String name) {
-    	super();
+    	this();
         setName(name);
     }
     

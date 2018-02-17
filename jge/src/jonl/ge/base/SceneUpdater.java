@@ -2,15 +2,23 @@ package jonl.ge.base;
 
 import java.util.HashMap;
 
+import jonl.ge.core.GameObject;
+import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
-import jonl.jutils.io.Console;
+import jonl.jutils.func.List;
 
 public class SceneUpdater {
 	
+    private SceneManager manager;
+    
 	private HashMap<BaseSceneObject<?>,Transform> worldTransformMap = new HashMap<>();
 	
-	public SceneUpdater() {
-		
+	public SceneUpdater(SceneManager manager, Service service) {
+	    
+	    this.manager = manager;
+	    
+	    service.implementGetWorldTransform( (g) -> getWorldTransform(g) );
+	    
 	}
 	
 	void update(BaseScene scene) {
@@ -35,7 +43,7 @@ public class SceneUpdater {
     private void recurseTransform(BaseSceneObject<?> gameObject, Transform transform) {
         //TODO dont compute matrix for static objects?
         //TODO keep premultiplied matrices for static objects and static children?
-    	Console.log(gameObject, gameObject.transform);
+        List.iterate(manager.delegate().onParentWorldTransformUpdate(), (cb) -> cb.f((GameObject) gameObject, transform) );
         Transform mult = gameObject.transform.get().multiply(transform);
         worldTransformMap.put(gameObject,mult);
         gameObject.iterate((g) -> recurseTransform((BaseSceneObject<?>) g,mult));
