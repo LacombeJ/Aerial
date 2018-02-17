@@ -1,13 +1,15 @@
-package jonl.ge.core;
+package jonl.ge.utils;
 
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 
 import jonl.jutils.misc.BufferPool;
 import jonl.jutils.misc.ImageUtils;
+import jonl.ge.core.Texture;
 import jonl.ge.core.Texture.Filter;
 import jonl.ge.core.Texture.Internal;
 import jonl.ge.core.Texture.Wrap;
+import jonl.ge.core.geometry.Geometry;
 import jonl.jgl.utils.MeshLoader;
 
 public class Loader {

@@ -1,5 +1,6 @@
-package jonl.ge.core;
+package jonl.ge.core.light;
 
+import jonl.ge.core.Component;
 import jonl.vmath.Vector3;
 
 public class Light extends Component {

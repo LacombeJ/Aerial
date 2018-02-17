@@ -2,7 +2,7 @@ package jonl.ge.base.app;
 
 import java.util.HashMap;
 
-import jonl.ge.base.render.LightModule;
+import jonl.ge.base.light.LightModule;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Input;

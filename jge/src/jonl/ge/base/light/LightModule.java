@@ -1,4 +1,4 @@
-package jonl.ge.base.render;
+package jonl.ge.base.light;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import jonl.ge.base.app.AppUtil;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Camera;
 import jonl.ge.core.Delegate;
-import jonl.ge.core.Light;
 import jonl.ge.core.Material;
 import jonl.ge.core.Service;
+import jonl.ge.core.light.Light;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback3D;

@@ -1,17 +1,11 @@
-package jonl.ge.core;
+package jonl.ge.core.geometry;
 
 import jonl.ge.base.BaseGeometry;
-import jonl.ge.core.geometry.GeometryOperation;
 import jonl.vmath.MathUtil;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 
 public class Geometry extends BaseGeometry {
-    
-    private boolean staticData = true;
-    private boolean changed = true;
-    
-    boolean instancedSet = false;
     
     public Geometry() {
         
@@ -31,22 +25,11 @@ public class Geometry extends BaseGeometry {
     }
     
     protected void set(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
+        update = true;
         this.vertices = vertices;
         this.normals = normals;
         this.texCoords = texCoords;
         this.indices = indices;
-    }
-    
-    /** Sets whether this mesh will free its mesh data after it is loaded into the GL */
-    public void setStatic(boolean staticData) {
-        this.staticData = staticData;
-    }
-    
-    public boolean isStatic() {
-        return staticData;
-    }
-    boolean isChanged() {
-        return changed;
     }
     
     public float[] getVertices() {
@@ -62,61 +45,21 @@ public class Geometry extends BaseGeometry {
         return indices;
     }
     
-    float[] getTangents() {
-        return tangents;
-    }
-    float[] getBiTangents() {
-        return bitangents;
-    }
-    
     public void setVertices(float[] v) {
-        changed = true;
+        update = true;
         vertices = v;
     }
     public void setNormals(float[] n) {
-        changed = true;
+        update = true;
         normals = n;
     }
     public void setTexCoords(float[] t) {
-        changed = true;
+        update = true;
         texCoords = t;
     }
     public void setIndices(int[] i) {
-        changed = true;
+        update = true;
         indices = i;
-    }
-    
-    void setVerticesNull() {
-        vertices = null;
-    }
-    void setNormalsNull() {
-        normals = null;
-    }
-    void setTexCoordsNull() {
-        texCoords = null;
-    }
-    void setIndicesNull() {
-        indices = null;
-    }
-    
-    void setTangentsNull() {
-        tangents = null;
-    }
-    void setBiTangentsNull() {
-        bitangents = null;
-    }
-    
-    boolean isVerticesNull() {
-        return vertices==null;
-    }
-    boolean isNormalsNull() {
-        return normals==null;
-    }
-    boolean isTexCoordsNull() {
-        return texCoords==null;
-    }
-    boolean isIndicesNull() {
-        return indices==null;
     }
     
     /**
@@ -128,7 +71,7 @@ public class Geometry extends BaseGeometry {
     }
     
     public void setVectorArray(Vector3[] array) {
-        changed = true;
+        update = true;
         vertices = MathUtil.getFloatArray(array);
     }
     
@@ -137,12 +80,8 @@ public class Geometry extends BaseGeometry {
     }
     
     public void setTexCoordArray(Vector2[] array) {
-        changed = true;
+        update = true;
         texCoords = MathUtil.getFloatArray(array);
-    }
-    
-    void overrideChanged() {
-        changed = false;
     }
     
     public int getNumVertices() {

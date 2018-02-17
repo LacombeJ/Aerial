@@ -1,17 +1,14 @@
-package jonl.ge.core;
+package jonl.ge.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jonl.ge.core.geometry.Geometry;
 import jonl.jutils.misc.ArrayUtils;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 
 public class MeshBuilder {
-
-    //public final float[] vertexData;
-    //public final float[] normalData;
-    //public final float[] texCoordData;
-    //public final int[] indices;
     
     private List<Vector3> vertices;
     private List<Vector3> normals;

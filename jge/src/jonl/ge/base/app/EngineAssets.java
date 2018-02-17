@@ -1,15 +1,15 @@
 package jonl.ge.base.app;
 
-import jonl.ge.core.Font;
 import jonl.ge.core.GameObject;
-import jonl.ge.core.Geometry;
-import jonl.ge.core.Light;
-import jonl.ge.core.Loader;
 import jonl.ge.core.Material;
 import jonl.ge.core.Mesh;
-import jonl.ge.core.Text;
+import jonl.ge.core.geometry.Geometry;
+import jonl.ge.core.light.Light;
 import jonl.ge.core.material.GeneratedMaterial;
 import jonl.ge.core.render.CanvasRenderer;
+import jonl.ge.core.text.Font;
+import jonl.ge.core.text.Text;
+import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
 
 public class EngineAssets {

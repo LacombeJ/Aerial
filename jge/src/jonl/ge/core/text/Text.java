@@ -1,10 +1,13 @@
-package jonl.ge.core;
+package jonl.ge.core.text;
 
 import jonl.ge.base.app.AppUtil;
+import jonl.ge.core.Component;
 import jonl.jgl.utils.FontUtils;
 import jonl.jutils.misc.ArrayUtils;
 
 public class Text extends Component {
+    
+    // TODO for text rendering, create an attachment under core.text that requests opengl
     
     public static final int VA_TOP    = FontUtils.VA_TOP;
     public static final int VA_MIDDLE = FontUtils.VA_MIDDLE;

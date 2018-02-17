@@ -3,6 +3,7 @@ package jonl.ge.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import jonl.ge.core.light.Light;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;

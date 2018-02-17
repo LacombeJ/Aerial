@@ -1,6 +1,5 @@
 package jonl.ge.core.geometry;
 
-import jonl.ge.core.Geometry;
 import jonl.jutils.structs.FloatList;
 import jonl.jutils.structs.IntList;
 

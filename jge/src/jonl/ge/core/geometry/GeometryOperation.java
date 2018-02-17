@@ -1,6 +1,5 @@
 package jonl.ge.core.geometry;
 
-import jonl.ge.core.Geometry;
 import jonl.ge.core.Transform;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector2;

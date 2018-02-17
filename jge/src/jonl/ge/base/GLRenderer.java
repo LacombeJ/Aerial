@@ -3,13 +3,13 @@ package jonl.ge.base;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
-import jonl.ge.core.Font;
 import jonl.ge.core.FrameBuffer;
-import jonl.ge.core.Geometry;
-import jonl.ge.core.Loader;
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Texture;
 import jonl.ge.core.TextureUniform;
+import jonl.ge.core.geometry.Geometry;
+import jonl.ge.core.text.Font;
+import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
