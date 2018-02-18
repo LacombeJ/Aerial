@@ -19,6 +19,7 @@ import jonl.ge.core.render.CameraCull;
 import jonl.ge.core.render.CameraTarget;
 import jonl.ge.core.render.RenderTarget;
 import jonl.ge.core.render.RenderTexture;
+import jonl.ge.utils.GLUtils;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 import jonl.jgl.GraphicsLibrary.Blend;
@@ -30,7 +31,7 @@ import jonl.jutils.misc.BufferPool;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
-public class SceneRenderer {
+class SceneRenderer {
 
 	private SceneManager manager;
 	private GraphicsLibrary gl;
@@ -40,6 +41,8 @@ public class SceneRenderer {
 		this.manager = manager;
 		this.gl = gl;
 		this.glr = new GLRenderer(gl);
+		
+		service.implementGetGL(() -> this.gl);
 		
 		service.implementRenderCameraSeparately((camera,scene)->{
 			renderCameraSeparately(camera, scene);
@@ -106,13 +109,12 @@ public class SceneRenderer {
             
             jonl.jutils.func.List.iterate(manager.delegate().onGameObjectRender(), (cb) -> cb.f(g,camera) );
             
-            Matrix4 M = gameObjectTransform(g);
-            
             Mesh mesh = g.getComponent(Mesh.class);
             if (mesh != null) {
                 Material mat = mesh.getMaterial();
                 Geometry geometry = mesh.getGeometry();
                 
+                Matrix4 M = gameObjectTransform(g);
                 Matrix4 MVP = VP.get().multiply(M);
                 
                 FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
@@ -145,7 +147,7 @@ public class SceneRenderer {
                     gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.LINE); 
                 }
                 
-                gl.glRender(glr.getOrCreateMesh(geometry),GLRenderer.map(mesh.getMode()));
+                gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));
                 
                 if (mesh.isWireframe()) {
                     gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.FILL);
@@ -246,12 +248,7 @@ public class SceneRenderer {
     
     private Matrix4 gameObjectTransform(GameObject g) {
         Transform t = manager.updater().getWorldTransform(g);
-        
-        Matrix4 model = Matrix4.identity()
-                .translate(t.translation)
-                .rotate(t.rotation)
-                .scale(t.scale);
-        return model;
+        return t.computeMatrix();
     }
     
     

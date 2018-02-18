@@ -87,12 +87,12 @@ public abstract class AbstractGraphicsLibrary implements GraphicsLibrary {
     
     @Override
     public Texture glGenTexture(String file, Internal internal, Wrap wrap, Filter filter) {
-        return glGenTexture(ImageUtils.loadBufferedImage(file),internal,wrap,filter);
+        return glGenTexture(ImageUtils.load(file),internal,wrap,filter);
     }
     
     @Override
     public Texture glGenTexture(String file) {
-        return glGenTexture(ImageUtils.loadBufferedImage(file));
+        return glGenTexture(ImageUtils.load(file));
     }
     
     @Override

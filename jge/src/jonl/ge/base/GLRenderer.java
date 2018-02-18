@@ -4,17 +4,15 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import jonl.ge.core.FrameBuffer;
-import jonl.ge.core.Mesh;
 import jonl.ge.core.Texture;
 import jonl.ge.core.TextureUniform;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.text.Font;
+import jonl.ge.utils.GLUtils;
 import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
-import jonl.jgl.Shader;
-import jonl.jgl.GraphicsLibrary.ShaderType;
 import jonl.jutils.func.Tuple2;
 import jonl.jutils.misc.BufferPool;
 import jonl.vmath.Mathf;
@@ -25,7 +23,7 @@ import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
 
-public class GLRenderer {
+class GLRenderer {
 
 	
 	private GraphicsLibrary gl;
@@ -84,11 +82,18 @@ public class GLRenderer {
         jonl.jgl.Texture gltexture = textureMap.get(texture);
         if (gltexture==null) {
             if (texture.data==null) {
-                gltexture = gl.glGenTexture(texture.width, texture.height,
-                        map(texture.format), map(texture.wrap), map(texture.filter));
+                gltexture = gl.glGenTexture(
+                        texture.width, texture.height,
+                        GLUtils.map(texture.format),
+                        GLUtils.map(texture.wrap),
+                        GLUtils.map(texture.filter));
             } else {
-                gltexture = gl.glGenTexture(texture.data,texture.width,texture.height,
-                        map(texture.format),map(texture.wrap),map(texture.filter));
+                gltexture = gl.glGenTexture(
+                        texture.data,
+                        texture.width,texture.height,
+                        GLUtils.map(texture.format),
+                        GLUtils.map(texture.wrap),
+                        GLUtils.map(texture.filter));
             }
             textureMap.put(texture,gltexture);
         }
@@ -148,9 +153,9 @@ public class GLRenderer {
         	String fragment = material.fragmentShader(version);
         	
         	if (geometry != null) {
-        		glprogram = createProgramFromSource(gl, vertex, geometry, fragment);
+        		glprogram = GLUtils.createProgramFromSource(gl, vertex, geometry, fragment);
         	} else {
-        		glprogram = createProgramFromSource(gl, vertex, fragment);
+        		glprogram = GLUtils.createProgramFromSource(gl, vertex, fragment);
         	}
         	
             shaderKeyMap.put(string,glprogram);
@@ -294,70 +299,6 @@ public class GLRenderer {
     	return new Tuple2<>(tangents,bitangents);
     	
     }
-    
-    static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String fragSource) {
-        Program program = gl.glCreateProgram();
-        Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);
-        Shader fragShader = gl.glCreateShader(ShaderType.FRAGMENT_SHADER,fragSource);
-        program.attach(vertShader);
-        program.attach(fragShader);
-        program.link();
-        return program;
-    }
-    
-    static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String geomSource, String fragSource) {
-        Program program = gl.glCreateProgram();
-        Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);
-        Shader geomShader = gl.glCreateShader(ShaderType.GEOMETRY_SHADER,geomSource);
-        Shader fragShader = gl.glCreateShader(ShaderType.FRAGMENT_SHADER,fragSource);
-        program.attach(vertShader);
-        program.attach(geomShader);
-        program.attach(fragShader);
-        program.link();
-        return program;
-    }
-    
-    static jonl.jgl.Texture.Internal map(Texture.Internal internal) {
-    	switch (internal) {
-    	case R16F 		: return jonl.jgl.Texture.Internal.R16F;
-    	case R32F 		: return jonl.jgl.Texture.Internal.R32F;
-    	case RGB16 		: return jonl.jgl.Texture.Internal.RGB16;
-    	case RGB16F 	: return jonl.jgl.Texture.Internal.RGB16F;
-    	case RGBA8 		: return jonl.jgl.Texture.Internal.RGBA8;
-    	case RGBA16 	: return jonl.jgl.Texture.Internal.RGBA16;
-    	case RGBA16F 	: return jonl.jgl.Texture.Internal.RGBA16F;
-    	default			: return null;
-    	}
-    }
-    
-    static jonl.jgl.Texture.Filter map(Texture.Filter filter) {
-    	switch (filter) {
-    	case NEAREST 	: return jonl.jgl.Texture.Filter.NEAREST;
-    	case LINEAR  	: return jonl.jgl.Texture.Filter.LINEAR;
-    	case MIPMAP  	: return jonl.jgl.Texture.Filter.MIPMAP;
-    	default			: return null;
-    	}
-    }
-    
-    static jonl.jgl.Texture.Wrap map(Texture.Wrap wrap) {
-    	switch (wrap) {
-    	case CLAMP 	: return jonl.jgl.Texture.Wrap.CLAMP;
-    	case REPEAT : return jonl.jgl.Texture.Wrap.REPEAT;
-    	default		: return null;
-    	}
-    }
-    
-    static jonl.jgl.GraphicsLibrary.Mode map(Mesh.Mode mode) {
-    	switch (mode) {
-    	case TRIANGLES 	: return jonl.jgl.GraphicsLibrary.Mode.TRIANGLES;
-    	case LINES 		: return jonl.jgl.GraphicsLibrary.Mode.LINES;
-    	case LINE_STRIP : return jonl.jgl.GraphicsLibrary.Mode.LINE_STRIP;
-    	case POINTS 	: return jonl.jgl.GraphicsLibrary.Mode.POINTS;
-    	default			: return null;
-    	}
-    }
-    
-    
-    
+
 
 }

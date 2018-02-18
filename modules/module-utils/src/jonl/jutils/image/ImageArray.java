@@ -69,7 +69,7 @@ public class ImageArray extends Array2Di {
     }
 
     public BufferedImage getBufferedImage() {
-        BufferedImage bi = ImageUtils.loadBufferedImage(getRows(), getColumns());
+        BufferedImage bi = ImageUtils.load(getRows(), getColumns());
         for (int i=0; i<getRows(); i++) {
             for (int j=0; j<getColumns(); j++) {
                 bi.setRGB(i, j, get(i,j));

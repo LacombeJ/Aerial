@@ -5,13 +5,13 @@ import jonl.jutils.func.Tuple4f;
 
 public class FontUtils {
 
-    public static final int VA_TOP    = 0;
-    public static final int VA_MIDDLE = 1;
-    public static final int VA_BOTTOM = 2;
-    
     public static final int HA_LEFT   = 0;
     public static final int HA_CENTER = 1;
     public static final int HA_RIGHT  = 2;
+    
+    public static final int VA_TOP    = 0;
+    public static final int VA_MIDDLE = 1;
+    public static final int VA_BOTTOM = 2;
     
     public Tuple4f[] getCharPositions(Font font, String string, int halign, int valign) {
         

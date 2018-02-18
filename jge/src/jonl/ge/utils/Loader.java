@@ -33,7 +33,7 @@ public class Loader {
     }
     
     public static Texture loadTexture(String fileLoc, Internal internal, Wrap wrap, Filter filter) {
-        BufferedImage b = ImageUtils.loadBufferedImage(fileLoc);
+        BufferedImage b = ImageUtils.load(fileLoc);
         FloatBuffer fb = ImageUtils.borrowBufferData(b);
         float[] f = new float[fb.limit()];
         for (int i=0; i<f.length; i++) {

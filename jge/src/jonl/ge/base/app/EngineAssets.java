@@ -6,9 +6,7 @@ import jonl.ge.core.Mesh;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.light.Light;
 import jonl.ge.core.material.GeneratedMaterial;
-import jonl.ge.core.render.CanvasRenderer;
 import jonl.ge.core.text.Font;
-import jonl.ge.core.text.Text;
 import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
 
@@ -97,16 +95,6 @@ public class EngineAssets {
         light.setType(Light.POINT);
         pointLight.addComponent(light);
         return pointLight;
-    }
-    
-    public GameObject text() {
-        GameObject gameObject = new GameObject();
-        gameObject.setName("Text");
-        Text text = new Text();
-        CanvasRenderer cr = new CanvasRenderer();
-        gameObject.addComponent(text);
-        gameObject.addComponent(cr);
-        return gameObject;
     }
     
     /* ***** ***************** ***** */

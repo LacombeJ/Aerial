@@ -7,6 +7,7 @@ import java.nio.FloatBuffer;
 
 import javax.imageio.ImageIO;
 
+import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 
 /**
@@ -18,7 +19,7 @@ public class ImageUtils {
 
     public final static int BYTES_PER_PIXEL = 4; //RGBA
     
-    public static BufferedImage loadBufferedImage(String file) {
+    public static BufferedImage load(String file) {
         try {
             return ImageIO.read(new File(file));
         } catch (IOException e) {
@@ -27,8 +28,19 @@ public class ImageUtils {
         return null;
     }
     
-    public static BufferedImage loadBufferedImage(int width, int height) {
+    public static BufferedImage load(int width, int height) {
         return new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+    }
+    
+    //TODO handle other image formats (if needed)
+    /** Saves image using png format */
+    public static void save(BufferedImage image, String file) {
+        try {
+            File out = new File(file);
+            ImageIO.write(image, "png", out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**

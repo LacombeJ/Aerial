@@ -3,6 +3,7 @@ package jonl.ge.base.app;
 import java.util.HashMap;
 
 import jonl.ge.base.light.LightModule;
+import jonl.ge.base.text.TextModule;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Input;
@@ -39,6 +40,7 @@ public abstract class AbstractApplication {
         attachments = new HashMap<>();
         
         add(new LightModule());
+        add(new TextModule());
     }
     
     // -------------------------------------------------------

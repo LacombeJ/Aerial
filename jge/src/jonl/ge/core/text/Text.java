@@ -1,30 +1,16 @@
 package jonl.ge.core.text;
 
-import jonl.ge.base.app.AppUtil;
-import jonl.ge.core.Component;
-import jonl.jgl.utils.FontUtils;
-import jonl.jutils.misc.ArrayUtils;
-
-public class Text extends Component {
+public class Text {
     
-    // TODO for text rendering, create an attachment under core.text that requests opengl
-    
-    public static final int VA_TOP    = FontUtils.VA_TOP;
-    public static final int VA_MIDDLE = FontUtils.VA_MIDDLE;
-    public static final int VA_BOTTOM = FontUtils.VA_BOTTOM;
-    
-    public static final int HA_LEFT   = FontUtils.HA_LEFT;
-    public static final int HA_CENTER = FontUtils.HA_CENTER;
-    public static final int HA_RIGHT  = FontUtils.HA_RIGHT;
+    public final static int LEFT = 0;
+    public final static int CENTER = 1;
+    public final static int RIGHT = 2;
     
     String text = "text";
     
-    Font font = AppUtil.FONT_CONSOLAS;
+    Font font = new Font("Consolas",Font.PLAIN,24,false); //TODO make null and handle default or null font some other way
     
-    float[] color = { 1, 1, 1, 1 };
-    
-    int valign = VA_MIDDLE;
-    int halign = HA_CENTER;
+    int align = LEFT;
     
     public Text(String text) {
        this.text = text;
@@ -50,53 +36,26 @@ public class Text extends Component {
         this.font = font;
     }
     
-    public int getHAlign() {
-        return halign;
+    public int getAlign() {
+        return align;
     }
     
-    public void setHAlign(int halign) {
-        this.halign = halign;
+    public void setAlign(int align) {
+        this.align = align;
     }
-    
-    public int getVAlign() {
-        return valign;
-    }
-    
-    public void setVAlign(int valign) {
-        this.valign = valign;
-    }
-    
-    public float[] getColor() {
-        return ArrayUtils.copy(color);
-    }
-    
-    public void setColor(float[] color) {
-        this.color = ArrayUtils.copy(color);
-    }
-    
     
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Text) {
             Text t = (Text) obj;
-            return text.equals(t.text) && font.equals(t.font)
-                    && valign==t.valign && halign==t.halign;
+            return text.equals(t.text) && font.equals(t.font) && align==t.align;
         }
         return false;
     }
     
     @Override
     public int hashCode() {
-        return text.hashCode() + font.hashCode() + valign + halign;
-    }
-    
-    static Text copy(Text t) {
-        Text text = new Text();
-        text.text = t.text;
-        text.font = t.font;
-        text.halign = t.halign;
-        text.valign = t.valign;
-        return text;
+        return text.hashCode() + font.hashCode() + align;
     }
     
 }

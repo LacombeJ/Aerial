@@ -7,7 +7,7 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
 import jonl.jutils.func.List;
 
-public class SceneUpdater {
+class SceneUpdater {
 	
     private SceneManager manager;
     

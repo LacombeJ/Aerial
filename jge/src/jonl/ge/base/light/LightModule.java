@@ -2,13 +2,13 @@ package jonl.ge.base.light;
 
 import java.util.List;
 
-import jonl.ge.base.app.AppUtil;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Camera;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Material;
 import jonl.ge.core.Service;
 import jonl.ge.core.light.Light;
+import jonl.ge.utils.GLUtils;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback3D;
@@ -33,16 +33,16 @@ public class LightModule extends Attachment {
         setUniforms = (program, material, camera) -> {
             
             Vector3 eye = service.getWorldTransform(camera.gameObject()).translation;
-            AppUtil.setUniform(program,"eye",eye);
+            GLUtils.setUniform(program,"eye",eye);
             
             int numLights = 0;
             for (int i=0; i<lights.size(); i++) {
                 Light light = lights.get(i);
                 Vector3 p = service.getWorldTransform(light.gameObject()).translation;
                 program.setUniformi("light["+i+"].type",light.getType());
-                AppUtil.setUniform(program,"light["+i+"].position",p);
+                GLUtils.setUniform(program,"light["+i+"].position",p);
                 program.setUniform("light["+i+"].range",light.getRange());
-                AppUtil.setUniform(program,"light["+i+"].color",light.getColor());
+                GLUtils.setUniform(program,"light["+i+"].color",light.getColor());
                 program.setUniform("light["+i+"].intensity",light.getIntensity());
                 program.setUniform("light["+i+"].angle",light.getAngle());
                 numLights++;

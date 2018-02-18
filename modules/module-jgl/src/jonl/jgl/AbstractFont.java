@@ -22,7 +22,7 @@ public abstract class AbstractFont implements Font {
     public void setBufferedImage(java.awt.Font font, boolean antialias) {
         int width = 256;
         int height = 256;
-        BufferedImage bi = ImageUtils.loadBufferedImage(width,height);
+        BufferedImage bi = ImageUtils.load(width,height);
         Graphics2D g = (Graphics2D) bi.getGraphics();
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics(font);;
@@ -38,7 +38,7 @@ public abstract class AbstractFont implements Font {
         height = fm.getHeight();
         width = x;
         
-        bi = ImageUtils.loadBufferedImage(width,height);
+        bi = ImageUtils.load(width,height);
         
         g = (Graphics2D) bi.getGraphics();
         g.setFont(font);

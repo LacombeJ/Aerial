@@ -22,13 +22,15 @@ public class CameraCull extends Component {
     private Target type = Target.ONLY;
     private List<Camera> targets = new ArrayList<>();
     
+    public CameraCull(Camera camera, Target type) {
+        this.type = type;
+        targets.add(camera);
+    }
+    
     public CameraCull(Target type) {
         this.type = type;
     }
     
-    /**
-     * Defaults to object being visible only to cameras added to this object
-     */
     public CameraCull() {
         
     }

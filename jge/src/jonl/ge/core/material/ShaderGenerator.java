@@ -2,7 +2,7 @@ package jonl.ge.core.material;
 
 import java.util.HashMap;
 
-import jonl.ge.base.app.AppUtil;
+import jonl.ge.utils.GLUtils;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 
@@ -51,7 +51,7 @@ class ShaderGenerator {
                 vertSource = ShaderGeneratorBasic.getVertSource(version, material, instanced);
                 break;
             }
-            glprogram = AppUtil.createProgramFromSource(gl,vertSource,fragSource);
+            glprogram = GLUtils.createProgramFromSource(gl,vertSource,fragSource);
             programMap.put(string,glprogram);
         }
         return glprogram;

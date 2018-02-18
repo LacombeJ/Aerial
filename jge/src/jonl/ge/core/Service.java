@@ -1,9 +1,11 @@
 package jonl.ge.core;
 
 import jonl.ge.core.render.RenderTexture;
+import jonl.jgl.GraphicsLibrary;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.func.Function;
+import jonl.jutils.func.Function0D;
 
 public class Service {
 
@@ -32,6 +34,15 @@ public class Service {
 	}
 	public Transform getWorldTransform(GameObject go) {
 		return worldTransform.f(go);
+	}
+	
+	private Function0D<GraphicsLibrary> graphicsLibrary = null;
+	public void implementGetGL(Function0D<GraphicsLibrary> implementation)
+	{
+	    graphicsLibrary = implementation;
+	}
+	public GraphicsLibrary getGL() {
+	    return graphicsLibrary.f();
 	}
 	
 }

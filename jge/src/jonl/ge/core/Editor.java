@@ -1,7 +1,6 @@
 package jonl.ge.core;
 
 import jonl.aui.Widget;
-import jonl.ge.base.app.AppUtil;
 import jonl.ge.base.app.ApplicationWindow;
 import jonl.ge.base.SceneManager;
 import jonl.ge.base.app.AbstractApplication;
@@ -84,7 +83,7 @@ public class Editor extends AbstractApplication {
         
         control.addComponent(camera);
         
-        GameObject b = AppUtil.cube();
+        GameObject b = EditorAssets.cube();
         s.add(b);
         
         s.add(control);
