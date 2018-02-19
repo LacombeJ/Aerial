@@ -13,6 +13,9 @@ module jonl.ge {
 	requires java.base;
 	requires java.desktop;
 	
+	requires jbullet;
+	requires vecmath;
+	
 	requires transitive jonl.jgl;
 	requires transitive jonl.aui;
 	requires transitive jonl.utils;

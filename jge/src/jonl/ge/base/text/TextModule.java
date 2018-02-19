@@ -6,7 +6,6 @@ import jonl.ge.core.Delegate;
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
-import jonl.ge.core.geometry.BoxGeometry;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.geometry.PlaneGeometry;
 import jonl.ge.core.text.Align;
@@ -22,7 +21,6 @@ import jonl.jgl.GraphicsLibrary.Mode;
 import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
-import jonl.jutils.io.Console;
 import jonl.vmath.Matrix4;
 
 public class TextModule extends Attachment {

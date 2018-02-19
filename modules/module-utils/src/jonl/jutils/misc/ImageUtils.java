@@ -7,7 +7,6 @@ import java.nio.FloatBuffer;
 
 import javax.imageio.ImageIO;
 
-import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 
 /**

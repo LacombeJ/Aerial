@@ -52,6 +52,7 @@ dependencies {
 jar {
     from configurations.compile .collect { zipTree it }
     exclude '**/module-info.class'
+    exclude '**/*.sha1'
 }
 
 apply plugin: 'maven-publish'
