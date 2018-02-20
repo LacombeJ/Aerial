@@ -1,7 +1,11 @@
 
-
-
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.plugins.ide.eclipse.model.ClasspathEntry
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+import org.gradle.plugins.ide.eclipse.model.FileReference
+import org.gradle.plugins.ide.eclipse.model.internal.FileReferenceFactory
+
+apply plugin: 'eclipse'
 
 dependencies {
     compile project(':modules:module-utils')
@@ -11,15 +15,17 @@ dependencies {
 
 // LWJGL dependencies //
 
+String version = 'lwjgl_3.1.6'
 String[][] libs = [
-    ['',        'lwjgl'         ,'lwjgl' ],
-    ['_glfw',   'lwjgl-glfw'    ,'glfw' ],
-    ['_openal', 'lwjgl-openal'  ,'OpenAL' ],
-    ['_opengl', 'lwjgl-opengl'  ,'lwjgl_opengl' ],
-    ['_stb',    'lwjgl-stb'     ,'lwjgl_stb' ]
+    ['',            'lwjgl'             ,'lwjgl' ],
+    ['_glfw',       'lwjgl-glfw'        ,'glfw' ],
+    ['_openal',     'lwjgl-openal'      ,'OpenAL' ],
+    ['_opengl',     'lwjgl-opengl'      ,'lwjgl_opengl' ],
+    ['_stb',        'lwjgl-stb'         ,'lwjgl_stb' ]
 ]
 
 FileCollection[] libFiles = new FileCollection[libs.length]
+FileCollection[] libNatives = new FileCollection[libs.length]
 
 //String arch = System.properties['sun.arch.data.model'] //arch type (32 or 64)
 
@@ -33,18 +39,24 @@ if (Os.isFamily(Os.FAMILY_UNIX)) {
     ext = ".dylib"
 }
 
-String[][] ref = new String[libs.length][2]
-for (int i=0; i<ref.length; i++) {
+String[] jarFiles = new String[libs.length]
+String[] nativeFiles = new String[libs.length]
+for (int i=0; i<libs.length; i++) {
     
     String postfix = libs[i][0]
     String name = libs[i][1]
     String nlib = libs[i][2]
     
-    String jarFile = 'lib/lwjgl_3.1.1'+postfix+'/'+name+'.jar'
-    String nativeFile = 'lib/lwjgl_3.1.1'+postfix+'/'+name+'-natives-'+os+'/'+nlib+ext
+    String jarFile = null
+    String nativeFile = null
     
-    ref[i][0] = jarFile
-    ref[i][1] = nativeFile
+    jarFile = 'lib/'+version+postfix+'/'+name+'.jar'
+    if (nlib != null) {
+        nativeFile = 'lib/'+version+postfix+'/'+name+'-natives-'+os+'.jar'
+    }
+    
+    jarFiles[i] = jarFile
+    nativeFiles[i] = nativeFile
     
 }
 
@@ -52,37 +64,78 @@ for (int i=0; i<ref.length; i++) {
 
 dependencies {
     
-    for (int i=0; i<ref.length; i++) {
-        String jarFile = ref[i][0]
-        String nativeFile = ref[i][1]
+    for (int i=0; i<jarFiles.length; i++) {
+        String jarFile = jarFiles[i]
+        String nativeFile = nativeFiles[i]
         
         compile files(jarFile)
         libFiles[i] = files(jarFile)
+        
+        if (nativeFile != null) {
+            compile files(nativeFile)
+            libNatives[i] = files(nativeFile)
+        }
+        
     }
     
 }
 
 jar {
-    for (int i=0; i<ref.length; i++) {
+    for (int i=0; i<libFiles.length; i++) {
         from libFiles[i].collect {
 	        zipTree it
         }
     }
-}
-
-task extractNatives {
     
-    for (int i=0; i<ref.length; i++) {
-        
-        String nativeFile = ref[i][1]
-        copy {
-            from project.file(nativeFile)
-            into new File(rootProject.buildDir, 'natives/')
+    for (int i=0; i<libNatives.length; i++) {
+        if (libNatives[i] != null) {
+            from libNatives[i].collect {
+                zipTree it
+            }
         }
-        
     }
-    
 }
 
-build.finalizedBy(extractNatives)
+boolean isModule(entry) {
+    return entry.kind == 'lib'
+}
+
+boolean getSourceDir(it) {
+    return false;
+}
+
+boolean setSourceDir(entries, factory) {
+    String[] sources = [
+        'lwjgl',
+        'lwjgl-glfw' ,
+        'lwjgl-openal',
+        'lwjgl-opengl',
+        'lwjgl-stb'
+    ]
+    for (ClasspathEntry entry : entries) {
+        for (int i=0; i<sources.length; i++) {
+            String jarName = sources[i]+'.jar'
+            String sourceName = sources[i]+'-sources.jar'
+            String javadocName = sources[i]+'-javadoc.jar'
+            if (entry.path.endsWith(jarName)) {
+                String sourcePath = entry.path.replace(jarName, sourceName)
+                FileReference sourceRef = factory.fromPath(sourcePath)
+                entry.sourcePath = sourceRef
+                
+                String javadocPath = entry.path.replace(jarName, javadocName)
+                FileReference javadocRef = factory.fromPath(javadocPath)
+                entry.javadocPath = javadocRef
+            }
+        }
+    }
+    return false
+}
+
+eclipse.classpath {
+    FileReferenceFactory factory = getFileReferenceFactory()
+    file.whenMerged {
+        setSourceDir(entries, factory)
+        entries.findAll { isModule(it) }.each { it.entryAttributes['module'] = 'true' }
+    }
+}
 

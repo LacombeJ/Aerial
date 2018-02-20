@@ -145,7 +145,7 @@ class GLFWInstance {
     private static void initializeInstance() {
     	
     	// Performing a time out check because program will hang if native libraries aren't found
-    	TimeOut timeOut = new TimeOut(1);
+    	TimeOut timeOut = new TimeOut(3);
     	
         Processor.thread(()->{
         	

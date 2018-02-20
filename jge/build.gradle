@@ -55,10 +55,6 @@ jar {
     }
 }
 
-boolean getSourceDir(it) {
-    return false;
-}
-
 boolean setSourceDir(entries, factory) {
     String[][] sources = [
         ['jbullet.jar','jbullet-sources.zip','jbullet-javadoc.zip'],
@@ -84,8 +80,5 @@ eclipse.classpath {
     FileReferenceFactory factory = getFileReferenceFactory()
     file.whenMerged {
         setSourceDir(entries, factory)
-        //entries.findAll { getSourceDir(it) }.each { it.entryAttributes['module'] = 'true' }
-        //entries.add(new SourceFolder('lib/jbullet/jbullet-sources.zip', null))
-        //println "Merged"
     }
 }
