@@ -8,6 +8,36 @@ import jonl.jutils.func.Callback;
  */
 public interface Window {
 
+    // ------------------------------------------------------------------------
+    
+    // Attributes
+    
+    /** indicates whether the specified window has input focus */
+    public static final int FOCUSED = 0;
+    
+    /** indicates whether the specified window is iconified */
+    public static final int ICONIFIED = 0;
+    
+    /** indicates whether the specified window is maximized */
+    public static final int MAXIMIZED = 0;
+    
+    /** indicates whether the specified window is visible */
+    public static final int VISIBLE = 0;
+    
+    /** indicates whether the specified window is resizable by the user */
+    public static final int RESIZABLE = 0;
+    
+    /** indicates whether the specified window has decorations such as a border, a close widget, etc */
+    public static final int DECORATED = 0;
+    
+    /** indicates whether the specified window is floating, also called topmost or always-on-top */
+    public static final int FLOATING = 0;
+    
+    /** indicates whether the mouse is hovered over the window */
+    public static final int HOVERED = 0;
+    
+    // ------------------------------------------------------------------------
+    
     /**
      * Sets the loader for this window whose method is called
      * when start is called and before the window is shown
@@ -29,6 +59,8 @@ public interface Window {
      */
     public void setCloser(Closer closer);
     
+    // ------------------------------------------------------------------------
+    
     /**
      * Does the following in order:
      * <ol>
@@ -47,6 +79,8 @@ public interface Window {
     public void start();
     
     public void close();
+    
+    // ------------------------------------------------------------------------
     
     /**
      * Returns whether window is still running and calls
@@ -75,6 +109,8 @@ public interface Window {
     
     public int getScreenWidth();
     public int getScreenHeight();
+    
+    public boolean getAttribute(int attribute);
     
     public Insets getInsets();
     

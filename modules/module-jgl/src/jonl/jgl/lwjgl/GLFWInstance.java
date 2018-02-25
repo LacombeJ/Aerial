@@ -75,6 +75,9 @@ class GLFWInstance {
     private static final RequestQueue<SetWindowVisibleRequest,SetWindowVisibleResponse>
         SET_WINDOW_VISIBLE_REQUEST      = new RequestQueue<>( (request) -> _setWindowVisible(request) );
     
+    private static final RequestQueue<GetWindowAttribRequest,GetWindowAttribResponse>
+        GET_WINDOW_ATTRIB_REQUEST         = new RequestQueue<>( (request) -> _getWindowAttrib(request) );
+    
     private static final RequestQueue<?,?>[] REQUEST_QUEUES = {
             CREATE_REQUEST,
             START_REQUEST,
@@ -87,7 +90,8 @@ class GLFWInstance {
             GET_CURSOR_POS_REQUEST,
             GET_MOUSE_BUTTON_REQUEST,
             GET_KEY_REQUEST,
-            SET_WINDOW_VISIBLE_REQUEST
+            SET_WINDOW_VISIBLE_REQUEST,
+            GET_WINDOW_ATTRIB_REQUEST
     };
     
     static CreateWindowResponse create(CreateWindowRequest request) {
@@ -125,6 +129,9 @@ class GLFWInstance {
     }
     static SetWindowVisibleResponse setWindowVisible(SetWindowVisibleRequest request) {
         return SET_WINDOW_VISIBLE_REQUEST.request(request);
+    }
+    static GetWindowAttribResponse getWindowAttrib(GetWindowAttribRequest request) {
+        return GET_WINDOW_ATTRIB_REQUEST.request(request);
     }
 
     
@@ -462,6 +469,29 @@ class GLFWInstance {
     private static SetWindowSizeResponse _setWindowSize(SetWindowSizeRequest request) {
         GLFW.glfwSetWindowSize(request.id,request.width,request.height);
         return new SetWindowSizeResponse();
+    }
+    
+    /* ********************************************************************************* */
+    /* ****************************** Get Window Attrib ******************************** */
+    /* ********************************************************************************* */
+    static class GetWindowAttribRequest extends Request {
+        final long id;
+        final int attrib;
+        GetWindowAttribRequest(long id, int attrib) {
+            this.id = id;
+            this.attrib = attrib;
+        }
+    }
+    static class GetWindowAttribResponse extends Response {
+        final boolean value;
+        GetWindowAttribResponse(boolean value) {
+            this.value = value;
+        }
+    }
+    private static GetWindowAttribResponse _getWindowAttrib(GetWindowAttribRequest request) {
+        int value = GLFW.glfwGetWindowAttrib(request.id, request.attrib);
+        boolean ret = (value == 1) ? true : false;
+        return new GetWindowAttribResponse(ret);
     }
     
     /* ********************************************************************************* */

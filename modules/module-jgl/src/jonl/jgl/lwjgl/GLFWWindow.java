@@ -12,6 +12,8 @@ import jonl.jgl.Runner;
 import jonl.jgl.Window;
 import jonl.jgl.lwjgl.GLFWInstance.GetInputModeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.GetInputModeResponse;
+import jonl.jgl.lwjgl.GLFWInstance.GetWindowAttribRequest;
+import jonl.jgl.lwjgl.GLFWInstance.GetWindowAttribResponse;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeResponse;
 import jonl.jgl.lwjgl.GLFWInstance.SetInputModeRequest;
@@ -382,6 +384,13 @@ public final class GLFWWindow implements Window {
     @Override
     public int getScreenHeight() {
         return screenHeight;
+    }
+    
+    @Override
+    public boolean getAttribute(int attribute) {
+        GetWindowAttribRequest request = new GetWindowAttribRequest(id, attribute);
+        GetWindowAttribResponse response = GLFWInstance.getWindowAttrib(request);
+        return response.value;
     }
 
     boolean isClosing = false;

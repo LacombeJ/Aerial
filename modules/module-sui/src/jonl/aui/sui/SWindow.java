@@ -63,6 +63,11 @@ public class SWindow extends AWindow {
     HAlign halign = HAlign.CENTER;
     VAlign valign = VAlign.MIDDLE;
     
+    public SWindow() {
+        loader = () -> {};
+        closer = () -> {};
+    }
+    
     public String getTitle() {
         return title;
     }
