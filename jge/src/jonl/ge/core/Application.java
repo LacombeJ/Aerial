@@ -1,5 +1,6 @@
 package jonl.ge.core;
 
+import jonl.ge.base.Engine;
 import jonl.ge.base.SceneManager;
 import jonl.ge.base.app.ApplicationInput;
 import jonl.ge.base.app.ApplicationWindow;
@@ -9,7 +10,6 @@ import jonl.jgl.AudioDevice;
 import jonl.jgl.AudioLibrary;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
-import jonl.jutils.io.Console;
 
 public class Application extends AbstractApplication {
 
@@ -161,8 +161,7 @@ public class Application extends AbstractApplication {
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
         if (glWindow!=null) {
-            //TODO app error
-            Console.println("Cannot change resizable window property after creation");
+            Engine.log.info("Cannot change resizable window property after creation");
         }
 	}
 
@@ -176,8 +175,7 @@ public class Application extends AbstractApplication {
 	public void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
         if (glWindow!=null) {
-            //TODO app error
-            Console.println("Cannot change fullscreen window property after creation");
+            Engine.log.info("Cannot change fullscreen window property after creation");
         }
 	}
 

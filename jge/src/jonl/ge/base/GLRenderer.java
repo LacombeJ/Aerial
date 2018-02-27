@@ -209,7 +209,7 @@ class GLRenderer {
             p.setUniformMat2(name,m.toFloatBuffer(fb));
             BufferPool.returnFloatBuffer(fb);
         } else {
-            System.err.println("Uniform type not supported - "+name+" : "+data);
+            Engine.log.error("Uniform type not supported - "+name+" : "+data);
         }
     }
     
