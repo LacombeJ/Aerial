@@ -24,7 +24,7 @@ public abstract class AButton extends AWidget implements Button {
     
     @Override
     public void addAction(Action action) {
-        addWidgetAction(action);
+        action().connect(action);
     }
     
     @Override

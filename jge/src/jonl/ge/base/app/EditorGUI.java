@@ -89,11 +89,11 @@ public class EditorGUI {
         window.setWidget(menuBarAndRest);
         
         
-        menuBar.addPainter((g)->{
+        menuBar.paint().connect((g)->{
             g.renderRect(0,0,menuBar.getWidth(),menuBar.getHeight(),new Vector4(0.7f,0.7f,0.8f,1));
         });
         
-        toolBar.addPainter((g)->{
+        toolBar.paint().connect((g)->{
             
             g.renderRect(0,0,toolBar.getWidth(),toolBar.getHeight(),new Vector4(0.9f,0.9f,0.9f,1));
         });

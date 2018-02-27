@@ -43,7 +43,7 @@ public class Editor extends AbstractApplication {
             manager.load();
         });
         
-        gui.editorViewer.addPainter((g)->{
+        gui.editorViewer.paint().connect((g)->{
             setViewport(camera);
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
