@@ -374,6 +374,10 @@ public final class Mathf {
         return x < min ? min : (x > max ? max : x);
     }
     
+    public static int clamp(int x, int min, int max) {
+        return x < min ? min : (x > max ? max : x);
+    }
+    
     /**
      * Returns isClamp with geq and leq parameters true
      * @return isClamp with geq and leq parameters true
@@ -446,6 +450,31 @@ public final class Mathf {
         float n = value - min;
         float d = max - min;
         return n / d;
+    }
+    
+    /**
+     * Alpha values with 0 will remain 0
+     * @param alphas list of values that add up to 1
+     * @return inverted list of values that also add up to be one such that the previous
+     * largest alpha value is now the smallest and vice-versa
+     */
+    public static float[] inverseAlphas(float[] alphas) {
+        //Using doubles for larger precision
+        double[] inverses = new double[alphas.length];
+        double sum = 0;
+        for (int i=0; i<alphas.length; i++) {
+            if (alphas[i]!=0) {
+                inverses[i] = 1.0 / alphas[i];
+                sum += inverses[i];
+            }
+        }
+        float[] ret = new float[alphas.length];
+        for (int i=0; i<alphas.length; i++) {
+            if (alphas[i]!=0) {
+                ret[i] = (float) (inverses[i] / sum);
+            }
+        }
+        return ret;
     }
     
     

@@ -5,10 +5,20 @@ public class TFillLayout extends TLayout {
     @Override
     void layout() {
         if (!isEmpty()) {
-            TWidget p = (TWidget) parent;
-            TWidget w = (TWidget) widgets()[0];
-            TLayoutManager.setPositionAndRequestFire(w, 0, 0);
-            TLayoutManager.setSizeAndRequestFire(w, p.width, p.height);
+            TLayoutItem item = getItem(0);
+            
+            int width = parent.width() - margin().left - margin().right;
+            int height = parent.height() - margin().bottom - margin().top;
+            
+            int sx = margin().left;
+            int sy = margin().bottom;
+            
+            int wWidth = TLayoutManager.allocate(TLayoutManager.getWidthPreference(item), width);
+            int wHeight = TLayoutManager.allocate(TLayoutManager.getHeightPreference(item), height);
+            if (item instanceof TWidgetItem) {
+                TLayoutManager.setPositionAndRequestFire(item.asWidget(), sx, sy);
+                TLayoutManager.setSizeAndRequestFire(item.asWidget(), wWidth, wHeight);
+            }
         }
     }
 

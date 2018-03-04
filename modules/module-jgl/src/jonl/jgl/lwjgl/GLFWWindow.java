@@ -18,6 +18,7 @@ import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeResponse;
 import jonl.jgl.lwjgl.GLFWInstance.SetInputModeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowPosRequest;
+import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeLimitsRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowTitleRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowVisibleRequest;
@@ -298,6 +299,12 @@ public final class GLFWWindow implements Window {
         SetWindowSizeRequest request = new SetWindowSizeRequest(id,this.width=width,this.height=height);
         GLFWInstance.setWindowSize(request);
     }
+    
+    @Override
+    public void setSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+        SetWindowSizeLimitsRequest request = new SetWindowSizeLimitsRequest(id,minWidth,minHeight,maxWidth,maxHeight);
+        GLFWInstance.setWindowSizeLimits(request);
+    }
 
     @Override
     public void setVisible(boolean visible) {
@@ -386,9 +393,22 @@ public final class GLFWWindow implements Window {
         return screenHeight;
     }
     
+    private final static BijectiveMap<Integer,Integer> ATTRIBUTE_MAP = new BijectiveMap<>();
+    
+    static {
+        ATTRIBUTE_MAP.put(Window.FOCUSED, GLFW.GLFW_FOCUSED);
+        ATTRIBUTE_MAP.put(Window.ICONIFIED, GLFW.GLFW_ICONIFIED);
+        ATTRIBUTE_MAP.put(Window.MAXIMIZED, GLFW.GLFW_MAXIMIZED);
+        ATTRIBUTE_MAP.put(Window.VISIBLE, GLFW.GLFW_VISIBLE);
+        ATTRIBUTE_MAP.put(Window.RESIZABLE, GLFW.GLFW_RESIZABLE);
+        ATTRIBUTE_MAP.put(Window.DECORATED, GLFW.GLFW_DECORATED);
+        ATTRIBUTE_MAP.put(Window.FLOATING, GLFW.GLFW_FLOATING);
+        ATTRIBUTE_MAP.put(Window.HOVERED, GLFW.GLFW_HOVERED);
+    }
+    
     @Override
     public boolean getAttribute(int attribute) {
-        GetWindowAttribRequest request = new GetWindowAttribRequest(id, attribute);
+        GetWindowAttribRequest request = new GetWindowAttribRequest(id, ATTRIBUTE_MAP.get(attribute));
         GetWindowAttribResponse response = GLFWInstance.getWindowAttrib(request);
         return response.value;
     }

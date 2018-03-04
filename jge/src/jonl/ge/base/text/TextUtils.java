@@ -2,6 +2,7 @@ package jonl.ge.base.text;
 
 import jonl.ge.core.text.Font;
 import jonl.ge.core.text.Text;
+import jonl.jutils.misc.AwtFont;
 
 class TextUtils {
 

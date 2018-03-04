@@ -1,28 +1,42 @@
 package jonl.aui;
 
+import java.util.ArrayList;
+
 public interface Layout {
 
     Widget parent();
     
-    Widget get();
     
-    Widget get(int index);
+    Widget getWidget();
     
-    void set(Widget widget);
+    void setWidget(Widget widget);
+    
+    
+    Widget getWidget(int index);
+    
+    LayoutItem getItem(int index);
     
     void add(Widget widget);
     
+    void add(LayoutItem item);
+    
     void remove(Widget widget);
+    
+    void remove(LayoutItem item);
     
     void removeAll();
     
-    Widget[] widgets();
+    int indexOf(Widget widget);
     
-    boolean contains(Widget widget);
+    int indexOf(LayoutItem item);
+    
+    ArrayList<Widget> widgets();
+    
+    ArrayList<LayoutItem> items();
+    
+    int count();
     
     boolean isEmpty();
-    
-    int size();
     
     Margin margin();
     

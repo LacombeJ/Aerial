@@ -33,7 +33,7 @@ public class TWindow extends TWidget implements Window {
     @Override
     public void setWidget(Widget widget) {
         this.widget = widget;
-        widgetLayout().set(widget);
+        widgetLayout().setWidget(widget);
     }
 
     @Override

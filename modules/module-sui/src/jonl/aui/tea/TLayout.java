@@ -3,14 +3,16 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.Layout;
+import jonl.aui.LayoutItem;
 import jonl.aui.Margin;
 import jonl.aui.Widget;
+import jonl.jutils.func.List;
 
 public abstract class TLayout implements Layout {
 
     TWidget parent = null;
     
-    private ArrayList<TWidget> widgets = new ArrayList<>();
+    private ArrayList<TLayoutItem> items = new ArrayList<>();
     
     private Margin margin = new Margin(9,9,9,9);
     private int spacing = 6;
@@ -20,71 +22,128 @@ public abstract class TLayout implements Layout {
     }
     
     @Override
-    public Widget parent() {
+    public TWidget parent() {
         return parent;
     }
 
     @Override
-    public Widget get() {
-        if (widgets.size()>0) {
-            return widgets.get(0);
+    public TWidget getWidget() {
+        for (TLayoutItem item : items) {
+            if (item instanceof TWidgetItem) {
+                return item.asWidget();
+            }
         }
         return null;
     }
     
     @Override
-    public Widget get(int index) {
-        return widgets.get(index);
+    public void setWidget(Widget widget) {
+        TWidget tw = (TWidget)widget;
+        Widget prev = getWidget();
+        if (prev != null) {
+            remove(prev);
+            add(tw);
+        } else {
+            add(tw);
+        }
     }
     
     @Override
-    public void set(Widget widget) {
-        TWidget tw = (TWidget)widget;
-        if (widgets.size()>0) {
-            widgets.remove(0);
+    public TWidget getWidget(int index) {
+        TLayoutItem item = getItem(index);
+        if (item instanceof TWidgetItem) {
+            return item.asWidget();
         }
-        widgets.add(0, tw);
-        tw.parentLayout = this;
+        return null;
+    }
+    
+    @Override
+    public TLayoutItem getItem(int index) {
+        return items.get(index);
     }
     
     @Override
     public void add(Widget widget) {
-        TWidget tw = (TWidget)widget;
-        if (widgets.add(tw)) {
-            tw.parentLayout = this;
+        add(new TWidgetItem(widget));
+    }
+    
+    @Override
+    public void add(LayoutItem item) {
+        if (items.add((TLayoutItem) item)) {
+            ((TLayoutItem)item).layout = this;
+            if (item instanceof TWidgetItem) {
+                ((TWidgetItem) item).asWidget().parentLayout = this;
+            }
         }
     }
 
     @Override
     public void remove(Widget widget) {
-        widgets.remove(widget);
+        for (TLayoutItem item : items) {
+            if (item instanceof TWidgetItem) {
+                TWidget tw = item.asWidget();
+                if (tw == widget) {
+                    remove(item);
+                    break;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void remove(LayoutItem item) {
+        items.remove(item);
     }
     
     @Override
     public void removeAll() {
-        widgets.clear();
+        items.clear();
+    }
+    
+    @Override
+    public int indexOf(Widget widget) {
+        for (int i=0; i<items.size(); i++) {
+            TLayoutItem item = items.get(i);
+            if (item instanceof TWidgetItem) {
+                if (item.asWidget() == widget) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+    
+    @Override
+    public int indexOf(LayoutItem item) {
+        return items.indexOf(item);
     }
 
     @Override
-    public Widget[] widgets() {
-        return widgets.toArray(new Widget[0]);
+    public ArrayList<Widget> widgets() {
+        ArrayList<Widget> widgets = new ArrayList<>();
+        for (TLayoutItem item : items) {
+            if (item instanceof TWidgetItem) {
+                widgets.add(item.asWidget());
+            }
+        }
+        return widgets;
     }
-
+    
     @Override
-    public boolean contains(Widget widget) {
-        return widgets.contains(widget);
+    public ArrayList<LayoutItem> items() {
+        return List.map(List.copy(items), i -> (TLayoutItem)i);
+    }
+    
+    @Override
+    public int count() {
+        return items.size();
     }
     
     @Override
     public boolean isEmpty() {
-        return widgets.size()==0;
+        return items.isEmpty();
     }
-    
-    @Override
-    public int size() {
-        return widgets.size();
-    }
-    
+
     @Override
     public Margin margin() {
         return new Margin(margin);

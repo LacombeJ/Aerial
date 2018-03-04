@@ -1,4 +1,4 @@
-package jonl.ge.base.text;
+package jonl.jutils.misc;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import jonl.jutils.misc.ImageUtils;
 
-class AwtFont {
+public class AwtFont {
     
     public static final int HA_LEFT   = 0;
     public static final int HA_CENTER = 1;

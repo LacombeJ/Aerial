@@ -23,6 +23,7 @@ public class TButton extends TWidget implements Button {
     private final Signal<Callback0D> clicked = new Signal<>();
     private final Signal<Callback<Boolean>> toggled = new Signal<>();
     
+    private int border = 4;
     private boolean isMouseWithin = false;
     private float intensityValue = 0;
     private float maxValue = 30;
@@ -95,6 +96,14 @@ public class TButton extends TWidget implements Button {
     public Signal<Callback<Boolean>> toggled() { return toggled; }
 
     // ------------------------------------------------------------------------
+    
+    @Override
+    protected TSizePolicy getSizePolicy() {
+        TSizePolicy sp = new TSizePolicy();
+        sp.minWidth = (int) TStyle.get(this).calibri.getWidth(text) + border;
+        sp.prefHeight = (int) TStyle.get(this).calibri.getHeight() + border;
+        return sp;
+    }
     
     @Override
     protected void paint(TGraphics g) {

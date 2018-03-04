@@ -57,6 +57,9 @@ class GLFWInstance {
     private static final RequestQueue<SetWindowSizeRequest,SetWindowSizeResponse>
         SET_WINDOW_SIZE_REQUEST         = new RequestQueue<>( (request) -> _setWindowSize(request) );
     
+    private static final RequestQueue<SetWindowSizeLimitsRequest,SetWindowSizeLimitsResponse>
+        SET_WINDOW_SIZE_LIMITS_REQUEST  = new RequestQueue<>( (request) -> _setWindowSizeLimits(request) );
+    
     private static final RequestQueue<GetInputModeRequest,GetInputModeResponse>
         GET_INPUT_MODE_REQUEST          = new RequestQueue<>( (request) -> _getInputMode(request) );
     
@@ -85,6 +88,7 @@ class GLFWInstance {
             SET_WINDOW_TITLE_REQUEST,
             SET_WINDOW_POS_REQUEST,
             SET_WINDOW_SIZE_REQUEST,
+            SET_WINDOW_SIZE_LIMITS_REQUEST,
             GET_INPUT_MODE_REQUEST,
             SET_INPUT_MODE_REQUEST,
             GET_CURSOR_POS_REQUEST,
@@ -111,6 +115,9 @@ class GLFWInstance {
     }
     static SetWindowSizeResponse setWindowSize(SetWindowSizeRequest request) {
         return SET_WINDOW_SIZE_REQUEST.request(request);
+    }
+    static SetWindowSizeLimitsResponse setWindowSizeLimits(SetWindowSizeLimitsRequest request) {
+        return SET_WINDOW_SIZE_LIMITS_REQUEST.request(request);
     }
     static GetInputModeResponse getInputMode(GetInputModeRequest request) {
         return GET_INPUT_MODE_REQUEST.request(request);
@@ -469,6 +476,34 @@ class GLFWInstance {
     private static SetWindowSizeResponse _setWindowSize(SetWindowSizeRequest request) {
         GLFW.glfwSetWindowSize(request.id,request.width,request.height);
         return new SetWindowSizeResponse();
+    }
+    
+    /* ********************************************************************************* */
+    /* **************************** Set Window Size Limits ***************************** */
+    /* ********************************************************************************* */
+    static class SetWindowSizeLimitsRequest extends Request {
+        final long id;
+        final int minWidth;
+        final int minHeight;
+        final int maxWidth;
+        final int maxHeight;
+        /** Use values of GLFW_DONT_CARE (-1) to ignore limits */
+        SetWindowSizeLimitsRequest(long id, int minWidth, int minHeight, int maxWidth, int maxHeight) {
+            this.id = id;
+            this.minWidth = minWidth;
+            this.minHeight = minHeight;
+            this.maxWidth = maxWidth;
+            this.maxHeight = maxHeight;
+        }
+    }
+    static class SetWindowSizeLimitsResponse extends Response {
+        SetWindowSizeLimitsResponse() {
+            
+        }
+    }
+    private static SetWindowSizeLimitsResponse _setWindowSizeLimits(SetWindowSizeLimitsRequest request) {
+        GLFW.glfwSetWindowSizeLimits(request.id,request.minWidth,request.minHeight,request.maxWidth,request.maxHeight);
+        return new SetWindowSizeLimitsResponse();
     }
     
     /* ********************************************************************************* */

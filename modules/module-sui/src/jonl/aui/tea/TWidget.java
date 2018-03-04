@@ -12,6 +12,7 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
 import jonl.jutils.func.Callback;
+import jonl.jutils.func.List;
 import jonl.jutils.time.Time;
 
 public class TWidget implements Widget {
@@ -20,6 +21,9 @@ public class TWidget implements Widget {
     protected int y;
     protected int width;
     protected int height;
+    
+    private boolean useWidgetSizePolicy = true;
+    private TSizePolicy defaultSizePolicy = new TSizePolicy();
     
     protected TLayout parentLayout = null;
     private TLayout layout = null;
@@ -56,6 +60,57 @@ public class TWidget implements Widget {
     @Override
     public int height() {
         return height;
+    }
+    
+    @Override
+    public int minWidth() {
+        return sizePolicy().minWidth;
+    }
+
+    @Override
+    public int minHeight() {
+        return sizePolicy().minHeight;
+    }
+
+    @Override
+    public void setMinSize(int width, int height) {
+        useWidgetSizePolicy = false;
+        defaultSizePolicy.minWidth = width;
+        defaultSizePolicy.minHeight = height;
+    }
+
+    @Override
+    public int maxWidth() {
+        return sizePolicy().maxWidth;
+    }
+
+    @Override
+    public int maxHeight() {
+        return sizePolicy().maxHeight;
+    }
+
+    @Override
+    public void setMaxSize(int width, int height) {
+        useWidgetSizePolicy = false;
+        defaultSizePolicy.maxWidth = width;
+        defaultSizePolicy.maxHeight = height;
+    }
+
+    @Override
+    public int preferredWidth() {
+        return sizePolicy().prefWidth;
+    }
+
+    @Override
+    public int preferredHeight() {
+        return sizePolicy().prefHeight;
+    }
+
+    @Override
+    public void setPreferredSize(int width, int height) {
+        useWidgetSizePolicy = false;
+        defaultSizePolicy.prefWidth = width;
+        defaultSizePolicy.prefHeight = height;
     }
     
     @Override
@@ -110,6 +165,17 @@ public class TWidget implements Widget {
     protected void setWidgetLayout(TLayout layout) {
         this.layout = layout;
         layout.parent = this;
+    }
+    
+    protected final TSizePolicy sizePolicy() {
+        if (useWidgetSizePolicy) {
+            return getSizePolicy();
+        }
+        return defaultSizePolicy;
+    }
+    
+    protected TSizePolicy getSizePolicy() {
+        return defaultSizePolicy;
     }
     
     protected boolean hasFocus() {
@@ -207,41 +273,26 @@ public class TWidget implements Widget {
     // ------------------------------------------------------------------------
     
     boolean hasChildren() {
-        if (layout != null) {
-            return !layout.isEmpty();
-        }
-        return false;
+        return getChildrenCount() != 0;
     }
     
     boolean hasChild(TWidget child) {
-        if (layout != null) {
-            return layout.contains(child);
-        }
-        return false;
+        return getChildren().contains(child);
     }
     
     int getChildrenCount() {
-        if (layout != null) {
-            return layout.size();
-        }
-        return 0;
+        return getChildren().size();
     }
     
     TWidget getChild(int index) {
-        if (layout != null) {
-            return (TWidget) layout.get(index);
-        }
-        return null;
+        return getChildren().get(index);
     }
     
     ArrayList<TWidget> getChildren() {
-        ArrayList<TWidget> children = new ArrayList<>();
         if (layout != null) {
-            for (Widget widget : layout.widgets()) {
-                children.add((TWidget) widget);
-            }
+            return List.map(layout.widgets(), c -> (TWidget)c);
         }
-        return children;
+        return new ArrayList<>();
     }
     
     void layoutChildren() {

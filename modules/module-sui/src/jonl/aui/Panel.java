@@ -1,5 +1,7 @@
 package jonl.aui;
 
+import java.util.ArrayList;
+
 public interface Panel extends Widget {
     
     Layout layout();
@@ -14,10 +16,6 @@ public interface Panel extends Widget {
     
     void removeAll();
     
-    Widget[] widgets();
-    
-    boolean isEmpty();
-    
-    int size();
+    ArrayList<Widget> widgets();
     
 }

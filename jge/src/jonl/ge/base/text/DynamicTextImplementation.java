@@ -10,6 +10,7 @@ import jonl.jgl.Texture;
 import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
 import jonl.jgl.Texture.Wrap;
+import jonl.jutils.misc.AwtFont;
 
 /**
  * This implementation of text rendering will keep a map of text to textures

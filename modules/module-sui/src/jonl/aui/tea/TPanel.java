@@ -1,5 +1,7 @@
 package jonl.aui.tea;
 
+import java.util.ArrayList;
+
 import jonl.aui.Layout;
 import jonl.aui.Panel;
 import jonl.aui.Widget;
@@ -26,7 +28,7 @@ public class TPanel extends TWidget implements Panel {
 
     @Override
     public Widget get(int index) {
-        return layout().get(index);
+        return layout().getWidget(index);
     }
 
     @Override
@@ -45,18 +47,8 @@ public class TPanel extends TWidget implements Panel {
     }
 
     @Override
-    public Widget[] widgets() {
+    public ArrayList<Widget> widgets() {
         return layout().widgets();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return layout().isEmpty();
-    }
-
-    @Override
-    public int size() {
-        return layout().size();
     }
     
 }

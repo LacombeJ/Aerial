@@ -4,17 +4,29 @@ import jonl.jutils.func.Callback;
 
 public interface Widget {
     
-    public int x();
-    public int y();
-    public int width();
-    public int height();
+    int x();
+    int y();
+    int width();
+    int height();
     
-    public int windowX();
-    public int windowY();
+    int minWidth();
+    int minHeight();
+    void setMinSize(int width, int height);
     
-    public boolean enabled();
+    int maxWidth();
+    int maxHeight();
+    void setMaxSize(int width, int height);
     
-    public void setEnabled(boolean enable);
+    int preferredWidth();
+    int preferredHeight();
+    void setPreferredSize(int width, int height);
+    
+    int windowX();
+    int windowY();
+    
+    boolean enabled();
+    
+    void setEnabled(boolean enable);
     
     /**
      * Emitted when widget is painted<br>
