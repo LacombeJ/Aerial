@@ -37,8 +37,9 @@ class TEventHandler {
         }
     }
     
-    private static boolean checkMouseFocusWidget(TWidget widget, TMouseEvent e, boolean released, boolean wasInClickState) {
+    private static boolean checkMouseFocusWidget(TWidget widget, TMouseEvent e, boolean released) {
         if (mouseFocusWidget != null) {
+            boolean wasInClickState = mouseFocusWidget.eventInClickState;
             Tuple2i eFocusPos = relative(widget, mouseFocusWidget, e.x, e.y);
             if (eFocusPos != null) {
                 TMouseEvent eventFocus = event(e, eFocusPos.x, eFocusPos.y);
@@ -64,7 +65,7 @@ class TEventHandler {
         return sendEvent(widget, e);
     }
     static boolean fireMouseButtonPressed(TWidget widget, TMouseEvent e) {
-        if (checkMouseFocusWidget(widget,e,false,false)) {
+        if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
         widget.eventInClickState = true;
@@ -92,11 +93,11 @@ class TEventHandler {
         return sendEvent(widget, e);
     }
     static boolean fireMouseButtonReleased(TWidget widget, TMouseEvent e) {
-        boolean wasInClickState = widget.eventInClickState;
-        widget.eventInClickState = false;
-        if (checkMouseFocusWidget(widget,e,true,wasInClickState)) {
+        if (checkMouseFocusWidget(widget,e,true)) {
             return false;
         }
+        boolean wasInClickState = widget.eventInClickState;
+        widget.eventInClickState = false;
         ArrayList<TWidget> children = widget.getChildren();
         if (children.size()==0) {
             return sendMouseEventAndHandleClickAndMouseFocus(widget, e, wasInClickState);
@@ -114,7 +115,7 @@ class TEventHandler {
     }
     
     static boolean fireMouseEnter(TWidget widget, TMouseEvent e) {
-        if (checkMouseFocusWidget(widget,e,false,false)) {
+        if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
         ArrayList<TWidget> children = widget.getChildren();
@@ -134,10 +135,10 @@ class TEventHandler {
     }
     
     static boolean fireMouseExit(TWidget widget, TMouseEvent e) {
-        widget.eventInClickState = false;
-        if (checkMouseFocusWidget(widget,e,false,false)) {
+        if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
+        widget.eventInClickState = false;
         ArrayList<TWidget> children = widget.getChildren();
         if (children.size()==0) {
             return sendEvent(widget, e);
@@ -157,7 +158,7 @@ class TEventHandler {
     }
     
     static boolean fireMouseMove(TWidget widget, TMouseEvent e) {
-        if (checkMouseFocusWidget(widget,e,false,false)) {
+        if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
         ArrayList<TWidget> children = widget.getChildren();

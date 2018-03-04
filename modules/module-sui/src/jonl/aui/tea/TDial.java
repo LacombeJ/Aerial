@@ -6,7 +6,6 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
-import jonl.jutils.func.Tuple2i;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector2;
@@ -122,12 +121,8 @@ public class TDial extends TWidget implements Dial {
             float x = width()/2f;
             float y = height()/2f;
             
-            //Tuple2i local = fromGlobalSpace(event.x,event.y);
-            
-            Tuple2i local = new Tuple2i(event.x,event.y);
-            
             Vector2 u = new Vector2(ox-x,oy-y);
-            Vector2 v = new Vector2(local.x-x,local.y-y);
+            Vector2 v = new Vector2(event.x-x, event.y-y);
             
             float ang = Vector2.rad(u,v);
             int oldValue = value;
@@ -145,11 +140,6 @@ public class TDial extends TWidget implements Dial {
                 changed().emit(cb->cb.f(value));
             }
         }
-    }
-    
-    @Override
-    protected void handleMouseExit(TMouseEvent event) {
-        inDialState = false;
     }
 
 }
