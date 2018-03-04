@@ -1,6 +1,7 @@
 package jonl.ge.core;
 
 import jonl.aui.Widget;
+import jonl.aui.tea.TWindow;
 import jonl.ge.base.app.ApplicationWindow;
 import jonl.ge.base.SceneManager;
 import jonl.ge.base.app.AbstractApplication;
@@ -30,9 +31,9 @@ public class Editor extends AbstractApplication {
         
         gui.create();
         
-        glWindow = gui.window.getWindow();
+        glWindow = gui.window.window();
         gl = glWindow.getGraphicsLibrary();
-        input = new EditorInput(gui.editorViewer,gui.window.getInput());
+        input = new EditorInput(gui.editorViewer, gui.window.input());
         window = new ApplicationWindow(this);
         manager.create(delegate, service, glWindow.getGraphicsLibrary());
         
@@ -95,10 +96,10 @@ public class Editor extends AbstractApplication {
     
     void setViewport(Camera camera) {
         Widget view = gui.editorViewer;
-        double px = view.getWindowX();
-        double py = view.getWindowY();
-        double pw = view.getWidth();
-        double ph = view.getHeight();
+        double px = view.windowX();
+        double py = view.windowY();
+        double pw = view.width();
+        double ph = view.height();
         double width = getWidth();
         double height = getHeight();
         float left = (float) (px / width);
@@ -148,7 +149,7 @@ public class Editor extends AbstractApplication {
 
 	@Override
 	public String getTitle() {
-		return gui.window.getTitle();
+		return gui.window.title();
 	}
 
 	@Override
@@ -158,12 +159,12 @@ public class Editor extends AbstractApplication {
 
 	@Override
 	public int getWidth() {
-		return gui.editorViewer.getWidth();
+		return gui.editorViewer.width();
 	}
 
 	@Override
 	public int getHeight() {
-		return gui.editorViewer.getHeight();
+		return gui.editorViewer.height();
 	}
 
 	@Override

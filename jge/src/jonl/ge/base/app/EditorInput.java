@@ -17,7 +17,7 @@ public class EditorInput implements Input {
     }
     
     boolean isWithin(float x, float y) {
-        return (x>=0 && x<=box.getWidth() && y>=0 && y<=box.getHeight());
+        return (x>=0 && x<=box.width() && y>=0 && y<=box.height());
     }
     
     boolean isMouseWithin() {
@@ -50,12 +50,12 @@ public class EditorInput implements Input {
 
     @Override
     public float getX() {
-        return input.getX() - box.getWindowX();
+        return input.getX() - box.windowX();
     }
 
     @Override
     public float getY() {
-        return input.getY() - box.getWindowY();
+        return input.getY() - box.windowY();
     }
     
     @Override

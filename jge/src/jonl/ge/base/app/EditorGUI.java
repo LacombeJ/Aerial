@@ -1,17 +1,18 @@
 package jonl.ge.base.app;
 
 import jonl.aui.Align;
-import jonl.aui.Border;
 import jonl.aui.HAlign;
+import jonl.aui.Panel;
+import jonl.aui.ScrollPanel;
+import jonl.aui.SplitPanel;
+import jonl.aui.Tree;
 import jonl.aui.TreeItem;
+import jonl.aui.UIManager;
 import jonl.aui.VAlign;
-import jonl.aui.sui.SFixedSplitPanel;
-import jonl.aui.sui.SPanel;
-import jonl.aui.sui.SScrollPanel;
-import jonl.aui.sui.SSplitPanel;
-import jonl.aui.sui.STree;
-import jonl.aui.sui.SUIManager;
-import jonl.aui.sui.SWindow;
+import jonl.aui.Window;
+import jonl.aui.tea.TGraphics;
+import jonl.aui.tea.TUIManager;
+import jonl.aui.tea.TWindow;
 import jonl.ge.core.Editor;
 import jonl.vmath.Vector4;
 
@@ -19,21 +20,21 @@ public class EditorGUI {
 
 	public Editor editor;
     
-	public SUIManager ui;
+	public UIManager ui;
     
-    public SWindow window;
-    public SFixedSplitPanel menuBarAndRest;
-    public SPanel menuBar;
-    public SFixedSplitPanel toolBarAndMainSplit;
-    public SPanel toolBar;
-    public SSplitPanel mainSplit;
-    public SScrollPanel hierarchyScroll;
-    public STree tree;
-    public SSplitPanel editorSplit;
-    public SSplitPanel consoleSplit;
-    public SPanel editorViewer;
-    public SPanel tabPanel;
-    public SPanel propertyPanel;
+    public TWindow window;
+    public Panel menuBarAndRest;
+    public Panel menuBar;
+    public Panel toolBarAndMainSplit;
+    public Panel toolBar;
+    public SplitPanel mainSplit;
+    public ScrollPanel hierarchyScroll;
+    public Tree tree;
+    public SplitPanel editorSplit;
+    public SplitPanel consoleSplit;
+    public Panel editorViewer;
+    public Panel tabPanel;
+    public Panel propertyPanel;
     
     public boolean resizable = true;
     public boolean fullscreen = false;
@@ -44,10 +45,10 @@ public class EditorGUI {
     
     public void create() {
         
-        ui = new SUIManager();
+        ui = new TUIManager();
         
         //Window
-        window = ui.window();
+        window = (TWindow) ui.window();
         window.setTitle("Engine");
         window.setWidth(1024);
         window.setHeight(576);
@@ -55,10 +56,10 @@ public class EditorGUI {
         window.setResizable(resizable);
         window.create();
         {
-            menuBarAndRest = ui.fixedSplitPanel();
+            //menuBarAndRest = ui.fixedSplitPanel();
             {
                 menuBar = ui.panel();
-                toolBarAndMainSplit = ui.fixedSplitPanel();
+                //toolBarAndMainSplit = ui.fixedSplitPanel();
                 {
                     toolBar = ui.panel();
                     mainSplit = ui.splitPanel();
@@ -67,7 +68,7 @@ public class EditorGUI {
                         {
                             tree = ui.tree();
                         }
-                        hierarchyScroll.setScroll(tree,0,0,200,800);
+                        //hierarchyScroll.setScroll(tree,0,0,200,800);
                         editorSplit = ui.splitPanel();
                         {
                             consoleSplit = ui.splitPanel();
@@ -82,20 +83,20 @@ public class EditorGUI {
                     }
                     mainSplit.setSplit(hierarchyScroll,editorSplit,Align.HORIZONTAL,0.2);
                 }
-                toolBarAndMainSplit.setSplit(toolBar,mainSplit,Border.TOP,32);
+                //toolBarAndMainSplit.setSplit(toolBar,mainSplit,Border.TOP,32);
             }
-            menuBarAndRest.setSplit(menuBar,toolBarAndMainSplit,Border.TOP,20);
+            //menuBarAndRest.setSplit(menuBar,toolBarAndMainSplit,Border.TOP,20);
         }
         window.setWidget(menuBarAndRest);
         
+        //TODO remove TGraphics cast with an implementation in graphics
         
         menuBar.paint().connect((g)->{
-            g.renderRect(0,0,menuBar.getWidth(),menuBar.getHeight(),new Vector4(0.7f,0.7f,0.8f,1));
+            ((TGraphics)g).renderRect(0,0,menuBar.width(),menuBar.height(),new Vector4(0.7f,0.7f,0.8f,1));
         });
         
         toolBar.paint().connect((g)->{
-            
-            g.renderRect(0,0,toolBar.getWidth(),toolBar.getHeight(),new Vector4(0.9f,0.9f,0.9f,1));
+            ((TGraphics)g).renderRect(0,0,toolBar.width(),toolBar.height(),new Vector4(0.9f,0.9f,0.9f,1));
         });
         
         TreeItem item = ui.treeItem("TreeRoot");

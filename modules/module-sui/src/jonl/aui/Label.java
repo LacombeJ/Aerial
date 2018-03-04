@@ -2,7 +2,7 @@ package jonl.aui;
 
 public interface Label extends Widget {
     
-    String getText();
+    String text();
     
     void setText(String text);
     

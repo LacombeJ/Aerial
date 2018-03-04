@@ -1,9 +1,23 @@
 package jonl.aui;
 
-public interface Panel extends MultiSlot {
+public interface Panel extends Widget {
     
-    Layout<MultiSlot> getLayout();
+    Layout layout();
     
-    void setLayout(Layout<MultiSlot> layout);
+    void setLayout(Layout layout);
+    
+    Widget get(int index);
+    
+    void add(Widget widget);
+    
+    void remove(Widget widget);
+    
+    void removeAll();
+    
+    Widget[] widgets();
+    
+    boolean isEmpty();
+    
+    int size();
     
 }

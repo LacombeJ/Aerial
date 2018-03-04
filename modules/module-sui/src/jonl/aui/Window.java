@@ -1,11 +1,15 @@
 package jonl.aui;
 
-public interface Window extends SingleSlot {
+public interface Window extends Widget {
 
     /** Creates the window with some of the set parameters */
     void create();
     
-    String getTitle();
+    Widget widget();
+    
+    void setWidget(Widget widget);
+    
+    String title();
     void setTitle(String title);
     
     void setPosition(HAlign halign, VAlign valign);
@@ -18,6 +22,4 @@ public interface Window extends SingleSlot {
     void setVisible(boolean visible);
     void setResizable(boolean resizable);
 
-    
-    
 }

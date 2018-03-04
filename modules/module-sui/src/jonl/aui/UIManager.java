@@ -18,15 +18,11 @@ public interface UIManager {
     
     public Panel panel();
     
-    public Panel panel(Layout<MultiSlot> layout);
+    public Panel panel(Layout layout);
     
     public SplitPanel splitPanel();
     
     public SplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio);
-    
-    public FixedSplitPanel fixedSplitPanel();
-    
-    public FixedSplitPanel fixedSplitPanel(Widget w1, Widget w2, Border type, int fix);
     
     public ScrollPanel scrollPanel();
     
@@ -39,5 +35,9 @@ public interface UIManager {
     // UI Elements
     
     public Font font(String font, int size);
+    
+    public ListLayout listLayout();
+    
+    public ListLayout listLayout(Align align);
     
 }

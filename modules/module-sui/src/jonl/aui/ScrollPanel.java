@@ -1,12 +1,9 @@
 package jonl.aui;
 
-public interface ScrollPanel extends SingleSlot {
+public interface ScrollPanel extends Widget {
     
-    void setScroll(Widget w, int x, int y, int width, int height);
+    Widget widget();
     
-    void setScrollX(int x);
-    void setScrollY(int y);
-    void setScrollWidth(int width);
-    void setScrollHeight(int height);
+    void setWidget(Widget widget);
     
 }

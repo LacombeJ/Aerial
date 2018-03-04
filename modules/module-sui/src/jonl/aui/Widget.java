@@ -1,41 +1,25 @@
 package jonl.aui;
 
 import jonl.jutils.func.Callback;
-import jonl.jutils.func.Tuple2i;
 
 public interface Widget {
-
-    Widget getRoot();
-    Container getParent();
     
-    int getX();
-    int getY();
-    int getWidth();
-    int getHeight();
+    public int x();
+    public int y();
+    public int width();
+    public int height();
     
-    int getWindowX();
-    int getWindowY();
+    public int windowX();
+    public int windowY();
     
-    int getScreenX();
-    int getScreenY();
+    public boolean enabled();
     
-    /** @return local space coordinates from global space coordinates */
-    Tuple2i fromGlobalSpace(int globalX, int globalY);
-    /** @return global space coordinates from local space coordinates */
-    Tuple2i toGlobalSpace(int localX, int localY);
+    public void setEnabled(boolean enable);
     
-    /** @return whether this point is within the local widget bounds */
-    boolean isWithin(int x, int y);
-    
-    <T> void emit(Signal<T> signal, Callback<T> cb);
-    <T> void connect(Signal<T> signal, T slot);
-    
-    Signal<Painter> paint();
-    Signal<Int2ChangedListener> positionChanged();
-    Signal<Int2ChangedListener> sizeChanged();
-    Signal<MouseMotionListener> mouseMoved();
-    Signal<MouseButtonListener> mouseButton();
-    Signal<MouseMotionListener> globalMouseMoved();
-    Signal<MouseButtonListener> globalMouseButton();
+    /**
+     * Emitted when widget is painted<br>
+     * Graphics g -> graphics used to paint widget
+     */
+    Signal<Callback<Graphics>> paint();
     
 }

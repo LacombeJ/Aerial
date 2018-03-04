@@ -1,6 +1,6 @@
 package jonl.ge.base.app;
 
-import jonl.aui.sui.SWindow;
+import jonl.aui.Window;
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Input;
 import jonl.ge.core.Material;
@@ -19,7 +19,7 @@ import jonl.vmath.Vector3;
 public class EditorAssets {
 
     /* Mesh Assets */
-	public static GameObject control(SWindow window) {
+	public static GameObject control(Window window) {
         GameObject control = new GameObject();
         control.setName("EditorControl");
         
@@ -154,11 +154,11 @@ public class EditorAssets {
     
 	public static class MouseGrab extends Property {
 
-        SWindow window;
+        Window window;
         boolean open = false;
         boolean close = false;
         
-        MouseGrab(SWindow window) {
+        MouseGrab(Window window) {
             this.window = window;
         }
         
@@ -172,11 +172,11 @@ public class EditorAssets {
             //might affect the input then
             
             if (open) {
-                window.openInput();
+                //window.openInput();
                 open = false;
             }
             if (close) {
-                window.closeInput();
+                //window.closeInput();
                 close = false;
             }
             
