@@ -17,7 +17,9 @@ public class TWindow extends TWidget implements Window {
     
     TWindow() {
         manager = new TWindowManager(this);
-        setWidgetLayout(new TFillLayout());
+        TFillLayout layout = new TFillLayout();
+        layout.setMargin(0, 0, 0, 0);
+        setWidgetLayout(layout);
     }
     
     @Override

@@ -68,8 +68,8 @@ public class TGraphics implements Graphics {
         gl.glScissor(currentCut);
         float ox = offsetX;
         float oy = offsetY;
-        offsetX = w.x;
-        offsetY = w.y;
+        offsetX = w.windowX();
+        offsetY = w.windowY();
         paintWidget(w);
         offsetX = ox;
         offsetY = oy;
