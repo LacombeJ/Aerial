@@ -173,10 +173,10 @@ class TEventHandler {
             boolean inNow = within(child,x,y);
             boolean inBefore = within(child,prevX,prevY);
             if (inNow && !inBefore) {
-                sendEvent(child,event(e, TEventType.MouseEnter, x, y));
+                fireMouseEnter(child,event(e, TEventType.MouseEnter, x, y));
             }
             if (!inNow && inBefore) {
-                sendEvent(child,event(e, TEventType.MouseExit, x, y));
+                fireMouseExit(child,event(e, TEventType.MouseExit, x, y));
             }
             if (inNow && inBefore) {
                 if (fireMouseMove(child,event(e, x, y))) {

@@ -18,6 +18,6 @@ public interface SplitPanel extends Widget {
     
     double ratio();
     
-    void setRatio(double d);
+    void setRatio(double ratio);
     
 }

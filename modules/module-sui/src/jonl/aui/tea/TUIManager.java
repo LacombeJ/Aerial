@@ -2,11 +2,10 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Font;
-import jonl.aui.Label;
 import jonl.aui.Layout;
 import jonl.aui.ListLayout;
 import jonl.aui.ScrollPanel;
-import jonl.aui.SplitPanel;
+import jonl.aui.SpacerItem;
 import jonl.aui.Tree;
 import jonl.aui.TreeItem;
 import jonl.aui.UIManager;
@@ -30,15 +29,13 @@ public class TUIManager implements UIManager {
     }
 
     @Override
-    public Label label() {
-        // TODO Auto-generated method stub
-        return null;
+    public TLabel label() {
+        return new TLabel();
     }
 
     @Override
-    public Label label(String text) {
-        // TODO Auto-generated method stub
-        return null;
+    public TLabel label(String text) {
+        return new TLabel(text);
     }
 
     @Override
@@ -57,15 +54,13 @@ public class TUIManager implements UIManager {
     }
 
     @Override
-    public SplitPanel splitPanel() {
-        // TODO Auto-generated method stub
-        return null;
+    public TSplitPanel splitPanel() {
+        return new TSplitPanel();
     }
 
     @Override
-    public SplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio) {
-        // TODO Auto-generated method stub
-        return null;
+    public TSplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio) {
+        return new TSplitPanel();
     }
 
     @Override
@@ -91,11 +86,31 @@ public class TUIManager implements UIManager {
         // TODO Auto-generated method stub
         return null;
     }
+    
+    @Override
+    public TOverlay overlay() {
+        return new TOverlay();
+    }
 
     @Override
     public Font font(String font, int size) {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    @Override
+    public SpacerItem spacerItem() {
+        return new TSpacerItem();
+    }
+    
+    @Override
+    public TSpacerItem spacerItem(Align align) {
+        return new TSpacerItem(align);
+    }
+    
+    @Override
+    public TWidgetItem widgetItem(Widget widget) {
+        return new TWidgetItem(widget);
     }
 
     @Override

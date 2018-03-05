@@ -12,7 +12,7 @@ public class TWidgetItem extends TLayoutItem implements WidgetItem {
     }
     
     @Override
-    public Widget widget() {
+    public TWidget widget() {
         return widget;
     }
 

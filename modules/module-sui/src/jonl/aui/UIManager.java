@@ -4,40 +4,48 @@ public interface UIManager {
 
     //UI Widgets
     
-    public Window window();
+    Window window();
     
-    public Button button();
+    Button button();
     
-    public Button button(String text);
+    Button button(String text);
     
-    public Label label();
+    Label label();
     
-    public Label label(String text);
+    Label label(String text);
     
-    public Dial dial();
+    Dial dial();
     
-    public Panel panel();
+    Panel panel();
     
-    public Panel panel(Layout layout);
+    Panel panel(Layout layout);
     
-    public SplitPanel splitPanel();
+    SplitPanel splitPanel();
     
-    public SplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio);
+    SplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio);
     
-    public ScrollPanel scrollPanel();
+    ScrollPanel scrollPanel();
     
-    public Tree tree();
+    Tree tree();
     
-    public TreeItem treeItem();
+    TreeItem treeItem();
     
-    public TreeItem treeItem(String text);
+    TreeItem treeItem(String text);
+    
+    Overlay overlay();
     
     // UI Elements
     
-    public Font font(String font, int size);
+    Font font(String font, int size);
     
-    public ListLayout listLayout();
+    SpacerItem spacerItem();
     
-    public ListLayout listLayout(Align align);
+    SpacerItem spacerItem(Align align);
+    
+    WidgetItem widgetItem(Widget widget);
+    
+    ListLayout listLayout();
+    
+    ListLayout listLayout(Align align);
     
 }

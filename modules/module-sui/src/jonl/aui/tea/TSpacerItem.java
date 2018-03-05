@@ -1,43 +1,60 @@
 package jonl.aui.tea;
 
+import jonl.aui.Align;
 import jonl.aui.SpacerItem;
 
 public class TSpacerItem extends TLayoutItem implements SpacerItem {
 
+    private Align align = Align.VERTICAL;
+    
+    private TSizePolicy sizePolicy = new TSizePolicy();
+    
+    public TSpacerItem() {
+        
+    }
+    
+    public TSpacerItem(Align align) {
+        this.align = align;
+    }
+    
+    @Override
+    public Align align() {
+        return align;
+    }
+    
+    @Override
+    public void setAlign(Align align) {
+        this.align = align;
+    }
+    
     @Override
     public int minWidth() {
-        // TODO Auto-generated method stub
-        return 0;
+        return sizePolicy.minWidth;
     }
 
     @Override
     public int minHeight() {
-        // TODO Auto-generated method stub
-        return 0;
+        return sizePolicy.minHeight;
     }
 
     @Override
     public int maxWidth() {
-        // TODO Auto-generated method stub
-        return 0;
+        return sizePolicy.maxWidth;
     }
 
     @Override
     public int maxHeight() {
-        // TODO Auto-generated method stub
-        return 0;
+        return sizePolicy.maxHeight;
     }
     
     @Override
     public int preferredWidth() {
-        // TODO Auto-generated method stub
-        return 0;
+        return sizePolicy.prefWidth;
     }
 
     @Override
     public int preferredHeight() {
-        // TODO Auto-generated method stub
-        return 0;
+        return sizePolicy.prefHeight;
     }
     
 }
