@@ -2,7 +2,6 @@ package jonl.jutils.image;
 
 import java.awt.image.BufferedImage;
 
-import jonl.jutils.math.Mathd;
 import jonl.jutils.misc.ImageUtils;
 import jonl.jutils.structs.Array2Di;
 
@@ -60,8 +59,8 @@ public class ImageArray extends Array2Di {
                 int[] rgb01 = ImageUtils.getColorInt(get(i*2,     j*2 + 1), true);
                 int[] rgb11 = ImageUtils.getColorInt(get(i*2 + 1, j*2 + 1), true);
                 int[] rgb10 = ImageUtils.getColorInt(get(i*2 + 1, j*2    ), true);
-                int[] avg = Mathd.sum(rgb00,rgb01,rgb11,rgb10);
-                Mathd.divBy(avg, 4);
+                int[] avg = sum(rgb00,rgb01,rgb11,rgb10);
+                divBy(avg, 4);
                 image.set(i, j, ImageUtils.getRgbaInt(avg));
             }
         }
@@ -76,6 +75,26 @@ public class ImageArray extends Array2Di {
             }
         }
         return bi;
+    }
+    
+    public static void addBy(int[] dst, int[] add) {
+        for (int i=0; i<dst.length; i++) {
+            dst[i] += add[i];
+        }
+    }
+    
+    public static int[] sum(int[]... arrays) {
+        int[] ret = new int[arrays[0].length];
+        for (int i=0; i<arrays.length; i++) {
+            addBy(ret,arrays[i]);
+        }
+        return ret;
+    }
+    
+    public static void divBy(int[] array, int v) {
+        for (int i=0; i<array.length; i++) {
+            array[i] /= v;
+        }
     }
 
 }

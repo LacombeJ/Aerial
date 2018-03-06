@@ -3,7 +3,6 @@ module jonl.utils {
     
 	exports jonl.jutils.structs;
 	exports jonl.jutils.image;
-	exports jonl.jutils.math;
 	exports jonl.jutils;
 	exports jonl.jutils.misc;
 	exports jonl.jutils.io;
