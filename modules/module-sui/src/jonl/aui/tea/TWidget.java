@@ -3,7 +3,6 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.Graphics;
-import jonl.aui.Layout;
 import jonl.aui.Signal;
 import jonl.aui.Widget;
 import jonl.aui.Window;
@@ -11,11 +10,12 @@ import jonl.aui.tea.event.TEvent;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
+import jonl.aui.tea.graphics.TStyle;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.List;
 import jonl.jutils.time.Time;
 
-public class TWidget implements Widget {
+public abstract class TWidget implements Widget {
 
     protected int x;
     protected int y;
@@ -32,11 +32,16 @@ public class TWidget implements Widget {
     
     private final Signal<Callback<Graphics>> paint = new Signal<>();
     
+    TStyle style = null;
+    
     // Variables used by event handler
     boolean eventInClickState = false;
     Time eventTimeSinceLastClick = new Time();
     boolean eventMouseFocusSupport = false;
     
+    public TWidget() {
+        TUIManager.instance().enroll(this);
+    }
     
     // AUI Widget Methods
     
@@ -158,7 +163,11 @@ public class TWidget implements Widget {
     
     // ------------------------------------------------------------------------
     
-    protected Layout widgetLayout() {
+    protected TStyle style() {
+        return style;
+    }
+    
+    protected TLayout widgetLayout() {
         return layout;
     }
     

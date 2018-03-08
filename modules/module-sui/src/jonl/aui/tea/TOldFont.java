@@ -2,13 +2,13 @@ package jonl.aui.tea;
 
 import jonl.aui.Font;
 
-public class TFont implements Font {
+public class TOldFont implements Font {
 
-    jonl.jgl.Font font;
+    public jonl.jgl.Font font;
     String name;
     int size;
     
-    TFont(String font, int size) {
+    public TOldFont(String font, int size) {
         name = font;
         this.size = size;
     }

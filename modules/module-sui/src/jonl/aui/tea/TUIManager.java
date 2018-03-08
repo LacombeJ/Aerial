@@ -10,8 +10,32 @@ import jonl.aui.Tree;
 import jonl.aui.TreeItem;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
+import jonl.aui.tea.graphics.TStyle;
 
 public class TUIManager implements UIManager {
+    
+    private static TUIManager ui = null;
+    
+    public static TUIManager instance() {
+        if (ui==null) {
+            ui = new TUIManager();
+        }
+        return ui;
+    }
+    
+    private TStyle style = new TStyle();
+    
+    private TUIManager() {
+        
+    }
+    
+    public TStyle getStyle() {
+        return style;
+    }
+    
+    void enroll(TWidget widget) {
+        widget.style = style;
+    }
     
     @Override
     public TWindow window() {

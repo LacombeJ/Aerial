@@ -6,6 +6,7 @@ import jonl.aui.Widget;
 public class TOverlay extends TWidget implements Overlay {
     
     public TOverlay() {
+        super();
         setWidgetLayout(new TOverlayLayout());
     }
     

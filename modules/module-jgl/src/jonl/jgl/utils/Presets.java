@@ -49,7 +49,9 @@ public class Presets {
         sb.append("    vec4 texColor = texture2D(texture,vTexCoord);");  
         sb.append("    gl_FragColor = texColor * fontColor;");
         sb.append("    gl_FragColor = vec4(1,1,1,texColor.w) * fontColor;");
+        //sb.append("    gl_FragColor = texColor;"); //TODO remove debug
         //sb.append("    gl_FragColor = fontColor;"); //TODO remove debug
+        //sb.append("    gl_FragColor = vec4(1,0,0,1);"); //TODO remove debug
         sb.append("}");
         return sb.toString();
     }

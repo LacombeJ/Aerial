@@ -5,7 +5,7 @@ import java.util.HashMap;
 import jonl.jgl.GraphicsLibrary;
 import jonl.vmath.Vector4;
 
-class TStyle {
+class TOldStyle {
 
     private static HashMap<GraphicsLibrary,Instance> map = new HashMap<>();
     
@@ -15,12 +15,12 @@ class TStyle {
         
         GraphicsLibrary gl;
         
-        TFont calibri;
+        TOldFont calibri;
         Vector4 buttonColor = new Vector4(0.8f,0.8f,0.8f,1);
         Vector4 buttonColorHover = new Vector4(0.5f,0.5f,0.6f,1);
         
         private void create() {
-            calibri = new TFont("Calibri",16);
+            calibri = new TOldFont("Calibri",16);
             calibri.font = gl.glGenFont("Calibri",jonl.jgl.Font.PLAIN,16,false);
         }
     }

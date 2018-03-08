@@ -27,6 +27,7 @@ public class TDial extends TWidget implements Dial {
     private final Signal<Callback0D> released = new Signal<>();
     
     public TDial() {
+        super();
         setMouseFocusSupport(true);
     }
     
@@ -83,7 +84,7 @@ public class TDial extends TWidget implements Dial {
         float dim = min * ratio;
         float x = width()/2f - dim/2;
         float y = height()/2f - dim/2;
-        g.renderCircle(x,y,dim,dim,TStyle.get(this).buttonColorHover);
+        g.renderCircle(x,y,dim,dim,TOldStyle.get(this).buttonColorHover);
         Matrix4 mat = Matrix4.identity();
         
         mat.translate(width()/2f,height()/2f,0);
@@ -93,7 +94,7 @@ public class TDial extends TWidget implements Dial {
         
         mat.translate(dim/2,0,0);
         mat.scale(dim/10,dim/10,1);
-        g.renderRect(mat,TStyle.get(this).buttonColor);
+        g.renderRect(mat,TOldStyle.get(this).buttonColor);
     }
     
     @Override

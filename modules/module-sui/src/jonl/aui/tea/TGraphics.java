@@ -2,11 +2,14 @@ package jonl.aui.tea;
 
 import java.nio.FloatBuffer;
 
+import jonl.jutils.io.Console;
 import jonl.jutils.misc.*;
 import jonl.vmath.*;
 import jonl.aui.Graphics;
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
+import jonl.aui.tea.graphics.TColor;
+import jonl.aui.tea.graphics.TTextManager;
 import jonl.jgl.*;
 import jonl.jgl.GraphicsLibrary.*;
 import jonl.jgl.utils.*;
@@ -14,6 +17,8 @@ import jonl.jgl.utils.*;
 public class TGraphics implements Graphics {
 
     GraphicsLibrary gl;
+    
+    TTextManager textManager;
     
     float offsetX;
     float offsetY;
@@ -47,6 +52,7 @@ public class TGraphics implements Graphics {
         solid = loadProgramFromSource(Presets.solidVSSource(version),Presets.solidFSSource(version));
         basic = loadProgramFromSource(Presets.basicVSSource(version),Presets.basicFSSource(version));
         
+        textManager = new TTextManager(gl);
     }
     
     void setOrtho(Matrix4 ortho) {
@@ -65,7 +71,7 @@ public class TGraphics implements Graphics {
             currentCut = cutOut(currentCut,box);
         }
         gl.glEnable(Target.SCISSOR_TEST);
-        gl.glScissor(currentCut);
+        //gl.glScissor(currentCut);
         float ox = offsetX;
         float oy = offsetY;
         offsetX = w.windowX();
@@ -93,6 +99,10 @@ public class TGraphics implements Graphics {
         render(rect,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
     }
     
+    public void renderRect(float x, float y, float w, float h, TColor color) {
+        render(rect,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector());
+    }
+    
     public void renderRect(Matrix4 mat, Vector4 color) {
         Matrix4 matrix = Matrix4.identity().translate(offsetX,offsetY,0).multiply(mat);
         render(rect,matrix,color);
@@ -100,7 +110,12 @@ public class TGraphics implements Graphics {
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
             jonl.aui.Font font, Vector4 color) {
-        renderString(string,x+offsetX,y+offsetY,halign,valign,(TFont)font,color);
+        renderText(string,x,y,halign,valign,font,TColor.fromVector(color));
+    }
+    
+    public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
+            jonl.aui.Font font, TColor color) {
+        textManager.render(string, x+offsetX, y+offsetY, ortho, halign, valign, color, fontRect, fontProgram);
     }
     
     
@@ -152,7 +167,7 @@ public class TGraphics implements Graphics {
     }
     
     
-    private void renderChar(char c, float x, float y, TFont font,
+    private void renderChar(char c, float x, float y, TOldFont font,
             Matrix4 model) { 
         fontRect.setTexCoordAttrib(font.font.getIndices(c),2);
         
@@ -175,7 +190,7 @@ public class TGraphics implements Graphics {
     
     //TODO static text transform to reduce matrix multiplications?
     private void renderString(String string, float x, float y, HAlign halign, VAlign valign,
-            TFont font, Vector4 color) {
+            TOldFont font, Vector4 color) {
         
         Matrix4 model = Matrix4.identity().translate(x,y,0);
         gl.glUseProgram(fontProgram);

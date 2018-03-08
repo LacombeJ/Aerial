@@ -3,7 +3,8 @@ module jonl.aui {
     
 	exports jonl.aui;
 	exports jonl.aui.tea;
-
+	exports jonl.aui.tea.graphics;
+	
 	//requires java.base;
 	//requires java.desktop;
 	

@@ -9,7 +9,6 @@ import jonl.aui.Tree;
 import jonl.aui.TreeItem;
 import jonl.aui.UIManager;
 import jonl.aui.VAlign;
-import jonl.aui.Window;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
@@ -45,7 +44,7 @@ public class EditorGUI {
     
     public void create() {
         
-        ui = new TUIManager();
+        ui = TUIManager.instance();
         
         //Window
         window = (TWindow) ui.window();

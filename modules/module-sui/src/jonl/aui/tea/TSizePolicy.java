@@ -2,12 +2,12 @@ package jonl.aui.tea;
 
 public class TSizePolicy {
 
-    int minWidth = 0;
-    int minHeight = 0;
-    int maxWidth = Integer.MAX_VALUE;
-    int maxHeight = Integer.MAX_VALUE;
-    int prefWidth = 0;
-    int prefHeight = 0;
+    public int minWidth = 0;
+    public int minHeight = 0;
+    public int maxWidth = Integer.MAX_VALUE;
+    public int maxHeight = Integer.MAX_VALUE;
+    public int prefWidth = 0;
+    public int prefHeight = 0;
     
     public TSizePolicy() {
         

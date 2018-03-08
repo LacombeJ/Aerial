@@ -1,15 +1,13 @@
 package jonl.aui.tea;
 
 import jonl.aui.Button;
-import jonl.aui.HAlign;
 import jonl.aui.Icon;
 import jonl.aui.Signal;
-import jonl.aui.VAlign;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.TButtonInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
-import jonl.vmath.Vector4;
 
 public class TButton extends TWidget implements Button {
 
@@ -23,16 +21,14 @@ public class TButton extends TWidget implements Button {
     private final Signal<Callback0D> clicked = new Signal<>();
     private final Signal<Callback<Boolean>> toggled = new Signal<>();
     
-    private int border = 4;
-    private boolean isMouseWithin = false;
-    private float intensityValue = 0;
-    private float maxValue = 30;
+    private TButtonInfo info = new TButtonInfo();
     
     public TButton() {
-        
+        super();
     }
     
     public TButton(String text) {
+        this();
         this.text = text;
     }
     
@@ -99,32 +95,12 @@ public class TButton extends TWidget implements Button {
     
     @Override
     protected TSizePolicy getSizePolicy() {
-        TSizePolicy sp = new TSizePolicy();
-        sp.minWidth = (int) TStyle.get(this).calibri.getWidth(text) + border;
-        sp.prefHeight = (int) TStyle.get(this).calibri.getHeight() + border;
-        return sp;
+        return style().button().getSizePolicy(this,info);
     }
     
     @Override
     protected void paint(TGraphics g) {
-        super.paint(g);
-        
-        if (isMouseWithin) {
-            if (intensityValue<maxValue) {
-                intensityValue++;
-            }
-        } else {
-            if (intensityValue>0) {
-                intensityValue--;
-            }
-        }
-        
-        float v = intensityValue / maxValue;
-        Vector4 col = TStyle.get(this).buttonColor.get().lerp(TStyle.get(this).buttonColorHover,v);
-        g.renderRect(0,0,width,height,col);
-        float x = width/2;
-        float y = height/2;
-        g.renderText(text(),x,y,HAlign.CENTER,VAlign.MIDDLE,TStyle.get(this).calibri,new Vector4(0,0,0,1));
+        style().button().paint(this,info,g);
     }
     
     @Override
@@ -154,12 +130,12 @@ public class TButton extends TWidget implements Button {
     
     @Override
     protected void handleMouseEnter(TMouseEvent event) {
-        isMouseWithin = true;
+        info.isMouseWithin = true;
     }
     
     @Override
     protected void handleMouseExit(TMouseEvent event) {
-        isMouseWithin = false;
+        info.isMouseWithin = false;
     }
     
 }

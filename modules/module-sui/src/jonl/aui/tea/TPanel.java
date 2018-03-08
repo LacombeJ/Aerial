@@ -9,10 +9,11 @@ import jonl.aui.Widget;
 public class TPanel extends TWidget implements Panel {
 
     public TPanel() {
-        
+        super();
     }
     
     public TPanel(Layout layout) {
+        this();
         setLayout(layout);
     }
     

@@ -143,6 +143,7 @@ class TWindowManager {
             sp.countDown();
             glWindow.setLoader(()->{
                 graphics = new TGraphics(gl);
+                window.style.init(gl); //TODO remove
                 ortho = Matrix4.orthographic(0,glWindow.getWidth(),0,glWindow.getHeight(),-1,1);
                 graphics.setOrtho(ortho);
                 loader.load();

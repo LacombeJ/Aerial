@@ -21,6 +21,7 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     private boolean inAdjustState = false;
     
     public TSplitPanel() {
+        super();
         setMouseFocusSupport(true);
         setWidgetLayout(new TSplitLayout());
     }

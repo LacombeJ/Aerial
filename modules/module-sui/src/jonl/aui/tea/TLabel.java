@@ -12,10 +12,11 @@ public class TLabel extends TWidget implements Label {
     private int border = 4;
     
     public TLabel() {
-        
+        super();
     }
     
     public TLabel(String text) {
+        this();
         this.text = text;
     }
     
@@ -34,9 +35,9 @@ public class TLabel extends TWidget implements Label {
     @Override
     protected TSizePolicy getSizePolicy() {
         TSizePolicy sp = new TSizePolicy();
-        sp.minWidth = (int) TStyle.get(this).calibri.getWidth(text) + border;
+        sp.minWidth = (int) TOldStyle.get(this).calibri.getWidth(text) + border;
         sp.prefWidth = sp.minWidth;
-        sp.prefHeight = (int) TStyle.get(this).calibri.getHeight() + border;
+        sp.prefHeight = (int) TOldStyle.get(this).calibri.getHeight() + border;
         return sp;
     }
     
@@ -45,7 +46,7 @@ public class TLabel extends TWidget implements Label {
         super.paint(g);
         float x = width/2;
         float y = height/2;
-        g.renderText(text(),x,y,HAlign.CENTER,VAlign.MIDDLE,TStyle.get(this).calibri,new Vector4(0,0,0,1));
+        g.renderText(text(),x,y,HAlign.CENTER,VAlign.MIDDLE,TOldStyle.get(this).calibri,new Vector4(0,0,0,1));
     }
     
 }
