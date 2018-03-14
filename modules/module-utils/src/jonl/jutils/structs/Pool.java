@@ -1,49 +1,39 @@
 package jonl.jutils.structs;
 
-import java.util.ArrayList;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Function;
 
 /**
  * Uses a bijective map internally meaning there are unique keys and unique values<br>
  * Will call create when trying to get a value whose key does not exist and destroy on
- * the least recently used 
+ * the previous value if a value already exists
  * @author Jonathan
  *
  * @param <K>
  * @param <V>
  */
-public class LimitingPool<K,V> {
+public class Pool<K,V> {
 
     private BijectiveMap<K,V> map;
     private Function<K,V> create;
     private Callback<V> destroy;
-    private ArrayList<V> lru;
-    private int limit;
     
-    public LimitingPool(int limit, Function<K,V> create, Callback<V> destroy) {
-        map = new BijectiveMap<>(limit);
-        lru = new ArrayList<>(limit);
-        this.limit = limit;
+    public Pool(int initialCapacity, Function<K,V> create, Callback<V> destroy) {
+        map = new BijectiveMap<>(initialCapacity);
         this.create = create;
         this.destroy = destroy;
     }
     
-    public int limit() {
-        return limit;
+    public Pool(Function<K,V> create, Callback<V> destroy) {
+        map = new BijectiveMap<>();
+        this.create = create;
+        this.destroy = destroy;
     }
     
     private V create(K k, V v) {
         if (v == null) {
             v = create.f(k);
-            if (map.size() >= limit) {
-                remove(map.getKey(lru.get(0)));
-            }
             map.put(k, v);
-            lru.add(v);
-        } else {
-            lru.remove(v);
-            lru.add(v);
         }
         return v;
     }
@@ -51,7 +41,6 @@ public class LimitingPool<K,V> {
     private V destroy(V v) {
         if (v != null) {
             destroy.f(v);
-            lru.remove(v);
         }
         return v;
     }
@@ -69,7 +58,7 @@ public class LimitingPool<K,V> {
     @Override
     public String toString() {
         String ret = "{";
-        for (V v : lru) {
+        for (V v : map.values()) {
             K k = map.getKey(v);
             ret +="["+k+":"+v+"]";
         }

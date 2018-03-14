@@ -77,4 +77,12 @@ public class AwtFont {
         return image;
     }
     
+    public int getHeight() {
+        return metrics.getHeight();
+    }
+    
+    public int getWidth(String string) {
+        return metrics.stringWidth(string);
+    }
+    
 }
