@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
+import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.jutils.func.List;
 
 public class TToolBar extends TButtonBar implements ToolBar {
@@ -32,6 +33,12 @@ public class TToolBar extends TButtonBar implements ToolBar {
     @Override
     public ArrayList<ToolButton> buttons() {
         return List.map(widgetLayout().widgets(), (w) -> (ToolButton)w);
+    }
+    
+    @Override
+    public void paint(TGraphics g) {
+        style().toolBar().paint(this, TWidgetInfo.widget(), g);
+        paint().emit((cb)->cb.f(g));
     }
 
 }

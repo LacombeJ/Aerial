@@ -11,6 +11,7 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
 import jonl.aui.tea.graphics.TStyle;
+import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.List;
 import jonl.jutils.time.Time;
@@ -200,6 +201,7 @@ public abstract class TWidget implements Widget {
     }
     
     protected void paint(TGraphics g) {
+        style().widget().paint(this, TWidgetInfo.widget(), g);
         paint().emit(cb->cb.f(g));
     }
     

@@ -3,11 +3,11 @@ package jonl.aui.tea;
 import jonl.aui.Dial;
 import jonl.aui.Signal;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 import jonl.vmath.Mathf;
-import jonl.vmath.Matrix4;
 import jonl.vmath.Vector2;
 
 public class TDial extends TWidget implements Dial {
@@ -76,24 +76,13 @@ public class TDial extends TWidget implements Dial {
     // ------------------------------------------------------------------------
     
     @Override
+    protected TSizePolicy getSizePolicy() {
+        return style().dial().getSizePolicy(this,TWidgetInfo.widget());
+    }
+    
+    @Override
     protected void paint(TGraphics g) {
-        float min = Mathf.min(width(),height());
-        float ratio = 0.7f;
-        float dim = min * ratio;
-        float x = width()/2f - dim/2;
-        float y = height()/2f - dim/2;
-        g.renderCircle(x,y,dim,dim,TOldStyle.get(this).buttonColorHover);
-        Matrix4 mat = Matrix4.identity();
-        
-        mat.translate(width()/2f,height()/2f,0);
-        float alpha = Mathf.alpha(value(),min(),max());
-        
-        mat.rotateZ(alpha*Mathf.TWO_PI);
-        
-        mat.translate(dim/2,0,0);
-        mat.scale(dim/10,dim/10,1);
-        g.renderRect(mat,TOldStyle.get(this).buttonColor);
-        
+        style().dial().paint(this, TWidgetInfo.widget(), g);
         paint().emit(cb->cb.f(g));
     }
     

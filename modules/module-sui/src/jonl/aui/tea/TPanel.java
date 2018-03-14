@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.Layout;
+import jonl.aui.LayoutItem;
 import jonl.aui.Panel;
 import jonl.aui.Widget;
 
@@ -28,8 +29,13 @@ public class TPanel extends TWidget implements Panel {
     }
 
     @Override
-    public Widget get(int index) {
+    public Widget getWidget(int index) {
         return layout().getWidget(index);
+    }
+    
+    @Override
+    public LayoutItem getItem(int index) {
+        return layout().getItem(index);
     }
 
     @Override
@@ -38,8 +44,18 @@ public class TPanel extends TWidget implements Panel {
     }
 
     @Override
+    public void add(LayoutItem item) {
+        layout().add(item);
+    }
+    
+    @Override
     public void remove(Widget widget) {
         layout().remove(widget);
+    }
+    
+    @Override
+    public void remove(LayoutItem item) {
+        layout().remove(item);
     }
     
     @Override
@@ -58,6 +74,11 @@ public class TPanel extends TWidget implements Panel {
     }
     
     @Override
+    public int indexOf(LayoutItem item) {
+        return layout().indexOf(item);
+    }
+    
+    @Override
     public int count() {
         return layout().count();
     }
@@ -65,6 +86,11 @@ public class TPanel extends TWidget implements Panel {
     @Override
     public ArrayList<Widget> widgets() {
         return layout().widgets();
+    }
+    
+    @Override
+    public ArrayList<LayoutItem> items() {
+        return layout().items();
     }
     
 }

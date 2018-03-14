@@ -4,6 +4,7 @@ import jonl.aui.Align;
 import jonl.aui.ListLayout;
 import jonl.aui.tea.TLayoutManager.SizePreference;
 import jonl.jutils.func.Wrapper;
+import jonl.jutils.io.Console;
 
 public class TListLayout extends TLayout implements ListLayout {
     
@@ -92,6 +93,27 @@ public class TListLayout extends TLayout implements ListLayout {
                 // ----------------------------------------------
             }
         }
+    }
+    
+    TSizePolicy getSizePolicy() {
+        TWidget widget = parent;
+        TSizePolicy sp = new TSizePolicy();
+        if (align == Align.HORIZONTAL) {
+            int vertical = margin().height();
+            for (TWidget wt : widget.getChildren()) {
+                sp.minHeight = Math.max(sp.minHeight, wt.minHeight() + vertical);
+                sp.maxHeight = Math.min(sp.maxHeight, wt.maxHeight() + vertical);
+                sp.prefHeight = Math.max(sp.prefHeight, wt.preferredHeight() + vertical);
+            }
+        } else {
+            int horizontal = margin().width();
+            for (TWidget wt : widget.getChildren()) {
+                sp.minWidth = Math.max(sp.minWidth, wt.minWidth() + horizontal);
+                sp.maxWidth = Math.min(sp.maxWidth, wt.maxWidth() + horizontal);
+                sp.prefWidth = Math.max(sp.prefWidth, wt.preferredWidth() + horizontal);
+            }
+        }
+        return sp;
     }
 
 }

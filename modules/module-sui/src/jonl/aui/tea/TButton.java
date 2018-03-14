@@ -8,7 +8,6 @@ import jonl.aui.tea.graphics.TButtonInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
-import jonl.jutils.io.Console;
 
 public class TButton extends TWidget implements Button {
 
@@ -102,7 +101,7 @@ public class TButton extends TWidget implements Button {
     @Override
     protected void paint(TGraphics g) {
         style().button().paint(this,info,g);
-        super.paint(g);
+        paint().emit(cb->cb.f(g));
     }
     
     @Override

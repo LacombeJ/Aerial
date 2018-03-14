@@ -32,11 +32,11 @@ public interface Layout {
     
     int indexOf(LayoutItem item);
     
+    int count();
+    
     ArrayList<Widget> widgets();
     
     ArrayList<LayoutItem> items();
-    
-    int count();
     
     boolean isEmpty();
     

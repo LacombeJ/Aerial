@@ -35,10 +35,9 @@ public class TLabel extends TWidget implements Label {
     @Override
     protected TSizePolicy getSizePolicy() {
         TSizePolicy sp = new TSizePolicy();
-        //TODO use style
-        //sp.minWidth = (int) TOldStyle.get(this).calibri.getWidth(text) + border;
+        sp.minWidth = style().font().getWidth(text) + border;
         sp.prefWidth = sp.minWidth;
-       // sp.prefHeight = (int) TOldStyle.get(this).calibri.getHeight() + border;
+        sp.prefHeight = style().font().getHeight() + border;
         return sp;
     }
     
@@ -46,7 +45,7 @@ public class TLabel extends TWidget implements Label {
     protected void paint(TGraphics g) {
         float x = width/2;
         float y = height/2;
-        g.renderText(text(),x,y,HAlign.CENTER,VAlign.MIDDLE,style().font(),new Vector4(0,0,0,1));
+        g.renderText(text(),x,y,HAlign.CENTER,VAlign.MIDDLE,style().font(),style().textColor());
         
         paint().emit(cb->cb.f(g));
     }

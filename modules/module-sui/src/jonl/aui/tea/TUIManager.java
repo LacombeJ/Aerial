@@ -11,6 +11,7 @@ import jonl.aui.Tree;
 import jonl.aui.TreeItem;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
+import jonl.aui.tea.graphics.TStyleDefault;
 import jonl.aui.tea.graphics.TStyle;
 
 public class TUIManager implements UIManager {
@@ -24,7 +25,7 @@ public class TUIManager implements UIManager {
         return ui;
     }
     
-    private TStyle style = new TStyle();
+    private TStyle style = new TStyleDefault();
     
     private TUIManager() {
         
@@ -32,6 +33,10 @@ public class TUIManager implements UIManager {
     
     public TStyle getStyle() {
         return style;
+    }
+    
+    public void setStyle(TStyle style) {
+        this.style = style;
     }
     
     void enroll(TWidget widget) {
