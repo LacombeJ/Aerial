@@ -2,6 +2,7 @@ package jonl.jgl;
 
 import jonl.jgl.Input.CursorState;
 import jonl.jutils.func.Callback;
+import jonl.jutils.func.Callback0D;
 
 /**
  * @author Jonathan Lacombe
@@ -78,7 +79,11 @@ public interface Window {
      */
     public void start();
     
+    /** Closes this window */
     public void close();
+    
+    /** Calls this callback on the window thread */
+    public void call(Callback0D call);
     
     // ------------------------------------------------------------------------
     

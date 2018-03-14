@@ -22,10 +22,12 @@ import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeLimitsRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowTitleRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowVisibleRequest;
+import jonl.jgl.lwjgl.GLFWInstance.CallWindowRequest;
 import jonl.jgl.lwjgl.GLFWInstance.CreateWindowRequest;
 import jonl.jgl.lwjgl.GLFWInstance.CreateWindowResponse;
 import jonl.jgl.lwjgl.GLFWInstance.StartWindowRequest;
 import jonl.jutils.func.Callback;
+import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.structs.BijectiveMap;
 import jonl.jgl.Input.CursorState;
@@ -214,6 +216,12 @@ public final class GLFWWindow implements Window {
         GLFW.glfwSetWindowShouldClose(id,true);
     }
     
+    @Override
+    public void call(Callback0D call) {
+        CallWindowRequest request = new CallWindowRequest(id,call);
+        GLFWInstance.call(request);
+    }
+    
     private void swapBuffers() {
         GLFW.glfwSwapBuffers(id);
     }
@@ -345,7 +353,7 @@ public final class GLFWWindow implements Window {
     public GraphicsLibrary getGraphicsLibrary() {
         return gl;
     }
-
+    
     @Override
     public void addSizeListener(Int2ChangedListener sl) {
         sizeListeners.add(sl);

@@ -9,6 +9,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
+import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.misc.BufferPool;
 import jonl.jutils.parallel.Processor;
@@ -44,6 +45,8 @@ class GLFWInstance {
     
     private static final RequestQueue<StartWindowRequest,StartWindowResponse>
         START_REQUEST                   = new RequestQueue<>( (request) -> _startWindow(request) );
+    private static final RequestQueue<CallWindowRequest,CallWindowResponse>
+        CALL_REQUEST                   = new RequestQueue<>( (request) -> _callWindow(request) );
     
     private static final RequestQueue<GetWindowFrameSizeRequest,GetWindowFrameSizeResponse>
         GET_WINDOW_FRAME_SIZE_REQUEST   = new RequestQueue<>( (request) -> _getWindowFrameSize(request) );
@@ -84,6 +87,7 @@ class GLFWInstance {
     private static final RequestQueue<?,?>[] REQUEST_QUEUES = {
             CREATE_REQUEST,
             START_REQUEST,
+            CALL_REQUEST,
             GET_WINDOW_FRAME_SIZE_REQUEST,
             SET_WINDOW_TITLE_REQUEST,
             SET_WINDOW_POS_REQUEST,
@@ -103,6 +107,9 @@ class GLFWInstance {
     }
     static StartWindowResponse start(StartWindowRequest request) {
         return START_REQUEST.request(request);
+    }
+    static CallWindowResponse call(CallWindowRequest request) {
+        return CALL_REQUEST.request(request);
     }
     static GetWindowFrameSizeResponse getWindowFrameSize(GetWindowFrameSizeRequest request) {
         return GET_WINDOW_FRAME_SIZE_REQUEST.request(request);
@@ -353,6 +360,7 @@ class GLFWInstance {
         input = new GLFWInput(id,()->request.window.getHeight());
         
         gl = GLFWInstance.gl;
+        
         CreateWindowResponse response = new CreateWindowResponse(id, title, x, y, width, height,
                 resizable, decorated, fullscreen,
                 screenWidth, screenHeight, input, gl);
@@ -377,6 +385,26 @@ class GLFWInstance {
     private static StartWindowResponse _startWindow(StartWindowRequest request) {
         StartWindowResponse response = new StartWindowResponse();
         STARTED_WINDOWS.add(request.window);
+        return response;
+    }
+    
+    /* ********************************************************************************* */
+    /* ********************************** Call Window ********************************** */
+    /* ********************************************************************************* */
+    static class CallWindowRequest extends Request {
+        final long id;
+        final Callback0D call;
+        CallWindowRequest(long id, Callback0D call) {
+            this.id = id;
+            this.call = call;
+        }
+    }
+    static class CallWindowResponse extends Response {
+        CallWindowResponse() { }
+    }
+    private static CallWindowResponse _callWindow(CallWindowRequest request) {
+        CallWindowResponse response = new CallWindowResponse();
+        request.call.f();
         return response;
     }
     
