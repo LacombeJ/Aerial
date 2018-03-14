@@ -5,7 +5,6 @@ import jonl.aui.SplitPanel;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
-import jonl.jutils.io.Console;
 import jonl.vmath.Vector4;
 
 public class TSplitPanel extends TWidget implements SplitPanel {
@@ -105,8 +104,6 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     
     @Override
     protected void paint(TGraphics g) {
-        super.paint(g);
-        
         switch (align()) {
         case HORIZONTAL:
             int minX = widgetOne().width();
@@ -117,6 +114,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
             g.renderRect(0,minY,width(),widgetLayout().spacing(),new Vector4(0.1f,0.1f,0.3f,1));
             break;
         }
+        
+        paint().emit(cb->cb.f(g));
     }
     
     private boolean isOnBorder(int x, int y) {
@@ -141,7 +140,6 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     
     @Override
     protected void handleMouseButtonPress(TMouseEvent event) {
-        Console.log(event,event.button);
         if (event.button==Input.MB_LEFT && isOnBorder(event.x,event.y)) {
             inAdjustState = true;
         }

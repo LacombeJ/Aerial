@@ -8,13 +8,13 @@ import jonl.aui.Widget;
 
 public class TPanel extends TWidget implements Panel {
 
-    public TPanel() {
+    public TPanel(Layout layout) {
         super();
+        setLayout(layout);
     }
     
-    public TPanel(Layout layout) {
-        this();
-        setLayout(layout);
+    public TPanel() {
+        this(new TFillLayout());
     }
     
     @Override
@@ -41,10 +41,25 @@ public class TPanel extends TWidget implements Panel {
     public void remove(Widget widget) {
         layout().remove(widget);
     }
+    
+    @Override
+    public void remove(int index) {
+        layout().remove(index);
+    }
 
     @Override
     public void removeAll() {
         layout().removeAll();
+    }
+    
+    @Override
+    public int indexOf(Widget widget) {
+        return layout().indexOf(widget);
+    }
+    
+    @Override
+    public int count() {
+        return layout().count();
     }
 
     @Override

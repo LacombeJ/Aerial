@@ -65,6 +65,9 @@ public abstract class TLayout implements Layout {
     @Override
     public void add(Widget widget) {
         add(new TWidgetItem(widget));
+        if (parent != null) {
+            layout();
+        }
     }
     
     @Override
@@ -93,6 +96,11 @@ public abstract class TLayout implements Layout {
     @Override
     public void remove(LayoutItem item) {
         items.remove(item);
+    }
+    
+    @Override
+    public void remove(int index) {
+        items.remove(index);
     }
     
     @Override

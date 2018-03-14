@@ -26,15 +26,31 @@ public interface UIManager {
     
     ScrollPanel scrollPanel();
     
+    TabPanel tabPanel();
+    
     Tree tree();
     
     TreeItem treeItem();
     
     TreeItem treeItem(String text);
     
+    MenuBar menuBar();
+    
+    MenuButton menuButton();
+    
+    MenuButton menuButton(String text);
+    
+    ToolBar toolBar();
+    
+    ToolButton toolButton();
+    
+    ToolButton toolButton(Icon icon);
+    
     Overlay overlay();
     
     // UI Elements
+    
+    Icon icon(String file);
     
     Font font(String font, int size);
     

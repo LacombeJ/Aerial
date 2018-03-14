@@ -188,11 +188,11 @@ public abstract class TWidget implements Widget {
     }
     
     protected boolean hasFocus() {
-        return TEventHandler.hasFocus(this);
+        return TEventManager.hasFocus(this);
     }
     
     protected boolean requestFocus() {
-        return TEventHandler.requestFocus(this);
+        return TEventManager.requestFocus(this);
     }
     
     protected void setMouseFocusSupport(boolean enable) {

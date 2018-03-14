@@ -115,7 +115,7 @@ class TWindowManager {
                 }
             }
             gl = glWindow.getGraphicsLibrary();
-            input = glWindow.getInput();
+            input = new TInput(glWindow.getInput(),()->window.height);
             
             
             glWindow.addCursorListener((enter)->{
@@ -127,35 +127,29 @@ class TWindowManager {
             glWindow.addPositionListener((x,y,prevX,prevY)->{
                 window.x = x;
                 window.y = y;
-                TEventHandler.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+                TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
             });
             
             glWindow.addSizeListener((width,height,prevWidth,prevHeight)->{
                 window.width = width;
                 window.height = height;
-                TEventHandler.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
+                TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
                 if (graphics!=null) {
-                    ortho = Matrix4.orthographic(0,width,0,height,-1,1);
+                    ortho = Matrix4.orthographic(0,width,height,0,-1,1);
                     graphics.setOrtho(ortho);
                 }
             });
             
             sp.countDown();
             glWindow.setLoader(()->{
-                graphics = new TGraphics(gl);
-                window.style.init(gl); //TODO remove
+                graphics = new TGraphics(gl,()->window.height);
                 ortho = Matrix4.orthographic(0,glWindow.getWidth(),0,glWindow.getHeight(),-1,1);
                 graphics.setOrtho(ortho);
                 loader.load();
             });
             glWindow.setRunner(()->{
                 while (glWindow.isRunning()) {
-                    gl.glViewport(0,0,window.width,window.height);
-                    gl.glScissor(0,0,window.width,window.height);
-                    gl.glClearColor(1,1,1,1);
-                    gl.glClear(Mask.COLOR_BUFFER_BIT);
-                    
-                    graphics.paint(window);
+                    refresh();
                     
                     handleInput();
                     
@@ -184,6 +178,15 @@ class TWindowManager {
             glWindow.start();
         });
         sp.run();
+    }
+    
+    private void refresh() {
+        gl.glViewport(0,0,window.width,window.height);
+        gl.glScissor(0,0,window.width,window.height);
+        gl.glClearColor(1,1,1,1);
+        gl.glClear(Mask.COLOR_BUFFER_BIT);
+        
+        graphics.paint(window);
     }
     
     String title() {
@@ -282,25 +285,25 @@ class TWindowManager {
         int y = (int) input.getY();
         for (int i=Input.MB_LEFT; i<Input.MB_LEFT+Input.MB_COUNT; i++) {
             if (input.isButtonPressed(i)) {
-                TEventHandler.fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy));
+                TEventManager.fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy));
             }
             if (input.isButtonReleased(i)) {
-                TEventHandler.fireMouseButtonReleased(window, new TMouseEvent(TEventType.MouseButtonRelease, i, x, y, x, y, dx, dy));
+                TEventManager.fireMouseButtonReleased(window, new TMouseEvent(TEventType.MouseButtonRelease, i, x, y, x, y, dx, dy));
             }
         }
         
         if (dx!=0 || dy!=0) {
             int prevX = x - dx;
             int prevY = y - dy;
-            boolean inNow = TEventHandler.within(window,x,y);
-            boolean inBefore = TEventHandler.within(window,prevX,prevY);
+            boolean inNow = TEventManager.within(window,x,y);
+            boolean inBefore = TEventManager.within(window,prevX,prevY);
             if (inNow && !inBefore) {
-                TEventHandler.fireMouseEnter(window, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
+                TEventManager.fireMouseEnter(window, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
             }
             if (!inNow && inBefore) {
-                TEventHandler.fireMouseExit(window, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
+                TEventManager.fireMouseExit(window, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
             }
-            TEventHandler.fireMouseMove(window, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
+            TEventManager.fireMouseMove(window, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
         }
     }
     

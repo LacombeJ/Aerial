@@ -16,7 +16,7 @@ class TLayoutManager {
         w.x = x;
         w.y = y;
         if (prevX!=x || prevY!=y) {
-            TEventHandler.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }
     
@@ -26,7 +26,7 @@ class TLayoutManager {
         w.width = width;
         w.height = height;
         if (prevWidth!=width || prevHeight!=height) {
-            TEventHandler.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
+            TEventManager.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
         }
     }
     

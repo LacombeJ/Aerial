@@ -2,6 +2,11 @@ package jonl.aui.tea;
 
 public class TFillLayout extends TLayout {
     
+    public TFillLayout() {
+        super();
+        setMargin(0, 0, 0, 0);
+    }
+    
     @Override
     void layout() {
         if (!isEmpty()) {

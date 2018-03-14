@@ -24,6 +24,8 @@ public interface Layout {
     
     void remove(LayoutItem item);
     
+    void remove(int index);
+    
     void removeAll();
     
     int indexOf(Widget widget);

@@ -43,6 +43,14 @@ public class TFont {
         return antialias;
     }
     
+    public int getHeight() {
+        return awtFont.getHeight();
+    }
+    
+    public int getWidth(String string) {
+        return awtFont.getWidth(string);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof TFont) {

@@ -11,7 +11,6 @@ import jonl.jgl.Program;
 import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
 import jonl.jgl.Texture.Wrap;
-import jonl.jutils.io.Console;
 import jonl.jutils.misc.AwtFont;
 import jonl.jutils.structs.LimitingPool;
 import jonl.vmath.Matrix4;
@@ -36,9 +35,10 @@ public class TTextManager {
         
     }
     
-    public void render(String text, float mx, float my, Matrix4 ortho, HAlign halign, VAlign valign, TColor color, Mesh mesh, Program fontProgram) {
+    public void render(String text, float mx, float my, HAlign halign, VAlign valign, TFont font, TColor color, Matrix4 ortho, Mesh mesh, Program fontProgram) {
         TText ttext = new TText(text);
         ttext.setAlign(TText.CENTER);
+        ttext.setFont(font);
         
         Matrix4 M = Matrix4.identity();
         M.translate(mx, my, 0);
@@ -66,7 +66,7 @@ public class TTextManager {
         // Scale
         // In matrix multiplication backwards-operations, we perform scale afterwards although logically
         // this means we scale first
-        M.scale(width, height, 1);
+        M.scale(width, -height, 1); //-height for top-left orientation
         
         Matrix4 MVP = ortho.get().multiply(M);
         
@@ -86,7 +86,6 @@ public class TTextManager {
         Filter filter = (text.getFont().antialias()) ? Filter.LINEAR : Filter.NEAREST;
         BufferedImage image = font.genBufferedImage(text.getText(), toAwtAlign(text.getAlign()));
         Texture tex = gl.glGenTexture(image, Internal.RGBA16, Wrap.CLAMP, filter);
-        Console.log(tex.getWidth(), tex.getHeight(), image.getWidth(), image.getHeight());
         return tex;
     }
     

@@ -21,4 +21,12 @@ public class Margin {
         bottom = margin.bottom;
     }
     
+    public int width() {
+        return left + right;
+    }
+    
+    public int height() {
+        return bottom + top;
+    }
+    
 }

@@ -8,6 +8,7 @@ import jonl.aui.tea.graphics.TButtonInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
+import jonl.jutils.io.Console;
 
 public class TButton extends TWidget implements Button {
 
@@ -21,7 +22,7 @@ public class TButton extends TWidget implements Button {
     private final Signal<Callback0D> clicked = new Signal<>();
     private final Signal<Callback<Boolean>> toggled = new Signal<>();
     
-    private TButtonInfo info = new TButtonInfo();
+    protected TButtonInfo info = new TButtonInfo();
     
     public TButton() {
         super();
@@ -69,7 +70,7 @@ public class TButton extends TWidget implements Button {
 
     @Override
     public void setChecked(boolean checked) {
-        this.checked = true;
+        this.checked = checked;
     }
 
     @Override
@@ -101,6 +102,7 @@ public class TButton extends TWidget implements Button {
     @Override
     protected void paint(TGraphics g) {
         style().button().paint(this,info,g);
+        super.paint(g);
     }
     
     @Override

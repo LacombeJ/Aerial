@@ -14,7 +14,13 @@ public interface Panel extends Widget {
     
     void remove(Widget widget);
     
+    void remove(int index);
+    
     void removeAll();
+    
+    int indexOf(Widget widget);
+    
+    int count();
     
     ArrayList<Widget> widgets();
     

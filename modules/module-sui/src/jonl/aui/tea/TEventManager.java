@@ -10,7 +10,7 @@ import jonl.aui.tea.event.TResizeEvent;
 import jonl.jutils.func.Tuple2i;
 import jonl.jutils.time.Time;
 
-class TEventHandler {
+class TEventManager {
 
     private static final long DOUBLE_CLICK_SPEED_MS = 500;
     

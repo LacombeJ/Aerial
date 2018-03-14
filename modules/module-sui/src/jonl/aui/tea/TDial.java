@@ -77,8 +77,6 @@ public class TDial extends TWidget implements Dial {
     
     @Override
     protected void paint(TGraphics g) {
-        super.paint(g);
-        
         float min = Mathf.min(width(),height());
         float ratio = 0.7f;
         float dim = min * ratio;
@@ -95,6 +93,8 @@ public class TDial extends TWidget implements Dial {
         mat.translate(dim/2,0,0);
         mat.scale(dim/10,dim/10,1);
         g.renderRect(mat,TOldStyle.get(this).buttonColor);
+        
+        paint().emit(cb->cb.f(g));
     }
     
     @Override

@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Font;
+import jonl.aui.Icon;
 import jonl.aui.Layout;
 import jonl.aui.ListLayout;
 import jonl.aui.ScrollPanel;
@@ -92,6 +93,11 @@ public class TUIManager implements UIManager {
         // TODO Auto-generated method stub
         return null;
     }
+    
+    @Override
+    public TTabPanel tabPanel() {
+        return new TTabPanel();
+    }
 
     @Override
     public Tree tree() {
@@ -112,8 +118,43 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public TMenuBar menuBar() {
+        return new TMenuBar();
+    }
+    
+    @Override
+    public TMenuButton menuButton() {
+        return new TMenuButton();
+    }
+    
+    @Override
+    public TMenuButton menuButton(String text) {
+        return new TMenuButton(text);
+    }
+    
+    @Override
+    public TToolBar toolBar() {
+        return new TToolBar();
+    }
+    
+    @Override
+    public TToolButton toolButton() {
+        return new TToolButton();
+    }
+    
+    @Override
+    public TToolButton toolButton(Icon icon) {
+        return new TToolButton(icon);
+    }
+    
+    @Override
     public TOverlay overlay() {
         return new TOverlay();
+    }
+    
+    @Override
+    public TIcon icon(String file) {
+        return new TIcon(file);
     }
 
     @Override
