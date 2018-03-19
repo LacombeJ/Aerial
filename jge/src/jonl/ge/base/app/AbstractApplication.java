@@ -14,8 +14,8 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Time;
 import jonl.ge.core.Window;
 import jonl.ge.core.Input.CursorState;
-import jonl.jutils.misc.DataMap;
 import jonl.jutils.misc.SystemUtils;
+import jonl.jutils.structs.AttributeMap;
 
 public abstract class AbstractApplication {
 	
@@ -25,7 +25,7 @@ public abstract class AbstractApplication {
     protected Time time;
     protected Delegate delegate;
     protected Service service;
-    protected DataMap info;
+    protected AttributeMap info;
     protected HashMap<String,Attachment> attachments;
 	
     protected AbstractApplication() {
@@ -37,7 +37,7 @@ public abstract class AbstractApplication {
         time = new Time();
         delegate = new Delegate();
         service = new Service();
-        info = new DataMap();
+        info = new AttributeMap();
         attachments = new HashMap<>();
         
         add(new LightModule());
@@ -112,7 +112,7 @@ public abstract class AbstractApplication {
     }
     
     public String info(String key) {
-        return info.get(key);
+        return info.getString(key);
     }
     
 }

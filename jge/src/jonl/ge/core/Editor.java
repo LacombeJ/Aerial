@@ -1,7 +1,6 @@
 package jonl.ge.core;
 
 import jonl.aui.Widget;
-import jonl.aui.tea.TWindow;
 import jonl.ge.base.app.ApplicationWindow;
 import jonl.ge.base.SceneManager;
 import jonl.ge.base.app.AbstractApplication;
