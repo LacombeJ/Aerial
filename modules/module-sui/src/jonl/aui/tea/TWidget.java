@@ -35,13 +35,19 @@ public abstract class TWidget implements Widget {
     
     TStyle style = null;
     
+    TWidgetInfo info = new TWidgetInfo();
+    
     // Variables used by event handler
     boolean eventInClickState = false;
     Time eventTimeSinceLastClick = new Time();
     boolean eventMouseFocusSupport = false;
     
     public TWidget() {
+        
         TUIManager.instance().enroll(this);
+        
+        info.put("this", this);
+        
     }
     
     // AUI Widget Methods
@@ -201,8 +207,12 @@ public abstract class TWidget implements Widget {
     }
     
     protected void paint(TGraphics g) {
-        style().widget().paint(this, TWidgetInfo.widget(), g);
+        style().widget().paint(this, info, g);
         paint().emit(cb->cb.f(g));
+    }
+    
+    protected TWidgetInfo info() {
+        return info;
     }
     
     protected void handleMouseButtonClick(TMouseEvent event) { }

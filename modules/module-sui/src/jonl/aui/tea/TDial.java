@@ -3,7 +3,6 @@ package jonl.aui.tea;
 import jonl.aui.Dial;
 import jonl.aui.Signal;
 import jonl.aui.tea.event.TMouseEvent;
-import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
@@ -77,12 +76,12 @@ public class TDial extends TWidget implements Dial {
     
     @Override
     protected TSizePolicy getSizePolicy() {
-        return style().dial().getSizePolicy(this,TWidgetInfo.widget());
+        return style().dial().getSizePolicy(this,info());
     }
     
     @Override
     protected void paint(TGraphics g) {
-        style().dial().paint(this, TWidgetInfo.widget(), g);
+        style().dial().paint(this, info(), g);
         paint().emit(cb->cb.f(g));
     }
     

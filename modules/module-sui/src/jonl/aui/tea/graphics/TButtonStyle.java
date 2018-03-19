@@ -23,20 +23,24 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
         hoverColor = style.secondary();
         toggleColor = style.tertiary();
         
-        this.setPainter((button,i,g)->{
-            TButtonInfo info = (TButtonInfo)i;
+        this.setPainter((button,info,g)->{
             
-            if (info.isMouseWithin) {
-                if (info.intensityValue<maxValue) {
-                    info.intensityValue++;
+            float intensityValue = info.get("fIntensityValue", 0f);
+            
+            if (info.get("bIsMouseWithin", false)) {
+                if (intensityValue<maxValue) {
+                    intensityValue++;
+                    
                 }
             } else {
-                if (info.intensityValue>0) {
-                    info.intensityValue--;
+                if (intensityValue>0) {
+                    intensityValue--;
                 }
             }
             
-            float v = info.intensityValue / maxValue;
+            info.put("fIntensityValue", intensityValue);
+            
+            float v = intensityValue / maxValue;
             Vector4 primary = (button.checked()) ? toggleColor.toVector() : buttonColor.toVector();
             Vector4 secondary = (button.checked()) ? toggleColor.toVector() : hoverColor.toVector();
             Vector4 color = primary.lerp(secondary, v);

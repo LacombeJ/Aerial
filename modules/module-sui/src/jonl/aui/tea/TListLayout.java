@@ -4,7 +4,6 @@ import jonl.aui.Align;
 import jonl.aui.ListLayout;
 import jonl.aui.tea.TLayoutManager.SizePreference;
 import jonl.jutils.func.Wrapper;
-import jonl.jutils.io.Console;
 
 public class TListLayout extends TLayout implements ListLayout {
     

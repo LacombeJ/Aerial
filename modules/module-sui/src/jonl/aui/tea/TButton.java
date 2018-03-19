@@ -4,7 +4,6 @@ import jonl.aui.Button;
 import jonl.aui.Icon;
 import jonl.aui.Signal;
 import jonl.aui.tea.event.TMouseEvent;
-import jonl.aui.tea.graphics.TButtonInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
@@ -20,8 +19,6 @@ public class TButton extends TWidget implements Button {
     private final Signal<Callback0D> released = new Signal<>();
     private final Signal<Callback0D> clicked = new Signal<>();
     private final Signal<Callback<Boolean>> toggled = new Signal<>();
-    
-    protected TButtonInfo info = new TButtonInfo();
     
     public TButton() {
         super();
@@ -95,12 +92,12 @@ public class TButton extends TWidget implements Button {
     
     @Override
     protected TSizePolicy getSizePolicy() {
-        return style().button().getSizePolicy(this,info);
+        return style().button().getSizePolicy(this,info());
     }
     
     @Override
     protected void paint(TGraphics g) {
-        style().button().paint(this,info,g);
+        style().button().paint(this,info(),g);
         paint().emit(cb->cb.f(g));
     }
     
@@ -131,12 +128,12 @@ public class TButton extends TWidget implements Button {
     
     @Override
     protected void handleMouseEnter(TMouseEvent event) {
-        info.isMouseWithin = true;
+        info().put("bIsMouseWithin", true);
     }
     
     @Override
     protected void handleMouseExit(TMouseEvent event) {
-        info.isMouseWithin = false;
+        info().put("bIsMouseWithin", false);
     }
     
 }

@@ -79,6 +79,23 @@ public class AttributeMap implements Map<String,Object> {
     
     // ------------------------------------------------------------------------
     
+    /**
+     * Gets or puts the value for the given key. If the key doesn't exist put and return
+     * the value given by defaultValue
+     * @param key
+     * @param defaultValue
+     * @return the value under the given key or the default value if it does not exist
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key, T defaultValue) {
+        Object ret = map.get(key);
+        if (ret != null) {
+            return (T) ret;
+        }
+        map.put(key, defaultValue);
+        return defaultValue;
+    }
+    
     public boolean getBoolean(String key) {
         return (boolean) map.get(key);
     }

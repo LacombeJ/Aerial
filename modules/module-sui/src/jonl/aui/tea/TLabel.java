@@ -3,7 +3,6 @@ package jonl.aui.tea;
 import jonl.aui.HAlign;
 import jonl.aui.Label;
 import jonl.aui.VAlign;
-import jonl.vmath.Vector4;
 
 public class TLabel extends TWidget implements Label {
 

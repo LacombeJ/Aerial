@@ -1,11 +1,11 @@
 package jonl.aui.tea.graphics;
 
-public class TWidgetInfo {
+import jonl.jutils.structs.AttributeMap;
 
-    private static TWidgetInfo widget = new TWidgetInfo();
-    
-    public static TWidgetInfo widget() {
-        return widget;
+public class TWidgetInfo extends AttributeMap {
+
+    public TColor getColor(String key) {
+        return (TColor) get(key);
     }
     
 }
