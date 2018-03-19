@@ -165,6 +165,10 @@ public class Vector2 extends Vector<Vector2> {
         return new Vector2(Mathf.random(),Mathf.random());
     }
     
+    public static Vector2 random(float min, float max) {
+        return new Vector2(Mathf.random(min,max),Mathf.random(min,max));
+    }
+    
     public static List<Vector2> pack(float[] values) {
         List<Vector2> vectors = new ArrayList<>();
         for (int i=0; i<values.length/2; i++) {

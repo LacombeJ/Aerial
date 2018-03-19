@@ -168,6 +168,10 @@ public class Vector3 extends Vector<Vector3> {
         return new Vector3(Mathf.random(),Mathf.random(),Mathf.random());
     }
     
+    public static Vector3 random(float min, float max) {
+        return new Vector3(Mathf.random(min,max),Mathf.random(min,max),Mathf.random(min,max));
+    }
+    
     //TODO Make sure these align with Matrix4 and Quaternion definition of forward, up, right
     public static final Vector3 forward()   { return new Vector3(0,0,1); }
     public static final Vector3 up()        { return new Vector3(0,1,0); }

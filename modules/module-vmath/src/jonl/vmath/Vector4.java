@@ -100,6 +100,10 @@ public class Vector4 extends Vector<Vector4> {
         return new Vector4(Mathf.random(),Mathf.random(),Mathf.random(),Mathf.random());
     }
     
+    public static Vector4 random(float min, float max) {
+        return new Vector4(Mathf.random(min,max),Mathf.random(min,max),Mathf.random(min,max),Mathf.random(min,max));
+    }
+    
     public static final Vector4 forward()   { return new Vector4(Vector3.forward(), 1); }
     public static final Vector4 up()        { return new Vector4(Vector3.up(),      1); }
     public static final Vector4 right()     { return new Vector4(Vector3.right(),   1); }
