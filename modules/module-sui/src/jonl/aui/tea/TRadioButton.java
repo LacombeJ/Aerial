@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
-import jonl.jutils.io.Console;
 
 public class TRadioButton extends TButton {
 

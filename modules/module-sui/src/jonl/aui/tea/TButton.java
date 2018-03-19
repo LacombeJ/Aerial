@@ -43,7 +43,7 @@ public class TButton extends TWidget implements Button {
     }
 
     @Override
-    public Icon icon() {
+    public TIcon icon() {
         return icon;
     }
 

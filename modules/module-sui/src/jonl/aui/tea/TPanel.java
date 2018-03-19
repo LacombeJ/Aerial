@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import java.util.ArrayList;
 
+import jonl.aui.Align;
 import jonl.aui.Layout;
 import jonl.aui.LayoutItem;
 import jonl.aui.Panel;
@@ -15,7 +16,7 @@ public class TPanel extends TWidget implements Panel {
     }
     
     public TPanel() {
-        this(new TFillLayout());
+        this(new TListLayout(Align.VERTICAL));
     }
     
     @Override

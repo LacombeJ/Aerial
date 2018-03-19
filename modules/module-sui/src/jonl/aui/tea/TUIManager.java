@@ -4,11 +4,6 @@ import jonl.aui.Align;
 import jonl.aui.Font;
 import jonl.aui.Icon;
 import jonl.aui.Layout;
-import jonl.aui.ListLayout;
-import jonl.aui.ScrollPanel;
-import jonl.aui.SpacerItem;
-import jonl.aui.Tree;
-import jonl.aui.TreeItem;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.graphics.TStyleDefault;
@@ -72,6 +67,11 @@ public class TUIManager implements UIManager {
     public TDial dial() {
         return new TDial();
     }
+    
+    @Override
+    public TSlider slider() {
+        return new TSlider();
+    }
 
     @Override
     public TPanel panel() {
@@ -94,9 +94,8 @@ public class TUIManager implements UIManager {
     }
 
     @Override
-    public ScrollPanel scrollPanel() {
-        // TODO Auto-generated method stub
-        return null;
+    public TScrollPanel scrollPanel() {
+        return new TScrollPanel();
     }
     
     @Override
@@ -105,21 +104,18 @@ public class TUIManager implements UIManager {
     }
 
     @Override
-    public Tree tree() {
-        // TODO Auto-generated method stub
-        return null;
+    public TTree tree() {
+        return new TTree();
     }
 
     @Override
-    public TreeItem treeItem() {
-        // TODO Auto-generated method stub
-        return null;
+    public TTreeItem treeItem() {
+        return new TTreeItem();
     }
 
     @Override
-    public TreeItem treeItem(String text) {
-        // TODO Auto-generated method stub
-        return null;
+    public TTreeItem treeItem(String text) {
+        return new TTreeItem(text);
     }
     
     @Override
@@ -169,7 +165,7 @@ public class TUIManager implements UIManager {
     }
     
     @Override
-    public SpacerItem spacerItem() {
+    public TSpacerItem spacerItem() {
         return new TSpacerItem();
     }
     
@@ -184,12 +180,12 @@ public class TUIManager implements UIManager {
     }
 
     @Override
-    public ListLayout listLayout() {
+    public TListLayout listLayout() {
         return new TListLayout();
     }
 
     @Override
-    public ListLayout listLayout(Align align) {
+    public TListLayout listLayout(Align align) {
         return new TListLayout(align);
     }
 

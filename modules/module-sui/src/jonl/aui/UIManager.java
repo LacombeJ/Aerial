@@ -16,6 +16,8 @@ public interface UIManager {
     
     Dial dial();
     
+    Slider slider();
+    
     Panel panel();
     
     Panel panel(Layout layout);

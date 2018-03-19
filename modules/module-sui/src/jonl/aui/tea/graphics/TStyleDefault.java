@@ -14,7 +14,7 @@ public class TStyleDefault implements TStyle {
     
     protected TColor textColor = TColor.BLACK;
     
-    protected TFont font = new TFont("Arial",TFont.PLAIN,16,false);
+    protected TFont font = new TFont("Calibri",TFont.PLAIN,15,false);
     
     protected TDefaultWidgetStyle widget = new TDefaultWidgetStyle(this);
     protected TButtonStyle button = new TButtonStyle(this);
