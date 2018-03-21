@@ -42,6 +42,11 @@ public class TUIManager implements UIManager {
     public TWindow window() {
         return new TWindow();
     }
+    
+    @Override
+    public TFrame frame() {
+        return new TFrame();
+    }
 
     @Override
     public TButton button() {

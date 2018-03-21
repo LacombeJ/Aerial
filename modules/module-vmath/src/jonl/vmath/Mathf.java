@@ -698,6 +698,8 @@ public final class Mathf {
         return (float) i;
     }
     
+    // isWithin Float
+    
     public static boolean isWithin(float x, float y, float x1, float y1, float x2, float y2) {
         if (x<x1) return false;
         if (y<y1) return false;
@@ -725,6 +727,34 @@ public final class Mathf {
         return isWithin(x,y,z,bx,by,bz,bx+bwidth,by+bheight,bz+blength);
     }
     
+    // isWithin Integer
+    
+    public static boolean isWithin(int x, int y, int x1, int y1, int x2, int y2) {
+        if (x<x1) return false;
+        if (y<y1) return false;
+        if (x>x2) return false;
+        if (y>y2) return false;
+        return true;
+    }
+    
+    public static boolean isWithinBounds(int x, int y, int bx, int by, int bwidth, int bheight) {
+        return isWithin(x,y,bx,by,bx+bwidth,by+bheight);
+    }
+    
+    public static boolean isWithin(int x, int y, int z, int x1, int y1, int z1, int x2, int y2, int z2) {
+        if (x<x1) return false;
+        if (y<y1) return false;
+        if (x>x2) return false;
+        if (y>y2) return false;
+        if (z<z1) return false;
+        if (z>z2) return false;
+        return true;
+    }
+    
+    public static boolean isWithinBounds(int x, int y, int z, int bx, int by, int bz,
+            int bwidth, int bheight, int blength) {
+        return isWithin(x,y,z,bx,by,bz,bx+bwidth,by+bheight,bz+blength);
+    }
     
     
     /* ******************************************************************************** */

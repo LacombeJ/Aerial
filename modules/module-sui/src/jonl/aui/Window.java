@@ -21,5 +21,6 @@ public interface Window extends Widget {
     
     void setVisible(boolean visible);
     void setResizable(boolean resizable);
+    void setDecorated(boolean decorated);
 
 }

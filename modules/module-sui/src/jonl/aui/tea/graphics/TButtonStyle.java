@@ -25,24 +25,27 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
         
         this.setPainter((button,info,g)->{
             
-            float intensityValue = info.get("fIntensityValue", 0f);
+            float fIntensityValue = info.get("fIntensityValue", 0f);
+            float fMaxValue = info.get("fMaxValue", maxValue);
+            TColor cButton = info.get("cButton", buttonColor);
+            TColor cHover = info.get("cHover", hoverColor);
             
             if (info.get("bIsMouseWithin", false)) {
-                if (intensityValue<maxValue) {
-                    intensityValue++;
+                if (fIntensityValue<fMaxValue) {
+                    fIntensityValue++;
                     
                 }
             } else {
-                if (intensityValue>0) {
-                    intensityValue--;
+                if (fIntensityValue>0) {
+                    fIntensityValue--;
                 }
             }
             
-            info.put("fIntensityValue", intensityValue);
+            info.put("fIntensityValue", fIntensityValue);
             
-            float v = intensityValue / maxValue;
-            Vector4 primary = (button.checked()) ? toggleColor.toVector() : buttonColor.toVector();
-            Vector4 secondary = (button.checked()) ? toggleColor.toVector() : hoverColor.toVector();
+            float v = fIntensityValue / fMaxValue;
+            Vector4 primary = (button.checked()) ? toggleColor.toVector() : cButton.toVector();
+            Vector4 secondary = (button.checked()) ? toggleColor.toVector() : cHover.toVector();
             Vector4 color = primary.lerp(secondary, v);
             
             g.renderRect(0,0,button.width(),button.height(),TColor.fromVector(color));

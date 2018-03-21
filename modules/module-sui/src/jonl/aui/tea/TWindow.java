@@ -11,15 +11,18 @@ import jonl.jgl.Loader;
 
 public class TWindow extends TWidget implements Window {
 
-    private Widget widget;
+    Widget widget;
     
-    TWindowManager manager;
+    protected TWindowManager manager;
+    
+    TWindow(TLayout layout) {
+        super();
+        this.manager = new TWindowManager(this);
+        setWidgetLayout(layout);
+    }
     
     TWindow() {
-        super();
-        manager = new TWindowManager(this);
-        TFillLayout layout = new TFillLayout();
-        setWidgetLayout(layout);
+        this(new TFillLayout());
     }
     
     @Override
@@ -81,6 +84,11 @@ public class TWindow extends TWidget implements Window {
     @Override
     public void setResizable(boolean resizable) {
         manager.setResizable(resizable);
+    }
+    
+    @Override
+    public void setDecorated(boolean decorated) {
+        manager.setDecorated(decorated);
     }
     
     public jonl.jgl.Window window() {

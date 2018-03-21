@@ -26,6 +26,8 @@ import jonl.jgl.lwjgl.GLFWInstance.CallWindowRequest;
 import jonl.jgl.lwjgl.GLFWInstance.CreateWindowRequest;
 import jonl.jgl.lwjgl.GLFWInstance.CreateWindowResponse;
 import jonl.jgl.lwjgl.GLFWInstance.StartWindowRequest;
+import jonl.jgl.lwjgl.GLFWInstance.WindowRequest;
+import jonl.jgl.lwjgl.GLFWInstance.WindowRequestType;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
@@ -283,7 +285,7 @@ public final class GLFWWindow implements Window {
     
     @Override
     public int getY() {
-        return screenHeight - (y + height);
+        return y;
     }
     
     @Override
@@ -312,6 +314,24 @@ public final class GLFWWindow implements Window {
     public void setSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
         SetWindowSizeLimitsRequest request = new SetWindowSizeLimitsRequest(id,minWidth,minHeight,maxWidth,maxHeight);
         GLFWInstance.setWindowSizeLimits(request);
+    }
+    
+    @Override
+    public void maximize() {
+        WindowRequest request = new WindowRequest(id, WindowRequestType.MAXIMIZE);
+        GLFWInstance.window(request);
+    }
+    
+    @Override
+    public void minimize() {
+        WindowRequest request = new WindowRequest(id, WindowRequestType.MINIMIZE);
+        GLFWInstance.window(request);
+    }
+    
+    @Override
+    public void restore() {
+        WindowRequest request = new WindowRequest(id, WindowRequestType.RESTORE);
+        GLFWInstance.window(request);
     }
 
     @Override

@@ -117,6 +117,10 @@ public interface Window {
     public int getScreenWidth();
     public int getScreenHeight();
     
+    public void maximize();
+    public void minimize();
+    public void restore();
+    
     public boolean getAttribute(int attribute);
     
     public Insets getInsets();

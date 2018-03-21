@@ -212,6 +212,9 @@ class TEventManager {
     // ------------------------------------------------------------------------
     
     static final Tuple2i relative(TWidget ancestor, TWidget target, int x, int y) {
+        if (ancestor==target) {
+            return new Tuple2i(x,y);
+        }
         if (ancestor.hasChild(target)) {
             int rx = x - target.x;
             int ry = y - target.y;

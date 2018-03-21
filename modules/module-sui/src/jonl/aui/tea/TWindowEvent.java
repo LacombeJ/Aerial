@@ -32,4 +32,11 @@ abstract class TWindowEvent {
         }
     }
     
+    static class SetDecorated extends TWindowEvent {
+        boolean decorated;
+        SetDecorated(boolean decorated) {
+            this.decorated = decorated;
+        }
+    }
+    
 }

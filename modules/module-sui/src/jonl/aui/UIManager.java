@@ -6,6 +6,8 @@ public interface UIManager {
     
     Window window();
     
+    Frame frame();
+    
     Button button();
     
     Button button(String text);

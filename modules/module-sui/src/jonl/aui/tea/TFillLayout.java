@@ -16,7 +16,7 @@ public class TFillLayout extends TLayout {
             int height = parent.height() - margin().bottom - margin().top;
             
             int sx = margin().left;
-            int sy = margin().bottom;
+            int sy = margin().top;
             
             int wWidth = TLayoutManager.allocate(TLayoutManager.getWidthPreference(item), width);
             int wHeight = TLayoutManager.allocate(TLayoutManager.getHeightPreference(item), height);

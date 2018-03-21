@@ -1,10 +1,8 @@
 package jonl.aui.tea;
 
-import jonl.aui.Dial;
 import jonl.aui.Signal;
 import jonl.aui.Slider;
 import jonl.aui.tea.event.TMouseEvent;
-import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;

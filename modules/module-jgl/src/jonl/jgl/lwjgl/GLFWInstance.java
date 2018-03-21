@@ -45,8 +45,12 @@ class GLFWInstance {
     
     private static final RequestQueue<StartWindowRequest,StartWindowResponse>
         START_REQUEST                   = new RequestQueue<>( (request) -> _startWindow(request) );
+    
     private static final RequestQueue<CallWindowRequest,CallWindowResponse>
         CALL_REQUEST                   = new RequestQueue<>( (request) -> _callWindow(request) );
+    
+    private static final RequestQueue<WindowRequest,WindowResponse>
+        WINDOW_REQUEST  = new RequestQueue<>( (request) -> _window(request) );
     
     private static final RequestQueue<GetWindowFrameSizeRequest,GetWindowFrameSizeResponse>
         GET_WINDOW_FRAME_SIZE_REQUEST   = new RequestQueue<>( (request) -> _getWindowFrameSize(request) );
@@ -88,6 +92,7 @@ class GLFWInstance {
             CREATE_REQUEST,
             START_REQUEST,
             CALL_REQUEST,
+            WINDOW_REQUEST,
             GET_WINDOW_FRAME_SIZE_REQUEST,
             SET_WINDOW_TITLE_REQUEST,
             SET_WINDOW_POS_REQUEST,
@@ -102,6 +107,12 @@ class GLFWInstance {
             GET_WINDOW_ATTRIB_REQUEST
     };
     
+    public enum WindowRequestType {
+        MAXIMIZE,
+        MINIMIZE,
+        RESTORE
+    }
+    
     static CreateWindowResponse create(CreateWindowRequest request) {
         return CREATE_REQUEST.request(request);
     }
@@ -110,6 +121,9 @@ class GLFWInstance {
     }
     static CallWindowResponse call(CallWindowRequest request) {
         return CALL_REQUEST.request(request);
+    }
+    static WindowResponse window(WindowRequest request) {
+        return WINDOW_REQUEST.request(request);
     }
     static GetWindowFrameSizeResponse getWindowFrameSize(GetWindowFrameSizeRequest request) {
         return GET_WINDOW_FRAME_SIZE_REQUEST.request(request);
@@ -406,6 +420,39 @@ class GLFWInstance {
         CallWindowResponse response = new CallWindowResponse();
         request.call.f();
         return response;
+    }
+    
+    /* ********************************************************************************* */
+    /* ******************************** Window Requests ******************************** */
+    /* ********************************************************************************* */
+    static class WindowRequest extends Request {
+        final long id;
+        final WindowRequestType type;
+        WindowRequest(long id, WindowRequestType type) {
+            this.id = id;
+            this.type = type;
+        }
+    }
+    static class WindowResponse extends Response {
+        WindowResponse() {
+            
+        }
+    }
+    private static WindowResponse _window(WindowRequest request) {
+        switch (request.type) {
+        case MAXIMIZE:
+            GLFW.glfwMaximizeWindow(request.id);
+            break;
+        case MINIMIZE:
+            GLFW.glfwIconifyWindow(request.id);
+            break;
+        case RESTORE:
+            GLFW.glfwRestoreWindow(request.id);
+            break;
+        default:
+            break;
+        }
+        return new WindowResponse();
     }
     
     /* ********************************************************************************* */

@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Button;
+import jonl.aui.tea.spatial.TSize;
 
 public abstract class TButtonBar extends TWidget {
 

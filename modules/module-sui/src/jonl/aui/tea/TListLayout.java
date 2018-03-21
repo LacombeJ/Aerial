@@ -34,7 +34,7 @@ public class TListLayout extends TLayout implements ListLayout {
             int width = parent.width() - margin().left - margin().right;
             int height = parent.height() - margin().bottom - margin().top;
             int sx = margin().left;
-            int sy = margin().bottom;
+            int sy = margin().top;
             
             // ----------------------------------------------
             if (align == Align.HORIZONTAL) {

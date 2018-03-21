@@ -8,6 +8,7 @@ import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TWindowEvent.Move;
 import jonl.aui.tea.TWindowEvent.Resize;
+import jonl.aui.tea.TWindowEvent.SetDecorated;
 import jonl.aui.tea.TWindowEvent.SetResizable;
 import jonl.aui.tea.TWindowEvent.SetVisible;
 import jonl.aui.tea.event.TEventType;
@@ -21,6 +22,7 @@ import jonl.jgl.Loader;
 import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.Window.Insets;
 import jonl.jgl.lwjgl.GLFWWindow;
+import jonl.jutils.io.Console;
 import jonl.jutils.parallel.SequentialProcessor;
 import jonl.vmath.Matrix4;
 
@@ -35,6 +37,7 @@ class TWindowManager {
     private String title = "Window";
     private boolean visible;
     private boolean resizable;
+    private boolean decorated = true;
     
     private boolean isAligned = true;
     private HAlign halign = HAlign.CENTER;
@@ -77,14 +80,14 @@ class TWindowManager {
             double h = displayHeight;
             
             switch (halign) {
-            case LEFT:      x = 0;                                 break;
-            case CENTER:    x = (int) ((w/2) - (window.width/2));    break;
-            case RIGHT:     x = (int) (w - (window.width/2));        break;
+            case LEFT:      x = 0;                                  break;
+            case CENTER:    x = (int) ((w/2) - (window.width/2));   break;
+            case RIGHT:     x = (int) (w - (window.width/2));       break;
             }
             switch(valign) {
-            case TOP:       y = 0;                                 break;
-            case MIDDLE:    y = (int) ((h/2) - (window.height/2));   break;
-            case BOTTOM:    y = (int) (h - (window.height/2));       break;
+            case TOP:       y = 0;                                  break;
+            case MIDDLE:    y = (int) ((h/2) - (window.height/2));  break;
+            case BOTTOM:    y = (int) (h - (window.height/2));      break;
             }
             
             if (glWindow!=null) {
@@ -105,13 +108,15 @@ class TWindowManager {
         sp.setLockCount(1);
         sp.add(()->{
             synchronized (lock) {
-                glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,true,4,false);
+                glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,false);
                 
                 Insets insets = glWindow.getInsets();
                 if (isAligned) {
                     setPosition(halign,valign);
                 } else {
-                    glWindow.setPosition(insets.left+window.x,insets.top+window.y);
+                    //Why do we have insets here?
+                    //glWindow.setPosition(insets.left+window.x,insets.top+window.y);
+                    glWindow.setPosition(window.x,window.y);
                 }
             }
             gl = glWindow.getGraphicsLibrary();
@@ -143,7 +148,7 @@ class TWindowManager {
             sp.countDown();
             glWindow.setLoader(()->{
                 graphics = new TGraphics(gl,()->window.height);
-                ortho = Matrix4.orthographic(0,glWindow.getWidth(),0,glWindow.getHeight(),-1,1);
+                ortho = Matrix4.orthographic(0,glWindow.getWidth(),glWindow.getHeight(),0,-1,1);
                 graphics.setOrtho(ortho);
                 loader.load();
             });
@@ -159,14 +164,20 @@ class TWindowManager {
                             if (we instanceof Move) {
                                 Move move = (Move) we;
                                 glWindow.setPosition(move.x,move.y);
+                                window.x = move.x;
+                                window.y = move.y;
                             } else if (we instanceof Resize) {
                                 Resize resize = (Resize) we;
                                 glWindow.setSize(resize.width,resize.height);
+                                window.width = resize.width;
+                                window.height = resize.height;
                             } else if (we instanceof SetVisible) {
                                 SetVisible visible = (SetVisible) we;
                                 glWindow.setVisible(visible.visible);
                             } else if (we instanceof SetResizable) {
-                                //GLFW does not support window resizable after creation
+                                //GLFW does not support toggling window resizing after creation
+                            } else if (we instanceof SetDecorated) {
+                               // GLFW does not support toggling window decoration after creation
                             }
                         }
                     }
@@ -197,43 +208,41 @@ class TWindowManager {
     }
     
     void setX(int x) {
+        window.x = x;
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Move(x,window.y));
+                windowEventQueue.addLast(new Move(x, window.y));
             } else {
-                window.x = x;
                 isAligned = false;
             }
         }
     }
     
     void setY(int y) {
+        window.y = y;
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Move(window.x,displayHeight - (y+window.width)));
+                windowEventQueue.addLast(new Move(window.x, y));
             } else {
-                window.y = y;
                 isAligned = false;
             }
         }
     }
     
     void setWidth(int width) {
+        window.width = width;
         synchronized (lock) {
             if (glWindow!=null) {
                 windowEventQueue.addLast(new Resize(width,window.height));
-            } else {
-                window.width = width;
             }
         }
     }
     
     void setHeight(int height) {
+        window.height = height;
         synchronized (lock) {
             if (glWindow!=null) {
                 windowEventQueue.addLast(new Resize(window.width,height));
-            } else {
-                window.height = height;
             }
         }
     }
@@ -254,6 +263,16 @@ class TWindowManager {
                 windowEventQueue.addLast(new SetResizable(resizable));
             } else {
                 this.resizable = resizable;
+            }
+        }
+    }
+    
+    void setDecorated(boolean decorated) {
+        synchronized (lock) {
+            if (glWindow!=null) {
+                windowEventQueue.addLast(new SetDecorated(decorated));
+            } else {
+                this.decorated = decorated;
             }
         }
     }
