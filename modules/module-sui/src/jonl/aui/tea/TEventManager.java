@@ -8,11 +8,21 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
 import jonl.aui.tea.spatial.TPoint;
-import jonl.jutils.func.Tuple2i;
 import jonl.jutils.time.Time;
 
+/**
+ * 
+ * @author Jonathan
+ *
+ */
 class TEventManager {
 
+    // TODO simplify this code to make it less confusing and more readable.
+    // Also define things such as the types of events that are withheld and sent
+    // with mouse focus or even make parameters that widgets can toggle such
+    // as whether it should receive events of mouse exiting window if the widget
+    // is focused.
+    
     private static final long DOUBLE_CLICK_SPEED_MS = 500;
     
     private static TWidget keyboardFocusWidget = null;
@@ -31,19 +41,34 @@ class TEventManager {
     }
     
     private static void internalBindFocus(TWidget widget, TMouseEvent event) {
-        mouseFocusWidget = widget;
-        mouseFocusPoint = new TPoint(event.globalX, event.globalY);
-        mouseFocusRootWidget = widget.root();
+        if (widget != null) {
+            mouseFocusWidget = widget;
+            mouseFocusPoint = new TPoint(event.globalX, event.globalY);
+            mouseFocusRootWidget = widget.root();
+        }
     }
     
     private static void internalFreeFocus(TWidget widget, TMouseEvent event) {
-        if (widget == mouseFocusWidget) {
-            mouseFocusWidget = null;
+        if (widget != null && widget == mouseFocusWidget) {
             
             int x = event.globalX;
             int y = event.globalY;
             int dx = event.globalX - mouseFocusPoint.x;
             int dy = event.globalY - mouseFocusPoint.y;
+            
+            // Fire mouse exist for the mouseFocusWidget if mouse isn't within widget
+            // This is to get the correct inNow and inBefore
+            // values when widget loses focus and internalFreeFocus is called. For example,
+            // if a slider button requested focus and was moved the mouse focus point
+            // called in internalBindFocus may fail on inBefore where we would want it
+            // to succeed.
+            TPoint eFocusPos = relative(mouseFocusRootWidget, mouseFocusWidget, x, y);
+            if (eFocusPos != null) {
+                TMouseEvent eventFocus = new TMouseEvent(TEventType.MouseExit, -1, eFocusPos.x, eFocusPos.y, x, y, dx, dy);
+                sendEvent(mouseFocusWidget, eventFocus);
+            }
+            
+            mouseFocusWidget = null;
             
             if (dx!=0 || dy!=0) {
                 int prevX = mouseFocusPoint.x;
@@ -58,8 +83,10 @@ class TEventManager {
                 }
                 TEventManager.fireMouseMove(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
             }
-            
         }
+        
+        mouseFocusPoint = null;
+        mouseFocusRootWidget = null;
     }
     
     private static void checkClick(TWidget widget, TMouseEvent e, boolean wasInClickState) {
@@ -72,17 +99,31 @@ class TEventManager {
         }
     }
     
+    /**
+     * This true if a widget has mouse focus.
+     * If a widget has mouse focus, this function sends an event directly to the widget with
+     * mouse focus. The widget in the parameter is only used to obtain the relative position
+     * of the mouseFocusWidget to the given widget.
+     * 
+     * @param widget
+     * @param e
+     * @param released
+     * @return
+     */
     private static boolean checkMouseFocusWidget(TWidget widget, TMouseEvent e, boolean released) {
         if (mouseFocusWidget != null) {
             boolean wasInClickState = mouseFocusWidget.eventInClickState;
-            Tuple2i eFocusPos = relative(widget, mouseFocusWidget, e.x, e.y);
+            TPoint eFocusPos = relative(widget, mouseFocusWidget, e.x, e.y);
             if (eFocusPos != null) {
                 TMouseEvent eventFocus = event(e, eFocusPos.x, eFocusPos.y);
                 if (released) {
                     mouseFocusWidget.eventInClickState = false;
                     checkClick(mouseFocusWidget, eventFocus, wasInClickState);
                 }
-                sendEvent(mouseFocusWidget, eventFocus);
+                // Right now we are omitting mouse exit events for focused widgets
+                if (eventFocus.type!=TEventType.MouseExit) {
+                    sendEvent(mouseFocusWidget, eventFocus);
+                }
             }
             if (released) {
                 internalFreeFocus(mouseFocusWidget, e);
@@ -246,20 +287,20 @@ class TEventManager {
     
     // ------------------------------------------------------------------------
     
-    static final Tuple2i relative(TWidget ancestor, TWidget target, int x, int y) {
+    static final TPoint relative(TWidget ancestor, TWidget target, int x, int y) {
         if (ancestor==target) {
-            return new Tuple2i(x,y);
+            return new TPoint(x,y);
         }
         if (ancestor.hasChild(target)) {
             int rx = x - target.x;
             int ry = y - target.y;
-            return new Tuple2i(rx,ry);
+            return new TPoint(rx,ry);
         }
         if (ancestor.hasChildren()) {
             for (TWidget child : ancestor.getChildren()) {
                 int rx = x - child.x;
                 int ry = y - child.y;
-                Tuple2i r = relative(child,target,rx,ry);
+                TPoint r = relative(child,target,rx,ry);
                 if (r != null) {
                     return r;
                 }
