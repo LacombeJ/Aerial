@@ -20,9 +20,7 @@ import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
 import jonl.jgl.GraphicsLibrary.Mask;
-import jonl.jgl.Window.Insets;
 import jonl.jgl.lwjgl.GLFWWindow;
-import jonl.jutils.io.Console;
 import jonl.jutils.parallel.SequentialProcessor;
 import jonl.vmath.Matrix4;
 
@@ -110,11 +108,11 @@ class TWindowManager {
             synchronized (lock) {
                 glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,false);
                 
-                Insets insets = glWindow.getInsets();
+                //Insets insets = glWindow.getInsets();
                 if (isAligned) {
                     setPosition(halign,valign);
                 } else {
-                    //Why do we have insets here?
+                    //Why did we have insets here?
                     //glWindow.setPosition(insets.left+window.x,insets.top+window.y);
                     glWindow.setPosition(window.x,window.y);
                 }
@@ -196,6 +194,8 @@ class TWindowManager {
         gl.glScissor(0,0,window.width,window.height);
         gl.glClearColor(1,1,1,1);
         gl.glClear(Mask.COLOR_BUFFER_BIT);
+        
+        window.layoutDirtyChildren();
         
         graphics.paint(window);
     }

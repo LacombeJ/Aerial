@@ -2,8 +2,8 @@ package jonl.aui.tea.spatial;
 
 public class TPoint {
 
-    int x;
-    int y;
+    public int x;
+    public int y;
     
     public TPoint() {
         

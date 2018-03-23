@@ -8,6 +8,7 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.graphics.TColor;
 import jonl.jgl.Input;
 import jonl.jgl.Window;
+import jonl.vmath.Mathf;
 
 public class TFrameBar extends TWidget {
 
@@ -98,17 +99,53 @@ public class TFrameBar extends TWidget {
     @Override
     protected void handleMouseMove(TMouseEvent event) {
         if (inAdjustState) {
-            int mouseWindowX = event.globalX + frame.manager.window().getX();
-            int mouseWindowY = event.globalY + frame.manager.window().getY();
-            int dx = mouseWindowX - adjustX;
-            int dy = mouseWindowY - adjustY;
-            adjustX = event.globalX + frame.manager.window().getX();
-            adjustY = event.globalY + frame.manager.window().getY();
+            
+            // Grab the screen mouse x early because window position might change
+            // when moving out of maximize
+            int screenMouseX = event.globalX + frame.manager.window().getX();
+            int screenMouseY = event.globalY + frame.manager.window().getY();
+            
+            // Moving window while maximizes unmaximizes it (since this is not handle by the OS like other windows)
+            // Only option is to diable moving maximized windows
+            if (frame.manager.window().getAttribute(Window.MAXIMIZED)) {
+                
+                // Move frame so that mouse will hover over the center of the frame bar
+                // This happens before we adjust the size of the framebar widget so we will use the
+                // dimensions of the window for calculation
+                int prevX = frame.manager.window().getX();
+                int prevY = frame.manager.window().getY();
+                frame.insets = new Margin(frame.defaultInsets); // restore insets
+                frame.manager.window().restore();
+                
+                // Using prevX and prevY in calculations to handle multiple screens
+                // Since we know in fullscreen mode, prevX and prevY denote the top left corner,
+                // we can handle multiple screens using those values
+                
+                // This does not however, handle multiple screens of different sizes
+                // TODO find a way to retrieve the size of the screen that contains the window
+                
+                int screenWidth = frame.manager.window().getScreenWidth();
+                int width = frame.manager.window().getWidth();
+                int left = prevX; // Using this instead of 0 to handle multiple screens
+                int right = prevX + screenWidth - width;
+                
+                int moveX = screenMouseX - width/2;
+                moveX = Mathf.clamp(moveX, left, right);
+                int moveY = prevY; // Keep takbar same height
+                
+                frame.manager.window().setPosition(moveX, moveY);
+            }
+            
+            // Adjust window position based on mouse motion
+            
+            int dx = screenMouseX - adjustX;
+            int dy = screenMouseY - adjustY;
+            adjustX = screenMouseX;
+            adjustY = screenMouseY;
             int nx = frame.manager.window().getX() + dx;
             int ny = frame.manager.window().getY() + dy;
             
-            this.frame.setX(nx);
-            this.frame.setY(ny);
+            frame.manager.window().setPosition(nx, ny);
         }
     }
     

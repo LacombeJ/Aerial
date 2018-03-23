@@ -34,4 +34,11 @@ public interface Widget {
      */
     Signal<Callback<Graphics>> paint();
     
+    /**
+     * Translates this string to a call
+     * @param call string to call
+     * @return return null if call doesn't exist, an object if call is a get type, or true if succeeded
+     */
+    Object call(String call);
+    
 }

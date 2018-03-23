@@ -66,7 +66,7 @@ public class TButton extends TWidget implements Button {
 
     @Override
     public void setChecked(boolean checked) {
-        this.checked = checked;
+        this.checked = checked;;
     }
 
     @Override

@@ -2,7 +2,6 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Button;
-import jonl.aui.tea.spatial.TSize;
 
 public abstract class TButtonBar extends TWidget {
 
@@ -30,7 +29,7 @@ private TSpacerItem spacer;
     }
 
     public void remove(Button button) {
-        widgetLayout().remove(button);;
+        widgetLayout().remove(button);
     }
     
     public void remove(int index) {

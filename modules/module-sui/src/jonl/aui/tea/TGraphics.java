@@ -35,9 +35,7 @@ public class TGraphics implements Graphics {
     
     Program solid;
     Program basic;
-    
-    Vector4 buttonColor = new Vector4(0.8f,0.8f,0.8f,1);
-    Vector4 buttonColorHover = new Vector4(0.5f,0.5f,0.6f,1);
+
     
     TGraphics(GraphicsLibrary gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
@@ -101,7 +99,16 @@ public class TGraphics implements Graphics {
     }
     
     public void renderCircle(float x, float y, float w, float h, Vector4 color) {
+        render(circle,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
+    }
+    
+    public void renderCircleBounds(float x, float y, float w, float h, Vector4 color) {
         render(circle,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
+    }
+    
+    public void renderCircle(Matrix4 mat, Vector4 color) {
+        Matrix4 matrix = Matrix4.identity().translate(offsetX,offsetY,0).multiply(mat);
+        render(circle,matrix,color);
     }
     
     public void renderRect(float x, float y, float w, float h, Vector4 color) {

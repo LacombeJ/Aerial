@@ -24,6 +24,11 @@ public class TFrame extends TWindow implements Frame {
         
         frameBar = new TFrameBar(this);
         layout.add(frameBar);
+        /*
+        caller().implement("SET_COLOR", (args) -> {
+            
+        });
+        */
     }
     
     TFrameBar frameBar() {

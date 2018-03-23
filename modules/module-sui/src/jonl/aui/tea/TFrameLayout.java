@@ -1,7 +1,5 @@
 package jonl.aui.tea;
 
-import jonl.jutils.io.Console;
-
 public class TFrameLayout extends TLayout {
 
     TFrameLayout() {

@@ -6,6 +6,7 @@ import jonl.aui.Graphics;
 import jonl.aui.Signal;
 import jonl.aui.Widget;
 import jonl.aui.Window;
+import jonl.aui.tea.call.TCaller;
 import jonl.aui.tea.event.TEvent;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
@@ -29,6 +30,8 @@ public abstract class TWidget implements Widget {
     protected TLayout parentLayout = null;
     private TLayout layout = null;
     
+    private boolean dirty = true;
+    
     private boolean enabled = true;
     
     private final Signal<Callback<Graphics>> paint = new Signal<>();
@@ -36,6 +39,8 @@ public abstract class TWidget implements Widget {
     TStyle style = null;
     
     TWidgetInfo info = new TWidgetInfo();
+    
+    TCaller caller = new TCaller();
     
     // Variables used by event handler
     boolean eventInClickState = false;
@@ -162,6 +167,11 @@ public abstract class TWidget implements Widget {
         return paint;
     }
     
+    @Override
+    public Object call(String call) {
+        return caller.call(call);
+    }
+    
     // ------------------------------------------------------------------------
     
     
@@ -198,10 +208,6 @@ public abstract class TWidget implements Widget {
         return TEventManager.hasFocus(this);
     }
     
-    protected boolean requestFocus() {
-        return TEventManager.requestFocus(this);
-    }
-    
     protected void setMouseFocusSupport(boolean enable) {
         eventMouseFocusSupport = enable;
     }
@@ -213,6 +219,10 @@ public abstract class TWidget implements Widget {
     
     protected TWidgetInfo info() {
         return info;
+    }
+    
+    protected TCaller caller() {
+        return caller;
     }
     
     protected void handleMouseButtonClick(TMouseEvent event) { }
@@ -319,6 +329,27 @@ public abstract class TWidget implements Widget {
     void layoutChildren() {
         if (layout != null) {
             layout.layout();
+            dirty = false;
+        }
+    }
+    
+    void validate() {
+        dirty = false;
+    }
+    
+    void invalidate() {
+        dirty = true;
+    }
+    
+    void layoutDirtyChildren() {
+        if (layout != null) {
+            if (dirty) {
+                layout.layout();
+                dirty = false;
+            }
+        }
+        for (TWidget widget : getChildren()) {
+            widget.layoutDirtyChildren();
         }
     }
     

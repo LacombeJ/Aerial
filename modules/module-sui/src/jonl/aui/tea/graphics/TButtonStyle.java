@@ -26,6 +26,7 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
         this.setPainter((button,info,g)->{
             
             float fIntensityValue = info.get("fIntensityValue", 0f);
+            
             float fMaxValue = info.get("fMaxValue", maxValue);
             TColor cButton = info.get("cButton", buttonColor);
             TColor cHover = info.get("cHover", hoverColor);

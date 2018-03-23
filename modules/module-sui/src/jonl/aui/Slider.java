@@ -3,8 +3,11 @@ package jonl.aui;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 
-public interface Slider {
+public interface Slider extends Widget {
 
+    Align align();
+    void setAlign(Align align);
+    
     int value();
     void setValue(int value);
     

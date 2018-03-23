@@ -18,7 +18,7 @@ public class TDial extends TWidget implements Dial {
     private float ox = 0;
     private float oy = 0;
     private int ovalue = 0;
-    private boolean inDialState = false;
+    private boolean inAdjustState = false;
     
     private final Signal<Callback<Integer>> moved = new Signal<>();
     private final Signal<Callback<Integer>> changed = new Signal<>();
@@ -37,7 +37,7 @@ public class TDial extends TWidget implements Dial {
 
     @Override
     public void setValue(int value) {
-        this.value = value;
+        this.value = Mathf.clamp(value, minValue, maxValue);
     }
 
     @Override
@@ -48,6 +48,7 @@ public class TDial extends TWidget implements Dial {
     @Override
     public void setMin(int min) {
         minValue = min;
+        setValue(minValue);
     }
 
     @Override
@@ -58,6 +59,7 @@ public class TDial extends TWidget implements Dial {
     @Override
     public void setMax(int max) {
         maxValue = max;
+        setValue(maxValue);
     }
 
     @Override
@@ -81,6 +83,7 @@ public class TDial extends TWidget implements Dial {
     
     @Override
     protected void paint(TGraphics g) {
+        info.put("bInAdjustState", inAdjustState);
         style().dial().paint(this, info(), g);
         paint().emit(cb->cb.f(g));
     }
@@ -88,7 +91,7 @@ public class TDial extends TWidget implements Dial {
     @Override
     protected void handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
-            inDialState = true;
+            inAdjustState = true;
             ox = event.x;
             oy = event.y;
             ovalue = value;
@@ -99,14 +102,14 @@ public class TDial extends TWidget implements Dial {
     @Override
     protected void handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
-            inDialState = false;
+            inAdjustState = false;
             released().emit(cb->cb.f());
         }
     }
     
     @Override
     protected void handleMouseMove(TMouseEvent event) {
-        if (inDialState) {
+        if (inAdjustState) {
             float x = width()/2f;
             float y = height()/2f;
             
@@ -115,15 +118,12 @@ public class TDial extends TWidget implements Dial {
             
             float ang = Vector2.rad(u,v);
             int oldValue = value;
-            int diff = (int)((ang/Mathf.TWO_PI) * 100);
+            int diff = (int)((ang/Mathf.TWO_PI) * (maxValue-minValue));
+            
             value = ovalue + diff;
             
-            if (value > maxValue) {
-                value = (int) Mathf.pattern(value, minValue, maxValue);
-            }
-            else if (value < minValue) {
-                value = (int) Mathf.pattern(value, minValue, maxValue);
-            }
+            value = (int) Mathf.pattern(value, minValue, maxValue);
+            
             if (value!=oldValue) {
                 moved().emit(cb->cb.f(value));
                 changed().emit(cb->cb.f(value));

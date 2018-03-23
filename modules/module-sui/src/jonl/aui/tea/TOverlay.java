@@ -41,6 +41,7 @@ public class TOverlay extends TWidget implements Overlay {
         TOverlayWidgetItem item = (TOverlayWidgetItem) widgetLayout().getItem(index);
         item.x = x;
         item.y = y;
+        invalidate();
     }
 
     @Override
@@ -48,6 +49,7 @@ public class TOverlay extends TWidget implements Overlay {
         TOverlayWidgetItem item = (TOverlayWidgetItem) widgetLayout().getItem(index);
         item.width = width;
         item.height = height;
+        invalidate();
     }
 
 }

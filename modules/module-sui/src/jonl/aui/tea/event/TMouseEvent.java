@@ -15,8 +15,8 @@ public class TMouseEvent extends TEvent {
         this.button = button;
         this.x = x;
         this.y = y;
-        this.globalX = x;
-        this.globalY = y;
+        this.globalX = globalX;
+        this.globalY = globalY;
         this.dx = dx;
         this.dy = dy;
     }

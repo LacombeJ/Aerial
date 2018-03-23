@@ -87,6 +87,7 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     @Override
     public void setAlign(Align align) {
         this.align = align;
+        invalidate();
     }
 
     @Override
@@ -97,7 +98,7 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     @Override
     public void setRatio(double ratio) {
         this.ratio = ratio;
-        layoutChildren();
+        invalidate();
     }
     
     // ------------------------------------------------------------------------

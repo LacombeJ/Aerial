@@ -20,6 +20,8 @@ public interface UIManager {
     
     Slider slider();
     
+    Slider slider(Align align);
+    
     Panel panel();
     
     Panel panel(Layout layout);

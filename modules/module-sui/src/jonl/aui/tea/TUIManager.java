@@ -77,6 +77,11 @@ public class TUIManager implements UIManager {
     public TSlider slider() {
         return new TSlider();
     }
+    
+    @Override
+    public TSlider slider(Align align) {
+        return new TSlider(align);
+    }
 
     @Override
     public TPanel panel() {

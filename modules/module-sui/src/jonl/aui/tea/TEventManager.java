@@ -7,6 +7,7 @@ import jonl.aui.tea.event.TEventType;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
+import jonl.aui.tea.spatial.TPoint;
 import jonl.jutils.func.Tuple2i;
 import jonl.jutils.time.Time;
 
@@ -17,6 +18,8 @@ class TEventManager {
     private static TWidget keyboardFocusWidget = null;
     
     private static TWidget mouseFocusWidget = null;
+    private static TPoint mouseFocusPoint = null;
+    private static TWidget mouseFocusRootWidget = null;
     
     static boolean hasFocus(TWidget widget) {
         return widget == keyboardFocusWidget;
@@ -25,6 +28,38 @@ class TEventManager {
     static boolean requestFocus(TWidget widget) {
         keyboardFocusWidget = widget;
         return true;
+    }
+    
+    private static void internalBindFocus(TWidget widget, TMouseEvent event) {
+        mouseFocusWidget = widget;
+        mouseFocusPoint = new TPoint(event.globalX, event.globalY);
+        mouseFocusRootWidget = widget.root();
+    }
+    
+    private static void internalFreeFocus(TWidget widget, TMouseEvent event) {
+        if (widget == mouseFocusWidget) {
+            mouseFocusWidget = null;
+            
+            int x = event.globalX;
+            int y = event.globalY;
+            int dx = event.globalX - mouseFocusPoint.x;
+            int dy = event.globalY - mouseFocusPoint.y;
+            
+            if (dx!=0 || dy!=0) {
+                int prevX = mouseFocusPoint.x;
+                int prevY = mouseFocusPoint.y;
+                boolean inNow = TEventManager.within(mouseFocusRootWidget,x,y);
+                boolean inBefore = TEventManager.within(mouseFocusRootWidget,prevX,prevY);
+                if (inNow && !inBefore) {
+                    TEventManager.fireMouseEnter(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
+                }
+                if (!inNow && inBefore) {
+                    TEventManager.fireMouseExit(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
+                }
+                TEventManager.fireMouseMove(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
+            }
+            
+        }
     }
     
     private static void checkClick(TWidget widget, TMouseEvent e, boolean wasInClickState) {
@@ -50,7 +85,7 @@ class TEventManager {
                 sendEvent(mouseFocusWidget, eventFocus);
             }
             if (released) {
-                mouseFocusWidget = null;
+                internalFreeFocus(mouseFocusWidget, e);
             }
             return true;
         }
@@ -60,7 +95,7 @@ class TEventManager {
     
     private static boolean sendMouseEventAndHandleMouseFocus(TWidget widget, TMouseEvent e) {
         if (widget.eventMouseFocusSupport) {
-            mouseFocusWidget = widget;
+            internalBindFocus(widget, e);
         }
         return sendEvent(widget, e);
     }
@@ -87,7 +122,7 @@ class TEventManager {
     
     private static boolean sendMouseEventAndHandleClickAndMouseFocus(TWidget widget, TMouseEvent e, boolean wasInClickState) {
         if (widget.eventMouseFocusSupport) {
-            mouseFocusWidget = null;
+            internalFreeFocus(mouseFocusWidget, e);
         }
         checkClick(widget, e, wasInClickState);
         return sendEvent(widget, e);
