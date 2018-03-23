@@ -3,7 +3,9 @@ package jonl.aui.tea;
 import jonl.aui.Frame;
 import jonl.aui.Margin;
 import jonl.aui.Widget;
+import jonl.aui.tea.call.TArgTypes;
 import jonl.aui.tea.graphics.TColor;
+import jonl.jutils.io.Console;
 
 public class TFrame extends TWindow implements Frame {
     
@@ -24,11 +26,12 @@ public class TFrame extends TWindow implements Frame {
         
         frameBar = new TFrameBar(this);
         layout.add(frameBar);
-        /*
+        
         caller().implement("SET_COLOR", (args) -> {
-            
+            color = TArgTypes.color(args);
+            return true;
         });
-        */
+        
     }
     
     TFrameBar frameBar() {
