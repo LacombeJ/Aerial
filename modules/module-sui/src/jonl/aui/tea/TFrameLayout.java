@@ -22,17 +22,22 @@ public class TFrameLayout extends TLayout {
                 TLayoutItem item = getItem(indexOf(frame.widget()));
                 int wWidth = TLayoutManager.allocate(TLayoutManager.getWidthPreference(item), width);
                 int wHeight = TLayoutManager.allocate(TLayoutManager.getHeightPreference(item), height);
-                TLayoutManager.setPositionAndRequestFire(item.asWidget(), sx, sy);
-                TLayoutManager.setSizeAndRequestFire(item.asWidget(), wWidth, wHeight);
+                TLayoutManager.setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
             }
             
             if (frame.frameBar() != null)
             {
                 TLayoutItem barItem = getItem(indexOf(frame.frameBar()));
-                TLayoutManager.setPositionAndRequestFire(barItem.asWidget(), sx, 0);
-                TLayoutManager.setSizeAndRequestFire(barItem.asWidget(), parent.width, frame.insets().top);
+                TLayoutManager.setPositionAndSize(barItem.asWidget(), sx, 0, parent.width, frame.insets().top);
             }
         }
+    }
+    
+    @Override
+    TSizeHint calculateSizeHint() {
+        TSizeHint hint = new TSizeHint();
+        
+        return hint;
     }
     
 }

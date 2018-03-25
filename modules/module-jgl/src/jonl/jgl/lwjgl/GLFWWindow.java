@@ -16,6 +16,7 @@ import jonl.jgl.lwjgl.GLFWInstance.GetWindowAttribRequest;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowAttribResponse;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeResponse;
+import jonl.jgl.lwjgl.GLFWInstance.SetCursorRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetInputModeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowPosRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeLimitsRequest;
@@ -362,6 +363,25 @@ public final class GLFWWindow implements Window {
         }
         SetInputModeRequest request = new SetInputModeRequest(id,GLFW.GLFW_CURSOR,STATE_MAP.getValue(state));
         GLFWInstance.setInputMode(request);
+    }
+    
+    private final static BijectiveMap<Integer,Integer> CURSOR_MAP = new BijectiveMap<>();
+    
+    static {
+        CURSOR_MAP.put(ARROW_CURSOR, GLFW.GLFW_ARROW_CURSOR);
+        CURSOR_MAP.put(IBEAM_CURSOR, GLFW.GLFW_IBEAM_CURSOR);
+        CURSOR_MAP.put(CROSSHAIR_CURSOR, GLFW.GLFW_CROSSHAIR_CURSOR);
+        CURSOR_MAP.put(HAND_CURSOR, GLFW.GLFW_HAND_CURSOR);
+        CURSOR_MAP.put(HRESIZE_CURSOR, GLFW.GLFW_HRESIZE_CURSOR);
+        CURSOR_MAP.put(VRESIZE_CURSOR, GLFW.GLFW_VRESIZE_CURSOR);
+    }
+    
+    @Override
+    public void setCursor(int cursorId) {
+        int cursor = CURSOR_MAP.get(cursorId);
+        long standardCursor = GLFWInstance.STANDARD_CURSORS.get(cursor);
+        SetCursorRequest request = new SetCursorRequest(id, standardCursor);
+        GLFWInstance.setCursor(request);
     }
     
     @Override

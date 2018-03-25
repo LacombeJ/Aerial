@@ -13,15 +13,17 @@ import jonl.aui.tea.TWindowEvent.SetResizable;
 import jonl.aui.tea.TWindowEvent.SetVisible;
 import jonl.aui.tea.event.TEventType;
 import jonl.aui.tea.event.TMouseEvent;
-import jonl.aui.tea.event.TMoveEvent;
-import jonl.aui.tea.event.TResizeEvent;
+import jonl.aui.tea.spatial.TPoint;
 import jonl.jgl.Closer;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
+import jonl.jgl.Window;
+import jonl.jgl.Window.Insets;
 import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.lwjgl.GLFWWindow;
 import jonl.jutils.parallel.SequentialProcessor;
+import jonl.vmath.Mathi;
 import jonl.vmath.Matrix4;
 
 class TWindowManager {
@@ -37,7 +39,10 @@ class TWindowManager {
     private boolean resizable;
     private boolean decorated = true;
     
-    private boolean isAligned = true;
+    private boolean usePolicyWidth = true;
+    private boolean usePolicyHeight = true;
+    private boolean isXAligned = true;
+    private boolean isYAligned = true;
     private HAlign halign = HAlign.CENTER;
     private VAlign valign = VAlign.MIDDLE;
     
@@ -69,35 +74,40 @@ class TWindowManager {
         displayHeight = devices[0].getDisplayMode().getHeight();
     }
     
+    private TPoint getPositionAlignment(HAlign halign, VAlign valign) {
+        int x = window.x;
+        int y = window.y;
+        
+        double w = displayWidth;
+        double h = displayHeight;
+        
+        switch (halign) {
+        case LEFT:      x = 0;                                  break;
+        case CENTER:    x = (int) ((w/2) - (window.width/2));   break;
+        case RIGHT:     x = (int) (w - (window.width/2));       break;
+        }
+        switch(valign) {
+        case TOP:       y = 0;                                  break;
+        case MIDDLE:    y = (int) ((h/2) - (window.height/2));  break;
+        case BOTTOM:    y = (int) (h - (window.height/2));      break;
+        }
+        
+        return new TPoint(x,y);
+    }
+    
     void setPosition(HAlign halign, VAlign valign) {
         synchronized (lock) {
-            int x = window.x;
-            int y = window.y;
-            
-            double w = displayWidth;
-            double h = displayHeight;
-            
-            switch (halign) {
-            case LEFT:      x = 0;                                  break;
-            case CENTER:    x = (int) ((w/2) - (window.width/2));   break;
-            case RIGHT:     x = (int) (w - (window.width/2));       break;
-            }
-            switch(valign) {
-            case TOP:       y = 0;                                  break;
-            case MIDDLE:    y = (int) ((h/2) - (window.height/2));  break;
-            case BOTTOM:    y = (int) (h - (window.height/2));      break;
-            }
-            
+            TPoint p = getPositionAlignment(halign, valign);
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Move(x,y));
+                windowEventQueue.addLast(new Move(p.x,p.y));
             } else {
-                window.x = x;
-                window.y = y;
-                isAligned = true;
+                window.x = p.x;
+                window.y = p.y;
+                isXAligned = true;
+                isYAligned = true;
                 this.halign = halign;
                 this.valign = valign;
             }
-            
         }
     }
     
@@ -106,16 +116,39 @@ class TWindowManager {
         sp.setLockCount(1);
         sp.add(()->{
             synchronized (lock) {
+                int minWidth = window.minWidth();
+                int minHeight = window.minHeight();
+                TSizeHint sizeHint = window.sizeHint();
+                
+                window.width = Math.max(minWidth, window.width);
+                window.height = Math.max(minHeight, window.height);
+                
+                if (usePolicyWidth) {
+                    window.width = Mathi.max(sizeHint.width, window.width, 1);
+                }
+                if (usePolicyHeight) {
+                    window.height = Mathi.max(sizeHint.height, window.height, 1);
+                }
+                
                 glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,false);
                 
-                //Insets insets = glWindow.getInsets();
-                if (isAligned) {
-                    setPosition(halign,valign);
-                } else {
-                    //Why did we have insets here?
-                    //glWindow.setPosition(insets.left+window.x,insets.top+window.y);
-                    glWindow.setPosition(window.x,window.y);
+                
+                TPoint aligned = getPositionAlignment(halign, valign);
+                if (isXAligned) {
+                    window.x = aligned.x;
                 }
+                if (isYAligned) {
+                    window.y = aligned.y;
+                }
+                
+                // We include insets here because the position of the gl window doesn't include the GLFW window frame isnets
+                Insets insets = glWindow.getInsets();
+                glWindow.setPosition(insets.left+window.x,insets.top+window.y);
+                
+                // Using Integer.MAX_VALUE for glfw max size limits doesn't work. Using GLFW_DONT_CARE=-1 instead
+                int prefWidth = Math.max(minWidth, sizeHint.width);
+                int prefHeight = Math.max(minHeight, sizeHint.height);
+                glWindow.setSizeLimits(prefWidth, prefHeight, -1, -1);
             }
             gl = glWindow.getGraphicsLibrary();
             input = new TInput(glWindow.getInput(),()->window.height);
@@ -128,15 +161,17 @@ class TWindowManager {
             });
             
             glWindow.addPositionListener((x,y,prevX,prevY)->{
-                window.x = x;
-                window.y = y;
-                TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+                //window.x = x;
+                //window.y = y;
+                TLayoutManager.setPosition(window, x, y);
+                //TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
             });
             
             glWindow.addSizeListener((width,height,prevWidth,prevHeight)->{
-                window.width = width;
-                window.height = height;
-                TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
+                //window.width = width;
+                //window.height = height;
+                TLayoutManager.setSize(window, width, height);
+                //TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
                 if (graphics!=null) {
                     ortho = Matrix4.orthographic(0,width,height,0,-1,1);
                     graphics.setOrtho(ortho);
@@ -195,7 +230,11 @@ class TWindowManager {
         gl.glClearColor(1,1,1,1);
         gl.glClear(Mask.COLOR_BUFFER_BIT);
         
-        window.layoutDirtyChildren();
+        //TODO swap this with something for new layout manager
+        //This is here because for TFrames (internally undecorated windows) , the GLFW
+        //size changed is not called on creation.
+        TLayoutManager.invalidateLayout(window.widgetLayout());
+        //window.layoutDirtyChildren();
         
         graphics.paint(window);
     }
@@ -213,7 +252,7 @@ class TWindowManager {
             if (glWindow!=null) {
                 windowEventQueue.addLast(new Move(x, window.y));
             } else {
-                isAligned = false;
+                isXAligned = false;
             }
         }
     }
@@ -224,7 +263,7 @@ class TWindowManager {
             if (glWindow!=null) {
                 windowEventQueue.addLast(new Move(window.x, y));
             } else {
-                isAligned = false;
+                isYAligned = false;
             }
         }
     }
@@ -234,6 +273,8 @@ class TWindowManager {
         synchronized (lock) {
             if (glWindow!=null) {
                 windowEventQueue.addLast(new Resize(width,window.height));
+            } else {
+                usePolicyWidth = false;
             }
         }
     }
@@ -243,6 +284,8 @@ class TWindowManager {
         synchronized (lock) {
             if (glWindow!=null) {
                 windowEventQueue.addLast(new Resize(window.width,height));
+            } else {
+                usePolicyHeight = false;
             }
         }
     }
@@ -323,6 +366,29 @@ class TWindowManager {
                 TEventManager.fireMouseExit(window, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
             }
             TEventManager.fireMouseMove(window, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
+        }
+    }
+    
+    void setCursor(TCursor cursor) {
+        switch (cursor) {
+        case ARROW:
+            glWindow.setCursor(Window.ARROW_CURSOR);
+            break;
+        case IBEAM:
+            glWindow.setCursor(Window.IBEAM_CURSOR);
+            break;
+        case CROSSHAIR:
+            glWindow.setCursor(Window.CROSSHAIR_CURSOR);
+            break;
+        case HAND:
+            glWindow.setCursor(Window.HAND_CURSOR);
+            break;
+        case HRESIZE:
+            glWindow.setCursor(Window.HRESIZE_CURSOR);
+            break;
+        case VRESIZE:
+            glWindow.setCursor(Window.VRESIZE_CURSOR);
+            break;
         }
     }
     

@@ -114,6 +114,10 @@ public class List
 		return list.get(0);
 	}
 	
+    public static <X> X head(java.util.List<X> list) {
+        return list.get(0);
+    }
+	
 	public static <X> X last(java.util.List<X> list) {
 		return list.get(list.size()-1);
 	}
@@ -124,6 +128,10 @@ public class List
     
 	public static <X> ArrayList<X> last(java.util.List<X> list, int n) {
         return sub(list, list.size()-n, list.size());
+    }
+	
+    public static <X> ArrayList<X> tail(java.util.List<X> list) {
+        return sub(list, 1, list.size());
     }
 	
 	public static <X> void setFirst(java.util.List<X> list, X x) {
@@ -229,6 +237,10 @@ public class List
 		sorted.sort(new FunctionComparator<X>(compare));
 		return sorted;
 	}
+	
+	public static <X> ArrayList<X> sort(java.util.List<X> list, Function2D<X,X,Integer> compare) {
+        return order(list, compare);
+    }
 	
 	public static <X> ArrayList<ArrayList<X>> bin(java.util.List<X> list, Function<X,Integer> generator) {
 		ArrayList<Tuple2<X,Integer>> list0 = map(list, x -> new Tuple2<>(x,generator.f(x)));

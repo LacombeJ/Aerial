@@ -154,6 +154,16 @@ public class ArrayUtils {
         return build.toString();
     }
     
+    public static String toString(long[] list) {
+        StringBuilder build = new StringBuilder();
+        build.append("[ ");
+        for (long i : list) {
+            build.append(i+" ");
+        }
+        build.append("]");
+        return build.toString();
+    }
+    
     public static String toString(double[] list) {
         StringBuilder build = new StringBuilder();
         build.append("[ ");

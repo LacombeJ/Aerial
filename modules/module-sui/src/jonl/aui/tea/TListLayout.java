@@ -25,12 +25,15 @@ public class TListLayout extends TLayout implements ListLayout {
     @Override
     public void setAlign(Align align) {
         this.align = align;
+        //TODO should we invalidateLayout / sizeHint here?
         layout();
     }
     
     void layout() {
         if (!isEmpty()) {
+            
             int numChildren = count();
+            
             int width = parent.width() - margin().left - margin().right;
             int height = parent.height() - margin().bottom - margin().top;
             int sx = margin().left;
@@ -38,31 +41,32 @@ public class TListLayout extends TLayout implements ListLayout {
             
             // ----------------------------------------------
             if (align == Align.HORIZONTAL) {
-                width -= numChildren * spacing();
+                width -= (numChildren-1) * spacing();
             } else {
-                height -= numChildren * spacing();
+                height -= (numChildren-1) * spacing();
             }
             // ----------------------------------------------
             
-            Wrapper<Integer> newDimension = new Wrapper<>(0);
-            Wrapper<Integer> totalDimension = new Wrapper<>(0);
+            Wrapper<Integer> extraDimension = new Wrapper<>(0);
             int[] sizes = null;
             // ----------------------------------------------
             if (align == Align.HORIZONTAL) {
                 SizePreference[] prefs = TLayoutManager.getWidthPreferences(this);
-                sizes = TLayoutManager.allocate(prefs, width, newDimension, totalDimension);
+                sizes = TLayoutManager.allocate(prefs, width, extraDimension);
             } else {
                 SizePreference[] prefs = TLayoutManager.getHeightPreferences(this);
-                sizes = TLayoutManager.allocate(prefs, height, newDimension, totalDimension);
+                sizes = TLayoutManager.allocate(prefs, height, extraDimension);
             }
+            
+            int extraSpacing = extraDimension.x / (numChildren+1);
             // ----------------------------------------------
             
             int start = 0;
             // ----------------------------------------------
             if (align == Align.HORIZONTAL) {
-                start = sx;
+                start = sx + extraSpacing;
             } else {
-                start = sy;
+                start = sy + extraSpacing;
             }
             // ----------------------------------------------
             for (int i=0; i<numChildren; i++) {
@@ -71,21 +75,19 @@ public class TListLayout extends TLayout implements ListLayout {
                 if (align == Align.HORIZONTAL) {
                     int wWidth = sizes[i];
                     int wHeight = TLayoutManager.allocate(TLayoutManager.getHeightPreference(item), height);
-                    int wX = start + spacing()*i;
+                    int wX = start + (spacing()+extraSpacing)*i;
                     int wY = sy + (height-wHeight)/2;
                     if (item instanceof TWidgetItem) {
-                        TLayoutManager.setPositionAndRequestFire(item.asWidget(), wX, wY);
-                        TLayoutManager.setSizeAndRequestFire(item.asWidget(), wWidth, wHeight);
+                        TLayoutManager.setPositionAndSize(item.asWidget(), wX, wY, wWidth, wHeight);
                     }
                     start += wWidth;
                 } else {
                     int wWidth = TLayoutManager.allocate(TLayoutManager.getWidthPreference(item), width);
                     int wHeight = sizes[i];
                     int wX = sx + (width-wWidth)/2;
-                    int wY = start + spacing()*i;
+                    int wY = start + (spacing()+extraSpacing)*i;
                     if (item instanceof TWidgetItem) {
-                        TLayoutManager.setPositionAndRequestFire(item.asWidget(), wX, wY);
-                        TLayoutManager.setSizeAndRequestFire(item.asWidget(), wWidth, wHeight);
+                        TLayoutManager.setPositionAndSize(item.asWidget(), wX, wY, wWidth, wHeight);
                     }
                     start += wHeight;
                 }
@@ -94,25 +96,21 @@ public class TListLayout extends TLayout implements ListLayout {
         }
     }
     
-    TSizePolicy getSizePolicy() {
-        TWidget widget = parent;
-        TSizePolicy sp = new TSizePolicy();
+    @Override
+    TSizeHint calculateSizeHint() {
         if (align == Align.HORIZONTAL) {
-            int vertical = margin().height();
-            for (TWidget wt : widget.getChildren()) {
-                sp.minHeight = Math.max(sp.minHeight, wt.minHeight() + vertical);
-                sp.maxHeight = Math.min(sp.maxHeight, wt.maxHeight() + vertical);
-                sp.prefHeight = Math.max(sp.prefHeight, wt.preferredHeight() + vertical);
-            }
+            int width = TLayoutManager.freeAllocate(TLayoutManager.getWidthPreferences(this));
+            int height = TLayoutManager.freeMaxAllocate(TLayoutManager.getHeightPreferences(this));
+            width += margin().width() + spacing()*(count()-1);
+            height += margin().height();
+            return new TSizeHint(width, height);
         } else {
-            int horizontal = margin().width();
-            for (TWidget wt : widget.getChildren()) {
-                sp.minWidth = Math.max(sp.minWidth, wt.minWidth() + horizontal);
-                sp.maxWidth = Math.min(sp.maxWidth, wt.maxWidth() + horizontal);
-                sp.prefWidth = Math.max(sp.prefWidth, wt.preferredWidth() + horizontal);
-            }
+            int height = TLayoutManager.freeAllocate(TLayoutManager.getHeightPreferences(this));
+            int width = TLayoutManager.freeMaxAllocate(TLayoutManager.getWidthPreferences(this));
+            height += margin().height() + spacing()*(count()-1);
+            width += margin().width();
+            return new TSizeHint(width, height);
         }
-        return sp;
     }
-
+    
 }

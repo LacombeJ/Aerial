@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Button;
 import jonl.aui.Icon;
 import jonl.aui.Signal;
+import jonl.aui.SizePolicy;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
@@ -22,6 +23,7 @@ public class TButton extends TWidget implements Button {
     
     public TButton() {
         super();
+        this.setSizePolicy(new SizePolicy(SizePolicy.MINIMUM, SizePolicy.FIXED));
     }
     
     public TButton(String text) {
@@ -91,8 +93,8 @@ public class TButton extends TWidget implements Button {
     // ------------------------------------------------------------------------
     
     @Override
-    protected TSizePolicy getSizePolicy() {
-        return style().button().getSizePolicy(this,info());
+    protected TSizeHint sizeHint() {
+        return style().button().getSizeHint(this,info());
     }
     
     @Override

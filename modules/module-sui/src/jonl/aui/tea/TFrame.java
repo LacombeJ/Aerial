@@ -5,7 +5,6 @@ import jonl.aui.Margin;
 import jonl.aui.Widget;
 import jonl.aui.tea.call.TArgTypes;
 import jonl.aui.tea.graphics.TColor;
-import jonl.jutils.io.Console;
 
 public class TFrame extends TWindow implements Frame {
     
@@ -43,7 +42,7 @@ public class TFrame extends TWindow implements Frame {
         if (widget()!=null) {
             widgetLayout().remove(this.widget);
         }
-        this.widget = widget;
+        this.widget = (TWidget) widget;
         widgetLayout().add(this.widget);
     }
     

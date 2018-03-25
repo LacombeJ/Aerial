@@ -3,7 +3,8 @@ package jonl.aui.tea.graphics;
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TButton;
-import jonl.aui.tea.TSizePolicy;
+import jonl.aui.tea.TSizeHint;
+import jonl.jutils.io.Console;
 import jonl.vmath.Vector4;
 
 public class TButtonStyle extends TWidgetStyle<TButton> {
@@ -58,17 +59,15 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
             g.renderText(button.text(),x,y,HAlign.CENTER,VAlign.MIDDLE,style().font(),textColor);
         });
         
-        this.setSizePolicy((button,i)->{
-            TSizePolicy sp = new TSizePolicy();
+        this.setSizeHint((button,i)->{
+            TSizeHint hint = new TSizeHint();
             if (button.icon()!=null) {
-                sp.minWidth = Math.max(sp.minWidth, button.icon().width()) + border;
-                sp.minHeight = Math.max(sp.minHeight, button.icon().height()) + border;
-                sp.prefWidth = Math.max(sp.prefWidth, button.icon().width()) + border;
-                sp.prefHeight = Math.max(sp.prefHeight, button.icon().height()) + border;
+                hint.width = Math.max(hint.width, button.icon().width()) + border;
+                hint.height = Math.max(hint.height, button.icon().height()) + border;
             }
-            sp.minWidth = Math.max(sp.minWidth, (int) style().font().getWidth(button.text()) + 2*border);
-            sp.prefHeight = Math.max(sp.prefHeight, (int) style().font().getHeight() + border);
-            return sp;
+            hint.width = Math.max(hint.width, (int) style().font().getWidth(button.text()) + 2*border);
+            hint.height = Math.max(hint.height, (int) style().font().getHeight() + border);
+            return hint;
         });
         
     }

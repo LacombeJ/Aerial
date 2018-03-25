@@ -1,5 +1,6 @@
 package jonl.aui.tea;
 
+import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
 import jonl.aui.WidgetItem;
 
@@ -37,13 +38,18 @@ public class TWidgetItem extends TLayoutItem implements WidgetItem {
     }
     
     @Override
-    public int preferredWidth() {
-        return widget.preferredWidth();
+    public SizePolicy sizePolicy() {
+        return widget.sizePolicy();
     }
-
+    
     @Override
-    public int preferredHeight() {
-        return widget.preferredHeight();
+    public int hintWidth() {
+        return widget.sizeHint().width;
+    }
+    
+    @Override
+    public int hintHeight() {
+        return widget.sizeHint().height;
     }
     
 }

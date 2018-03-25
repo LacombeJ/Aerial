@@ -7,6 +7,7 @@ import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 import jonl.vmath.Mathf;
+import jonl.vmath.Mathi;
 import jonl.vmath.Vector2;
 
 public class TDial extends TWidget implements Dial {
@@ -37,7 +38,7 @@ public class TDial extends TWidget implements Dial {
 
     @Override
     public void setValue(int value) {
-        this.value = Mathf.clamp(value, minValue, maxValue);
+        this.value = Mathi.clamp(value, minValue, maxValue);
     }
 
     @Override
@@ -77,8 +78,8 @@ public class TDial extends TWidget implements Dial {
     // ------------------------------------------------------------------------
     
     @Override
-    protected TSizePolicy getSizePolicy() {
-        return style().dial().getSizePolicy(this,info());
+    protected TSizeHint sizeHint() {
+        return style().dial().getSizeHint(this,info());
     }
     
     @Override

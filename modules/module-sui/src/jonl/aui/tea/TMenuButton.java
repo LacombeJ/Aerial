@@ -13,8 +13,8 @@ public class TMenuButton extends TButton implements MenuButton {
     }
     
     @Override
-    protected TSizePolicy getSizePolicy() {
-        return style().menuButton().getSizePolicy(this,info);
+    protected TSizeHint sizeHint() {
+        return style().menuButton().getSizeHint(this,info);
     }
     
     @Override

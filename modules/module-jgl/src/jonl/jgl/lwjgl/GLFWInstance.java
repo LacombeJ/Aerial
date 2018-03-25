@@ -2,6 +2,7 @@ package jonl.jgl.lwjgl;
 
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -40,6 +41,10 @@ class GLFWInstance {
     private final static DoubleBuffer xBuffer = BufferPool.createDoubleBuffer(1);
     private final static DoubleBuffer yBuffer = BufferPool.createDoubleBuffer(1);
     
+    static final HashMap<Integer,Long> STANDARD_CURSORS = new HashMap<>();
+    
+    
+    
     private static final RequestQueue<CreateWindowRequest,CreateWindowResponse>
         CREATE_REQUEST                  = new RequestQueue<>( (request) -> _createWindow(request) );
     
@@ -76,6 +81,9 @@ class GLFWInstance {
     private static final RequestQueue<GetCursorPosRequest,GetCursorPosResponse>
         GET_CURSOR_POS_REQUEST          = new RequestQueue<>( (request) -> _getCursorPos(request) );
     
+    private static final RequestQueue<SetCursorRequest,SetCursorResponse>
+        SET_CURSOR_REQUEST          = new RequestQueue<>( (request) -> _setCursor(request) );
+    
     private static final RequestQueue<GetMouseButtonRequest,GetMouseButtonResponse>
         GET_MOUSE_BUTTON_REQUEST        = new RequestQueue<>( (request) -> _getMouseButton(request) );
     
@@ -101,6 +109,7 @@ class GLFWInstance {
             GET_INPUT_MODE_REQUEST,
             SET_INPUT_MODE_REQUEST,
             GET_CURSOR_POS_REQUEST,
+            SET_CURSOR_REQUEST,
             GET_MOUSE_BUTTON_REQUEST,
             GET_KEY_REQUEST,
             SET_WINDOW_VISIBLE_REQUEST,
@@ -149,6 +158,9 @@ class GLFWInstance {
     static GetCursorPosResponse getCursorPos(GetCursorPosRequest request) {
         return GET_CURSOR_POS_REQUEST.request(request);
     }
+    static SetCursorResponse setCursor(SetCursorRequest request) {
+        return SET_CURSOR_REQUEST.request(request);
+    }
     static GetMouseButtonResponse getMouseButton(GetMouseButtonRequest request) {
         return GET_MOUSE_BUTTON_REQUEST.request(request);
     }
@@ -176,10 +188,18 @@ class GLFWInstance {
         }
     }
     
+    static void createCursors() {
+        for (int cursor = GLFW.GLFW_ARROW_CURSOR; cursor < GLFW.GLFW_VRESIZE_CURSOR+1; cursor++) {
+            long cursorId = GLFW.glfwCreateStandardCursor(cursor);
+            STANDARD_CURSORS.put(cursor, cursorId);
+        }
+    }
+    
     static TimeOut initTimeOut;
     private static void initializeInstance() {
     	
     	// Performing a time out check because program will hang if native libraries aren't found
+        // Choosing arbitrary value of 3 seconds to timeout
     	TimeOut timeOut = new TimeOut(3);
     	
         Processor.thread(()->{
@@ -191,6 +211,8 @@ class GLFWInstance {
             }
             
             timeOut.pass(); // Initialization succeeded and no errors have occurred so far
+            
+            createCursors();
             
             while (true) {
             	
@@ -449,8 +471,6 @@ class GLFWInstance {
         case RESTORE:
             GLFW.glfwRestoreWindow(request.id);
             break;
-        default:
-            break;
         }
         return new WindowResponse();
     }
@@ -469,7 +489,7 @@ class GLFWInstance {
         final int top;
         final int right;
         final int bottom;
-        GetWindowFrameSizeResponse(int left, int right, int top, int bottom) {
+        GetWindowFrameSizeResponse(int left, int top, int right, int bottom) {
             this.left = left;
             this.right = right;
             this.top = top;
@@ -671,6 +691,27 @@ class GLFWInstance {
         double x = (double) xBuffer.get(0);
         double y = (double) yBuffer.get(0);
         return new GetCursorPosResponse(x,y);
+    }
+    
+    /* ********************************************************************************* */
+    /* ******************************** Get Cursor Pos ********************************* */
+    /* ********************************************************************************* */
+    static class SetCursorRequest extends Request {
+        final long id;
+        final long cursorId;
+        SetCursorRequest(long id, long cursorId) {
+            this.id = id;
+            this.cursorId = cursorId;
+        }
+    }
+    static class SetCursorResponse extends Response {
+        SetCursorResponse() {
+            
+        }
+    }
+    private static SetCursorResponse _setCursor(SetCursorRequest request) {
+        GLFW.glfwSetCursor(request.id,request.cursorId);
+        return new SetCursorResponse();
     }
     
     /* ********************************************************************************* */

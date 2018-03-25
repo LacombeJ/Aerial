@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Signal;
+import jonl.aui.SizePolicy;
 import jonl.aui.Slider;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.graphics.TColor;
@@ -9,6 +10,7 @@ import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 import jonl.vmath.Mathf;
+import jonl.vmath.Mathi;
 
 public class TSlider extends TWidget implements Slider {
 
@@ -34,6 +36,13 @@ public class TSlider extends TWidget implements Slider {
         TSliderLayout layout = new TSliderLayout();
         layout.add(button);
         setWidgetLayout(layout);
+        
+        if (this.align == Align.HORIZONTAL) {
+            this.setSizePolicy(new SizePolicy(SizePolicy.PREFERRED, SizePolicy.FIXED));
+        } else {
+            this.setSizePolicy(new SizePolicy(SizePolicy.FIXED, SizePolicy.PREFERRED));
+        }
+        
     }
     
     public TSlider() {
@@ -47,8 +56,11 @@ public class TSlider extends TWidget implements Slider {
     
     @Override
     public void setAlign(Align align) {
-        this.align = align;
-        invalidate();
+        if (this.align != align) {
+            this.align = align;
+            invalidateLayout();
+            invalidateSizeHint();
+        }
     }
     
     
@@ -59,8 +71,8 @@ public class TSlider extends TWidget implements Slider {
 
     @Override
     public void setValue(int value) {
-        this.value = Mathf.clamp(value, minValue, maxValue);
-        invalidate();
+        this.value = Mathi.clamp(value, minValue, maxValue);
+        invalidateLayout();
     }
 
     @Override
@@ -70,8 +82,11 @@ public class TSlider extends TWidget implements Slider {
 
     @Override
     public void setMin(int min) {
-        minValue = min;
-        setValue(value);
+        if (this.minValue != min) {
+            minValue = min;
+            this.value = Mathi.clamp(value, minValue, maxValue);
+            invalidateLayout();
+        }
     }
 
     @Override
@@ -81,8 +96,11 @@ public class TSlider extends TWidget implements Slider {
 
     @Override
     public void setMax(int max) {
-        maxValue = max;
-        setValue(value);
+        if (this.maxValue != max) {
+            maxValue = max;
+            this.value = Mathi.clamp(value, minValue, maxValue);
+            invalidateLayout();
+        }
     }
 
     @Override
@@ -98,12 +116,6 @@ public class TSlider extends TWidget implements Slider {
     public Signal<Callback0D> released() { return released; }
     
     // ------------------------------------------------------------------------
-    
-    @Override
-    protected TSizePolicy getSizePolicy() {
-        //return style().dial().getSizePolicy(this,TWidgetInfo.widget());
-        return new TSizePolicy();
-    }
     
     @Override
     protected void paint(TGraphics g) {
@@ -126,6 +138,7 @@ public class TSlider extends TWidget implements Slider {
     static class TSliderButton extends TButton {
         
         private TSlider slider;
+        private int dim = 20;
         
         private float opos = 0;
         private int ovalue = 0;
@@ -135,6 +148,14 @@ public class TSlider extends TWidget implements Slider {
             super();
             setMouseFocusSupport(true);
             this.slider = slider;
+        }
+        
+        @Override
+        protected TSizeHint sizeHint() {
+            TSizeHint hint = new TSizeHint();
+            hint.width = dim;
+            hint.height = dim;
+            return hint;
         }
         
         @Override
@@ -176,10 +197,10 @@ public class TSlider extends TWidget implements Slider {
                 
                 slider.value = ovalue + diff;
                 
-                slider.value = Mathf.clamp(slider.value, slider.minValue, slider.maxValue);
+                slider.value = Mathi.clamp(slider.value, slider.minValue, slider.maxValue);
                 
                 if (slider.value!=oldValue) {
-                    slider.invalidate();
+                    slider.invalidateLayout();
                     slider.moved().emit(cb->cb.f(slider.value));
                     slider.changed().emit(cb->cb.f(slider.value));
                 }
@@ -197,12 +218,23 @@ public class TSlider extends TWidget implements Slider {
             
             if (slider.align == Align.HORIZONTAL) {
                 int x = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.width - button.width));
-                TLayoutManager.setPositionAndRequestFire(button, x, 0);
-                TLayoutManager.setSizeAndRequestFire(button, 20, slider.height);
+                int y = slider.height/2 - button.height/2;
+                TLayoutManager.setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
             } else {
+                int x = slider.width/2 - button.width/2;
                 int y = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.height - button.height));
-                TLayoutManager.setPositionAndRequestFire(button, 0, y);
-                TLayoutManager.setSizeAndRequestFire(button, slider.width, 20);
+                TLayoutManager.setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
+            }
+        }
+        
+        @Override
+        TSizeHint calculateSizeHint() {
+            TSlider slider = (TSlider)parent;
+            TButton button = slider.button;
+            if (slider.align == Align.HORIZONTAL) {
+                return new TSizeHint(button.sizeHint().width*3, button.sizeHint().height);
+            } else {
+                return new TSizeHint(button.sizeHint().width, button.sizeHint().height*3);
             }
         }
         

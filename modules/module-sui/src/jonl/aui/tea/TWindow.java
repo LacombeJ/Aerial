@@ -11,7 +11,7 @@ import jonl.jgl.Loader;
 
 public class TWindow extends TWidget implements Window {
 
-    Widget widget;
+    TWidget widget;
     
     protected TWindowManager manager;
     
@@ -22,7 +22,7 @@ public class TWindow extends TWidget implements Window {
     }
     
     TWindow() {
-        this(new TFillLayout());
+        this(new TWindowLayout());
     }
     
     @Override
@@ -31,13 +31,13 @@ public class TWindow extends TWidget implements Window {
     }
 
     @Override
-    public Widget widget() {
+    public TWidget widget() {
         return widget;
     }
 
     @Override
     public void setWidget(Widget widget) {
-        this.widget = widget;
+        this.widget = (TWidget) widget;
         widgetLayout().setWidget(widget);
     }
 
@@ -109,6 +109,11 @@ public class TWindow extends TWidget implements Window {
     
     public void setCloser(Closer closer) {
         manager.setCloser(closer);
+    }
+    
+    @Override
+    public void setCursor(TCursor cursor) {
+        manager.setCursor(cursor);
     }
     
 }

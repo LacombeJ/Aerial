@@ -5,6 +5,7 @@ import jonl.aui.SplitPanel;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
+import jonl.vmath.Mathd;
 import jonl.vmath.Vector4;
 
 public class TSplitPanel extends TWidget implements SplitPanel {
@@ -16,12 +17,12 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     
     private double ratio = 0.5f;
     
-    private double min = 0.05;
     private boolean inAdjustState = false;
     
     public TSplitPanel() {
         super();
         setMouseFocusSupport(true);
+        setMouseMotionBounds(true);
         setWidgetLayout(new TSplitLayout());
     }
     
@@ -86,8 +87,11 @@ public class TSplitPanel extends TWidget implements SplitPanel {
 
     @Override
     public void setAlign(Align align) {
-        this.align = align;
-        invalidate();
+        if (this.align != align) {
+            this.align = align;
+            invalidateSizeHint();
+            invalidateLayout();
+        }
     }
 
     @Override
@@ -97,8 +101,11 @@ public class TSplitPanel extends TWidget implements SplitPanel {
 
     @Override
     public void setRatio(double ratio) {
-        this.ratio = ratio;
-        invalidate();
+        ratio = Mathd.clamp(ratio, 0, 1);
+        if (this.ratio != ratio) {
+            this.ratio = ratio;
+            invalidateLayout();
+        }
     }
     
     // ------------------------------------------------------------------------
@@ -150,24 +157,53 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     protected void handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = false;
+            setCursor(TCursor.ARROW);
         }
     }
     
     @Override
+    protected void handleMouseExit(TMouseEvent event) {
+        setCursor(TCursor.ARROW);
+    }
+    
+    @Override
     protected void handleMouseMove(TMouseEvent event) {
+        if (isOnBorder(event.x,event.y)) {
+            setCursor(align==Align.HORIZONTAL ? TCursor.HRESIZE : TCursor.VRESIZE);
+        } else if (!inAdjustState) {
+            setCursor(TCursor.ARROW);
+        }
         double ratio = this.ratio;
         if (inAdjustState) {
             switch (align) {
             case HORIZONTAL:
-                ratio = (double)event.globalX / width();
+                int widgetOneWidth = TLayoutManager.freeWidth(widgetOne);
+                int widgetTwoWidth = TLayoutManager.freeWidth(widgetTwo);
+                int midWidth = width - widgetOneWidth - widgetTwoWidth - widgetLayout().spacing();
+                if (midWidth != 0) {
+                    int spaceHalfLeft = widgetLayout().spacing() / 2;
+                    int spaceHalfRight = widgetLayout().spacing() - spaceHalfLeft;
+                    
+                    int left = widgetOneWidth + spaceHalfLeft;
+                    int right = left + midWidth + spaceHalfRight;
+                    ratio = Mathd.alpha(event.x, left, right);
+                }
                 break;
             case VERTICAL:
-                ratio = (double)event.globalY / height();
+                int widgetOneHeight = TLayoutManager.freeHeight(widgetOne);
+                int widgetTwoHeight = TLayoutManager.freeHeight(widgetTwo);
+                int midHeight = height - widgetOneHeight - widgetTwoHeight - widgetLayout().spacing();
+                if (midHeight != 0) {
+                    int spaceHalfTop = widgetLayout().spacing() / 2;
+                    int spaceHalfBottom = widgetLayout().spacing() - spaceHalfTop;
+                    
+                    int top = widgetOneHeight + spaceHalfTop;
+                    int bottom = top + midHeight + spaceHalfBottom;
+                    ratio = Mathd.alpha(event.y, top, bottom);
+                }
                 break;
             }
         }
-        if (ratio<min) ratio = min;
-        if (ratio>(1-min)) ratio = (1-min);
         setRatio(ratio);
     }
 

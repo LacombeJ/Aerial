@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import java.util.ArrayList;
 
+import jonl.aui.Align;
 import jonl.aui.MenuBar;
 import jonl.aui.MenuButton;
 import jonl.jutils.func.List;
@@ -9,7 +10,7 @@ import jonl.jutils.func.List;
 public class TMenuBar extends TButtonBar implements MenuBar {
     
     public TMenuBar() {
-        super();
+        super(Align.HORIZONTAL);
     }
     
     @Override

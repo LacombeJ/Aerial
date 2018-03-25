@@ -64,8 +64,10 @@ class TEventManager {
             // to succeed.
             TPoint eFocusPos = relative(mouseFocusRootWidget, mouseFocusWidget, x, y);
             if (eFocusPos != null) {
-                TMouseEvent eventFocus = new TMouseEvent(TEventType.MouseExit, -1, eFocusPos.x, eFocusPos.y, x, y, dx, dy);
-                sendEvent(mouseFocusWidget, eventFocus);
+                if (!within(mouseFocusWidget, eFocusPos.x, eFocusPos.y)) {
+                    TMouseEvent eventFocus = new TMouseEvent(TEventType.MouseExit, -1, eFocusPos.x, eFocusPos.y, x, y, dx, dy);
+                    sendEvent(mouseFocusWidget, eventFocus);
+                }
             }
             
             mouseFocusWidget = null;
@@ -92,10 +94,10 @@ class TEventManager {
     private static void checkClick(TWidget widget, TMouseEvent e, boolean wasInClickState) {
         if (wasInClickState) {
             sendEvent(widget, event(e, TEventType.MouseButtonClick));
-            if (widget.eventTimeSinceLastClick.elapsed() < DOUBLE_CLICK_SPEED_MS) {
+            if (widget.event().timeSinceLastClick.elapsed() < DOUBLE_CLICK_SPEED_MS) {
                 sendEvent(widget, event(e, TEventType.MouseButtonClick));
             }
-            widget.eventTimeSinceLastClick = new Time();
+            widget.event().timeSinceLastClick = new Time();
         }
     }
     
@@ -112,12 +114,12 @@ class TEventManager {
      */
     private static boolean checkMouseFocusWidget(TWidget widget, TMouseEvent e, boolean released) {
         if (mouseFocusWidget != null) {
-            boolean wasInClickState = mouseFocusWidget.eventInClickState;
+            boolean wasInClickState = mouseFocusWidget.event().inClickState;
             TPoint eFocusPos = relative(widget, mouseFocusWidget, e.x, e.y);
             if (eFocusPos != null) {
                 TMouseEvent eventFocus = event(e, eFocusPos.x, eFocusPos.y);
                 if (released) {
-                    mouseFocusWidget.eventInClickState = false;
+                    mouseFocusWidget.event().inClickState = false;
                     checkClick(mouseFocusWidget, eventFocus, wasInClickState);
                 }
                 // Right now we are omitting mouse exit events for focused widgets
@@ -135,7 +137,7 @@ class TEventManager {
     
     
     private static boolean sendMouseEventAndHandleMouseFocus(TWidget widget, TMouseEvent e) {
-        if (widget.eventMouseFocusSupport) {
+        if (widget.event().mouseFocusSupport) {
             internalBindFocus(widget, e);
         }
         return sendEvent(widget, e);
@@ -144,7 +146,7 @@ class TEventManager {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
-        widget.eventInClickState = true;
+        widget.event().inClickState = true;
         ArrayList<TWidget> children = widget.getChildren();
         if (children.size()==0) {
             return sendMouseEventAndHandleMouseFocus(widget, e);
@@ -162,7 +164,7 @@ class TEventManager {
     }
     
     private static boolean sendMouseEventAndHandleClickAndMouseFocus(TWidget widget, TMouseEvent e, boolean wasInClickState) {
-        if (widget.eventMouseFocusSupport) {
+        if (widget.event().mouseFocusSupport) {
             internalFreeFocus(mouseFocusWidget, e);
         }
         checkClick(widget, e, wasInClickState);
@@ -172,8 +174,8 @@ class TEventManager {
         if (checkMouseFocusWidget(widget,e,true)) {
             return false;
         }
-        boolean wasInClickState = widget.eventInClickState;
-        widget.eventInClickState = false;
+        boolean wasInClickState = widget.event().inClickState;
+        widget.event().inClickState = false;
         ArrayList<TWidget> children = widget.getChildren();
         if (children.size()==0) {
             return sendMouseEventAndHandleClickAndMouseFocus(widget, e, wasInClickState);
@@ -214,7 +216,7 @@ class TEventManager {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
-        widget.eventInClickState = false;
+        widget.event().inClickState = false;
         ArrayList<TWidget> children = widget.getChildren();
         if (children.size()==0) {
             return sendEvent(widget, e);
@@ -256,7 +258,9 @@ class TEventManager {
             }
             if (inNow && inBefore) {
                 if (fireMouseMove(child,event(e, x, y))) {
-                    return true;
+                    if (!widget.event().mouseMotionBounds) {
+                        return true;
+                    }
                 }
             }
         }
@@ -268,7 +272,6 @@ class TEventManager {
     }
     
     static void fireSizeChanged(TWidget w, TResizeEvent e) {
-        w.layoutChildren();
         sendEvent(w,e);
     }
     

@@ -10,7 +10,9 @@ public interface LayoutItem {
     int maxWidth();
     int maxHeight();
     
-    int preferredWidth();
-    int preferredHeight();
+    SizePolicy sizePolicy();
+    
+    int hintWidth();
+    int hintHeight();
     
 }

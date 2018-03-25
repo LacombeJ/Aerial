@@ -1,7 +1,7 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.tea.TDial;
-import jonl.aui.tea.TSizePolicy;
+import jonl.aui.tea.TSizeHint;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
@@ -76,11 +76,8 @@ public class TDialStyle extends TWidgetStyle<TDial> {
             g.renderCircle(mat, handColor.toVector());
         });
         
-        this.setSizePolicy((button,i)->{
-            TSizePolicy sp = new TSizePolicy();
-            sp.minWidth = minDim;
-            sp.minHeight = minDim;
-            return sp;
+        this.setSizeHint((button,i)->{
+            return new TSizeHint(minDim, minDim);
         });
         
     }

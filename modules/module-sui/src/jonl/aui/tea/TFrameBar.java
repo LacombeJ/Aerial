@@ -8,7 +8,7 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.graphics.TColor;
 import jonl.jgl.Input;
 import jonl.jgl.Window;
-import jonl.vmath.Mathf;
+import jonl.vmath.Mathi;
 
 public class TFrameBar extends TWidget {
 
@@ -130,7 +130,7 @@ public class TFrameBar extends TWidget {
                 int right = prevX + screenWidth - width;
                 
                 int moveX = screenMouseX - width/2;
-                moveX = Mathf.clamp(moveX, left, right);
+                moveX = Mathi.clamp(moveX, left, right);
                 int moveY = prevY; // Keep takbar same height
                 
                 frame.manager.window().setPosition(moveX, moveY);

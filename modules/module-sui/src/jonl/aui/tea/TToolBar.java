@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import java.util.ArrayList;
 
+import jonl.aui.Align;
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
 import jonl.jutils.func.List;
@@ -9,7 +10,7 @@ import jonl.jutils.func.List;
 public class TToolBar extends TButtonBar implements ToolBar {
     
     public TToolBar() {
-        super();
+        super(Align.HORIZONTAL);
         widgetLayout().setMargin(4, 4, 4, 4);
         widgetLayout().setSpacing(4);
     }

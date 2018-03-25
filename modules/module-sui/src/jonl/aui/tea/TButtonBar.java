@@ -2,19 +2,29 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Button;
+import jonl.aui.SizePolicy;
 
 public abstract class TButtonBar extends TWidget {
 
 private TSpacerItem spacer;
     
-    public TButtonBar() {
+    public TButtonBar(Align align) {
         super();
-        TListLayout menuBarLayout = new TListLayout(Align.HORIZONTAL);
+        
+        TListLayout menuBarLayout = new TListLayout(align);
         menuBarLayout.setMargin(0, 0, 0, 0);
         menuBarLayout.setSpacing(0);
+        
         setWidgetLayout(menuBarLayout);
-        spacer = new TSpacerItem();
-        spacer.setPreferredSize(Integer.MAX_VALUE,0);
+        
+        spacer = new TSpacerItem(align);
+        
+        if (align == Align.HORIZONTAL) {
+            this.setSizePolicy(new SizePolicy(SizePolicy.EXPANDING, SizePolicy.FIXED));
+        } else {
+            this.setSizePolicy(new SizePolicy(SizePolicy.FIXED, SizePolicy.EXPANDING));
+        }
+        
         widgetLayout().add(spacer);
     }
     
@@ -43,19 +53,6 @@ private TSpacerItem spacer;
     
     public int indexOf(Button button) {
         return widgetLayout().indexOf(button);
-    }
-    
-    @Override
-    protected TSizePolicy getSizePolicy() {
-        TLayout layout = widgetLayout();
-        int vertical = layout.margin().top + layout.margin().bottom;
-        TSizePolicy sp = new TSizePolicy();
-        for (TWidget wt : getChildren()) {
-            sp.minHeight = Math.max(sp.minHeight, wt.minHeight() + vertical);
-            sp.maxHeight = Math.min(sp.maxHeight, wt.maxHeight() + vertical);
-            sp.prefHeight = Math.max(sp.prefHeight, wt.preferredHeight() + vertical);
-        }
-        return sp;
     }
     
 }

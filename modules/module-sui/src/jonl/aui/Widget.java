@@ -17,9 +17,8 @@ public interface Widget {
     int maxHeight();
     void setMaxSize(int width, int height);
     
-    int preferredWidth();
-    int preferredHeight();
-    void setPreferredSize(int width, int height);
+    SizePolicy sizePolicy();
+    void setSizePolicy(SizePolicy policy);
     
     int windowX();
     int windowY();

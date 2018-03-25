@@ -2,43 +2,330 @@ package jonl.aui.tea;
 
 import java.util.ArrayList;
 
-import jonl.aui.tea.event.TEventType;
-import jonl.aui.tea.event.TMoveEvent;
-import jonl.aui.tea.event.TResizeEvent;
+import jonl.aui.SizePolicy;
+import jonl.jutils.func.List;
 import jonl.jutils.func.Wrapper;
-import jonl.vmath.Mathf;
+import jonl.jutils.structs.ArrayList2D;
+import jonl.vmath.Mathi;
 
-class TLayoutManager {
+/**
+ * Utility class for managing layouts
+ * 
+ * @author Jonathan
+ *
+ */
+public class TLayoutManager {
 
-    static void setPositionAndRequestFire(TWidget w, int x, int y) {
+    /*
+     * How layouts and resizing widgets work:
+     * 
+     * * There are two "paths": The "layout path" and the "size policy path".
+     *   The layout path changes when the size of a widget is changed.
+     *     (For ex: window resizing, or adjusting a split panel)
+     *   The size policy path is changed when its min,max,hint size is changed.
+     *     (For ex: adding/removing a widget, or adjusting the text on a button or label)
+     *     
+     * * The layout path moves downward, and the size policy path moves upward (in terms of widget hiearchy)
+     *     (For ex: changing the size of a window will cause the window to layout it's children again.)
+     *     (also: modifying the text of a button will cause its size policy to change and its parents size policy to change and so forth)
+     *   The size policy path may invalidate a layout so that children sizes can be adjusted.
+     * 
+     * Layout cycle:
+     * 
+     * 1) At the beginning of the UI lifecycle, the root widget's layout asks for
+     *    it's children hint sizes. The children containers, not knowing
+     *    their size hint, will in turn, recursively ask their children for their hint
+     *    size to answer back to their parents. The root widget will set its size to the preferred size
+     *    and optionally set size limits to its hint size
+     * 2) Afterwards, the root widget will then layout it's children accordingly and it's children
+     *    will also layout it's children and so forth.
+     * 3) When the size policy of any widget changes, it will first
+     *
+     * Technical:
+     * 
+     * * A layout will have two functions invalidateLayout(), and invalidateSizePolicy()
+     *   - A widget will have a function invalidate() which will call it's layout parent invalidateSizePolicy()
+     *   - invalidateSizePolicy() will call it's parent invalidateSizePolicy() and so forth. When this reaches
+     *     the root layout / widget, layout() will be peformed.
+     *   - invalidateLayout()
+     *   
+     * Notes:
+     * - Use long values to do size policy calculations since adding values to Integer.MAX_VALUE for ints will result in overflow
+     * - Instead of calling widget min sizes or hint sizes. Use the freeWidth or freeHeight method or use the freeAllocate
+     *   method to get there "true minimum" or preferred size for a widget. This is because the size hint may be set to a value
+     *   but the layout manager will clamp that value to the min/max size value in its calculations.
+     *   
+     *
+     */
+    
+    
+    public static void invalidateSizeHint(TLayout layout) {
+        
+        TSizeHint prevHint = layout.getSizeHint();
+        TSizeHint newHint = layout.calculateSizeHint();
+        
+        if (!newHint.equals(prevHint)) {
+            
+            layout.validateSizeHint(newHint);
+            
+            TWidget widget = layout.parent;
+            TWidget parentWidget = widget.parent();
+            if (parentWidget != null) {
+                invalidateSizeHint(parentWidget.widgetLayout());
+            } else {
+                invalidateLayout(layout);
+            }
+            
+        } else {
+            
+            invalidateLayout(layout);
+            
+        }
+        
+    }
+    
+    public static void invalidateLayout(TLayout layout) {
+        
+        layout.layout();
+        
+    }
+    
+    private static void invalidateWidgetLayout(TWidget widget) {
+        TLayout layout = widget.widgetLayout();
+        if (layout != null) {
+            invalidateLayout(layout);
+        }
+    }
+    
+    // TODO for firePositionChanged and fireSizeChanged, only send events, don't call layout or anything else that should be handled by
+    // this layout manager
+    
+    public static void setPosition(TWidget w, int x, int y) {
         int prevX = w.x;
         int prevY = w.y;
         w.x = x;
         w.y = y;
         if (prevX!=x || prevY!=y) {
-            TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            invalidateWidgetLayout(w);
+            //TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }
     
-    static void setSizeAndRequestFire(TWidget w, int width, int height) {
+    public static void setSize(TWidget w, int width, int height) {
         int prevWidth = w.width;
         int prevHeight = w.height;
         w.width = width;
         w.height = height;
         if (prevWidth!=width || prevHeight!=height) {
-            TEventManager.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
+            invalidateWidgetLayout(w);
+            //TEventManager.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
         }
     }
     
-    static SizePreference getWidthPreference(TLayoutItem item) {
-        return new SizePreference(item.minWidth(),item.maxWidth(),item.preferredWidth());
+    public static void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
+        int prevX = w.x;
+        int prevY = w.y;
+        int prevWidth = w.width;
+        int prevHeight = w.height;
+        w.x = x;
+        w.y = y;
+        w.width = width;
+        w.height = height;
+        if (prevX!=x || prevY!=y || prevWidth!=width || prevHeight!=height) {
+            invalidateWidgetLayout(w);
+            //TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+        }
     }
     
-    static SizePreference getHeightPreference(TLayoutItem item) {
-        return new SizePreference(item.minHeight(),item.maxHeight(),item.preferredHeight());
+    
+    
+    
+    // ------------------------------------------------------------------------
+    
+    // Size allocations
+    
+    public static class SizePreference {
+        int policy;
+        int hint;
+        int min;
+        int max;
+        
+        int i;
+        int minHint;
+        
+        SizePreference(int policy, int hint, int min, int max) {
+            this.policy = policy;
+            this.hint = hint;
+            this.min = min;
+            this.max = max;
+        }
+        @Override
+        public String toString() {
+            return "SizePreference("+policy+","+min+","+max+","+hint+")";
+        }
     }
     
-    static SizePreference[] getWidthPreferences(TLayout layout) {
+    public static int freeWidth(TWidget item) {
+        return Mathi.max(item.sizeHint().width, item.minWidth());
+    }
+    
+    public static int freeHeight(TWidget item) {
+        return Mathi.max(item.sizeHint().height, item.minHeight());
+    }
+    
+    public static int freeWidth(TLayoutItem item) {
+        return Mathi.max(item.hintWidth(), item.minWidth());
+    }
+    
+    public static int freeWidth(ArrayList<TLayoutItem> items) {
+        int finalDimension = 0;
+        for (int i=0; i<items.size(); i++) {
+            finalDimension += freeWidth(items.get(i));
+        }
+        return finalDimension;
+    }
+    
+    public static int freeHeight(TLayoutItem item) {
+        return Mathi.max(item.hintHeight(), item.minHeight());
+    }
+    
+    public static int freeHeight(ArrayList<TLayoutItem> items) {
+        int finalDimension = 0;
+        for (int i=0; i<items.size(); i++) {
+            finalDimension += freeHeight(items.get(i));
+        }
+        return finalDimension;
+    }
+    
+    public static int freeAllocate(SizePreference pref) {
+        SizePreference[] prefs = {pref};
+        return freeAllocate(prefs);
+    }
+    
+    public static int freeAllocate(SizePreference[] prefs) {
+        int finalDimension = 0;
+        for (int i=0; i<prefs.length; i++) {
+            SizePreference pref = prefs[i];
+            pref.i = i;
+            
+            int minHint = Mathi.max(pref.hint, pref.min);
+            finalDimension += minHint;
+        }
+        return finalDimension;
+    }
+    
+    public static int freeMaxAllocate(SizePreference[] prefs) {
+        int max = 0;
+        for (SizePreference p : prefs) {
+            max = Math.max(max, freeAllocate(p));
+        }
+        return max;
+    }
+    
+    public static int allocate(SizePreference pref, int dimension) {
+        SizePreference[] prefs = {pref};
+        Wrapper<Integer> extra = new Wrapper<>(0);
+        int[] size = allocate(prefs, dimension, extra);
+        return size[0];
+    }
+    
+    /**
+     * Allocates sizes based on preferences such that added sizes are within their bounds and the
+     * bounds of the given dimension<br>
+     * 
+     */
+    public static int[] allocate(SizePreference[] prefs, int dimension, Wrapper<Integer> extra) {
+        /*
+        Algorithm:
+        1) For each size preference calculate max(hint,min) and save these as minHint
+        2) Calculate the sum of the minHints and save them as minDimension
+        3) Set extraDimension = dimension - minDimension
+        4) while extraDimension != 0 and for each policy [EXPANDING, PREFERRED, MINIMUM] in order:
+           A) Find all preferences of the same policy and allocate the remaining extraDimension
+              space such that: (in priority)
+              - as much space is filled as possible
+              - allocated sizes are as equal as possible
+              - allocated sizes are not greater than max size
+              If there is still extraDimensions left, continue to next policy
+        5) Return size arrays and newDimension and totalDimension values
+        */
+        
+        int[] size = new int[prefs.length];
+        
+        int minDimension = 0;
+        
+        ArrayList<SizePreference> expanding = new ArrayList<>();
+        ArrayList<SizePreference> preferred = new ArrayList<>();
+        ArrayList<SizePreference> minimum = new ArrayList<>();
+        
+        ArrayList2D<SizePreference> policies = new ArrayList2D<>();
+        policies.add(expanding);
+        policies.add(preferred);
+        policies.add(minimum);
+        
+        for (int i=0; i<prefs.length; i++) {
+            SizePreference pref = prefs[i];
+            pref.i = i;
+            
+            int minHint = Mathi.max(pref.hint, pref.min);
+            size[i] = minHint;
+            minDimension += minHint;
+            
+            if (pref.policy==SizePolicy.EXPANDING) expanding.add(pref);
+            if (pref.policy==SizePolicy.PREFERRED) preferred.add(pref);
+            if (pref.policy==SizePolicy.MINIMUM) minimum.add(pref);
+        }
+        
+        Wrapper<Integer> extraDimension = new Wrapper<>(0);
+        extraDimension.x = dimension - minDimension;
+        
+        int index = 0;
+        while (extraDimension.x > 0 && index < policies.size()) {
+            ArrayList<SizePreference> policy = policies.get(index);
+            allocateExtra(policy, extraDimension, size);
+            index++;
+        }
+        
+        extra.x = extraDimension.x;
+        
+        return size;
+    }
+    
+    public static void allocateExtra(ArrayList<SizePreference> policy, Wrapper<Integer> extraDimension, int[] size) {
+        ArrayList<SizePreference> rest = List.sort(policy, (a,b) -> Integer.compare(a.max, b.max));
+        
+        while (rest.size() > 0) {
+            SizePreference p = List.first(rest);
+            
+            int ideal = extraDimension.x / rest.size();
+            int actual = Mathi.min(ideal, p.max-size[p.i]); //max-size (actual difference)
+            
+            size[p.i] += actual;
+            extraDimension.x -= actual;
+            
+            if (rest.size()>1) {
+                rest = List.tail(rest);
+            } else {
+                // Try to add rest of extraDimension if possible
+                // TODO maybe better to add 1 to multiple sizes instead of all to one? (7,7,9) vs (7,8,8)
+                if (extraDimension.x > 0) {
+                    int freeSpace = p.max - size[p.i];
+                    size[p.i] += Mathi.min(extraDimension.x, freeSpace);
+                }
+                break;
+            }
+        }
+    }
+    
+    public static SizePreference getWidthPreference(TLayoutItem item) {
+        return new SizePreference(item.sizePolicy().horizontal(), item.hintWidth(), item.minWidth(),item.maxWidth());
+    }
+    
+    public static SizePreference getHeightPreference(TLayoutItem item) {
+        return new SizePreference(item.sizePolicy().vertical(), item.hintHeight(), item.minHeight(),item.maxHeight());
+    }
+    
+    public static SizePreference[] getWidthPreferences(TLayout layout) {
         SizePreference[] prefs = new SizePreference[layout.count()];
         for (int i=0; i<prefs.length; i++) {
             TLayoutItem item = layout.getItem(i);
@@ -47,7 +334,7 @@ class TLayoutManager {
         return prefs;
     }
     
-    static SizePreference[] getHeightPreferences(TLayout layout) {
+    public static SizePreference[] getHeightPreferences(TLayout layout) {
         SizePreference[] prefs = new SizePreference[layout.count()];
         for (int i=0; i<prefs.length; i++) {
             TLayoutItem item = layout.getItem(i);
@@ -56,160 +343,8 @@ class TLayoutManager {
         return prefs;
     }
     
-    static int allocate(SizePreference pref, int dimension) {
-        if (pref.pref <= 0) {
-            return dimension;
-        }
-        return Mathf.clamp(pref.pref, pref.min, pref.max);
-    }
     
-    /**
-     * Allocates sizes based on preferences such that added sizes are within their bounds and the
-     * bounds of the given dimension<br>
-     * Priority order: (prefs.min, prefs.max) , dimension, prefs.pref<br>
-     * Assumes that min < pref < max
-     * 
-     */
-    static int[] allocate(SizePreference[] prefs, int dimension, Wrapper<Integer> newDimension, Wrapper<Integer> totalDimension) {
-        /*
-        Algorithm:
-        1) Get all sizes that have a preference and try to allocate sizes for those such that
-        the closest preferences are chosen and there is enough space for the SizePreferences with
-        an undefined pref.
-        2) Allocate sizes with undefined pref to fit the newDimension
-         */
-        int[] size = new int[prefs.length];
-        
-        ArrayList<SizePreference> hasPref = new ArrayList<>();
-        ArrayList<SizePreference> noPref = new ArrayList<>();
-        
-        int min = 0;
-        
-        int pref = 0;
-        
-        int noPrefMin = 0;
-        
-        for (int i=0; i<prefs.length; i++) {
-            SizePreference sp = prefs[i];
-            sp.i = i;
-            min += sp.min;
-            if (sp.pref>0) {
-                hasPref.add(sp);
-                pref += sp.pref;
-            } else {
-                noPref.add(sp);
-                noPrefMin += sp.min;
-            }
-        }
-        
-        if (min>dimension) dimension = min;
-        
-        int targetPrefMax = Mathf.min(pref, dimension - noPrefMin);
-        int actualPrefMax = 0;
-        
-        // Step 1
-        
-        for (int i=0; i<hasPref.size(); i++) {
-            SizePreference sp = hasPref.get(i);
-            double alpha = sp.pref / (double)pref;
-            double prefSize = alpha * targetPrefMax;
-            size[sp.i] = Mathf.clamp((int)prefSize, sp.min, sp.max);
-            actualPrefMax += size[sp.i];
-        }
-        
-        // Step 2
-        double targetNoPref = dimension - actualPrefMax;
-        int actualNoPref = 0;
-        
-        Wrapper<Integer> noPrefRemainding = new Wrapper<>((int)targetNoPref);
-        int[] noPrefSizes = allocateNoPref(noPref, noPrefRemainding);
-        for (int i=0; i<noPref.size(); i++) {
-            SizePreference sp = noPref.get(i);
-            size[sp.i] = noPrefSizes[i];
-            actualNoPref += size[sp.i];
-        }
-        
-        newDimension.x = dimension;
-        totalDimension.x = actualPrefMax + actualNoPref;
-        
-        return size;
-    }
     
-    static final void allocateNoPrefHelper(ArrayList<SizePreference> prefs, int[] size, boolean handled[], long[] maxRemainder, Wrapper<Integer> remaining) {
-        long totalMaxRemainders = 0;
-        int maxAlphaIndex = -1;
-        float maxAlpha = 0;
-        
-        for (int i=0; i<size.length; i++) {
-            if (!handled[i]) {
-                totalMaxRemainders += maxRemainder[i];
-            }
-        }
-        
-        float[] alpha = new float[maxRemainder.length];
-        for (int i=0; i<maxRemainder.length; i++) {
-            if (!handled[i]) {
-                alpha[i] = (float) (maxRemainder[i] / (double)totalMaxRemainders);
-            }
-        }
-        
-        float[] inverseAlpha = Mathf.inverseAlphas(alpha);
-        for (int i=0; i<inverseAlpha.length; i++) {
-            if (!handled[i]) {
-                if (inverseAlpha[i] > maxAlpha) {
-                    maxAlpha = inverseAlpha[i];
-                    maxAlphaIndex = i;
-                }
-            }
-        }
-        
-        if (maxAlphaIndex != -1) {
-            SizePreference sp = prefs.get(maxAlphaIndex);
-            double a = inverseAlpha[maxAlphaIndex];
-            int piece = (int) (a * remaining.x);
-            if (piece > 0) {
-                int nValue = size[maxAlphaIndex] + piece;
-                int cValue = Mathf.clamp(nValue, sp.min, sp.max);
-                int diff = cValue - size[maxAlphaIndex];
-                if (diff > 0 && diff <= remaining.x) {
-                    size[maxAlphaIndex] = cValue;
-                    remaining.x -= diff;
-                }
-            }
-            handled[maxAlphaIndex] = true;
-        }
-        
-    }
     
-    static int[] allocateNoPref(ArrayList<SizePreference> prefs, Wrapper<Integer> remaining) {
-        int[] size = new int[prefs.size()];
-        long[] maxRemainder = new long[size.length];
-        
-        for (int i=0; i<size.length; i++) {
-            SizePreference sp = prefs.get(i);
-            size[i] = sp.min;
-            maxRemainder[i] = sp.max - sp.min;
-            remaining.x -= size[i];
-        }
-        
-        boolean[] handled = new boolean[maxRemainder.length];
-        for (int i=0; i<handled.length; i++) {
-            allocateNoPrefHelper(prefs, size, handled, maxRemainder, remaining);
-        }
-        
-        return size;
-    }
-    
-    static class SizePreference {
-        int i;
-        int min;
-        int max;
-        int pref;
-        SizePreference(int min, int max, int pref) {
-            this.min = min;
-            this.max = max;
-            this.pref = pref;
-        }
-    }
     
 }

@@ -17,9 +17,32 @@ public abstract class TLayout implements Layout {
     private Margin margin = new Margin(9,9,9,9);
     private int spacing = 6;
     
+    private TSizeHint sizeHint;
+    
     public TLayout() {
         
     }
+    
+    abstract void layout();
+    
+    abstract TSizeHint calculateSizeHint();
+    
+    TSizeHint sizeHint() {
+        if (sizeHint == null) {
+            TLayoutManager.invalidateSizeHint(this);
+        }
+        return sizeHint;
+    }
+    
+    TSizeHint getSizeHint() {
+        return sizeHint;
+    }
+    
+    void validateSizeHint(TSizeHint hint) {
+        sizeHint = hint;
+    }
+    
+    // ------------------------------------------------------------------------
     
     @Override
     public TWidget parent() {
@@ -176,13 +199,5 @@ public abstract class TLayout implements Layout {
     public void setSpacing(int spacing) {
         this.spacing = spacing;
     }
-    
-    // ------------------------------------------------------------------------
-    
-    void layout() {
-        
-    }
-    
-    
 
 }

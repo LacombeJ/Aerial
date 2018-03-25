@@ -1,7 +1,7 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.tea.TGraphics;
-import jonl.aui.tea.TSizePolicy;
+import jonl.aui.tea.TSizeHint;
 import jonl.aui.tea.TWidget;
 import jonl.jutils.func.Callback3D;
 import jonl.jutils.func.Function2D;
@@ -12,7 +12,7 @@ public abstract class TWidgetStyle<T extends TWidget> {
     
     private Callback3D<T,TWidgetInfo,TGraphics> painter = (w,i,g) -> { };
     
-    private Function2D<T,TWidgetInfo,TSizePolicy> sizePolicy = (w,i) -> new TSizePolicy();
+    private Function2D<T,TWidgetInfo,TSizeHint> sizeHint = (w,i) -> new TSizeHint();
     
     public TWidgetStyle(TStyle style) {
         this.style = style;
@@ -34,12 +34,12 @@ public abstract class TWidgetStyle<T extends TWidget> {
         painter.f(widget, info, g);
     }
     
-    public void setSizePolicy(Function2D<T,TWidgetInfo,TSizePolicy> sizePolicy) {
-        this.sizePolicy = sizePolicy;
+    public void setSizeHint(Function2D<T,TWidgetInfo,TSizeHint> sizeHint) {
+        this.sizeHint = sizeHint;
     }
     
-    public TSizePolicy getSizePolicy(T widget, TWidgetInfo info) {
-        return sizePolicy.f(widget, info);
+    public TSizeHint getSizeHint(T widget, TWidgetInfo info) {
+        return sizeHint.f(widget, info);
     }
     
 }

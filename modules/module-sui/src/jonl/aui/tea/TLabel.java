@@ -32,12 +32,11 @@ public class TLabel extends TWidget implements Label {
     // ------------------------------------------------------------------------
     
     @Override
-    protected TSizePolicy getSizePolicy() {
-        TSizePolicy sp = new TSizePolicy();
-        sp.minWidth = style().font().getWidth(text) + border;
-        sp.prefWidth = sp.minWidth;
-        sp.prefHeight = style().font().getHeight() + border;
-        return sp;
+    protected TSizeHint sizeHint() {
+        TSizeHint hint = new TSizeHint();
+        hint.width = style().font().getWidth(text) + border;
+        hint.height = style().font().getHeight() + border;
+        return hint;
     }
     
     @Override

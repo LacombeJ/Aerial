@@ -37,8 +37,12 @@ public class Console {
                 System.out.print(ArrayUtils.toString((byte[]) o));
             } else if (o instanceof double[]) {
                 System.out.print(ArrayUtils.toString((double[]) o));
+            } else if (o instanceof long[]) {
+                System.out.print(ArrayUtils.toString((long[]) o));
             } else if (o instanceof char[]) {
                 System.out.print(ArrayUtils.toString((char[]) o));
+            } else if (o.getClass().isArray()) {
+                print(o);
             } else {
                 System.out.print(o);
             }

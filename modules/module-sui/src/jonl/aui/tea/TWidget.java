@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import jonl.aui.Graphics;
 import jonl.aui.Signal;
+import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
 import jonl.aui.Window;
 import jonl.aui.tea.call.TCaller;
@@ -13,9 +14,9 @@ import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
 import jonl.aui.tea.graphics.TStyle;
 import jonl.aui.tea.graphics.TWidgetInfo;
+import jonl.aui.tea.spatial.TSize;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.List;
-import jonl.jutils.time.Time;
 
 public abstract class TWidget implements Widget {
 
@@ -24,13 +25,13 @@ public abstract class TWidget implements Widget {
     protected int width;
     protected int height;
     
-    private boolean useWidgetSizePolicy = true;
-    private TSizePolicy defaultSizePolicy = new TSizePolicy();
+    private TSize min = new TSize();
+    private TSize max = new TSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    private SizePolicy sizePolicy = new SizePolicy(SizePolicy.PREFERRED, SizePolicy.PREFERRED);
+    private TSizeHint sizeHint = new TSizeHint();
     
     protected TLayout parentLayout = null;
     private TLayout layout = null;
-    
-    private boolean dirty = true;
     
     private boolean enabled = true;
     
@@ -43,9 +44,7 @@ public abstract class TWidget implements Widget {
     TCaller caller = new TCaller();
     
     // Variables used by event handler
-    boolean eventInClickState = false;
-    Time eventTimeSinceLastClick = new Time();
-    boolean eventMouseFocusSupport = false;
+    private TEventHandler event = new TEventHandler();
     
     public TWidget() {
         
@@ -53,6 +52,12 @@ public abstract class TWidget implements Widget {
         
         info.put("this", this);
         
+        caller().implement("SET_INFO", (args) -> {
+            String key = args.get(0);
+            String value = args.get(1);
+            info.put(key, value);
+            return true;
+        });
     }
     
     // AUI Widget Methods
@@ -81,55 +86,46 @@ public abstract class TWidget implements Widget {
     
     @Override
     public int minWidth() {
-        return sizePolicy().minWidth;
+        return min.width;
     }
 
     @Override
     public int minHeight() {
-        return sizePolicy().minHeight;
+        return min.height;
     }
 
     @Override
     public void setMinSize(int width, int height) {
-        useWidgetSizePolicy = false;
-        defaultSizePolicy.minWidth = width;
-        defaultSizePolicy.minHeight = height;
+        min.width = width;
+        min.height = height;
     }
 
     @Override
     public int maxWidth() {
-        return sizePolicy().maxWidth;
+        return max.width;
     }
 
     @Override
     public int maxHeight() {
-        return sizePolicy().maxHeight;
+        return max.height;
+    }
+    
+    @Override
+    public SizePolicy sizePolicy() {
+        return sizePolicy;
+    }
+    
+    @Override
+    public void setSizePolicy(SizePolicy policy) {
+        sizePolicy = policy;
     }
 
     @Override
     public void setMaxSize(int width, int height) {
-        useWidgetSizePolicy = false;
-        defaultSizePolicy.maxWidth = width;
-        defaultSizePolicy.maxHeight = height;
+        max.width = width;
+        max.height = height;
     }
 
-    @Override
-    public int preferredWidth() {
-        return sizePolicy().prefWidth;
-    }
-
-    @Override
-    public int preferredHeight() {
-        return sizePolicy().prefHeight;
-    }
-
-    @Override
-    public void setPreferredSize(int width, int height) {
-        useWidgetSizePolicy = false;
-        defaultSizePolicy.prefWidth = width;
-        defaultSizePolicy.prefHeight = height;
-    }
-    
     @Override
     public int windowX() {
         if (this instanceof Window) {
@@ -193,23 +189,33 @@ public abstract class TWidget implements Widget {
         layout.parent = this;
     }
     
-    protected final TSizePolicy sizePolicy() {
-        if (useWidgetSizePolicy) {
-            return getSizePolicy();
+    protected TSizeHint sizeHint() {
+        if (layout != null) {
+            return layout.sizeHint();
         }
-        return defaultSizePolicy;
+        return sizeHint;
     }
-    
-    protected TSizePolicy getSizePolicy() {
-        return defaultSizePolicy;
-    }
-    
+
     protected boolean hasFocus() {
         return TEventManager.hasFocus(this);
     }
     
     protected void setMouseFocusSupport(boolean enable) {
-        eventMouseFocusSupport = enable;
+        event.mouseFocusSupport = enable;
+    }
+    
+    /**
+     * If set to true, this widget will get mouse move events while mouse is within bounds.
+     * Normally it is set to false and the widget will only get events not handled by children.
+     */
+    protected void setMouseMotionBounds(boolean enable) {
+        event.mouseMotionBounds = enable;
+    }
+    
+    protected void setCursor(TCursor cursor) {
+        if (parent() != null) {
+            parent().setCursor(cursor);
+        }
     }
     
     protected void paint(TGraphics g) {
@@ -260,6 +266,10 @@ public abstract class TWidget implements Widget {
     }
     
     // ------------------------------------------------------------------------
+    
+    TEventHandler event() {
+        return event;
+    }
     
     boolean event(TEvent event) {
         
@@ -326,30 +336,39 @@ public abstract class TWidget implements Widget {
         return new ArrayList<>();
     }
     
-    void layoutChildren() {
-        if (layout != null) {
-            layout.layout();
-            dirty = false;
-        }
-    }
+    // ------------------------------------------------------------------------
     
-    void validate() {
-        dirty = false;
-    }
-    
-    void invalidate() {
-        dirty = true;
-    }
-    
-    void layoutDirtyChildren() {
-        if (layout != null) {
-            if (dirty) {
-                layout.layout();
-                dirty = false;
+    /**
+     * @return this widget as a layout item in respect to it's parent layout or null if this widget
+     * does not have a parent layout
+     */
+    protected TLayoutItem asLayoutItem() {
+        if (parentLayout != null) {
+            int index = parentLayout.indexOf(this);
+            if (index != -1) {
+                return parentLayout.getItem(index);
             }
         }
-        for (TWidget widget : getChildren()) {
-            widget.layoutDirtyChildren();
+        return null;
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Call whenever layout should change
+     */
+    void invalidateLayout() {
+        if (layout != null) {
+            TLayoutManager.invalidateLayout(layout);
+        }
+    }
+    
+    /**
+     * Call whenever min, max, policy, or size hint is invalidated
+     */
+    void invalidateSizeHint() {
+        if (layout != null) {
+            TLayoutManager.invalidateSizeHint(layout);
         }
     }
     

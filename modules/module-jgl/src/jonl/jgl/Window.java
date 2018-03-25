@@ -39,6 +39,23 @@ public interface Window {
     
     // ------------------------------------------------------------------------
     
+    // Standard Cursors
+    
+    /** the default arrow cursor */
+    public final static int ARROW_CURSOR = 0;
+    
+    public final static int IBEAM_CURSOR = 1;
+    
+    public final static int CROSSHAIR_CURSOR = 2;
+    
+    public final static int HAND_CURSOR = 3;
+    
+    public final static int HRESIZE_CURSOR = 4;
+    
+    public final static int VRESIZE_CURSOR = 5;
+    
+    // ------------------------------------------------------------------------
+    
     /**
      * Sets the loader for this window whose method is called
      * when start is called and before the window is shown
@@ -127,6 +144,8 @@ public interface Window {
     
     public CursorState getCursorState();
     public void setCursorState(CursorState state);
+    
+    public void setCursor(int cursorId);
     
     public Input getInput();
     public GraphicsLibrary getGraphicsLibrary();

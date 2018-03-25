@@ -1,30 +1,27 @@
 package jonl.aui.tea;
 
-import jonl.vmath.Mathf;
+import jonl.vmath.Mathi;
 
 public class TTabButton extends TRadioButton {
 
     private int border = 8;
-    private int minWidth = 70;
-    private int minHeight = 32;
+    private int width = 70;
+    private int height = 32;
     
     public TTabButton(String text) {
         super(text);
     }
     
     @Override
-    protected TSizePolicy getSizePolicy() {
-        // Expand the buffer policy
-        TSizePolicy sp = new TSizePolicy();
+    protected TSizeHint sizeHint() {
+        TSizeHint hint = new TSizeHint();
         if (icon()!=null) {
-            sp.minWidth = Math.max(sp.minWidth, icon().width()) + border;
-            sp.minHeight = Math.max(sp.minHeight, icon().height()) + border;
-            sp.prefWidth = Math.max(sp.prefWidth, icon().width()) + border;
-            sp.prefHeight = Math.max(sp.prefHeight, icon().height()) + border;
+            hint.width = Math.max(hint.width, icon().width()) + border;
+            hint.height = Math.max(hint.height, icon().height()) + border;
         }
-        sp.minWidth = Mathf.max(minWidth, sp.minWidth, (int) style().font().getWidth(text()) + 2*border);
-        sp.prefHeight = Mathf.max(minHeight, sp.prefHeight, (int) style().font().getHeight() + border);
-        return sp;
+        hint.width = Mathi.max(width, hint.width, (int) style().font().getWidth(text()) + 2*border);
+        hint.height = Mathi.max(height, hint.height, (int) style().font().getHeight() + border);
+        return hint;
     }
     
     @Override
