@@ -325,6 +325,14 @@ public class TLayoutManager {
         return new SizePreference(item.sizePolicy().vertical(), item.hintHeight(), item.minHeight(),item.maxHeight());
     }
     
+    public static SizePreference getWidthPreference(TWidget item) {
+        return new SizePreference(item.sizePolicy().horizontal(), item.sizeHint().width, item.minWidth(),item.maxWidth());
+    }
+    
+    public static SizePreference getHeightPreference(TWidget item) {
+        return new SizePreference(item.sizePolicy().vertical(), item.sizeHint().height, item.minHeight(),item.maxHeight());
+    }
+    
     public static SizePreference[] getWidthPreferences(TLayout layout) {
         SizePreference[] prefs = new SizePreference[layout.count()];
         for (int i=0; i<prefs.length; i++) {

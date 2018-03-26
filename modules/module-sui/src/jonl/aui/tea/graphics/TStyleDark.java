@@ -12,7 +12,7 @@ public class TStyleDark extends TStyleDefault {
         foreground = TColor.fromFloat(0.9f, 0.9f, 0.9f);
         
         light = TColor.fromFloat(0.05f, 0.05f, 0.1f);
-        dark = TColor.fromFloat(0.95f, 0.8f, 0.9f);
+        dark = TColor.fromFloat(0.8f, 0.8f, 0.8f);
         
         textColor = TColor.WHITE;
         

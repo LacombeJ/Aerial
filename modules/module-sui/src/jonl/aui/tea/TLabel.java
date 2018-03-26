@@ -43,7 +43,7 @@ public class TLabel extends TWidget implements Label {
     protected void paint(TGraphics g) {
         float x = width/2;
         float y = height/2;
-        g.renderText(text(),x,y,HAlign.CENTER,VAlign.MIDDLE,style().font(),style().textColor());
+        g.renderText(text(),0,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),style().textColor());
         
         paint().emit(cb->cb.f(g));
     }

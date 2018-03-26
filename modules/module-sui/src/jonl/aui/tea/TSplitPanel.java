@@ -60,8 +60,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
         if (widgetOne != null) {
             widgetLayout().remove(widgetOne);
         }
-        widgetLayout().add(widget);
         widgetOne = tw;
+        widgetLayout().add(widget);
     }
 
     @Override
@@ -70,8 +70,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
         if (widgetTwo != null) {
             widgetLayout().remove(widgetTwo);
         }
-        widgetLayout().add(widget);
         widgetTwo = tw;
+        widgetLayout().add(widget);
     }
 
     @Override
