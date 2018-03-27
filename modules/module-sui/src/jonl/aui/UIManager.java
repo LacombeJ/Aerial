@@ -16,6 +16,10 @@ public interface UIManager {
     
     Label label(String text);
     
+    LineEdit lineEdit();
+    
+    LineEdit lineEdit(String text);
+    
     Dial dial();
     
     Slider slider();

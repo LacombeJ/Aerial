@@ -104,38 +104,46 @@ public class TButton extends TWidget implements Button {
     }
     
     @Override
-    protected void handleMouseButtonClick(TMouseEvent event) {
+    protected boolean handleMouseButtonClick(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             clicked().emit(cb->cb.f());
             if (checkable()) {
                 checked = !checked;
                 toggled().emit(cb->cb.f(checked));
             }
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseButtonPress(TMouseEvent event) {
+    protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             pressed().emit(cb->cb.f());
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseButtonRelease(TMouseEvent event) {
+    protected boolean handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             released().emit(cb->cb.f());
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseEnter(TMouseEvent event) {
+    protected boolean handleMouseEnter(TMouseEvent event) {
         info().put("bIsMouseWithin", true);
+        return true;
     }
     
     @Override
-    protected void handleMouseExit(TMouseEvent event) {
+    protected boolean handleMouseExit(TMouseEvent event) {
         info().put("bIsMouseWithin", false);
+        return true;
     }
     
 }

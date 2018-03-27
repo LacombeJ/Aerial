@@ -22,7 +22,7 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     public TSplitPanel() {
         super();
         setMouseFocusSupport(true);
-        setMouseMotionBounds(true);
+        //setMouseMotionBounds(true); //TODO why did we add this, try another way, interferes with other widgets
         setWidgetLayout(new TSplitLayout());
     }
     
@@ -147,34 +147,39 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     }
     
     @Override
-    protected void handleMouseButtonPress(TMouseEvent event) {
+    protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT && isOnBorder(event.x,event.y)) {
             inAdjustState = true;
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseButtonRelease(TMouseEvent event) {
+    protected boolean handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = false;
             setCursor(TCursor.ARROW);
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseExit(TMouseEvent event) {
+    protected boolean handleMouseExit(TMouseEvent event) {
         setCursor(TCursor.ARROW);
+        return true;
     }
     
     @Override
-    protected void handleMouseMove(TMouseEvent event) {
+    protected boolean handleMouseMove(TMouseEvent event) {
         if (isOnBorder(event.x,event.y)) {
             setCursor(align==Align.HORIZONTAL ? TCursor.HRESIZE : TCursor.VRESIZE);
         } else if (!inAdjustState) {
             setCursor(TCursor.ARROW);
         }
-        double ratio = this.ratio;
         if (inAdjustState) {
+            double ratio = this.ratio;
             switch (align) {
             case HORIZONTAL:
                 int widgetOneWidth = TLayoutManager.freeWidth(widgetOne);
@@ -203,8 +208,10 @@ public class TSplitPanel extends TWidget implements SplitPanel {
                 }
                 break;
             }
+            setRatio(ratio);
+            return true;
         }
-        setRatio(ratio);
+        return false;
     }
 
 }

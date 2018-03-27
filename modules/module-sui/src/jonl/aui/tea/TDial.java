@@ -90,26 +90,30 @@ public class TDial extends TWidget implements Dial {
     }
     
     @Override
-    protected void handleMouseButtonPress(TMouseEvent event) {
+    protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = true;
             ox = event.x;
             oy = event.y;
             ovalue = value;
             pressed().emit(cb->cb.f());
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseButtonRelease(TMouseEvent event) {
+    protected boolean handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = false;
             released().emit(cb->cb.f());
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseMove(TMouseEvent event) {
+    protected boolean handleMouseMove(TMouseEvent event) {
         if (inAdjustState) {
             float x = width()/2f;
             float y = height()/2f;
@@ -129,7 +133,9 @@ public class TDial extends TWidget implements Dial {
                 moved().emit(cb->cb.f(value));
                 changed().emit(cb->cb.f(value));
             }
+            return true;
         }
+        return false;
     }
 
 }

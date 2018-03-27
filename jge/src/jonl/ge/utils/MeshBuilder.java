@@ -23,7 +23,7 @@ public class MeshBuilder {
     }
     
     public Geometry build() {
-        return new Geometry(Vector3.unpack(vertices),Vector3.unpack(normals),Vector2.unpack(texCoords),ArrayUtils.toIntArray(indices));
+        return new Geometry(Vector3.pack(vertices),Vector3.pack(normals),Vector2.pack(texCoords),ArrayUtils.toIntArray(indices));
     }
     
     public void addVertex(Vector3... vertices) {

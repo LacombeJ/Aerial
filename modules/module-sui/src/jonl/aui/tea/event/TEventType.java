@@ -8,8 +8,6 @@ public enum TEventType {
     
     MouseButtonDoubleClick,
     
-    MouseButtonDown,
-    
     MouseButtonPress,
     
     MouseButtonRelease,
@@ -20,10 +18,18 @@ public enum TEventType {
     
     MouseMove,
     
+    Scroll,
+    
+    // Keybaord Events
+    
+    KeyPress,
+    
+    KeyRelease,
+    
     // Widget Events
     
     Move,
     
-    Resize
+    Resize,
     
 }

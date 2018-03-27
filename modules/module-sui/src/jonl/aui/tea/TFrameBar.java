@@ -81,23 +81,27 @@ public class TFrameBar extends TWidget {
     }
     
     @Override
-    protected void handleMouseButtonPress(TMouseEvent event) {
+    protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = true;
             adjustX = event.globalX + frame.manager.window().getX();
             adjustY = event.globalY + frame.manager.window().getY();
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseButtonRelease(TMouseEvent event) {
+    protected boolean handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = false;
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseMove(TMouseEvent event) {
+    protected boolean handleMouseMove(TMouseEvent event) {
         if (inAdjustState) {
             
             // Grab the screen mouse x early because window position might change
@@ -146,7 +150,10 @@ public class TFrameBar extends TWidget {
             int ny = frame.manager.window().getY() + dy;
             
             frame.manager.window().setPosition(nx, ny);
+            
+            return true;
         }
+        return false;
     }
     
 }

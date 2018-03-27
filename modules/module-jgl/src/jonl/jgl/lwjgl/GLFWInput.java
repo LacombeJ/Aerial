@@ -42,7 +42,8 @@ class GLFWInput extends AbstractInput {
     private float scrollX;
     private float scrollY;
     
-    //Accumulating because scroll callback access happends on a different thread
+    //Accumulating because scroll callback access happens on a different thread
+    private Object scrollSync = new Object();
     private float saccumx;
     private float saccumy;
     /**
@@ -59,8 +60,11 @@ class GLFWInput extends AbstractInput {
         this.windowHeight = windowHeight;
         
         GLFW.glfwSetScrollCallback(windowID,(windowid,xoffset,yoffset)->{
-            saccumx += (float) xoffset;
-            saccumy += (float) yoffset;
+            synchronized(scrollSync) {
+                saccumx += (float) xoffset;
+                saccumy += (float) yoffset;
+            }
+            
         });
         
     }
@@ -89,10 +93,12 @@ class GLFWInput extends AbstractInput {
             dy = ny - y;
         }
         
-        scrollX = saccumx;
-        scrollY = saccumy;
-        saccumx = 0;
-        saccumy = 0;
+        synchronized(scrollSync) {
+            scrollX = saccumx;
+            scrollY = saccumy;
+            saccumx = 0;
+            saccumy = 0;
+        }
         
         x = nx;
         y = ny;

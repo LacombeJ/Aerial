@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.HAlign;
 import jonl.aui.Label;
+import jonl.aui.SizePolicy;
 import jonl.aui.VAlign;
 
 public class TLabel extends TWidget implements Label {
@@ -12,6 +13,7 @@ public class TLabel extends TWidget implements Label {
     
     public TLabel() {
         super();
+        setSizePolicy(new SizePolicy(SizePolicy.MINIMUM, SizePolicy.FIXED));
     }
     
     public TLabel(String text) {
@@ -41,9 +43,9 @@ public class TLabel extends TWidget implements Label {
     
     @Override
     protected void paint(TGraphics g) {
-        float x = width/2;
+        float x = border/2;
         float y = height/2;
-        g.renderText(text(),0,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),style().textColor());
+        g.renderText(text(),x,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),style().textColor());
         
         paint().emit(cb->cb.f(g));
     }

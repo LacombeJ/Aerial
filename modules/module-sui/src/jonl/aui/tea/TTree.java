@@ -82,7 +82,7 @@ public class TTree extends TWidget implements Tree {
     }
     
     @Override
-    protected void handleMouseButtonClick(TMouseEvent event) {
+    protected boolean handleMouseButtonClick(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             int height = height();
             float y = height;
@@ -92,7 +92,9 @@ public class TTree extends TWidget implements Tree {
                     break;
                 }
             }
+            return true;
         }
+        return false;
     }
     
     private float findAndAct(int ex, int ey, TreeItem t, float x, float y, float dx, float dy) {

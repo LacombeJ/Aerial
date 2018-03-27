@@ -49,7 +49,7 @@ public class TRadioButton extends TButton {
     }
     
     @Override
-    protected void handleMouseButtonClick(TMouseEvent event) {
+    protected boolean handleMouseButtonClick(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             clicked().emit(cb->cb.f());
             if (checkable() && !checked()) {
@@ -59,7 +59,9 @@ public class TRadioButton extends TButton {
                 }
                 toggled().emit(cb->cb.f(checked()));
             }
+            return true;
         }
+        return false;
     }
     
     

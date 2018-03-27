@@ -9,9 +9,11 @@ import jonl.aui.Widget;
 import jonl.aui.Window;
 import jonl.aui.tea.call.TCaller;
 import jonl.aui.tea.event.TEvent;
+import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
+import jonl.aui.tea.event.TScrollEvent;
 import jonl.aui.tea.graphics.TStyle;
 import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.aui.tea.spatial.TSize;
@@ -197,7 +199,15 @@ public abstract class TWidget implements Widget {
     }
 
     protected boolean hasFocus() {
-        return TEventManager.hasFocus(this);
+        return TEventManager.hasKeyFocus(this);
+    }
+    
+    protected boolean grabKeyFocus() {
+        return TEventManager.grabKeyFocus(this);
+    }
+    
+    protected void releaseKeyFocus() {
+        TEventManager.releaseKeyFocus(this);
     }
     
     protected void setMouseFocusSupport(boolean enable) {
@@ -231,17 +241,23 @@ public abstract class TWidget implements Widget {
         return caller;
     }
     
-    protected void handleMouseButtonClick(TMouseEvent event) { }
-    protected void handleMouseButtonDoubleClick(TMouseEvent event) { }
-    protected void handleMouseButtonDown(TMouseEvent event) { }
-    protected void handleMouseButtonPress(TMouseEvent event) { }
-    protected void handleMouseButtonRelease(TMouseEvent event) { }
-    protected void handleMouseEnter(TMouseEvent event) { }
-    protected void handleMouseExit(TMouseEvent event) { }
-    protected void handleMouseMove(TMouseEvent event) { }
+    // TODO add returns here
     
-    protected void handleMove(TMoveEvent event) { }
-    protected void handleResize(TResizeEvent event) { }
+    protected boolean handleMouseButtonClick(TMouseEvent event) { return false; }
+    protected boolean handleMouseButtonDoubleClick(TMouseEvent event) { return false; }
+    protected boolean handleMouseButtonDown(TMouseEvent event) { return false; }
+    protected boolean handleMouseButtonPress(TMouseEvent event) { return false; }
+    protected boolean handleMouseButtonRelease(TMouseEvent event) { return false; }
+    protected boolean handleMouseEnter(TMouseEvent event) { return false; }
+    protected boolean handleMouseExit(TMouseEvent event) { return false; }
+    protected boolean handleMouseMove(TMouseEvent event) { return false; }
+    protected boolean handleScroll(TScrollEvent event) { return false; }
+    
+    protected boolean handleKeyPress(TKeyEvent event) { return false; }
+    protected boolean handleKeyRelease(TKeyEvent event) { return false; }
+    
+    protected boolean handleMove(TMoveEvent event) { return false; }
+    protected boolean handleResize(TResizeEvent event) { return false; }
     
     // ------------------------------------------------------------------------
     
@@ -273,6 +289,8 @@ public abstract class TWidget implements Widget {
     
     boolean event(TEvent event) {
         
+        // TODO add returns to handle functions
+        
         // Ignore mouse/keyboard events when disabled
         if (!enabled()) {
             
@@ -280,12 +298,14 @@ public abstract class TWidget implements Widget {
             
             case MouseButtonClick:          return false;
             case MouseButtonDoubleClick:    return false;
-            case MouseButtonDown:           return false;
             case MouseButtonPress:          return false;
             case MouseButtonRelease:        return false;
             case MouseEnter:                return false;
             case MouseExit:                 return false;
             case MouseMove:                 return false;
+            case Scroll:                    return false;
+            case KeyPress:                    return false;
+            case KeyRelease:                    return false;
             
             default:                        break;
             
@@ -294,21 +314,23 @@ public abstract class TWidget implements Widget {
         
         switch (event.type) {
         
-        case MouseButtonClick:          handleMouseButtonClick((TMouseEvent)event);         break;
-        case MouseButtonDoubleClick:    handleMouseButtonDoubleClick((TMouseEvent)event);   break;
-        case MouseButtonDown:           handleMouseButtonDown((TMouseEvent)event);          break;
-        case MouseButtonPress:          handleMouseButtonPress((TMouseEvent)event);         break;
-        case MouseButtonRelease:        handleMouseButtonRelease((TMouseEvent)event);       break;
-        case MouseEnter:                handleMouseEnter((TMouseEvent)event);               break;
-        case MouseExit:                 handleMouseExit((TMouseEvent)event);                break;
-        case MouseMove:                 handleMouseMove((TMouseEvent)event);                break;
+        case MouseButtonClick:          return handleMouseButtonClick((TMouseEvent)event);
+        case MouseButtonDoubleClick:    return handleMouseButtonDoubleClick((TMouseEvent)event);
+        case MouseButtonPress:          return handleMouseButtonPress((TMouseEvent)event);
+        case MouseButtonRelease:        return handleMouseButtonRelease((TMouseEvent)event);
+        case MouseEnter:                return handleMouseEnter((TMouseEvent)event);
+        case MouseExit:                 return handleMouseExit((TMouseEvent)event);
+        case MouseMove:                 return handleMouseMove((TMouseEvent)event);
+        case Scroll:                    return handleScroll((TScrollEvent)event);
+        case KeyPress:                  return handleKeyPress((TKeyEvent)event);
+        case KeyRelease:                return handleKeyRelease((TKeyEvent)event);
         
-        case Move:                      handleMove((TMoveEvent)event);                      break;
-        case Resize:                    handleResize((TResizeEvent)event);                  break;
+        case Move:                      return handleMove((TMoveEvent)event);
+        case Resize:                    return handleResize((TResizeEvent)event);
         
         }
         
-        return true;
+        return false;
     }
     
     // ------------------------------------------------------------------------

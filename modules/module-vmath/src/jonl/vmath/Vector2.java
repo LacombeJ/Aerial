@@ -169,8 +169,26 @@ public class Vector2 extends Vector<Vector2> {
         return new Vector2(Mathf.random(min,max),Mathf.random(min,max));
     }
     
-    public static List<Vector2> pack(float[] values) {
-        List<Vector2> vectors = new ArrayList<>();
+    public static float[] pack(List<Vector2> vectors) {
+        float[] values = new float[vectors.size()*2];
+        for (int i=0; i<vectors.size(); i++) {
+            values[i*2] = vectors.get(i).x;
+            values[i*2+1] = vectors.get(i).y;
+        }
+        return values;
+    }
+    
+    public static float[] pack(Vector2... vectors) {
+        float[] values = new float[vectors.length*2];
+        for (int i=0; i<vectors.length; i++) {
+            values[i*2] = vectors[i].x;
+            values[i*2+1] = vectors[i].y;
+        }
+        return values;
+    }
+    
+    public static ArrayList<Vector2> unpack(float[] values) {
+        ArrayList<Vector2> vectors = new ArrayList<>();
         for (int i=0; i<values.length/2; i++) {
             Vector2 v = new Vector2(
                 values[i],
@@ -179,15 +197,6 @@ public class Vector2 extends Vector<Vector2> {
             vectors.add(v);
         }
         return vectors;
-    }
-    
-    public static float[] unpack(List<Vector2> vectors) {
-        float[] values = new float[vectors.size()*2];
-        for (int i=0; i<vectors.size(); i++) {
-            values[i*2] = vectors.get(i).x;
-            values[i*2+1] = vectors.get(i).y;
-        }
-        return values;
     }
     
 }

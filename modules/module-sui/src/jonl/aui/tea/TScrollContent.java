@@ -1,11 +1,16 @@
 package jonl.aui.tea;
 
+import jonl.aui.Signal;
 import jonl.aui.Widget;
+import jonl.aui.tea.event.TScrollEvent;
+import jonl.jutils.func.Callback;
 import jonl.vmath.Mathi;
 
 public class TScrollContent extends TWidget {
 
     TWidget scrollWidget;
+    
+    private Signal<Callback<Integer>> scrolled = new Signal<>();
     
     public TScrollContent() {
         super();
@@ -23,6 +28,14 @@ public class TScrollContent extends TWidget {
         }
         this.scrollWidget = tw;
         widgetLayout().add(tw);
+    }
+    
+    public Signal<Callback<Integer>> scrolled() { return scrolled; }
+    
+    @Override
+    protected boolean handleScroll(TScrollEvent scroll) {
+        scrolled.emit((cb)->cb.f(scroll.sy));
+        return true;
     }
     
     public static class TScrollContentLayout extends TLayout {

@@ -50,28 +50,31 @@ public class  TSliderButton extends TButton {
     }
     
     @Override
-    protected void handleMouseButtonPress(TMouseEvent event) {
+    protected boolean handleMouseButtonPress(TMouseEvent event) {
         super.handleMouseButtonPress(event);
         if (event.button==Input.MB_LEFT) {
             inAdjustState = true;
             opos = slider.align==Align.HORIZONTAL ? event.globalX : event.globalY;
             ovalue = slider.value;
             slider.pressed().emit(cb->cb.f());
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseButtonRelease(TMouseEvent event) {
+    protected boolean handleMouseButtonRelease(TMouseEvent event) {
         super.handleMouseButtonRelease(event);
         if (event.button==Input.MB_LEFT) {
             inAdjustState = false;
             slider.released().emit(cb->cb.f());
+            return true;
         }
+        return false;
     }
     
     @Override
-    protected void handleMouseMove(TMouseEvent event) {
-        super.handleMouseMove(event);
+    protected boolean handleMouseMove(TMouseEvent event) {
         if (inAdjustState) {
             int newpos = event.globalX;
             int sliderDim = slider.width;
@@ -95,7 +98,9 @@ public class  TSliderButton extends TButton {
                 slider.moved().emit(cb->cb.f(slider.value));
                 slider.changed().emit(cb->cb.f(slider.value));
             }
+            return true;
         }
+        return false;
     }
     
 }

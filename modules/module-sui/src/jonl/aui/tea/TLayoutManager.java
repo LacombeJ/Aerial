@@ -3,6 +3,9 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.SizePolicy;
+import jonl.aui.tea.event.TEventType;
+import jonl.aui.tea.event.TMoveEvent;
+import jonl.aui.tea.event.TResizeEvent;
 import jonl.jutils.func.List;
 import jonl.jutils.func.Wrapper;
 import jonl.jutils.structs.ArrayList2D;
@@ -107,7 +110,7 @@ public class TLayoutManager {
         w.y = y;
         if (prevX!=x || prevY!=y) {
             invalidateWidgetLayout(w);
-            //TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }
     
@@ -118,7 +121,7 @@ public class TLayoutManager {
         w.height = height;
         if (prevWidth!=width || prevHeight!=height) {
             invalidateWidgetLayout(w);
-            //TEventManager.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
+            TEventManager.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
         }
     }
     

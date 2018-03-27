@@ -67,6 +67,16 @@ public class TUIManager implements UIManager {
     public TLabel label(String text) {
         return new TLabel(text);
     }
+    
+    @Override
+    public TLineEdit lineEdit() {
+        return new TLineEdit();
+    }
+
+    @Override
+    public TLineEdit lineEdit(String text) {
+        return new TLineEdit(text);
+    }
 
     @Override
     public TDial dial() {

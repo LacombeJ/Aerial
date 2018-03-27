@@ -4,7 +4,6 @@ import jonl.aui.Align;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.Slider;
-import jonl.aui.tea.graphics.TColor;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 import jonl.vmath.Mathi;

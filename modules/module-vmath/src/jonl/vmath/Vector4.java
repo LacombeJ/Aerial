@@ -108,8 +108,30 @@ public class Vector4 extends Vector<Vector4> {
     public static final Vector4 up()        { return new Vector4(Vector3.up(),      1); }
     public static final Vector4 right()     { return new Vector4(Vector3.right(),   1); }
     
-    public static List<Vector4> pack(float[] values) {
-        List<Vector4> vectors = new ArrayList<>();
+    public static float[] pack(List<Vector4> vectors) {
+        float[] values = new float[vectors.size()*4];
+        for (int i=0; i<vectors.size(); i++) {
+            values[i*4] = vectors.get(i).x;
+            values[i*4+1] = vectors.get(i).y;
+            values[i*4+2] = vectors.get(i).z;
+            values[i*4+3] = vectors.get(i).w;
+        }
+        return values;
+    }
+    
+    public static float[] pack(Vector4... vectors) {
+        float[] values = new float[vectors.length*4];
+        for (int i=0; i<vectors.length; i++) {
+            values[i*4] = vectors[i].x;
+            values[i*4+1] = vectors[i].y;
+            values[i*4+2] = vectors[i].z;
+            values[i*4+3] = vectors[i].w;
+        }
+        return values;
+    }
+    
+    public static ArrayList<Vector4> unpack(float[] values) {
+        ArrayList<Vector4> vectors = new ArrayList<>();
         for (int i=0; i<values.length/4; i++) {
             Vector4 v = new Vector4(
                 values[i],
@@ -120,17 +142,6 @@ public class Vector4 extends Vector<Vector4> {
             vectors.add(v);
         }
         return vectors;
-    }
-    
-    public static float[] unpack(List<Vector4> vectors) {
-        float[] values = new float[vectors.size()*4];
-        for (int i=0; i<vectors.size(); i++) {
-            values[i*4] = vectors.get(i).x;
-            values[i*4+1] = vectors.get(i).y;
-            values[i*4+2] = vectors.get(i).z;
-            values[i*4+3] = vectors.get(i).w;
-        }
-        return values;
     }
     
 }

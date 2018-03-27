@@ -12,7 +12,9 @@ import jonl.aui.tea.TWindowEvent.SetDecorated;
 import jonl.aui.tea.TWindowEvent.SetResizable;
 import jonl.aui.tea.TWindowEvent.SetVisible;
 import jonl.aui.tea.event.TEventType;
+import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.event.TScrollEvent;
 import jonl.aui.tea.spatial.TPoint;
 import jonl.jgl.Closer;
 import jonl.jgl.GraphicsLibrary;
@@ -161,15 +163,11 @@ class TWindowManager {
             });
             
             glWindow.addPositionListener((x,y,prevX,prevY)->{
-                //window.x = x;
-                //window.y = y;
                 TLayoutManager.setPosition(window, x, y);
                 //TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
             });
             
             glWindow.addSizeListener((width,height,prevWidth,prevHeight)->{
-                //window.width = width;
-                //window.height = height;
                 TLayoutManager.setSize(window, width, height);
                 //TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
                 if (graphics!=null) {
@@ -178,7 +176,9 @@ class TWindowManager {
                 }
             });
             
+            // Counts down and frees the thread that created this thread
             sp.countDown();
+            
             glWindow.setLoader(()->{
                 graphics = new TGraphics(gl,()->window.height);
                 ortho = Matrix4.orthographic(0,glWindow.getWidth(),glWindow.getHeight(),0,-1,1);
@@ -345,7 +345,9 @@ class TWindowManager {
         int dy = (int) input.getDY();
         int x = (int) input.getX();
         int y = (int) input.getY();
-        for (int i=Input.MB_LEFT; i<Input.MB_LEFT+Input.MB_COUNT; i++) {
+        
+        // Mouse button events
+        for (int i=Input.MB_LEFT; i<Input.MB_COUNT; i++) {
             if (input.isButtonPressed(i)) {
                 TEventManager.fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy));
             }
@@ -354,6 +356,7 @@ class TWindowManager {
             }
         }
         
+        // Mouse motion events
         if (dx!=0 || dy!=0) {
             int prevX = x - dx;
             int prevY = y - dy;
@@ -366,6 +369,33 @@ class TWindowManager {
                 TEventManager.fireMouseExit(window, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
             }
             TEventManager.fireMouseMove(window, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
+        }
+        
+        // Mouse scroll wheel events
+        int sx = (int) input.getScrollX();
+        int sy = (int) input.getScrollY();
+        if (sx!=0 || sy!=0) {
+            TEventManager.fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
+        }
+        
+        // Key events
+        for (int i=Input.K_0; i<Input.K_COUNT; i++) {
+            int mod = TKeyEvent.NO_MOD;
+            if (input.isKeyDown(Input.K_LSHIFT) || input.isKeyDown(Input.K_RSHIFT)) {
+                mod |= TKeyEvent.SHIFT_MOD;
+            }
+            if (input.isKeyDown(Input.K_LCONTROL) || input.isKeyDown(Input.K_RCONTROL)) {
+                mod |= TKeyEvent.CTRL_MOD;
+            }
+            if (input.isKeyDown(Input.K_LALT) || input.isKeyDown(Input.K_RALT)) {
+                mod |= TKeyEvent.ALT_MOD;
+            }
+            if (input.isKeyPressed(i)) {
+                TEventManager.fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod));
+            }
+            if (input.isKeyReleased(i)) {
+                TEventManager.fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod));
+            }
         }
     }
     

@@ -10,6 +10,7 @@ import jonl.aui.tea.graphics.TColor;
 import jonl.aui.tea.graphics.TFont;
 import jonl.aui.tea.graphics.TImage;
 import jonl.aui.tea.graphics.TImageManager;
+import jonl.aui.tea.graphics.TMesh;
 import jonl.aui.tea.graphics.TTextManager;
 import jonl.jgl.*;
 import jonl.jgl.GraphicsLibrary.*;
@@ -28,8 +29,13 @@ public class TGraphics implements Graphics {
     float offsetY;
     
     Matrix4 ortho;
-    Mesh rect;
+    
+    Mesh box;
     Mesh circle;
+    
+    Mesh boxOutline;
+    Mesh circleOutline;
+    
     Mesh fontRect;
     Program fontProgram;
     
@@ -48,10 +54,13 @@ public class TGraphics implements Graphics {
         gl.glEnable(Target.BLEND);
         gl.glBlendFunc(Blend.NORMAL);
         
-        rect = gl.glGenMesh(Presets.rectMesh());
-        circle = gl.glGenMesh(Presets.circleMesh());
+        box = gl.glGenMesh(TMesh.BOX.data);
+        circle = gl.glGenMesh(TMesh.CIRCLE.data);
         
-        fontRect = gl.glGenMesh(Presets.rectMesh());
+        boxOutline = gl.glGenMesh(TMesh.BOX_OUTLINE.data);
+        circleOutline = gl.glGenMesh(TMesh.CIRCLE_OUTLINE.data);
+        
+        fontRect = gl.glGenMesh(TMesh.BOX.data);
         fontProgram = loadProgramFromSource(Presets.fontVSSource(version),Presets.fontFSSource(version));
         
         solid = loadProgramFromSource(Presets.solidVSSource(version),Presets.solidFSSource(version));
@@ -102,26 +111,34 @@ public class TGraphics implements Graphics {
         render(circle,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
     }
     
-    public void renderCircleBounds(float x, float y, float w, float h, Vector4 color) {
-        render(circle,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
-    }
-    
     public void renderCircle(Matrix4 mat, Vector4 color) {
         Matrix4 matrix = Matrix4.identity().translate(offsetX,offsetY,0).multiply(mat);
         render(circle,matrix,color);
     }
     
+    public void renderCircleOutline(float x, float y, float w, float h, Vector4 color) {
+        render(circleOutline,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,Mode.LINE_STRIP);
+    }
+    
     public void renderRect(float x, float y, float w, float h, Vector4 color) {
-        render(rect,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
+        render(box,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
     }
     
     public void renderRect(float x, float y, float w, float h, TColor color) {
-        render(rect,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector());
+        render(box,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector());
     }
     
     public void renderRect(Matrix4 mat, Vector4 color) {
         Matrix4 matrix = Matrix4.identity().translate(offsetX,offsetY,0).multiply(mat);
-        render(rect,matrix,color);
+        render(box,matrix,color);
+    }
+    
+    public void renderRectOutline(float x, float y, float w, float h, Vector4 color) {
+        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,Mode.LINE_STRIP);
+    }
+    
+    public void renderRectOutline(float x, float y, float w, float h, TColor color) {
+        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector(),Mode.LINE_STRIP);
     }
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
@@ -142,12 +159,12 @@ public class TGraphics implements Graphics {
     }
     
     public void renderTexture(Texture texture, float x, float y, float w, float h) {
-        render(rect,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),texture);
+        render(box,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),texture);
     }
     
     // Top-left orientation
     
-    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color) {
+    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color, Mode mode) {
         Matrix4 mat = Matrix4.identity();
         mat.translate(trans);
         mat.rotate(rot);
@@ -156,8 +173,11 @@ public class TGraphics implements Graphics {
         gl.glUseProgram(solid);
         solid.setUniformMat4("MVP",ortho.get().multiply(mat).toArray());
         solid.setUniform("color",color.x,color.y,color.z,color.w);
-        gl.glRender(mesh);
+        gl.glRender(mesh, mode);
         gl.glUseProgram(null);
+    }
+    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color) {
+        render(mesh,trans,rot,scale,color,Mode.TRIANGLES);
     }
     
     private void render(Mesh mesh, Matrix4 mat, Vector4 color) {        

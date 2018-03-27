@@ -8,8 +8,14 @@ public class TColor {
     public final static TColor GREEN    = TColor.fromFloat(0, 1, 0);
     public final static TColor BLUE     = TColor.fromFloat(0, 0, 1);
     
+    public final static TColor CYAN     = TColor.fromFloat(0, 1, 1);
+    
     public final static TColor WHITE    = TColor.fromFloat(1, 1, 1);
     public final static TColor BLACK    = TColor.fromFloat(0, 0, 0);
+    
+    public final static TColor LIGHT_GRAY       = TColor.fromFloat(0.25f, 0.25f, 0.25f);
+    public final static TColor GRAY             = TColor.fromFloat(0.5f, 0.5f, 0.5f);
+    public final static TColor DARK_GRAY        = TColor.fromFloat(0.75f, 0.75f, 0.75f);
     
     public final float r;
     public final float g;

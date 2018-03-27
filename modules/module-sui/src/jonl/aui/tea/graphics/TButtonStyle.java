@@ -4,7 +4,6 @@ import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TButton;
 import jonl.aui.tea.TSizeHint;
-import jonl.jutils.io.Console;
 import jonl.vmath.Vector4;
 
 public class TButtonStyle extends TWidgetStyle<TButton> {

@@ -1,12 +1,25 @@
 package jonl.aui.tea;
 
 import jonl.aui.Align;
+import jonl.aui.Signal;
+import jonl.aui.tea.event.TScrollEvent;
+import jonl.jutils.func.Callback;
 
 public class TScrollBar extends TSlider {
 
+    private Signal<Callback<Integer>> scrolled = new Signal<>();
+    
     public TScrollBar(Align align) {
         super(align);
         
+    }
+    
+    public Signal<Callback<Integer>> scrolled() { return scrolled; }
+    
+    @Override
+    protected boolean handleScroll(TScrollEvent scroll) {
+        scrolled.emit((cb)->cb.f(scroll.sy));
+        return true;
     }
     
     @Override
