@@ -34,10 +34,6 @@ public class TUIManager implements UIManager {
         this.style = style;
     }
     
-    void enroll(TWidget widget) {
-        widget.style = style;
-    }
-    
     @Override
     public TWindow window() {
         return new TWindow();

@@ -25,9 +25,9 @@ public class TFillLayout extends TLayout {
             int sy = margin().top;
             
             if (item instanceof TWidgetItem) {
-                int wWidth = TLayoutManager.allocate(TLayoutManager.getWidthPreference(item), width);
-                int wHeight = TLayoutManager.allocate(TLayoutManager.getHeightPreference(item), height);
-                TLayoutManager.setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
+                int wWidth = TManagerLayout.allocate(TManagerLayout.getWidthPreference(item), width);
+                int wHeight = TManagerLayout.allocate(TManagerLayout.getHeightPreference(item), height);
+                manager().layout().setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
             }
         }
     }
@@ -36,8 +36,8 @@ public class TFillLayout extends TLayout {
     TSizeHint calculateSizeHint() {
         TLayoutItem item = getItem(0);
         
-        int width = TLayoutManager.freeAllocate(TLayoutManager.getWidthPreference(item));
-        int height = TLayoutManager.freeAllocate(TLayoutManager.getHeightPreference(item));
+        int width = TManagerLayout.freeAllocate(TManagerLayout.getWidthPreference(item));
+        int height = TManagerLayout.freeAllocate(TManagerLayout.getHeightPreference(item));
         
         width += margin().width();
         width += margin().height();

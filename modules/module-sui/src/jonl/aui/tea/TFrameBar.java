@@ -35,8 +35,8 @@ public class TFrameBar extends TWidget {
         TButton minimize = new TButton("--");
         minimize.setMinSize(buttonWidth, buttonHeight);
         minimize.setMaxSize(buttonWidth, buttonHeight);
-        minimize.info.put("cButton", frame.color);
-        minimize.info.put("fMaxValue", 4f);
+        minimize.info().put("cButton", frame.color);
+        minimize.info().put("fMaxValue", 4f);
         minimize.clicked().connect(()->{
             frame.window().minimize();
         });
@@ -45,8 +45,8 @@ public class TFrameBar extends TWidget {
         TButton maximize = new TButton("[]]");
         maximize.setMinSize(buttonWidth, buttonHeight);
         maximize.setMaxSize(buttonWidth, buttonHeight);
-        maximize.info.put("cButton", frame.color);
-        maximize.info.put("fMaxValue", 4f);
+        maximize.info().put("cButton", frame.color);
+        maximize.info().put("fMaxValue", 4f);
         maximize.clicked().connect(()->{
             if (frame.window().getAttribute(Window.MAXIMIZED)) {
                 frame.insets = new Margin(frame.defaultInsets);
@@ -62,9 +62,9 @@ public class TFrameBar extends TWidget {
         TButton close = new TButton("X");
         close.setMinSize(buttonWidth, buttonHeight);
         close.setMaxSize(buttonWidth, buttonHeight);
-        close.info.put("cButton", frame.color);
-        close.info.put("cHover", TColor.RED);
-        close.info.put("fMaxValue", 4f);
+        close.info().put("cButton", frame.color);
+        close.info().put("cHover", TColor.RED);
+        close.info().put("fMaxValue", 4f);
         close.clicked().connect(()->{
             frame.window().close();
         });
@@ -84,8 +84,8 @@ public class TFrameBar extends TWidget {
     protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
             inAdjustState = true;
-            adjustX = event.globalX + frame.manager.window().getX();
-            adjustY = event.globalY + frame.manager.window().getY();
+            adjustX = event.globalX + frame.windowManager.window().getX();
+            adjustY = event.globalY + frame.windowManager.window().getY();
             return true;
         }
         return false;
@@ -106,20 +106,20 @@ public class TFrameBar extends TWidget {
             
             // Grab the screen mouse x early because window position might change
             // when moving out of maximize
-            int screenMouseX = event.globalX + frame.manager.window().getX();
-            int screenMouseY = event.globalY + frame.manager.window().getY();
+            int screenMouseX = event.globalX + frame.windowManager.window().getX();
+            int screenMouseY = event.globalY + frame.windowManager.window().getY();
             
             // Moving window while maximizes unmaximizes it (since this is not handle by the OS like other windows)
             // Only option is to diable moving maximized windows
-            if (frame.manager.window().getAttribute(Window.MAXIMIZED)) {
+            if (frame.windowManager.window().getAttribute(Window.MAXIMIZED)) {
                 
                 // Move frame so that mouse will hover over the center of the frame bar
                 // This happens before we adjust the size of the framebar widget so we will use the
                 // dimensions of the window for calculation
-                int prevX = frame.manager.window().getX();
-                int prevY = frame.manager.window().getY();
+                int prevX = frame.windowManager.window().getX();
+                int prevY = frame.windowManager.window().getY();
                 frame.insets = new Margin(frame.defaultInsets); // restore insets
-                frame.manager.window().restore();
+                frame.windowManager.window().restore();
                 
                 // Using prevX and prevY in calculations to handle multiple screens
                 // Since we know in fullscreen mode, prevX and prevY denote the top left corner,
@@ -128,8 +128,8 @@ public class TFrameBar extends TWidget {
                 // This does not however, handle multiple screens of different sizes
                 // TODO find a way to retrieve the size of the screen that contains the window
                 
-                int screenWidth = frame.manager.window().getScreenWidth();
-                int width = frame.manager.window().getWidth();
+                int screenWidth = frame.windowManager.window().getScreenWidth();
+                int width = frame.windowManager.window().getWidth();
                 int left = prevX; // Using this instead of 0 to handle multiple screens
                 int right = prevX + screenWidth - width;
                 
@@ -137,7 +137,7 @@ public class TFrameBar extends TWidget {
                 moveX = Mathi.clamp(moveX, left, right);
                 int moveY = prevY; // Keep takbar same height
                 
-                frame.manager.window().setPosition(moveX, moveY);
+                frame.windowManager.window().setPosition(moveX, moveY);
             }
             
             // Adjust window position based on mouse motion
@@ -146,10 +146,10 @@ public class TFrameBar extends TWidget {
             int dy = screenMouseY - adjustY;
             adjustX = screenMouseX;
             adjustY = screenMouseY;
-            int nx = frame.manager.window().getX() + dx;
-            int ny = frame.manager.window().getY() + dy;
+            int nx = frame.windowManager.window().getX() + dx;
+            int ny = frame.windowManager.window().getY() + dy;
             
-            frame.manager.window().setPosition(nx, ny);
+            frame.windowManager.window().setPosition(nx, ny);
             
             return true;
         }

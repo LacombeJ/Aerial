@@ -49,8 +49,8 @@ public class TScrollContent extends TWidget {
                 int scrollWidth = scrollContent.width;
                 int scrollHeight = scrollContent.height;
                 
-                int prefWidth = TLayoutManager.freeWidth(scrollContent.widget());
-                int prefHeight = TLayoutManager.freeHeight(scrollContent.widget());
+                int prefWidth = TManagerLayout.freeWidth(scrollContent.widget());
+                int prefHeight = TManagerLayout.freeHeight(scrollContent.widget());
                 
                 int contentWidth = Math.max(prefWidth, scrollWidth);
                 int contentHeight = Math.max(prefHeight, scrollHeight);
@@ -63,7 +63,7 @@ public class TScrollContent extends TWidget {
                 x = Mathi.clamp(x, 0, Integer.MAX_VALUE);
                 y = Mathi.clamp(y, 0, Integer.MAX_VALUE);
                 
-                TLayoutManager.setPositionAndSize(scrollContent.widget(), -x, -y, contentWidth, contentHeight);
+                manager().layout().setPositionAndSize(scrollContent.widget(), -x, -y, contentWidth, contentHeight);
             }
         }
 

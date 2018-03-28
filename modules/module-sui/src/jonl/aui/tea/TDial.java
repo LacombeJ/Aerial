@@ -84,7 +84,7 @@ public class TDial extends TWidget implements Dial {
     
     @Override
     protected void paint(TGraphics g) {
-        info.put("bInAdjustState", inAdjustState);
+        info().put("bInAdjustState", inAdjustState);
         style().dial().paint(this, info(), g);
         paint().emit(cb->cb.f(g));
     }

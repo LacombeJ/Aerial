@@ -10,7 +10,7 @@ public class TStyleDefault implements TStyle {
     protected TColor foreground = TColor.fromFloat(0.1f, 0.1f, 0.15f);
     
     protected TColor light = TColor.fromFloat(0.95f, 0.95f, 0.97f);
-    protected TColor dark = TColor.fromFloat(0.05f, 0.7f, 0.1f);
+    protected TColor dark = TColor.fromFloat(0.05f, 0.07f, 0.1f);
     
     protected TColor textColor = TColor.BLACK;
     

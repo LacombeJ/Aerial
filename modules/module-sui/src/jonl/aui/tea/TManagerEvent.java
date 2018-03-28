@@ -17,15 +17,13 @@ import jonl.jutils.time.Time;
  * @author Jonathan
  *
  */
-class TEventManager {
+public class TManagerEvent {
 
     // TODO simplify this code to make it less confusing and more readable.
     // Also define things such as the types of events that are withheld and sent
     // with mouse focus or even make parameters that widgets can toggle such
     // as whether it should receive events of mouse exiting window if the widget
     // is focused.
-    
-    // TODO remove static TEventManager and have an instance for every root window / UI
     
     // TODO send mouse motion events even when the mouse does not move (in cases where
     // a widget has been scrolled, etc)
@@ -59,28 +57,32 @@ class TEventManager {
      *   
      */
     
-    private static final long DOUBLE_CLICK_SPEED_MS = 500;
+    private final long DOUBLE_CLICK_SPEED_MS = 500;
     
-    private static TWidget keyboardFocusWidget = null;
+    private TWidget keyboardFocusWidget = null;
     
-    private static TWidget mouseFocusWidget = null;
-    private static TPoint mouseFocusPoint = null;
-    private static TWidget mouseFocusRootWidget = null;
+    private TWidget mouseFocusWidget = null;
+    private TPoint mouseFocusPoint = null;
+    private TWidget mouseFocusRootWidget = null;
     
-    static boolean hasKeyFocus(TWidget widget) {
+    public TManagerEvent() {
+        
+    }
+    
+    boolean hasKeyFocus(TWidget widget) {
         return widget == keyboardFocusWidget;
     }
     
-    static boolean grabKeyFocus(TWidget widget) {
+    boolean grabKeyFocus(TWidget widget) {
         keyboardFocusWidget = widget;
         return true;
     }
     
-    static void releaseKeyFocus(TWidget widget) {
+    void releaseKeyFocus(TWidget widget) {
         keyboardFocusWidget = null;
     }
     
-    private static void internalBindFocus(TWidget widget, TMouseEvent event) {
+    private void internalBindFocus(TWidget widget, TMouseEvent event) {
         if (widget != null) {
             mouseFocusWidget = widget;
             mouseFocusPoint = new TPoint(event.globalX, event.globalY);
@@ -88,7 +90,7 @@ class TEventManager {
         }
     }
     
-    private static void internalFreeFocus(TWidget widget, TMouseEvent event) {
+    private void internalFreeFocus(TWidget widget, TMouseEvent event) {
         if (widget != null && widget == mouseFocusWidget) {
             
             int x = event.globalX;
@@ -116,15 +118,15 @@ class TEventManager {
             if (dx!=0 || dy!=0) {
                 int prevX = mouseFocusPoint.x;
                 int prevY = mouseFocusPoint.y;
-                boolean inNow = TEventManager.within(mouseFocusRootWidget,x,y);
-                boolean inBefore = TEventManager.within(mouseFocusRootWidget,prevX,prevY);
+                boolean inNow = TManagerEvent.within(mouseFocusRootWidget,x,y);
+                boolean inBefore = TManagerEvent.within(mouseFocusRootWidget,prevX,prevY);
                 if (inNow && !inBefore) {
-                    TEventManager.fireMouseEnter(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
+                    fireMouseEnter(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
                 }
                 if (!inNow && inBefore) {
-                    TEventManager.fireMouseExit(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
+                    fireMouseExit(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
                 }
-                TEventManager.fireMouseMove(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
+                fireMouseMove(mouseFocusRootWidget, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
             }
         }
         
@@ -135,7 +137,7 @@ class TEventManager {
     /**
      * Checks if double click has been performed and sends an event if it has
      */
-    private static void checkDoubleClick(TWidget widget, TMouseEvent e, boolean wasInClickState) {
+    private void checkDoubleClick(TWidget widget, TMouseEvent e, boolean wasInClickState) {
         if (wasInClickState) {
             sendEvent(widget, event(e, TEventType.MouseButtonClick));
             if (widget.event().timeSinceLastClick.elapsed() < DOUBLE_CLICK_SPEED_MS) {
@@ -156,7 +158,7 @@ class TEventManager {
      * @param released
      * @return
      */
-    private static boolean checkMouseFocusWidget(TWidget widget, TMouseEvent e, boolean released) {
+    private boolean checkMouseFocusWidget(TWidget widget, TMouseEvent e, boolean released) {
         if (mouseFocusWidget != null) {
             boolean wasInClickState = mouseFocusWidget.event().inClickState;
             TPoint eFocusPos = relative(widget, mouseFocusWidget, e.x, e.y);
@@ -180,13 +182,13 @@ class TEventManager {
     }
     
     
-    private static boolean sendMouseEventAndHandleMouseFocus(TWidget widget, TMouseEvent e) {
+    private boolean sendMouseEventAndHandleMouseFocus(TWidget widget, TMouseEvent e) {
         if (widget.event().mouseFocusSupport) {
             internalBindFocus(widget, e);
         }
         return sendEvent(widget, e);
     }
-    static boolean fireMouseButtonPressed(TWidget widget, TMouseEvent e) {
+    boolean fireMouseButtonPressed(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -204,14 +206,14 @@ class TEventManager {
         return sendMouseEventAndHandleMouseFocus(widget,e);
     }
     
-    private static boolean sendMouseEventAndHandleClickAndMouseFocus(TWidget widget, TMouseEvent e, boolean wasInClickState) {
+    private boolean sendMouseEventAndHandleClickAndMouseFocus(TWidget widget, TMouseEvent e, boolean wasInClickState) {
         if (widget.event().mouseFocusSupport) {
             internalFreeFocus(mouseFocusWidget, e);
         }
         checkDoubleClick(widget, e, wasInClickState);
         return sendEvent(widget, e);
     }
-    static boolean fireMouseButtonReleased(TWidget widget, TMouseEvent e) {
+    boolean fireMouseButtonReleased(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,true)) {
             return false;
         }
@@ -230,7 +232,7 @@ class TEventManager {
         return sendMouseEventAndHandleClickAndMouseFocus(widget, e, wasInClickState);
     }
     
-    static boolean fireMouseEnter(TWidget widget, TMouseEvent e) {
+    boolean fireMouseEnter(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -247,7 +249,7 @@ class TEventManager {
         return sendEvent(widget,e);
     }
     
-    static boolean fireMouseExit(TWidget widget, TMouseEvent e) {
+    boolean fireMouseExit(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -267,7 +269,7 @@ class TEventManager {
         return sendEvent(widget,e);
     }
     
-    static boolean fireMouseMove(TWidget widget, TMouseEvent e) {
+    boolean fireMouseMove(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -296,7 +298,7 @@ class TEventManager {
         return sendEvent(widget,e);
     }
     
-    static boolean fireScroll(TWidget widget, TScrollEvent e) {
+    boolean fireScroll(TWidget widget, TScrollEvent e) {
         ArrayList<TWidget> children = widget.getChildren();
         for (TWidget child : children) {
             int x = e.x - child.x;
@@ -318,25 +320,25 @@ class TEventManager {
      * @param e
      * @return
      */
-    static boolean fireKeyPressed(TWidget widget, TKeyEvent e) {
+    boolean fireKeyPressed(TWidget widget, TKeyEvent e) {
         if (keyboardFocusWidget!=null) {
             return sendEvent(keyboardFocusWidget, e);
         }
         return sendEvent(widget, e);
     }
     
-    static boolean fireKeyReleased(TWidget widget, TKeyEvent e) {
+    boolean fireKeyReleased(TWidget widget, TKeyEvent e) {
         if (keyboardFocusWidget!=null) {
             return sendEvent(keyboardFocusWidget, e);
         }
         return sendEvent(widget, e);
     }
     
-    static void firePositionChanged(TWidget w, TMoveEvent e) {
+    void firePositionChanged(TWidget w, TMoveEvent e) {
         sendEvent(w,e);
     }
     
-    static void fireSizeChanged(TWidget w, TResizeEvent e) {
+    void fireSizeChanged(TWidget w, TResizeEvent e) {
         sendEvent(w,e);
     }
     
@@ -348,7 +350,7 @@ class TEventManager {
      * @param e
      * @return true if event was handled or false if should be handled by parent
      */
-    private static boolean sendEvent(TWidget widget, TEvent event) {
+    private boolean sendEvent(TWidget widget, TEvent event) {
         return widget.event(event);
     }
     

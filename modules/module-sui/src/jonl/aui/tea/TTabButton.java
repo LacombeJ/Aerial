@@ -26,7 +26,7 @@ public class TTabButton extends TRadioButton {
     
     @Override
     protected void paint(TGraphics g) {
-        style().tabButton().paint(this,info,g);
+        style().tabButton().paint(this,info(),g);
         
         paint().emit(cb->cb.f(g));
     }

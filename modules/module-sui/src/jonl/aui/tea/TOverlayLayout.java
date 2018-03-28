@@ -10,7 +10,7 @@ public class TOverlayLayout extends TLayout {
         for (LayoutItem layoutItem : items()) {
             TOverlayWidgetItem item = (TOverlayWidgetItem)layoutItem;
             
-            TLayoutManager.setPositionAndSize(item.widget(), item.x, item.y, item.width, item.height);
+            manager().layout().setPositionAndSize(item.widget(), item.x, item.y, item.width, item.height);
         }
         
     }

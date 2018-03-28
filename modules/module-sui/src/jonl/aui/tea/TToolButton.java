@@ -21,7 +21,7 @@ public class TToolButton extends TButton implements ToolButton {
     
     @Override
     protected void paint(TGraphics g) {
-        style().toolButton().paint(this,info,g);
+        style().toolButton().paint(this,info(),g);
         paint().emit(cb->cb.f(g));
     }
     

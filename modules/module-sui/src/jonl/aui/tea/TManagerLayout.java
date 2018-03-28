@@ -17,7 +17,7 @@ import jonl.vmath.Mathi;
  * @author Jonathan
  *
  */
-public class TLayoutManager {
+public class TManagerLayout {
 
     /*
      * How layouts and resizing widgets work:
@@ -46,9 +46,9 @@ public class TLayoutManager {
      *
      * Technical:
      * 
-     * * A layout will have two functions invalidateLayout(), and invalidateSizePolicy()
-     *   - A widget will have a function invalidate() which will call it's layout parent invalidateSizePolicy()
-     *   - invalidateSizePolicy() will call it's parent invalidateSizePolicy() and so forth. When this reaches
+     * * A layout will have two functions invalidateLayout(), and invalidateSizeHint()
+     *   - A widget will have a function invalidate() which will call it's layout parent invalidateSizeHint()
+     *   - invalidateSizeHint() will call it's parent invalidateSizeHint() and so forth. When this reaches
      *     the root layout / widget, layout() will be peformed.
      *   - invalidateLayout()
      *   
@@ -61,8 +61,13 @@ public class TLayoutManager {
      *
      */
     
+    private TManager manager;
     
-    public static void invalidateSizeHint(TLayout layout) {
+    TManagerLayout(TManager manager) {
+        this.manager = manager;
+    }
+    
+    public void invalidateSizeHint(TLayout layout) {
         
         TSizeHint prevHint = layout.getSizeHint();
         TSizeHint newHint = layout.calculateSizeHint();
@@ -87,13 +92,13 @@ public class TLayoutManager {
         
     }
     
-    public static void invalidateLayout(TLayout layout) {
+    public void invalidateLayout(TLayout layout) {
         
         layout.layout();
         
     }
     
-    private static void invalidateWidgetLayout(TWidget widget) {
+    private void invalidateWidgetLayout(TWidget widget) {
         TLayout layout = widget.widgetLayout();
         if (layout != null) {
             invalidateLayout(layout);
@@ -103,29 +108,29 @@ public class TLayoutManager {
     // TODO for firePositionChanged and fireSizeChanged, only send events, don't call layout or anything else that should be handled by
     // this layout manager
     
-    public static void setPosition(TWidget w, int x, int y) {
+    public void setPosition(TWidget w, int x, int y) {
         int prevX = w.x;
         int prevY = w.y;
         w.x = x;
         w.y = y;
         if (prevX!=x || prevY!=y) {
             invalidateWidgetLayout(w);
-            TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            manager.event().firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }
     
-    public static void setSize(TWidget w, int width, int height) {
+    public void setSize(TWidget w, int width, int height) {
         int prevWidth = w.width;
         int prevHeight = w.height;
         w.width = width;
         w.height = height;
         if (prevWidth!=width || prevHeight!=height) {
             invalidateWidgetLayout(w);
-            TEventManager.fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
+            manager.event().fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
         }
     }
     
-    public static void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
+    public void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
         int prevX = w.x;
         int prevY = w.y;
         int prevWidth = w.width;

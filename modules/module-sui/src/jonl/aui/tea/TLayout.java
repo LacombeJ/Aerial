@@ -29,7 +29,7 @@ public abstract class TLayout implements Layout {
     
     TSizeHint sizeHint() {
         if (sizeHint == null) {
-            TLayoutManager.invalidateSizeHint(this);
+            manager().layout().invalidateSizeHint(this);
         }
         return sizeHint;
     }
@@ -40,6 +40,10 @@ public abstract class TLayout implements Layout {
     
     void validateSizeHint(TSizeHint hint) {
         sizeHint = hint;
+    }
+    
+    TManager manager() {
+        return parent.manager();
     }
     
     // ------------------------------------------------------------------------
@@ -89,7 +93,7 @@ public abstract class TLayout implements Layout {
     public void add(Widget widget) {
         add(new TWidgetItem(widget));
         if (parent != null) {
-            layout();
+            parent.invalidateLayout();
         }
     }
     

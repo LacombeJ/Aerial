@@ -13,11 +13,11 @@ public class TSliderLayout extends TLayout {
         if (slider.align == Align.HORIZONTAL) {
             int x = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.width - button.width));
             int y = slider.height/2 - button.height/2;
-            TLayoutManager.setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
+            manager().layout().setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
         } else {
             int x = slider.width/2 - button.width/2;
             int y = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.height - button.height));
-            TLayoutManager.setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
+            manager().layout().setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
         }
     }
     

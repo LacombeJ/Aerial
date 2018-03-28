@@ -39,18 +39,16 @@ public abstract class TWidget implements Widget {
     
     private final Signal<Callback<Graphics>> paint = new Signal<>();
     
-    TStyle style = null;
+    private TUIManager ui = null;
     
-    TWidgetInfo info = new TWidgetInfo();
-    
-    TCaller caller = new TCaller();
+    private TWidgetInfo info = new TWidgetInfo();
+    private TCaller caller = new TCaller();
     
     // Variables used by event handler
     private TEventHandler event = new TEventHandler();
     
     public TWidget() {
-        
-        TUIManager.instance().enroll(this);
+        ui = TUIManager.instance();
         
         info.put("this", this);
         
@@ -60,6 +58,10 @@ public abstract class TWidget implements Widget {
             info.put(key, value);
             return true;
         });
+    }
+    
+    {
+        
     }
     
     // AUI Widget Methods
@@ -178,8 +180,16 @@ public abstract class TWidget implements Widget {
     
     // ------------------------------------------------------------------------
     
+    protected TManager _root_manager() {
+        return null;
+    }
+    
+    protected TManager manager() {
+        return root()._root_manager();
+    }
+    
     protected TStyle style() {
-        return style;
+        return ui.getStyle();
     }
     
     protected TLayout widgetLayout() {
@@ -199,15 +209,15 @@ public abstract class TWidget implements Widget {
     }
 
     protected boolean hasFocus() {
-        return TEventManager.hasKeyFocus(this);
+        return manager().event().hasKeyFocus(this);
     }
     
     protected boolean grabKeyFocus() {
-        return TEventManager.grabKeyFocus(this);
+        return manager().event().grabKeyFocus(this);
     }
     
     protected void releaseKeyFocus() {
-        TEventManager.releaseKeyFocus(this);
+        manager().event().releaseKeyFocus(this);
     }
     
     protected void setMouseFocusSupport(boolean enable) {
@@ -380,8 +390,8 @@ public abstract class TWidget implements Widget {
      * Call whenever layout should change
      */
     void invalidateLayout() {
-        if (layout != null) {
-            TLayoutManager.invalidateLayout(layout);
+        if (manager() != null && layout != null) {
+            manager().layout().invalidateLayout(layout);
         }
     }
     
@@ -389,8 +399,8 @@ public abstract class TWidget implements Widget {
      * Call whenever min, max, policy, or size hint is invalidated
      */
     void invalidateSizeHint() {
-        if (layout != null) {
-            TLayoutManager.invalidateSizeHint(layout);
+        if (manager() != null && parentLayout != null) {
+            manager().layout().invalidateSizeHint(parentLayout);
         }
     }
     

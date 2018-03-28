@@ -6,11 +6,6 @@ import java.util.ArrayDeque;
 
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
-import jonl.aui.tea.TWindowEvent.Move;
-import jonl.aui.tea.TWindowEvent.Resize;
-import jonl.aui.tea.TWindowEvent.SetDecorated;
-import jonl.aui.tea.TWindowEvent.SetResizable;
-import jonl.aui.tea.TWindowEvent.SetVisible;
 import jonl.aui.tea.event.TEventType;
 import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
@@ -101,7 +96,7 @@ class TWindowManager {
         synchronized (lock) {
             TPoint p = getPositionAlignment(halign, valign);
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Move(p.x,p.y));
+                windowEventQueue.addLast(new TWindowEvent.Move(p.x,p.y));
             } else {
                 window.x = p.x;
                 window.y = p.y;
@@ -163,12 +158,12 @@ class TWindowManager {
             });
             
             glWindow.addPositionListener((x,y,prevX,prevY)->{
-                TLayoutManager.setPosition(window, x, y);
+                window.manager().layout().setPosition(window, x, y);
                 //TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
             });
             
             glWindow.addSizeListener((width,height,prevWidth,prevHeight)->{
-                TLayoutManager.setSize(window, width, height);
+                window.manager().layout().setSize(window, width, height);
                 //TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
                 if (graphics!=null) {
                     ortho = Matrix4.orthographic(0,width,height,0,-1,1);
@@ -194,22 +189,22 @@ class TWindowManager {
                     synchronized (lock) {
                         while (!windowEventQueue.isEmpty()) {
                             TWindowEvent we = windowEventQueue.pollFirst();
-                            if (we instanceof Move) {
-                                Move move = (Move) we;
+                            if (we instanceof TWindowEvent.Move) {
+                                TWindowEvent.Move move = (TWindowEvent.Move) we;
                                 glWindow.setPosition(move.x,move.y);
                                 window.x = move.x;
                                 window.y = move.y;
-                            } else if (we instanceof Resize) {
-                                Resize resize = (Resize) we;
+                            } else if (we instanceof TWindowEvent.Resize) {
+                                TWindowEvent.Resize resize = (TWindowEvent.Resize) we;
                                 glWindow.setSize(resize.width,resize.height);
                                 window.width = resize.width;
                                 window.height = resize.height;
-                            } else if (we instanceof SetVisible) {
-                                SetVisible visible = (SetVisible) we;
+                            } else if (we instanceof TWindowEvent.SetVisible) {
+                                TWindowEvent.SetVisible visible = (TWindowEvent.SetVisible) we;
                                 glWindow.setVisible(visible.visible);
-                            } else if (we instanceof SetResizable) {
+                            } else if (we instanceof TWindowEvent.SetResizable) {
                                 //GLFW does not support toggling window resizing after creation
-                            } else if (we instanceof SetDecorated) {
+                            } else if (we instanceof TWindowEvent.SetDecorated) {
                                // GLFW does not support toggling window decoration after creation
                             }
                         }
@@ -233,7 +228,7 @@ class TWindowManager {
         //TODO swap this with something for new layout manager
         //This is here because for TFrames (internally undecorated windows) , the GLFW
         //size changed is not called on creation.
-        TLayoutManager.invalidateLayout(window.widgetLayout());
+        window.manager().layout().invalidateLayout(window.widgetLayout());
         //window.layoutDirtyChildren();
         
         graphics.paint(window);
@@ -250,7 +245,7 @@ class TWindowManager {
         window.x = x;
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Move(x, window.y));
+                windowEventQueue.addLast(new TWindowEvent.Move(x, window.y));
             } else {
                 isXAligned = false;
             }
@@ -261,7 +256,7 @@ class TWindowManager {
         window.y = y;
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Move(window.x, y));
+                windowEventQueue.addLast(new TWindowEvent.Move(window.x, y));
             } else {
                 isYAligned = false;
             }
@@ -272,7 +267,7 @@ class TWindowManager {
         window.width = width;
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Resize(width,window.height));
+                windowEventQueue.addLast(new TWindowEvent.Resize(width,window.height));
             } else {
                 usePolicyWidth = false;
             }
@@ -283,7 +278,7 @@ class TWindowManager {
         window.height = height;
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new Resize(window.width,height));
+                windowEventQueue.addLast(new TWindowEvent.Resize(window.width,height));
             } else {
                 usePolicyHeight = false;
             }
@@ -293,7 +288,7 @@ class TWindowManager {
     void setVisible(boolean visible) {
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new SetVisible(visible));
+                windowEventQueue.addLast(new TWindowEvent.SetVisible(visible));
             } else {
                 this.visible = visible;
             }
@@ -303,7 +298,7 @@ class TWindowManager {
     void setResizable(boolean resizable) {
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new SetResizable(resizable));
+                windowEventQueue.addLast(new TWindowEvent.SetResizable(resizable));
             } else {
                 this.resizable = resizable;
             }
@@ -313,7 +308,7 @@ class TWindowManager {
     void setDecorated(boolean decorated) {
         synchronized (lock) {
             if (glWindow!=null) {
-                windowEventQueue.addLast(new SetDecorated(decorated));
+                windowEventQueue.addLast(new TWindowEvent.SetDecorated(decorated));
             } else {
                 this.decorated = decorated;
             }
@@ -349,10 +344,10 @@ class TWindowManager {
         // Mouse button events
         for (int i=Input.MB_LEFT; i<Input.MB_COUNT; i++) {
             if (input.isButtonPressed(i)) {
-                TEventManager.fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy));
+                window.manager().event().fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy));
             }
             if (input.isButtonReleased(i)) {
-                TEventManager.fireMouseButtonReleased(window, new TMouseEvent(TEventType.MouseButtonRelease, i, x, y, x, y, dx, dy));
+                window.manager().event().fireMouseButtonReleased(window, new TMouseEvent(TEventType.MouseButtonRelease, i, x, y, x, y, dx, dy));
             }
         }
         
@@ -360,22 +355,22 @@ class TWindowManager {
         if (dx!=0 || dy!=0) {
             int prevX = x - dx;
             int prevY = y - dy;
-            boolean inNow = TEventManager.within(window,x,y);
-            boolean inBefore = TEventManager.within(window,prevX,prevY);
+            boolean inNow = TManagerEvent.within(window,x,y);
+            boolean inBefore = TManagerEvent.within(window,prevX,prevY);
             if (inNow && !inBefore) {
-                TEventManager.fireMouseEnter(window, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
+                window.manager().event().fireMouseEnter(window, new TMouseEvent(TEventType.MouseEnter, -1, x, y, x, y, dx, dy));
             }
             if (!inNow && inBefore) {
-                TEventManager.fireMouseExit(window, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
+                window.manager().event().fireMouseExit(window, new TMouseEvent(TEventType.MouseExit, -1, x, y, x, y, dx, dy));
             }
-            TEventManager.fireMouseMove(window, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
+            window.manager().event().fireMouseMove(window, new TMouseEvent(TEventType.MouseMove, -1, x, y, x, y, dx, dy));
         }
         
         // Mouse scroll wheel events
         int sx = (int) input.getScrollX();
         int sy = (int) input.getScrollY();
         if (sx!=0 || sy!=0) {
-            TEventManager.fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
+            window.manager().event().fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
         }
         
         // Key events
@@ -391,10 +386,10 @@ class TWindowManager {
                 mod |= TKeyEvent.ALT_MOD;
             }
             if (input.isKeyPressed(i)) {
-                TEventManager.fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod));
+                window.manager().event().fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod));
             }
             if (input.isKeyReleased(i)) {
-                TEventManager.fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod));
+                window.manager().event().fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod));
             }
         }
     }
@@ -420,6 +415,47 @@ class TWindowManager {
             glWindow.setCursor(Window.VRESIZE_CURSOR);
             break;
         }
+    }
+    
+    static abstract class TWindowEvent {
+        
+        public static class Move extends TWindowEvent {
+            int x, y;
+            Move(int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+        
+        static class Resize extends TWindowEvent {
+            int width, height;
+            Resize(int width, int height) {
+                this.width = width;
+                this.height = height;
+            }
+        }
+        
+        static class SetVisible extends TWindowEvent {
+            boolean visible;
+            SetVisible(boolean visible) {
+                this.visible = visible;
+            }
+        }
+        
+        static class SetResizable extends TWindowEvent {
+            boolean resizable;
+            SetResizable(boolean resizable) {
+                this.resizable = resizable;
+            }
+        }
+        
+        static class SetDecorated extends TWindowEvent {
+            boolean decorated;
+            SetDecorated(boolean decorated) {
+                this.decorated = decorated;
+            }
+        }
+        
     }
     
 }

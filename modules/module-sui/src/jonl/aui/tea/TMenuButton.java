@@ -14,12 +14,12 @@ public class TMenuButton extends TButton implements MenuButton {
     
     @Override
     protected TSizeHint sizeHint() {
-        return style().menuButton().getSizeHint(this,info);
+        return style().menuButton().getSizeHint(this,info());
     }
     
     @Override
     protected void paint(TGraphics g) {
-        style().menuButton().paint(this,info,g);
+        style().menuButton().paint(this,info(),g);
         paint().emit(cb->cb.f(g));
     }
     

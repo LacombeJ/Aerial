@@ -36,6 +36,7 @@ public class TLineEdit extends TWidget implements LineEdit {
     @Override
     public void setText(String text) {
         this.text = text;
+        invalidateSizeHint();
     }
     
     @Override
@@ -54,13 +55,13 @@ public class TLineEdit extends TWidget implements LineEdit {
     @Override
     protected void paint(TGraphics g) {
         
-        float fIntensityValue = info.get("fIntensityValue", 0f);
+        float fIntensityValue = info().get("fIntensityValue", 0f);
         
-        float fMaxValue = info.get("fMaxValue", 30);
-        TColor cNormal = info.get("cNormal", TColor.BLACK);
-        TColor cHover = info.get("cHover", TColor.fromInt(0, 0, 255));
+        float fMaxValue = info().get("fMaxValue", 30);
+        TColor cNormal = info().get("cNormal", TColor.BLACK);
+        TColor cHover = info().get("cHover", TColor.fromInt(0, 0, 255));
         
-        if (info.get("bIsMouseWithin", false)) {
+        if (info().get("bIsMouseWithin", false)) {
             if (fIntensityValue<fMaxValue) {
                 fIntensityValue++;
                 
@@ -71,7 +72,7 @@ public class TLineEdit extends TWidget implements LineEdit {
             }
         }
         
-        info.put("fIntensityValue", fIntensityValue);
+        info().put("fIntensityValue", fIntensityValue);
         
         float v = fIntensityValue / fMaxValue;
         Vector4 primary = cNormal.toVector();

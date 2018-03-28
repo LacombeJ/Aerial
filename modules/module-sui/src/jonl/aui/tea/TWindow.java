@@ -13,11 +13,13 @@ public class TWindow extends TWidget implements Window {
 
     TWidget widget;
     
-    protected TWindowManager manager;
+    private TManager manager;
+    protected TWindowManager windowManager;
     
     TWindow(TLayout layout) {
         super();
-        this.manager = new TWindowManager(this);
+        manager = new TManager();
+        windowManager = new TWindowManager(this);
         setWidgetLayout(layout);
     }
     
@@ -25,9 +27,13 @@ public class TWindow extends TWidget implements Window {
         this(new TWindowLayout());
     }
     
+    protected TManager _root_manager() {
+        return manager;
+    }
+    
     @Override
     public void create() {
-        manager.create();
+        windowManager.create();
     }
 
     @Override
@@ -43,77 +49,77 @@ public class TWindow extends TWidget implements Window {
 
     @Override
     public String title() {
-        return manager.title();
+        return windowManager.title();
     }
 
     @Override
     public void setTitle(String title) {
-        manager.setTitle(title);
+        windowManager.setTitle(title);
     }
 
     @Override
     public void setPosition(HAlign halign, VAlign valign) {
-        manager.setPosition(halign, valign);
+        windowManager.setPosition(halign, valign);
     }
 
     @Override
     public void setX(int x) {
-        manager.setX(x);
+        windowManager.setX(x);
     }
 
     @Override
     public void setY(int y) {
-        manager.setY(y);
+        windowManager.setY(y);
     }
 
     @Override
     public void setWidth(int width) {
-        manager.setWidth(width);
+        windowManager.setWidth(width);
     }
 
     @Override
     public void setHeight(int height) {
-        manager.setHeight(height);
+        windowManager.setHeight(height);
     }
 
     @Override
     public void setVisible(boolean visible) {
-        manager.setVisible(visible);
+        windowManager.setVisible(visible);
     }
 
     @Override
     public void setResizable(boolean resizable) {
-        manager.setResizable(resizable);
+        windowManager.setResizable(resizable);
     }
     
     @Override
     public void setDecorated(boolean decorated) {
-        manager.setDecorated(decorated);
+        windowManager.setDecorated(decorated);
     }
     
     public jonl.jgl.Window window() {
-        return manager.window();
+        return windowManager.window();
     }
     
     public GraphicsLibrary gl() {
-        return manager.getGL();
+        return windowManager.getGL();
     }
     
     public Input input() {
-        return manager.input();
+        return windowManager.input();
     }
     
     public void setLoader(Loader loader) {
-        manager.setLoader(loader);
+        windowManager.setLoader(loader);
     }
     
     public void setCloser(Closer closer) {
-        manager.setCloser(closer);
+        windowManager.setCloser(closer);
     }
     
     @Override
     public void setCursor(TCursor cursor) {
-        manager.setCursor(cursor);
+        windowManager.setCursor(cursor);
     }
     
 }
