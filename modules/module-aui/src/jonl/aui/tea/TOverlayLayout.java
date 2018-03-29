@@ -10,13 +10,13 @@ public class TOverlayLayout extends TLayout {
         for (LayoutItem layoutItem : items()) {
             TOverlayWidgetItem item = (TOverlayWidgetItem)layoutItem;
             
-            manager().layout().setPositionAndSize(item.widget(), item.x, item.y, item.width, item.height);
+            setPositionAndSize(item.widget(), item.x, item.y, item.width, item.height);
         }
         
     }
 
     @Override
-    TSizeHint calculateSizeHint() {
+    public TSizeHint calculateSizeHint() {
         return new TSizeHint();
     }
     

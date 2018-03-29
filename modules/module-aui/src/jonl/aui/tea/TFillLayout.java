@@ -14,7 +14,7 @@ public class TFillLayout extends TLayout {
     }
     
     @Override
-    void layout() {
+    public void layout() {
         if (!isEmpty()) {
             TLayoutItem item = getItem(0);
             
@@ -25,19 +25,19 @@ public class TFillLayout extends TLayout {
             int sy = margin().top;
             
             if (item instanceof TWidgetItem) {
-                int wWidth = TManagerLayout.allocate(TManagerLayout.getWidthPreference(item), width);
-                int wHeight = TManagerLayout.allocate(TManagerLayout.getHeightPreference(item), height);
-                manager().layout().setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
+                int wWidth = allocate(widthPref(item), width);
+                int wHeight = allocate(heightPref(item), height);
+                setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
             }
         }
     }
     
     @Override
-    TSizeHint calculateSizeHint() {
+    public TSizeHint calculateSizeHint() {
         TLayoutItem item = getItem(0);
         
-        int width = TManagerLayout.freeAllocate(TManagerLayout.getWidthPreference(item));
-        int height = TManagerLayout.freeAllocate(TManagerLayout.getHeightPreference(item));
+        int width = freeAllocate(widthPref(item));
+        int height = freeAllocate(heightPref(item));
         
         width += margin().width();
         width += margin().height();

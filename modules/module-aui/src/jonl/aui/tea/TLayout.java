@@ -5,8 +5,13 @@ import java.util.ArrayList;
 import jonl.aui.Layout;
 import jonl.aui.LayoutItem;
 import jonl.aui.Margin;
+import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
+import jonl.aui.tea.TLayoutManager.SizePreference;
 import jonl.jutils.func.List;
+import jonl.jutils.func.Wrapper;
+import jonl.jutils.structs.ArrayList2D;
+import jonl.vmath.Mathi;
 
 public abstract class TLayout implements Layout {
 
@@ -23,13 +28,13 @@ public abstract class TLayout implements Layout {
         
     }
     
-    abstract void layout();
+    public abstract void layout();
     
-    abstract TSizeHint calculateSizeHint();
+    public abstract TSizeHint calculateSizeHint();
     
     TSizeHint sizeHint() {
         if (sizeHint == null) {
-            manager().layout().invalidateSizeHint(this);
+            invalidateSizeHint();
         }
         return sizeHint;
     }
@@ -92,9 +97,6 @@ public abstract class TLayout implements Layout {
     @Override
     public void add(Widget widget) {
         add(new TWidgetItem(widget));
-        if (parent != null) {
-            parent.invalidateLayout();
-        }
     }
     
     @Override
@@ -102,7 +104,11 @@ public abstract class TLayout implements Layout {
         if (items.add((TLayoutItem) item)) {
             ((TLayoutItem)item).layout = this;
             if (item instanceof TWidgetItem) {
-                ((TWidgetItem) item).asWidget().parentLayout = this;
+                TWidget widget = ((TWidgetItem) item).asWidget();
+                widget.parentLayout = this;
+            }
+            if (parent != null) {
+                parent.invalidateLayout();
             }
         }
     }
@@ -203,5 +209,99 @@ public abstract class TLayout implements Layout {
     public void setSpacing(int spacing) {
         this.spacing = spacing;
     }
+    
+    // ------------------------------------------------------------------------
+    
+    protected void invalidateLayout() {
+        TLayoutManager.invalidateLayout(this);
+    }
+    
+    protected void invalidateSizeHint() {
+        TLayoutManager.invalidateSizeHint(this);
+    }
+    
+    protected void setPosition(TWidget w, int x, int y) {
+        TLayoutManager.setPosition(w, x, y);
+    }
+    
+    protected void setSize(TWidget w, int width, int height) {
+        TLayoutManager.setSize(w, width, height);
+    }
+    
+    protected void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
+        TLayoutManager.setPositionAndSize(w, x, y, width, height);
+    }
+    
+    protected int freeWidth(TWidget widget) {
+        return TLayoutManager.freeWidth(widget);
+    }
+    
+    protected int freeHeight(TWidget widget) {
+        return TLayoutManager.freeHeight(widget);
+    }
+    
+    protected int freeWidth(TLayoutItem item) {
+        return TLayoutManager.freeWidth(item);
+    }
+    
+    protected int freeHeight(TLayoutItem item) {
+        return TLayoutManager.freeHeight(item);
+    }
 
+    protected int freeWidth(ArrayList<TLayoutItem> items) {
+        return TLayoutManager.freeWidth(items);
+    }
+    
+    protected int freeHeight(ArrayList<TLayoutItem> items) {
+        return TLayoutManager.freeHeight(items);
+    }
+    
+    protected SizePreference widthPref(TLayoutItem item) {
+        return TLayoutManager.getWidthPreference(item);
+    }
+    
+    protected SizePreference heightPref(TLayoutItem item) {
+        return TLayoutManager.getHeightPreference(item);
+    }
+    
+    protected SizePreference widthPref(TWidget widget) {
+        return TLayoutManager.getWidthPreference(widget);
+    }
+    
+    protected SizePreference heightPref(TWidget widget) {
+        return TLayoutManager.getHeightPreference(widget);
+    }
+    
+    protected SizePreference[] widthPrefs() {
+        return TLayoutManager.getWidthPreferences(this);
+    }
+    
+    protected SizePreference[] heightPrefs() {
+        return TLayoutManager.getHeightPreferences(this);
+    }
+    
+    protected int freeAllocate(SizePreference pref) {
+        return TLayoutManager.freeAllocate(pref);
+    }
+    
+    protected int freeAllocate(SizePreference[] prefs) {
+        return TLayoutManager.freeAllocate(prefs);
+    }
+    
+    protected int freeMaxAllocate(SizePreference[] prefs) {
+        return TLayoutManager.freeMaxAllocate(prefs);
+    }
+    
+    protected int allocate(SizePreference pref, int dimension) {
+        return TLayoutManager.allocate(pref, dimension);
+    }
+    
+    /**
+     * Allocates sizes based on preferences such that added sizes are within their bounds and the
+     * bounds of the given dimension<br>
+     */
+    protected int[] allocate(SizePreference[] prefs, int dimension, Wrapper<Integer> extra) {
+        return TLayoutManager.allocate(prefs, dimension, extra);
+    }
+    
 }

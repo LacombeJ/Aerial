@@ -182,8 +182,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
             double ratio = this.ratio;
             switch (align) {
             case HORIZONTAL:
-                int widgetOneWidth = TManagerLayout.freeWidth(widgetOne);
-                int widgetTwoWidth = TManagerLayout.freeWidth(widgetTwo);
+                int widgetOneWidth = TLayoutManager.freeWidth(widgetOne);
+                int widgetTwoWidth = TLayoutManager.freeWidth(widgetTwo);
                 int midWidth = width - widgetOneWidth - widgetTwoWidth - widgetLayout().spacing();
                 if (midWidth != 0) {
                     int spaceHalfLeft = widgetLayout().spacing() / 2;
@@ -195,8 +195,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
                 }
                 break;
             case VERTICAL:
-                int widgetOneHeight = TManagerLayout.freeHeight(widgetOne);
-                int widgetTwoHeight = TManagerLayout.freeHeight(widgetTwo);
+                int widgetOneHeight = TLayoutManager.freeHeight(widgetOne);
+                int widgetTwoHeight = TLayoutManager.freeHeight(widgetTwo);
                 int midHeight = height - widgetOneHeight - widgetTwoHeight - widgetLayout().spacing();
                 if (midHeight != 0) {
                     int spaceHalfTop = widgetLayout().spacing() / 2;

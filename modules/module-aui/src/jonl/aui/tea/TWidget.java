@@ -387,20 +387,22 @@ public abstract class TWidget implements Widget {
     // ------------------------------------------------------------------------
     
     /**
-     * Call whenever layout should change
+     * This calls layout().invalidateSizeHint(). Call whenever layout should change.
      */
     void invalidateLayout() {
         if (manager() != null && layout != null) {
-            manager().layout().invalidateLayout(layout);
+            //manager().layout().invalidateLayout(layout);
+            layout.invalidateLayout();
         }
     }
     
     /**
-     * Call whenever min, max, policy, or size hint is invalidated
+     * This called parent's layout().invalidateSizeHint(). Call whenever min, max, policy, or size hint is invalidated and needs to be recalculated.
      */
     void invalidateSizeHint() {
         if (manager() != null && parentLayout != null) {
-            manager().layout().invalidateSizeHint(parentLayout);
+            //manager().layout().invalidateSizeHint(parentLayout);
+            parentLayout.invalidateSizeHint();
         }
     }
     

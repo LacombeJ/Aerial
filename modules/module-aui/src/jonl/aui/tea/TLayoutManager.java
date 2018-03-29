@@ -17,7 +17,7 @@ import jonl.vmath.Mathi;
  * @author Jonathan
  *
  */
-public class TManagerLayout {
+class TLayoutManager {
 
     /*
      * How layouts and resizing widgets work:
@@ -61,13 +61,7 @@ public class TManagerLayout {
      *
      */
     
-    private TManager manager;
-    
-    TManagerLayout(TManager manager) {
-        this.manager = manager;
-    }
-    
-    public void invalidateSizeHint(TLayout layout) {
+    public static void invalidateSizeHint(TLayout layout) {
         
         TSizeHint prevHint = layout.getSizeHint();
         TSizeHint newHint = layout.calculateSizeHint();
@@ -92,13 +86,13 @@ public class TManagerLayout {
         
     }
     
-    public void invalidateLayout(TLayout layout) {
+    public static void invalidateLayout(TLayout layout) {
         
         layout.layout();
         
     }
     
-    private void invalidateWidgetLayout(TWidget widget) {
+    private static void invalidateWidgetLayout(TWidget widget) {
         TLayout layout = widget.widgetLayout();
         if (layout != null) {
             invalidateLayout(layout);
@@ -108,29 +102,29 @@ public class TManagerLayout {
     // TODO for firePositionChanged and fireSizeChanged, only send events, don't call layout or anything else that should be handled by
     // this layout manager
     
-    public void setPosition(TWidget w, int x, int y) {
+    public static void setPosition(TWidget w, int x, int y) {
         int prevX = w.x;
         int prevY = w.y;
         w.x = x;
         w.y = y;
         if (prevX!=x || prevY!=y) {
             invalidateWidgetLayout(w);
-            manager.event().firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            w.manager().event().firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }
     
-    public void setSize(TWidget w, int width, int height) {
+    public static void setSize(TWidget w, int width, int height) {
         int prevWidth = w.width;
         int prevHeight = w.height;
         w.width = width;
         w.height = height;
         if (prevWidth!=width || prevHeight!=height) {
             invalidateWidgetLayout(w);
-            manager.event().fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
+            w.manager().event().fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
         }
     }
     
-    public void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
+    public static void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
         int prevX = w.x;
         int prevY = w.y;
         int prevWidth = w.width;

@@ -158,12 +158,12 @@ class TWindowManager {
             });
             
             glWindow.addPositionListener((x,y,prevX,prevY)->{
-                window.manager().layout().setPosition(window, x, y);
+                TLayoutManager.setPosition(window, x, y);
                 //TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
             });
             
             glWindow.addSizeListener((width,height,prevWidth,prevHeight)->{
-                window.manager().layout().setSize(window, width, height);
+                TLayoutManager.setSize(window, width, height);
                 //TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
                 if (graphics!=null) {
                     ortho = Matrix4.orthographic(0,width,height,0,-1,1);
@@ -228,7 +228,7 @@ class TWindowManager {
         //TODO swap this with something for new layout manager
         //This is here because for TFrames (internally undecorated windows) , the GLFW
         //size changed is not called on creation.
-        window.manager().layout().invalidateLayout(window.widgetLayout());
+        window.invalidateLayout();
         //window.layoutDirtyChildren();
         
         graphics.paint(window);

@@ -8,7 +8,7 @@ public class TFrameLayout extends TLayout {
     }
     
     @Override
-    void layout() {
+    public void layout() {
         if (!isEmpty()) {
             TFrame frame = (TFrame) parent;
             
@@ -20,21 +20,21 @@ public class TFrameLayout extends TLayout {
             
             if (frame.widget() != null) {
                 TLayoutItem item = getItem(indexOf(frame.widget()));
-                int wWidth = TManagerLayout.allocate(TManagerLayout.getWidthPreference(item), width);
-                int wHeight = TManagerLayout.allocate(TManagerLayout.getHeightPreference(item), height);
-                manager().layout().setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
+                int wWidth = allocate(widthPref(item), width);
+                int wHeight = allocate(heightPref(item), height);
+                setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
             }
             
             if (frame.frameBar() != null)
             {
                 TLayoutItem barItem = getItem(indexOf(frame.frameBar()));
-                manager().layout().setPositionAndSize(barItem.asWidget(), sx, 0, parent.width, frame.insets().top);
+                setPositionAndSize(barItem.asWidget(), sx, 0, parent.width, frame.insets().top);
             }
         }
     }
     
     @Override
-    TSizeHint calculateSizeHint() {
+    public TSizeHint calculateSizeHint() {
         TSizeHint hint = new TSizeHint();
         
         return hint;

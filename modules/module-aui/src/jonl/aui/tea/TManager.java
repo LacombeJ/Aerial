@@ -7,16 +7,10 @@ public class TManager {
      * There should exist one instance of this per root widget / window.
      */
     
-    private TManagerLayout layout;
     private TManagerEvent event;
     
     TManager() {
-        layout = new TManagerLayout(this);
         event = new TManagerEvent();
-    }
-    
-    public TManagerLayout layout() {
-        return layout;
     }
     
     public TManagerEvent event() {
