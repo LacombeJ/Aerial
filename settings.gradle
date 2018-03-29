@@ -4,7 +4,7 @@
 include ":jge"
 
 include ":modules:module-jgl"
-include ":modules:module-sui"
+include ":modules:module-aui"
 include ":modules:module-utils"
 include ":modules:module-vmath"
 

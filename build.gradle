@@ -44,7 +44,7 @@ subprojects {
 dependencies {
     compile project(':jge')
     compile project(':modules:module-jgl')
-    compile project(':modules:module-sui')
+    compile project(':modules:module-aui')
     compile project(':modules:module-utils')
     compile project(':modules:module-vmath')
 }
