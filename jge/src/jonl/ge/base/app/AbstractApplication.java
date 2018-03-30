@@ -14,6 +14,7 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Time;
 import jonl.ge.core.Window;
 import jonl.ge.core.Input.CursorState;
+import jonl.jutils.call.Caller;
 import jonl.jutils.misc.SystemUtils;
 import jonl.jutils.structs.AttributeMap;
 
@@ -27,6 +28,7 @@ public abstract class AbstractApplication {
     protected Service service;
     protected AttributeMap info;
     protected HashMap<String,Attachment> attachments;
+    protected Caller caller;
 	
     protected AbstractApplication() {
     	if (SystemUtils.isWindows()) {
@@ -39,6 +41,7 @@ public abstract class AbstractApplication {
         service = new Service();
         info = new AttributeMap();
         attachments = new HashMap<>();
+        caller = new Caller();
         
         add(new LightModule());
         add(new TextModule());
@@ -113,6 +116,10 @@ public abstract class AbstractApplication {
     
     public String info(String key) {
         return info.getString(key);
+    }
+    
+    public Object call(String call) {
+        return caller.call(call);
     }
     
 }

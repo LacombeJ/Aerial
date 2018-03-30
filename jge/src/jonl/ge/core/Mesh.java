@@ -11,7 +11,8 @@ public class Mesh extends Component {
     
     Geometry geometry; //TODO hide variables, getters and setters?
     Material material = null;
-    Mode mode = Mode.TRIANGLES;
+    Mode mode;
+    
     boolean wireframe = false;
     
     public enum Mode {
@@ -21,9 +22,14 @@ public class Mesh extends Component {
         POINTS;
     }
     
-    public Mesh(Geometry mesh, Material material) {
+    public Mesh(Geometry mesh, Material material, Mode mode) {
         this.geometry = mesh;
         this.material = material;
+        this.mode = mode;
+    }
+    
+    public Mesh(Geometry mesh, Material material) {
+        this(mesh, material, Mode.TRIANGLES);
     }
     
     public Geometry getGeometry() {

@@ -1,22 +1,22 @@
-package jonl.aui.tea.call;
+package jonl.jutils.call;
 
 import java.util.HashMap;
 
 import jonl.jutils.func.Function;
 
-public class TCaller {
+public class Caller {
 
-    private HashMap<String, Function<TArgs,Object>> functionMaps = new HashMap<>();
+    private HashMap<String, Function<Args,Object>> functionMaps = new HashMap<>();
     
     public Object call(String call) {
         
-        TParsedCall parsed = TParser.call(call);
+        ParsedCall parsed = Parser.call(call);
         
         if (functionMaps.containsKey(parsed.label)) {
             
-            Function<TArgs,Object> function = functionMaps.get(parsed.label);
+            Function<Args,Object> function = functionMaps.get(parsed.label);
             
-            TArgs args = new TArgs(parsed.args);
+            Args args = new Args(parsed.args);
             
             return function.f(args);
         }
@@ -24,7 +24,7 @@ public class TCaller {
         return null;
     }
     
-    public void implement(String label, Function<TArgs,Object> function) {
+    public void implement(String label, Function<Args,Object> function) {
         functionMaps.put(label, function);
     }
     
@@ -32,7 +32,7 @@ public class TCaller {
         return functionMaps.containsKey(label);
     }
     
-    public Function<TArgs,Object> implementation(String label) {
+    public Function<Args,Object> implementation(String label) {
         return functionMaps.get(label);
     }
     

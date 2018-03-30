@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Set;
 
+import jonl.jutils.io.Console;
 import jonl.jutils.structs.ObjectSet;
 
 /**
@@ -25,6 +26,9 @@ import jonl.jutils.structs.ObjectSet;
  *
  */
 public class BufferPool {
+    
+    // TODO do not use allocateDirect ?
+    // https://blog.lwjgl.org/memory-management-in-lwjgl-3/
     
     /**
      * Limit of size difference when getting a buffer of a close size.

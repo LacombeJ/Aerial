@@ -15,6 +15,7 @@ import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 import jonl.jutils.func.Tuple2;
 import jonl.jutils.misc.BufferPool;
+import jonl.jutils.parallel.Processor;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
@@ -58,6 +59,7 @@ class GLRenderer {
             glmesh = gl.glGenMesh(mesh.vertices, mesh.normals, mesh.texCoords, mesh.indices);
             checkUpdateTangents(mesh, glmesh);
             meshMap.put(mesh,glmesh);
+            
         } else if (mesh.update) {
         	if (mesh.vertices!=null) glmesh.setVertexAttrib(mesh.vertices, 3);
         	if (mesh.normals!=null) glmesh.setNormalAttrib(mesh.normals, 3);
@@ -113,33 +115,6 @@ class GLRenderer {
         }
         return glbuffer;
     }
-    
-    
-    
-    /* ******************************************************************************** */
-    
-    // We want to create a texture for each text object (to save rendering time in matrix
-    // multiplication and rendering each character as a separate texture
-    // TODO remove font textures that haven't been used in a long time
-    /*
-    jonl.jgl.Texture getOrCreateTextTexture(Text text) {
-        jonl.jgl.Texture gltexture = textureMap.get(texture);
-        if (gltexture==null) {
-            if (texture.data==null) {
-                gltexture = gl.glGenTexture(texture.width,texture.height,
-                        texture.format.format,texture.wrap.wrap,texture.filter.filter);
-            } else {
-                gltexture = gl.glGenTexture(texture.data,texture.width,texture.height,
-                        texture.format.format,texture.wrap.wrap,texture.filter.filter);
-            }
-            textureMap.put(texture,gltexture);
-        }
-        return gltexture;
-    }
-    */
-    
-    
-    /* ******************************************************************************** */
     
     // -----------------------------------------------------------------------------------
     
@@ -218,24 +193,23 @@ class GLRenderer {
     static void checkUpdateTangents(BaseGeometry mesh, jonl.jgl.Mesh glmesh) {
     	if (mesh.calculateTangents) {
         	Tuple2<float[],float[]> calculated = calculateTangents(mesh.vertices, mesh.normals, mesh.texCoords, mesh.indices);
-        	float[] tangents = calculated.x;
-        	float[] bitangents = calculated.y;
-        	glmesh.setCustomAttrib(3,tangents,3);
-        	glmesh.setCustomAttrib(4,bitangents,3);
+        	if (calculated != null) {
+        	    float[] tangents = calculated.x;
+                float[] bitangents = calculated.y;
+                glmesh.setCustomAttrib(3,tangents,3);
+                glmesh.setCustomAttrib(4,bitangents,3);
+        	}
         }
     }
     
     // https://learnopengl.com/#!Advanced-Lighting/Normal-Mapping
     //TODO calculate smooth tangents instead of flat tangents?
     static Tuple2<float[],float[]> calculateTangents(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
-    	
-        float[] tangents = null;
-        float[] bitangents = null;
         
-    	if (vertices!=null && normals!=null && texCoords!=null) {
+    	if (vertices!=null && normals!=null && texCoords!=null && indices!=null) {
     		
-            tangents = new float[vertices.length];
-            bitangents = new float[vertices.length];
+    	    float[] tangents = new float[vertices.length];
+    	    float[] bitangents = new float[vertices.length];
             
             for (int i=0; i<indices.length; i+=3) {
             	
@@ -294,9 +268,10 @@ class GLRenderer {
                 
             }
             
+            return new Tuple2<>(tangents,bitangents);
         }
     	
-    	return new Tuple2<>(tangents,bitangents);
+    	return null;
     	
     }
 

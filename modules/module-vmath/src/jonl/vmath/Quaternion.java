@@ -19,6 +19,7 @@
 package jonl.vmath;
 
 // TODO jonathan rewrite class to resemble other vmath libraries (eg: static variables, do not modify arguments, etc)
+// TODO jonathan, also choose on default method radians or degrees but also have alternative (should match with Vector and Matrix classes)
 
 /** A simple quaternion class.
  * @see <a href="http://en.wikipedia.org/wiki/Quaternion">http://en.wikipedia.org/wiki/Quaternion</a>
@@ -922,7 +923,27 @@ public class Quaternion {
      * @return
      */
     public static Quaternion euler(float x, float y, float z) {
-        return new Quaternion().setEulerAnglesDeg(x,y,z);
+        Quaternion quat = new Quaternion().setEulerAnglesDeg(x,y,z);
+        quat.nor();
+        return quat;
+    }
+    
+    public static Quaternion eulerRad(float x, float y, float z) {
+        Quaternion quat = new Quaternion().setEulerAngles(x,y,z);
+        quat.nor();
+        return quat;
+    }
+    
+    public static Vector3 asEuler(Quaternion quat) {
+        Quaternion q = quat.cpy();
+        q.nor();
+        return new Vector3(q.getYawDeg(), q.getPitchDeg(), q.getRollDeg());
+    }
+    
+    public static Vector3 asEulerRad(Quaternion quat) {
+        Quaternion q = quat.cpy();
+        q.nor();
+        return new Vector3(q.getYaw(), q.getPitch(), q.getRoll());
     }
 
     public static Quaternion slerp(Quaternion initialRot, Quaternion targetRot, float alpha) {

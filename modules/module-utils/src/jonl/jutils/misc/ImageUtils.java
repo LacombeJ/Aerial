@@ -43,7 +43,7 @@ public class ImageUtils {
     }
     
     /**
-     * Return with BufferPool.returnFloatBuffer
+     * Recycle with BufferPool.returnFloatBuffer
      */
     public static FloatBuffer borrowBufferData(BufferedImage bi) {
         FloatBuffer buffer = BufferPool.borrowFloatBuffer(bi.getWidth()*bi.getHeight()*BYTES_PER_PIXEL,false);
@@ -61,7 +61,7 @@ public class ImageUtils {
     }
     
     /**
-     * Return with BufferPool.returnFloatBuffer
+     * Recycle with BufferPool.returnFloatBuffer
      */
     public static FloatBuffer borrowBufferData(float[] color, int width, int height) {
         int size = width*height;

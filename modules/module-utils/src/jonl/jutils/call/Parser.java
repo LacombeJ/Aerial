@@ -1,12 +1,12 @@
-package jonl.aui.tea.call;
+package jonl.jutils.call;
 
 import java.util.ArrayList;
 
 import jonl.jutils.func.List;
 
-public class TParser {
+public class Parser {
     
-    public static TParsedCall call(String call) {
+    public static ParsedCall call(String call) {
         int firstSpace = call.indexOf(' ');
         String label = call.substring(0, firstSpace);
         
@@ -14,7 +14,7 @@ public class TParser {
         int lastParen = call.lastIndexOf(')');
         String args = call.substring(firstParen, lastParen+1);
         
-        return new TParsedCall(label,args);
+        return new ParsedCall(label,args);
     }
     
     public static ArrayList<String> args(String args)  {

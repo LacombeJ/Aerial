@@ -29,7 +29,9 @@ public class Console {
     public static synchronized void print(Object... objects) {
         for (int i=0; i<objects.length; i++) {
             Object o = objects[i];
-            if (o instanceof int[]) {
+            if (o==null) {
+                System.out.print(o);
+            } else if (o instanceof int[]) {
                 System.out.print(ArrayUtils.toString((int[]) o));
             } else if (o instanceof float[]) {
                 System.out.print(ArrayUtils.toString((float[]) o));

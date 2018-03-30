@@ -168,10 +168,6 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     	
     }
     
-    private void gl_FragColor(SLVec4 v) {
-    	this.putStatement("gl_FragColor = "+v);
-    }
-    
     /** Use this with StandardMaterial instead of regular SL sampling */
     public SLVec3 sample(SLTexU u) {
     	return this.sample(u, vTexCoord).xyz();

@@ -440,6 +440,14 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
         return v.xyz();
     }
     
+    public static Matrix4 translation(float x, float y, float z) {
+        return Matrix4.identity().translate(x, y, z);
+    }
+    
+    public static Matrix4 translation(Vector3 translation) {
+        return Matrix4.identity().translate(translation);
+    }
+    
     /** @return 3d rotation matrix about x axis */
     public static Matrix4 rotationX(float theta) {
         float cos = Mathf.cos(theta);
@@ -474,6 +482,14 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
     		  0,    0,   1,   0,
     		  0,    0,   0,   1
 		);
+    }
+    
+    public static Matrix4 scaled(float x, float y, float z) {
+        return Matrix4.identity().scale(x, y, z);
+    }
+    
+    public static Matrix4 scaled(Vector3 scale) {
+        return Matrix4.identity().scale(scale);
     }
     
     /** @return the identity matrix */

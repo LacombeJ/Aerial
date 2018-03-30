@@ -15,6 +15,7 @@ import jonl.ge.core.Transform;
 import jonl.ge.core.Window;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.light.Light;
+import jonl.ge.core.material.PointsMaterial;
 import jonl.ge.core.render.CameraCull;
 import jonl.ge.core.render.CameraTarget;
 import jonl.ge.core.render.RenderTarget;
@@ -24,9 +25,12 @@ import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 import jonl.jgl.GraphicsLibrary.Blend;
 import jonl.jgl.GraphicsLibrary.Face;
+import jonl.jgl.GraphicsLibrary.Hint;
+import jonl.jgl.GraphicsLibrary.HintTarget;
 import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.GraphicsLibrary.PMode;
 import jonl.jgl.GraphicsLibrary.Target;
+import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
@@ -145,6 +149,12 @@ class SceneRenderer {
                 
                 if (mesh.isWireframe()) {
                     gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.LINE); 
+                }
+                
+                if (mat instanceof PointsMaterial) {
+                    gl.glEnable(Target.PROGRAM_POINT_SIZE);
+                    gl.glDisable(Target.POINT_SMOOTH);
+                    gl.glHint(HintTarget.POINT_SMOOTH_HINT, Hint.FASTEST);
                 }
                 
                 gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));

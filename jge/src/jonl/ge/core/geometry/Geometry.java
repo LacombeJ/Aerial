@@ -7,6 +7,8 @@ import jonl.vmath.Vector3;
 
 public class Geometry extends BaseGeometry {
     
+    // TODO switch to high level geometry that stores Vector3 / Vector2 values
+    
     public Geometry() {
         
     }

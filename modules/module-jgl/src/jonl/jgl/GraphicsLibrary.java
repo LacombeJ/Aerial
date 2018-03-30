@@ -29,6 +29,9 @@ public interface GraphicsLibrary {
     /** Disables target */
     public void glDisable(Target target);
     
+    /** Sets the GL hint */
+    public void glHint(HintTarget target, Hint hint);
+    
     /** Returns GL version */
     public String glGetVersion();
     
@@ -169,7 +172,7 @@ public interface GraphicsLibrary {
 
     public static enum Mask {
         COLOR_BUFFER_BIT,
-        DEPTH_BUFFER_BIT;
+        DEPTH_BUFFER_BIT
     }
     
     public static enum Target {
@@ -177,7 +180,21 @@ public interface GraphicsLibrary {
         DEPTH_TEST,
         STENCIL_TEST,
         SCISSOR_TEST,
-        BLEND;
+        BLEND,
+        POINT_SMOOTH,
+        PROGRAM_POINT_SIZE
+    }
+    
+    public static enum HintTarget {
+        POINT_SMOOTH_HINT,
+        LINE_SMOOTH_HINT,
+        POLYGON_SMOOTH_HINT
+    }
+    
+    public static enum Hint {
+        FASTEST,
+        NICEST,
+        DONT_CARE
     }
     
     public static enum Blend {
@@ -197,7 +214,7 @@ public interface GraphicsLibrary {
         SUBTRACT,
         
         /** src=ONE, dst=SRC_COLOR */
-        DARKEN;
+        DARKEN
     }
     
     public static enum Factor {
@@ -210,7 +227,7 @@ public interface GraphicsLibrary {
         DST_ALPHA,
         ONE_MINUS_DST_ALPHA,
         ONE_MINUS_SRC_ALPHA,
-        ONE_MINUS_DST_COLOR;
+        ONE_MINUS_DST_COLOR
     }
     
     public static enum Face {

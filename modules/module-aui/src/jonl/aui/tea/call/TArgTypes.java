@@ -1,10 +1,11 @@
 package jonl.aui.tea.call;
 
 import jonl.aui.tea.graphics.TColor;
+import jonl.jutils.call.Args;
 
 public class TArgTypes {
 
-    public static TColor color(TArgs args) {
+    public static TColor color(Args args) {
         String type = args.get(0);
         
         if (type.equals("f") || type.equals("4f")) {

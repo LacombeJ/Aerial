@@ -5,13 +5,10 @@ import java.util.ArrayList;
 import jonl.aui.Layout;
 import jonl.aui.LayoutItem;
 import jonl.aui.Margin;
-import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
 import jonl.aui.tea.TLayoutManager.SizePreference;
 import jonl.jutils.func.List;
 import jonl.jutils.func.Wrapper;
-import jonl.jutils.structs.ArrayList2D;
-import jonl.vmath.Mathi;
 
 public abstract class TLayout implements Layout {
 

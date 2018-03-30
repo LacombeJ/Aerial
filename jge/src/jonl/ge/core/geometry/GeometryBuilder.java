@@ -2,6 +2,7 @@ package jonl.ge.core.geometry;
 
 import jonl.jutils.structs.FloatList;
 import jonl.jutils.structs.IntList;
+import jonl.vmath.Vector3;
 
 public class GeometryBuilder {
     
@@ -37,6 +38,10 @@ public class GeometryBuilder {
     	
     	calculateTangents = calculateTangents && geometry.shouldCalculateTangents();
     	
+    }
+    
+    public void addVertex(Vector3 v) {
+        vertices.put(v.toArray());
     }
 	
     public Geometry build() {

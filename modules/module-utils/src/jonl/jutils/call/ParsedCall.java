@@ -1,11 +1,11 @@
-package jonl.aui.tea.call;
+package jonl.jutils.call;
 
-public class TParsedCall {
+public class ParsedCall {
 
     public final String label;
     public final String args;
     
-    TParsedCall(String label, String args) {
+    ParsedCall(String label, String args) {
         this.label = label;
         this.args = args;
     }

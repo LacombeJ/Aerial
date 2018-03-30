@@ -452,7 +452,7 @@ public class ShaderLanguage {
     	return index(array,index+"");
     }
     
-    /** Adds string to body */
+    /** Adds string to body (without semicolon and newline, use putStatement for that) */
     public void putString(String s)     { put(s); }
     
     /** Add string, semicolon, and new line to body */
@@ -932,6 +932,23 @@ public class ShaderLanguage {
     public SLVec2 mul(SLVec2 u, Vector2 v) {
         return (SLVec2) putVariable(getVar(u),u+"*"+j(v));
     }
+    
+    // Standard OpenGL Calls
+    
+    public void gl_PointSize(float f) {
+        putStatement("gl_PointSize = "+f);
+    }
+    
+    public void gl_PointSize(SLFloat f) {
+        putStatement("gl_PointSize = "+f);
+    }
+    
+    public void gl_FragColor(SLVec4 v) {
+        putStatement("gl_FragColor = "+v);
+    }
+    
+    
+    
     
     private String jvec4(float x, float y, float z, float w) {
     	return StringUtils.f("vec4(%,%,%,%)", x, y,z,w);
@@ -1452,6 +1469,11 @@ public class ShaderLanguage {
     public interface SLInclude<T extends SLIncludeLibrary> {
     	T include(ShaderLanguage sl);
     }
+    
+    
+    
+    
+    
     
     
 }

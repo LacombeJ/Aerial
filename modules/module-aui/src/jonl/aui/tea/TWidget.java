@@ -7,7 +7,6 @@ import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
 import jonl.aui.Window;
-import jonl.aui.tea.call.TCaller;
 import jonl.aui.tea.event.TEvent;
 import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
@@ -17,6 +16,7 @@ import jonl.aui.tea.event.TScrollEvent;
 import jonl.aui.tea.graphics.TStyle;
 import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.aui.tea.spatial.TSize;
+import jonl.jutils.call.Caller;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.List;
 
@@ -42,7 +42,7 @@ public abstract class TWidget implements Widget {
     private TUIManager ui = null;
     
     private TWidgetInfo info = new TWidgetInfo();
-    private TCaller caller = new TCaller();
+    private Caller caller = new Caller();
     
     // Variables used by event handler
     private TEventHandler event = new TEventHandler();
@@ -247,7 +247,7 @@ public abstract class TWidget implements Widget {
         return info;
     }
     
-    protected TCaller caller() {
+    protected Caller caller() {
         return caller;
     }
     

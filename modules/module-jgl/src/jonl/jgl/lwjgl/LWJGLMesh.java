@@ -22,6 +22,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GL33;
 import jonl.jgl.Mesh;
+import jonl.jutils.io.Console;
 import jonl.jutils.misc.BufferPool;
 
 /**
@@ -33,6 +34,8 @@ import jonl.jutils.misc.BufferPool;
 class LWJGLMesh implements Mesh {
 
     final static int FLOAT_SIZE = 4;
+
+    // TODO have mesh types, STATIC and DYNAMIC
     
     final int id;
     
@@ -41,6 +44,7 @@ class LWJGLMesh implements Mesh {
     private int texCoordID;
     private int indicesID;
     
+    private int verticesCount;
     private int indicesCount;
     
     /** Map (Location,BufferID) */
@@ -52,10 +56,12 @@ class LWJGLMesh implements Mesh {
         GL30.glBindVertexArray(id);
         
         vertexID        = GL15.glGenBuffers();
-        normalID        = (normalData!=null)    ? GL15.glGenBuffers() : -1;
-        texCoordID      = (texCoordData!=null)  ? GL15.glGenBuffers() : -1;
-        indicesID       = GL15.glGenBuffers();
-        indicesCount    = indices.length;
+        normalID        = (normalData==null || normalData.length==0)        ? -1 : GL15.glGenBuffers();
+        texCoordID      = (texCoordData==null || texCoordData.length==0)    ? -1 : GL15.glGenBuffers();
+        indicesID       = (indices==null || indices.length==0)              ? -1 : GL15.glGenBuffers();
+        
+        verticesCount   = vertexData.length;
+        indicesCount    = (indices==null) ? 0 : indices.length;
         
         //Vertices
         {
@@ -82,8 +88,7 @@ class LWJGLMesh implements Mesh {
             GL20.glVertexAttribPointer(2,2,GL11.GL_FLOAT,false,0,0);
         }
         
-        //Indices
-        {
+        if (indicesID!=-1) {
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
             IntBuffer ib = BufferPool.borrowIntBuffer(indices,true);
             GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,ib,GL15.GL_STATIC_DRAW);
@@ -125,11 +130,13 @@ class LWJGLMesh implements Mesh {
     
     void render(int mode) {
         preRender();
-        
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
-        GL11.glDrawElements(mode,indicesCount,GL11.GL_UNSIGNED_INT,0);
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
-        
+        if (indicesID != -1) {
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
+            GL11.glDrawElements(mode,indicesCount,GL11.GL_UNSIGNED_INT,0);
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
+        } else {
+            GL11.glDrawArrays(mode, 0, verticesCount);
+        }
         postRender();
     }
     
@@ -140,9 +147,13 @@ class LWJGLMesh implements Mesh {
     void renderInstance(int mode, int count) {
         preRender();
         
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
-        GL31.glDrawElementsInstanced(mode, indicesCount, GL11.GL_UNSIGNED_INT, 0, count);
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
+        if (indicesID != -1) {
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
+            GL31.glDrawElementsInstanced(mode, indicesCount, GL11.GL_UNSIGNED_INT, 0, count);
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0);
+        } else {
+            GL31.glDrawArraysInstanced(mode, 0, verticesCount, count);
+        }
         
         postRender();
     }
@@ -234,11 +245,15 @@ class LWJGLMesh implements Mesh {
     public void setIndices(int[] indices) {
         indicesCount = indices.length;
         GL30.glBindVertexArray(id);
+        if (indicesID==-1) {
+            indicesID = GL15.glGenBuffers();
+        }
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,indicesID);
         IntBuffer ib = BufferPool.borrowIntBuffer(indices,true);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER,ib,GL15.GL_STATIC_DRAW);
         BufferPool.returnIntBuffer(ib);
         //TODO GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER,0); ? Will this fix errors?
+        //TODO 3/29/18 try to uncomment above ?
         GL30.glBindVertexArray(0);
     }
 

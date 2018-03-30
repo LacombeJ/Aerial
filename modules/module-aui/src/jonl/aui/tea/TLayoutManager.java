@@ -61,7 +61,7 @@ class TLayoutManager {
      *
      */
     
-    public static void invalidateSizeHint(TLayout layout) {
+    static void invalidateSizeHint(TLayout layout) {
         
         TSizeHint prevHint = layout.getSizeHint();
         TSizeHint newHint = layout.calculateSizeHint();
@@ -86,7 +86,7 @@ class TLayoutManager {
         
     }
     
-    public static void invalidateLayout(TLayout layout) {
+    static void invalidateLayout(TLayout layout) {
         
         layout.layout();
         
@@ -102,7 +102,7 @@ class TLayoutManager {
     // TODO for firePositionChanged and fireSizeChanged, only send events, don't call layout or anything else that should be handled by
     // this layout manager
     
-    public static void setPosition(TWidget w, int x, int y) {
+    static void setPosition(TWidget w, int x, int y) {
         int prevX = w.x;
         int prevY = w.y;
         w.x = x;
@@ -113,7 +113,7 @@ class TLayoutManager {
         }
     }
     
-    public static void setSize(TWidget w, int width, int height) {
+    static void setSize(TWidget w, int width, int height) {
         int prevWidth = w.width;
         int prevHeight = w.height;
         w.width = width;
@@ -124,7 +124,7 @@ class TLayoutManager {
         }
     }
     
-    public static void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
+    static void setPositionAndSize(TWidget w, int x, int y, int width, int height) {
         int prevX = w.x;
         int prevY = w.y;
         int prevWidth = w.width;
@@ -146,7 +146,7 @@ class TLayoutManager {
     
     // Size allocations
     
-    public static class SizePreference {
+    static class SizePreference {
         int policy;
         int hint;
         int min;
@@ -167,19 +167,19 @@ class TLayoutManager {
         }
     }
     
-    public static int freeWidth(TWidget item) {
-        return Mathi.max(item.sizeHint().width, item.minWidth());
+    static int freeWidth(TWidget widget) {
+        return Mathi.max(widget.sizeHint().width, widget.minWidth());
     }
     
-    public static int freeHeight(TWidget item) {
-        return Mathi.max(item.sizeHint().height, item.minHeight());
+    static int freeHeight(TWidget widget) {
+        return Mathi.max(widget.sizeHint().height, widget.minHeight());
     }
     
-    public static int freeWidth(TLayoutItem item) {
+    static int freeWidth(TLayoutItem item) {
         return Mathi.max(item.hintWidth(), item.minWidth());
     }
     
-    public static int freeWidth(ArrayList<TLayoutItem> items) {
+    static int freeWidth(ArrayList<TLayoutItem> items) {
         int finalDimension = 0;
         for (int i=0; i<items.size(); i++) {
             finalDimension += freeWidth(items.get(i));
@@ -187,11 +187,11 @@ class TLayoutManager {
         return finalDimension;
     }
     
-    public static int freeHeight(TLayoutItem item) {
+    static int freeHeight(TLayoutItem item) {
         return Mathi.max(item.hintHeight(), item.minHeight());
     }
     
-    public static int freeHeight(ArrayList<TLayoutItem> items) {
+    static int freeHeight(ArrayList<TLayoutItem> items) {
         int finalDimension = 0;
         for (int i=0; i<items.size(); i++) {
             finalDimension += freeHeight(items.get(i));
@@ -199,12 +199,12 @@ class TLayoutManager {
         return finalDimension;
     }
     
-    public static int freeAllocate(SizePreference pref) {
+    static int freeAllocate(SizePreference pref) {
         SizePreference[] prefs = {pref};
         return freeAllocate(prefs);
     }
     
-    public static int freeAllocate(SizePreference[] prefs) {
+    static int freeAllocate(SizePreference[] prefs) {
         int finalDimension = 0;
         for (int i=0; i<prefs.length; i++) {
             SizePreference pref = prefs[i];
@@ -216,7 +216,7 @@ class TLayoutManager {
         return finalDimension;
     }
     
-    public static int freeMaxAllocate(SizePreference[] prefs) {
+    static int freeMaxAllocate(SizePreference[] prefs) {
         int max = 0;
         for (SizePreference p : prefs) {
             max = Math.max(max, freeAllocate(p));
@@ -224,7 +224,7 @@ class TLayoutManager {
         return max;
     }
     
-    public static int allocate(SizePreference pref, int dimension) {
+    static int allocate(SizePreference pref, int dimension) {
         SizePreference[] prefs = {pref};
         Wrapper<Integer> extra = new Wrapper<>(0);
         int[] size = allocate(prefs, dimension, extra);
@@ -236,7 +236,7 @@ class TLayoutManager {
      * bounds of the given dimension<br>
      * 
      */
-    public static int[] allocate(SizePreference[] prefs, int dimension, Wrapper<Integer> extra) {
+    static int[] allocate(SizePreference[] prefs, int dimension, Wrapper<Integer> extra) {
         /*
         Algorithm:
         1) For each size preference calculate max(hint,min) and save these as minHint
@@ -293,7 +293,7 @@ class TLayoutManager {
         return size;
     }
     
-    public static void allocateExtra(ArrayList<SizePreference> policy, Wrapper<Integer> extraDimension, int[] size) {
+    static void allocateExtra(ArrayList<SizePreference> policy, Wrapper<Integer> extraDimension, int[] size) {
         ArrayList<SizePreference> rest = List.sort(policy, (a,b) -> Integer.compare(a.max, b.max));
         
         while (rest.size() > 0) {
@@ -319,23 +319,23 @@ class TLayoutManager {
         }
     }
     
-    public static SizePreference getWidthPreference(TLayoutItem item) {
+    static SizePreference getWidthPreference(TLayoutItem item) {
         return new SizePreference(item.sizePolicy().horizontal(), item.hintWidth(), item.minWidth(),item.maxWidth());
     }
     
-    public static SizePreference getHeightPreference(TLayoutItem item) {
+    static SizePreference getHeightPreference(TLayoutItem item) {
         return new SizePreference(item.sizePolicy().vertical(), item.hintHeight(), item.minHeight(),item.maxHeight());
     }
     
-    public static SizePreference getWidthPreference(TWidget item) {
-        return new SizePreference(item.sizePolicy().horizontal(), item.sizeHint().width, item.minWidth(),item.maxWidth());
+    static SizePreference getWidthPreference(TWidget widget) {
+        return new SizePreference(widget.sizePolicy().horizontal(), widget.sizeHint().width, widget.minWidth(),widget.maxWidth());
     }
     
-    public static SizePreference getHeightPreference(TWidget item) {
-        return new SizePreference(item.sizePolicy().vertical(), item.sizeHint().height, item.minHeight(),item.maxHeight());
+    static SizePreference getHeightPreference(TWidget widget) {
+        return new SizePreference(widget.sizePolicy().vertical(), widget.sizeHint().height, widget.minHeight(),widget.maxHeight());
     }
     
-    public static SizePreference[] getWidthPreferences(TLayout layout) {
+    static SizePreference[] getWidthPreferences(TLayout layout) {
         SizePreference[] prefs = new SizePreference[layout.count()];
         for (int i=0; i<prefs.length; i++) {
             TLayoutItem item = layout.getItem(i);
@@ -344,7 +344,7 @@ class TLayoutManager {
         return prefs;
     }
     
-    public static SizePreference[] getHeightPreferences(TLayout layout) {
+    static SizePreference[] getHeightPreferences(TLayout layout) {
         SizePreference[] prefs = new SizePreference[layout.count()];
         for (int i=0; i<prefs.length; i++) {
             TLayoutItem item = layout.getItem(i);

@@ -1,15 +1,15 @@
-package jonl.aui.tea.call;
+package jonl.jutils.call;
 
 import java.util.ArrayList;
 
 import jonl.jutils.func.Function;
 
-public class TArgs {
+public class Args {
 
     private final ArrayList<String> args;
     
-    public TArgs(String args) {
-        this.args = TParser.args(args);
+    public Args(String args) {
+        this.args = Parser.args(args);
     }
     
     public int count() {
@@ -24,8 +24,8 @@ public class TArgs {
         return cast.f(get(i));
     }
     
-    public TArgs getParsed(int i) {
-        return new TArgs(get(i));
+    public Args getParsed(int i) {
+        return new Args(get(i));
     }
     
     public boolean getBoolean(int i) {

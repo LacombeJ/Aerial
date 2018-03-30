@@ -19,6 +19,8 @@ public class Application extends AbstractApplication {
     private boolean fullscreen = false;
     private boolean resizable = false;
     
+    private int samples = 4; // antialias samples
+    
     private jonl.jgl.Window glWindow;
     
     private AudioDevice audio;
@@ -33,11 +35,16 @@ public class Application extends AbstractApplication {
 	public Application() {
 		super();
 		
+		caller.implement("SET_SAMPLES", (args) -> {
+		    samples = args.getInt(0);
+		    return true;
+		});
+		
 	}
 	
 	@Override
 	public void start() {
-		glWindow = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,4,true);
+		glWindow = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,samples,true);
         
         width = glWindow.getWidth();
         height = glWindow.getHeight();
