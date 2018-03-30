@@ -1,9 +1,6 @@
 package jonl.ge.utils;
 
 import java.awt.image.BufferedImage;
-import java.nio.FloatBuffer;
-
-import jonl.jutils.misc.BufferPool;
 import jonl.jutils.misc.ImageUtils;
 import jonl.ge.core.Texture;
 import jonl.ge.core.Texture.Filter;
@@ -34,13 +31,7 @@ public class Loader {
     
     public static Texture loadTexture(String fileLoc, Internal internal, Wrap wrap, Filter filter) {
         BufferedImage b = ImageUtils.load(fileLoc);
-        FloatBuffer fb = ImageUtils.borrowBufferData(b);
-        float[] f = new float[fb.limit()];
-        for (int i=0; i<f.length; i++) {
-            f[i] = fb.get(i);
-        }
-        Texture t = new Texture(f,b.getWidth(),b.getHeight(),internal,wrap,filter);
-        BufferPool.returnFloatBuffer(fb);
+        Texture t = new Texture(ImageUtils.data(b),b.getWidth(),b.getHeight(),internal,wrap,filter);
         return t;
     }
     

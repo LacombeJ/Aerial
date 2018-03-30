@@ -3,11 +3,12 @@ package jonl.jgl;
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 
+import org.lwjgl.system.MemoryUtil;
+
 import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
 import jonl.jgl.Texture.Wrap;
 import jonl.jgl.utils.MeshData;
-import jonl.jutils.misc.BufferPool;
 import jonl.jutils.misc.ImageUtils;
 
 /**
@@ -55,33 +56,39 @@ public abstract class AbstractGraphicsLibrary implements GraphicsLibrary {
     
     @Override
     public Texture glGenTexture(float[] data, int width, int height, Internal internal, Wrap wrap, Filter filter) {
-        FloatBuffer fb = BufferPool.borrowFloatBuffer(data,true);
+        FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
+        fb.put(data).flip();
         Texture t = glGenTexture(fb,width,height,internal,wrap,filter);
-        BufferPool.returnFloatBuffer(fb);
+        MemoryUtil.memFree(fb);
         return t;
     }
     
     @Override
     public Texture glGenTexture(float[] data, int width, int height) {
-        FloatBuffer fb = BufferPool.borrowFloatBuffer(data,true);
+        FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
+        fb.put(data).flip();
         Texture t = glGenTexture(fb,width,height);
-        BufferPool.returnFloatBuffer(fb);
+        MemoryUtil.memFree(fb);
         return t;
     }
     
     @Override
     public Texture glGenTexture(BufferedImage image, Internal internal, Wrap wrap, Filter filter) {
-        FloatBuffer fb = ImageUtils.borrowBufferData(image);
+        float[] data = ImageUtils.data(image);
+        FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
+        fb.put(data).flip();
         Texture t = glGenTexture(fb,image.getWidth(),image.getHeight(),internal,wrap,filter);
-        BufferPool.returnFloatBuffer(fb);
+        MemoryUtil.memFree(fb);
         return t;
     }
     
     @Override
     public Texture glGenTexture(BufferedImage image) {
-        FloatBuffer fb = ImageUtils.borrowBufferData(image);
+        float[] data = ImageUtils.data(image);
+        FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
+        fb.put(data).flip();
         Texture t = glGenTexture(fb,image.getWidth(),image.getHeight());
-        BufferPool.returnFloatBuffer(fb);
+        MemoryUtil.memFree(fb);
         return t;
     }
     
@@ -97,17 +104,21 @@ public abstract class AbstractGraphicsLibrary implements GraphicsLibrary {
     
     @Override
     public Texture glGenTexture(int width, int height, Internal internal, Wrap wrap, Filter filter) {
-        FloatBuffer fb = ImageUtils.borrowBufferData(new float[4],width,height);
+        float[] data = ImageUtils.data(new float[4], width, height);
+        FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
+        fb.put(data).flip();
         Texture t = glGenTexture(fb,width,height,internal,wrap,filter);
-        BufferPool.returnFloatBuffer(fb);
+        MemoryUtil.memFree(fb);
         return t;
     }
     
     @Override
     public Texture glGenTexture(int width, int height) {
-        FloatBuffer fb = ImageUtils.borrowBufferData(new float[4],width,height);
+        float[] data = ImageUtils.data(new float[4], width, height);
+        FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
+        fb.put(data).flip();
         Texture t = glGenTexture(fb,width,height);
-        BufferPool.returnFloatBuffer(fb);
+        MemoryUtil.memFree(fb);
         return t;
     }
     

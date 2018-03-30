@@ -12,7 +12,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
-import jonl.jutils.misc.BufferPool;
 import jonl.jutils.parallel.Processor;
 import jonl.jutils.parallel.Request;
 import jonl.jutils.parallel.RequestQueue;
@@ -38,8 +37,8 @@ class GLFWInstance {
     private static boolean initialized = false;
     private static LWJGL gl = new LWJGL();
     
-    private final static DoubleBuffer xBuffer = BufferPool.createDoubleBuffer(1);
-    private final static DoubleBuffer yBuffer = BufferPool.createDoubleBuffer(1);
+    private static DoubleBuffer xBuffer;
+    private static DoubleBuffer yBuffer;
     
     static final HashMap<Integer,Long> STANDARD_CURSORS = new HashMap<>();
     
@@ -188,11 +187,34 @@ class GLFWInstance {
         }
     }
     
+    static void create() {
+        
+        xBuffer = MemoryUtil.memCallocDouble(1);
+        yBuffer = MemoryUtil.memCallocDouble(1);
+        
+        createCursors();
+        
+    }
+    
     static void createCursors() {
         for (int cursor = GLFW.GLFW_ARROW_CURSOR; cursor < GLFW.GLFW_VRESIZE_CURSOR+1; cursor++) {
             long cursorId = GLFW.glfwCreateStandardCursor(cursor);
             STANDARD_CURSORS.put(cursor, cursorId);
         }
+    }
+    
+    static void destroy() {
+        
+        MemoryUtil.memFree(xBuffer);
+        MemoryUtil.memFree(yBuffer);
+        
+        GLFW.glfwTerminate();
+        GLFW.glfwSetErrorCallback(null).free();
+        resetInstance();
+    }
+    
+    private static void resetInstance() {
+        initialized = false;
     }
     
     static TimeOut initTimeOut;
@@ -212,7 +234,7 @@ class GLFWInstance {
             
             timeOut.pass(); // Initialization succeeded and no errors have occurred so far
             
-            createCursors();
+            create();
             
             while (true) {
             	
@@ -261,10 +283,7 @@ class GLFWInstance {
                 requestRespond();
             }
             
-            GLFW.glfwTerminate();
-            GLFW.glfwSetErrorCallback(null).free();
-            
-            resetInstance();
+            destroy();
         });
         
         if (!timeOut.hold()) {
@@ -287,10 +306,6 @@ class GLFWInstance {
             }
         }
         return false;
-    }
-    
-    private static void resetInstance() {
-        initialized = false;
     }
     
     

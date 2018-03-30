@@ -1,6 +1,5 @@
 package jonl.ge.base;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +29,6 @@ import jonl.jgl.GraphicsLibrary.HintTarget;
 import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.GraphicsLibrary.PMode;
 import jonl.jgl.GraphicsLibrary.Target;
-import jonl.jutils.io.Console;
-import jonl.jutils.misc.BufferPool;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
@@ -121,18 +118,16 @@ class SceneRenderer {
                 Matrix4 M = gameObjectTransform(g);
                 Matrix4 MVP = VP.get().multiply(M);
                 
-                FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
-                
                 Program program = glr.getOrCreateProgram(mat);
                 
                 gl.glUseProgram(program);
                 
                 //TODO meshes should be able to choose which uniforms it needs?
-                program.setUniformMat4("MVP",MVP.toFloatBuffer(fb));
-                program.setUniformMat4("MV",V.get().multiply(M).toFloatBuffer(fb));
-                program.setUniformMat4("M",M.toFloatBuffer(fb));
-                program.setUniformMat4("V",V.toFloatBuffer(fb));
-                program.setUniformMat4("P",P.toFloatBuffer(fb));
+                program.setUniformMat4("MVP",MVP.toArray());
+                program.setUniformMat4("MV",V.get().multiply(M).toArray());
+                program.setUniformMat4("M",M.toArray());
+                program.setUniformMat4("V",V.toArray());
+                program.setUniformMat4("P",P.toArray());
                 
                 List<Uniform> uniforms = mat.uniforms();
                 for (Uniform u : uniforms) {
@@ -165,8 +160,6 @@ class SceneRenderer {
                 }
                 
                 gl.glEnable(Target.CULL_FACE);
-                
-                BufferPool.returnFloatBuffer(fb);
                 
                 gl.glUseProgram(null);
             }
@@ -280,13 +273,11 @@ class SceneRenderer {
         Material mat = rt.getMaterial();
         Matrix4 canvas = Matrix4.orthographic(-0.5f, 0.5f, -0.5f, 0.5f, -1, 1);
         
-        FloatBuffer fb = BufferPool.borrowFloatBuffer(16,false);
-        
         Program program = glr.getOrCreateProgram(mat);
         
         gl.glUseProgram(program);
         
-        program.setUniformMat4("MVP",canvas.toFloatBuffer(fb));
+        program.setUniformMat4("MVP",canvas.toArray());
         
         List<Uniform> uniforms = mat.uniforms();
         for (Uniform u : uniforms) {
@@ -294,8 +285,6 @@ class SceneRenderer {
         }
         
         gl.glRender(glr.getOrCreateMesh(glr.getRectGeometry()),GraphicsLibrary.Mode.TRIANGLES);
-        
-        BufferPool.returnFloatBuffer(fb);
         
         gl.glUseProgram(null);
         

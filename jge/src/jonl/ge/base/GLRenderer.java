@@ -1,6 +1,5 @@
 package jonl.ge.base;
 
-import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import jonl.ge.core.FrameBuffer;
@@ -14,8 +13,6 @@ import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 import jonl.jutils.func.Tuple2;
-import jonl.jutils.misc.BufferPool;
-import jonl.jutils.parallel.Processor;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
@@ -170,19 +167,13 @@ class GLRenderer {
             p.setUniform(name,v.x,v.y);
         } else if (data instanceof Matrix4) {
             Matrix4 m = (Matrix4) data;
-            FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
-            p.setUniformMat4(name,m.toFloatBuffer(fb));
-            BufferPool.returnFloatBuffer(fb);
+            p.setUniformMat4(name,m.toArray());
         } else if (data instanceof Matrix3) {
             Matrix3 m = (Matrix3) data;
-            FloatBuffer fb = BufferPool.borrowFloatBuffer(9,true);
-            p.setUniformMat3(name,m.toFloatBuffer(fb));
-            BufferPool.returnFloatBuffer(fb);
+            p.setUniformMat3(name,m.toArray());
         } else if (data instanceof Matrix2) {
             Matrix2 m = (Matrix2) data;
-            FloatBuffer fb = BufferPool.borrowFloatBuffer(4,true);
-            p.setUniformMat2(name,m.toFloatBuffer(fb));
-            BufferPool.returnFloatBuffer(fb);
+            p.setUniformMat2(name,m.toArray());
         } else {
             Engine.log.error("Uniform type not supported - "+name+" : "+data);
         }

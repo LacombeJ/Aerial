@@ -1,7 +1,5 @@
 package jonl.ge.utils;
 
-import java.nio.FloatBuffer;
-
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Texture;
 import jonl.jgl.GraphicsLibrary;
@@ -9,7 +7,6 @@ import jonl.jgl.Program;
 import jonl.jgl.Shader;
 import jonl.jgl.GraphicsLibrary.ShaderType;
 import jonl.jutils.io.FileUtils;
-import jonl.jutils.misc.BufferPool;
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
 import jonl.vmath.Matrix4;
@@ -76,19 +73,13 @@ public class GLUtils {
         }
     }
     public static void setUniform(Program program, String name, Matrix2 m) {
-        FloatBuffer fb = BufferPool.borrowFloatBuffer(4,true);
-        program.setUniformMat2(name,m.toFloatBuffer(fb));
-        BufferPool.returnFloatBuffer(fb);
+        program.setUniformMat2(name,m.toArray());
     }
     public static void setUniform(Program program, String name, Matrix3 m) {
-        FloatBuffer fb = BufferPool.borrowFloatBuffer(9,true);
-        program.setUniformMat3(name,m.toFloatBuffer(fb));
-        BufferPool.returnFloatBuffer(fb);
+        program.setUniformMat3(name,m.toArray());
     }
     public static void setUniform(Program program, String name, Matrix4 m) {
-        FloatBuffer fb = BufferPool.borrowFloatBuffer(16,true);
-        program.setUniformMat4(name,m.toFloatBuffer(fb));
-        BufferPool.returnFloatBuffer(fb);
+        program.setUniformMat4(name,m.toArray());
     }
     
     public static jonl.jgl.Texture.Internal map(Texture.Internal internal) {

@@ -3,11 +3,9 @@ package jonl.jutils.misc;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.FloatBuffer;
-
 import javax.imageio.ImageIO;
 
-import jonl.jutils.misc.BufferPool;
+import jonl.jutils.structs.FloatArray;
 
 /**
  * 
@@ -42,42 +40,34 @@ public class ImageUtils {
         }
     }
     
-    /**
-     * Recycle with BufferPool.returnFloatBuffer
-     */
-    public static FloatBuffer borrowBufferData(BufferedImage bi) {
-        FloatBuffer buffer = BufferPool.borrowFloatBuffer(bi.getWidth()*bi.getHeight()*BYTES_PER_PIXEL,false);
+    public static float[] data(BufferedImage bi) {
+        FloatArray data = new FloatArray(bi.getHeight() * bi.getWidth() * BYTES_PER_PIXEL);
         for (int i=0; i<bi.getHeight(); i++) {
             for (int j=0; j<bi.getWidth(); j++) {
                 float[] c = getColor(bi.getRGB(j,i),true);
-                buffer.put(c[0]);
-                buffer.put(c[1]);
-                buffer.put(c[2]);
-                buffer.put(c[3]);
+                data.put(c);
             }
         }
-        buffer.flip();
-        return buffer;
+        return data.getArray();
     }
     
     /**
      * Recycle with BufferPool.returnFloatBuffer
      */
-    public static FloatBuffer borrowBufferData(float[] color, int width, int height) {
+    public static float[] data(float[] color, int width, int height) {
         int size = width*height;
-        FloatBuffer buffer = BufferPool.borrowFloatBuffer(size*BYTES_PER_PIXEL,false);
+        FloatArray data = new FloatArray(width * height * BYTES_PER_PIXEL);
         float r = color.length>0 ? color[0] : 0;
         float g = color.length>1 ? color[1] : 0;
         float b = color.length>2 ? color[2] : 0;
         float a = color.length>3 ? color[3] : 1;
         for (int i=0; i<size; i++) {
-            buffer.put(r);
-            buffer.put(g);
-            buffer.put(b);
-            buffer.put(a);
+            data.put(r);
+            data.put(g);
+            data.put(b);
+            data.put(a);
         }
-        buffer.flip();
-        return buffer;
+        return data.getArray();
     }
     
     /** @return a float array of length 4 with values r,g,b,a */
