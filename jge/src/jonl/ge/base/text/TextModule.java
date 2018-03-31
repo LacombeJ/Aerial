@@ -22,6 +22,8 @@ import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.vmath.Matrix4;
+import jonl.vmath.Vector2;
+import jonl.vmath.Vector3;
 
 public class TextModule extends Attachment {
 
@@ -69,7 +71,11 @@ public class TextModule extends Attachment {
         
         Geometry geometry = new PlaneGeometry();
         geometry.scaleTexCoords(1f, -1f);
-        mesh = gl.glGenMesh(geometry.getVertices(), geometry.getNormals(), geometry.getTexCoords(), geometry.getIndices());
+        mesh = gl.glGenMesh(
+                Vector3.pack(geometry.getVertexArray()),
+                Vector3.pack(geometry.getNormalArray()),
+                Vector2.pack(geometry.getTexCoordArray()),
+                geometry.getIndices());
         
         ti.load(gl);
     }

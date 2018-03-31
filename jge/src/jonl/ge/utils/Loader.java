@@ -13,10 +13,7 @@ public class Loader {
 
     public static Geometry loadMesh(MeshData md) {
         Geometry m = new Geometry();
-        m.setVertices(md.vertexData);
-        m.setNormals(md.normalData);
-        m.setTexCoords(md.texCoordData);
-        m.setIndices(md.indices);
+        m.set(md.vertexData,md.normalData,md.texCoordData,md.indices);
         return m;
     }
     

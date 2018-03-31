@@ -179,7 +179,8 @@ public interface GraphicsLibrary {
         SCISSOR_TEST,
         BLEND,
         POINT_SMOOTH,
-        PROGRAM_POINT_SIZE
+        PROGRAM_POINT_SIZE,
+        POINT_SPRITE
     }
     
     public static enum HintTarget {

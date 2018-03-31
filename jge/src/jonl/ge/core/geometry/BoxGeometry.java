@@ -12,11 +12,6 @@ public class BoxGeometry extends Geometry {
     private static int Y = 1;
     private static int Z = 2;
     
-    private FloatArray vertices;
-    private FloatArray normals;
-    private FloatArray texCoords;
-    private IntArray indices;
-    
     private class Variables {
         int numberOfVertices = 0;
     }
@@ -33,25 +28,26 @@ public class BoxGeometry extends Geometry {
         
         int numVerts = 6 * 4 * widthSegments * heightSegments * depthSegments;
         
-        vertices = new FloatArray(3 * numVerts);
-        normals = new FloatArray(3 * numVerts);
-        texCoords = new FloatArray(2 * numVerts);
-        indices = new IntArray(6 * 6 * widthSegments * heightSegments * depthSegments);
+        FloatArray vertices = new FloatArray(3 * numVerts);
+        FloatArray normals = new FloatArray(3 * numVerts);
+        FloatArray texCoords = new FloatArray(2 * numVerts);
+        IntArray indices = new IntArray(6 * 6 * widthSegments * heightSegments * depthSegments);
         
         Variables vars = new Variables();
         
-        buildPlane( vars, Z, Y, X, - 1, - 1, depth, height,   width,  depthSegments, heightSegments); // px
-        buildPlane( vars, Z, Y, X,   1, - 1, depth, height, - width,  depthSegments, heightSegments); // nx
-        buildPlane( vars, X, Z, Y,   1,   1, width, depth,    height, widthSegments, depthSegments);  // py
-        buildPlane( vars, X, Z, Y,   1, - 1, width, depth,  - height, widthSegments, depthSegments);  // ny
-        buildPlane( vars, X, Y, Z,   1, - 1, width, height,   depth,  widthSegments, heightSegments); // pz
-        buildPlane( vars, X, Y, Z, - 1, - 1, width, height, - depth,  widthSegments, heightSegments); // nz
+        buildPlane( vars, Z, Y, X, - 1, - 1, depth, height,   width,  depthSegments, heightSegments, vertices, normals, texCoords, indices); // px
+        buildPlane( vars, Z, Y, X,   1, - 1, depth, height, - width,  depthSegments, heightSegments, vertices, normals, texCoords, indices); // nx
+        buildPlane( vars, X, Z, Y,   1,   1, width, depth,    height, widthSegments, depthSegments, vertices, normals, texCoords, indices);  // py
+        buildPlane( vars, X, Z, Y,   1, - 1, width, depth,  - height, widthSegments, depthSegments, vertices, normals, texCoords, indices);  // ny
+        buildPlane( vars, X, Y, Z,   1, - 1, width, height,   depth,  widthSegments, heightSegments, vertices, normals, texCoords, indices); // pz
+        buildPlane( vars, X, Y, Z, - 1, - 1, width, height, - depth,  widthSegments, heightSegments, vertices, normals, texCoords, indices); // nz
         
         set(vertices.getArray(),normals.getArray(),texCoords.getArray(),indices.getArray());
         
     }
     
-    private void buildPlane(Variables vars, int u, int v, int w, float udir, float vdir, float width, float height, float depth, int gridX, int gridY) {
+    private void buildPlane(Variables vars, int u, int v, int w, float udir, float vdir, float width, float height, float depth, int gridX, int gridY,
+            FloatArray vertices, FloatArray normals, FloatArray texCoords, IntArray indices) {
 
         float segmentWidth = width / gridX;
         float segmentHeight = height / gridY;

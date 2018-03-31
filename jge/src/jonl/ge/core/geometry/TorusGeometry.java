@@ -9,11 +9,6 @@ import jonl.vmath.Vector3;
 
 public class TorusGeometry extends Geometry {
     
-    private FloatArray vertices;
-    private FloatArray normals;
-    private FloatArray texCoords;
-    private IntList indices;
-    
     public TorusGeometry() {
         this(0.5f);
     }
@@ -34,10 +29,10 @@ public class TorusGeometry extends Geometry {
         
         int numVerts = (radialSegments+1) * (tubularSegments+1);
         
-        vertices = new FloatArray(3 * numVerts);
-        normals = new FloatArray(3 * numVerts);
-        texCoords = new FloatArray(2 * numVerts);
-        indices = new IntList();
+        FloatArray vertices = new FloatArray(3 * numVerts);
+        FloatArray normals = new FloatArray(3 * numVerts);
+        FloatArray texCoords = new FloatArray(2 * numVerts);
+        IntList indices = new IntList();
         
         Vector3 center = new Vector3();
         Vector3 vertex = new Vector3();

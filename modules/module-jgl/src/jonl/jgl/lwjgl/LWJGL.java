@@ -267,6 +267,7 @@ class LWJGL extends AbstractGraphicsLibrary {
         case BLEND:                 return GL11.GL_BLEND;
         case POINT_SMOOTH:          return GL11.GL_POINT_SMOOTH;
         case PROGRAM_POINT_SIZE:    return GL32.GL_PROGRAM_POINT_SIZE;
+        case POINT_SPRITE:          return GL20.GL_POINT_SPRITE;
         default:                    throw new IllegalStateException("Unknown target");
         }
     }

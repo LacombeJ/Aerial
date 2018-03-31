@@ -8,7 +8,6 @@ import jonl.ge.core.Texture.Wrap;
 import jonl.ge.core.render.CameraExtension;
 import jonl.ge.core.render.RenderTarget;
 import jonl.jutils.io.FileUtils;
-import jonl.vmath.MathUtil;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
@@ -54,7 +53,7 @@ public class MYSSAO extends CameraExtension {
             );
             ssaoNoise[i] = noise;
         }
-        noiseTexture = new Texture(MathUtil.getFloatArray(ssaoNoise),
+        noiseTexture = new Texture(Vector3.pack(ssaoNoise),
                 ssaoNoiseSize,ssaoNoiseSize,Internal.RGB16,Wrap.REPEAT,Filter.NEAREST);
     }
     

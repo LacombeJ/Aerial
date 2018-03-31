@@ -7,11 +7,6 @@ import jonl.jutils.structs.IntArray;
 
 public class PlaneGeometry extends Geometry {
     
-    private FloatArray vertices;
-    private FloatArray normals;
-    private FloatArray texCoords;
-    private IntArray indices;
-    
     public PlaneGeometry() {
         this(1,1);
     }
@@ -24,10 +19,10 @@ public class PlaneGeometry extends Geometry {
         
         int numVerts = (widthSegments+1) * (heightSegments+1);
         
-        vertices = new FloatArray(3 * numVerts);
-        normals = new FloatArray(3 * numVerts);
-        texCoords = new FloatArray(2 * numVerts);
-        indices = new IntArray(6 * widthSegments * heightSegments);
+        FloatArray vertices = new FloatArray(3 * numVerts);
+        FloatArray normals = new FloatArray(3 * numVerts);
+        FloatArray texCoords = new FloatArray(2 * numVerts);
+        IntArray indices = new IntArray(6 * widthSegments * heightSegments);
         
         float width_half = width / 2f;
         float height_half = height / 2f;

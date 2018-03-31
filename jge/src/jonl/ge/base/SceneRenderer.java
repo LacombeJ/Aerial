@@ -153,6 +153,7 @@ class SceneRenderer {
                 
                 if (mat instanceof PointsMaterial) {
                     gl.glEnable(Target.PROGRAM_POINT_SIZE);
+                    gl.glEnable(Target.POINT_SPRITE);
                 }
                 
                 gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));

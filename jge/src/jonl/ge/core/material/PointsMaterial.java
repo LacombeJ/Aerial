@@ -1,14 +1,13 @@
 package jonl.ge.core.material;
 
 import jonl.ge.core.Texture;
-import jonl.ge.core.material.ShaderLanguage.SLBoolU;
-import jonl.ge.core.material.ShaderLanguage.SLFloat;
 import jonl.ge.core.material.ShaderLanguage.SLFloatU;
 import jonl.ge.core.material.ShaderLanguage.SLTexU;
+import jonl.ge.core.material.ShaderLanguage.SLVec2;
+import jonl.ge.core.material.ShaderLanguage.SLVec4;
 import jonl.ge.core.material.ShaderLanguage.SLVec4U;
 import jonl.ge.shaders.FogShader;
 import jonl.ge.utils.SLImports;
-import jonl.ge.utils.SLImports.DiffuseOrenNayerDeprecated;
 import jonl.vmath.Vector4;
 import jonl.vmath.Vector3;
 
@@ -24,24 +23,14 @@ import jonl.vmath.Vector3;
  */
 public class PointsMaterial extends GeneratedShader {
     
-    private Texture texture = null;
-    
-    public PointsMaterial(Texture texture, Vector4 color) {
-        super(vertexShader(), fragmentShader(texture));
+    public PointsMaterial(Texture texture, Vector4 color, float size, boolean useSizeAttenuation) {
+        super(vertexShader(useSizeAttenuation,size), fragmentShader(texture,color));
         setColor(color);
-        this.texture = texture;
+        setSize(size);
     }
     
-    public PointsMaterial(Vector4 color) {
-        this(null, color);
-    }
-    
-    public PointsMaterial(Vector3 color) {
-        this(new Vector4(color,1));
-    }
-    
-    public PointsMaterial() {
-        this(new Vector4(1,1,1,1));
+    public PointsMaterial(Vector4 color, float size, boolean useSizeAttenuation) {
+        this(null, color, size, useSizeAttenuation);
     }
     
     public Vector4 getColor() {
@@ -69,7 +58,7 @@ public class PointsMaterial extends GeneratedShader {
         return "PointsMaterial"; // Since all shaders are the same
     }
 
-    static ShaderLanguage vertexShader() {
+    static ShaderLanguage vertexShader(boolean useSizeAttenuation, float sizef) {
         ShaderLanguage sl = new ShaderLanguage("vs");
         
         sl.version("330");
@@ -80,43 +69,48 @@ public class PointsMaterial extends GeneratedShader {
         sl.uniform("mat4 MV");
         sl.uniform("float _height");
         
-        SLFloatU size = sl.slFloatu("size", 1f);
+        SLFloatU size = sl.slFloatu("size", sizef);
         
         sl.putStatement("gl_Position = MVP * vertex");
         
         sl.putStatement("vec3 mvPosition = vec3(MV * vertex)");
         
-        SLFloat f = sl.slFloat(size+" * ((_height/2) / - mvPosition.z)");
+        if (useSizeAttenuation) {
+            sl.gl_PointSize(sl.slFloat(size+" * ((_height/2) / - mvPosition.z)"));
+        } else {
+            sl.gl_PointSize(sl.slFloat(size+"+ 0.0"));
+        }
         
-        sl.gl_PointSize(f);
-        
-        sl.call(FogShader.fogVertex("mvPosition"));
+        sl.include(FogShader.fogVertex("mvPosition"));
         
         return sl;
     }
     
-    static ShaderLanguage fragmentShader(Texture tex) {
+    static ShaderLanguage fragmentShader(Texture tex, Vector4 col) {
         ShaderLanguage sl = new ShaderLanguage("fs");
-        
-        DiffuseOrenNayerDeprecated oren = sl.include(SLImports.orenNayer());
-        
-        
-        
-        sl.call(oren.orenNayer(), 4f);
-        
-        //sl.call(SLUtils.mapTexelToLinear, mapTexel);
         
         sl.version("330");
         
-        if (tex != null) {
-            SLTexU texture = sl.texture("texture");
-        }
+        SLImports.GLSLGamma gamma = sl.include(new SLImports.GLSLGamma());
         
         SLVec4U color = sl.vec4u("color", new Vector4(1,1,1,1));
+        SLVec4 diffuseColor = sl.vec4(color);
         
-        sl.gl_FragColor(color);
+        if (tex != null) {
+            SLTexU texture = sl.texture("texture", tex);
+            
+            SLVec2 uv = sl.vec2("vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y)");
+            
+            SLVec4 mapTexel = sl.sample(texture, uv);
+            
+            sl.call(gamma.toLinearVec4, mapTexel);
+            
+            sl.set(diffuseColor, sl.mul(diffuseColor, mapTexel));
+        }
         
-        sl.call(FogShader.fogFragment());
+        sl.gl_FragColor(diffuseColor);
+        
+        sl.include(FogShader.fogFragment());
         
         return sl;
     }

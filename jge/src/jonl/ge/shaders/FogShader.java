@@ -1,21 +1,21 @@
 package jonl.ge.shaders;
 
-import jonl.ge.core.material.ShaderLanguage.SLCall;
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
+import jonl.ge.core.material.ShaderLanguage.SLInclude;
 import jonl.ge.core.material.ShaderLanguage.SLVec3;
 import jonl.ge.core.material.ShaderLanguage.SLVec3U;
 import jonl.vmath.Vector3;
 
 public class FogShader {
 
-    public static SLCall fogVertex(String mvPosition) {
+    public static SLInclude fogVertex(String mvPosition) {
         return (sl) -> {
             SLFloat fogDepth = sl.attributeOut(SLFloat.class, "fogDepth");
             sl.putStatement(fogDepth+" = -"+mvPosition+".z");
         };
     }
     
-    public static SLCall fogFragment() {
+    public static SLInclude fogFragment() {
         return (sl) -> {
             SLFloat fogDepth = sl.attributeIn(SLFloat.class, "fogDepth");
             

@@ -1,12 +1,11 @@
 package jonl.ge.core.material;
 
 import jonl.ge.base.Construct;
-import jonl.ge.utils.SLImports;
 import jonl.ge.utils.SLUtils;
-import jonl.ge.utils.SLImports.AttenuationDeprecated;
-import jonl.ge.utils.SLImports.DiffuseOrenNayerDeprecated;
-import jonl.ge.utils.SLImports.GLSLGammaDeprecated;
-import jonl.ge.utils.SLImports.SpecularPhongDeprecated;
+import jonl.ge.utils.SLImports.Attenuation;
+import jonl.ge.utils.SLImports.DiffuseOrenNayer;
+import jonl.ge.utils.SLImports.GLSLGamma;
+import jonl.ge.utils.SLImports.SpecularPhong;
 
 /**
  * This material builder extends the fragment shader
@@ -17,7 +16,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
 	
 	private StandardMaterial build = null;
 	
-	GLSLGammaDeprecated glslGamma;
+	GLSLGamma glslGamma;
 	SLVec3 vPosition;
     SLVec3 vNormal;
     SLVec2 vTexCoord;
@@ -80,8 +79,8 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     private void build_0() {
     	
     	ShaderLanguage sl = this;
-    		
-    	glslGamma = sl.include(SLImports.glslGamma());
+		
+    	glslGamma = sl.include(new GLSLGamma());
     	
     	vPosition = sl.attributeIn(SLVec3.class, "vPosition");
         vNormal = sl.attributeIn(SLVec3.class, "vNormal");
@@ -94,7 +93,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         eye = sl.vec3u("eye");
         
         textureLinear = sl.slBegin(SLVec4.class, "sampler2D", "vec2"); {
-        	sl.putStatement("return "+glslGamma.toLinearVec4()+"(texture2D("+sl.arg(0)+", "+sl.arg(1)+" ))");
+        	sl.putStatement("return "+glslGamma.toLinearVec4+"(texture2D("+sl.arg(0)+", "+sl.arg(1)+" ))");
         }
         sl.slEnd();
         
@@ -107,9 +106,9 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     	// Declares
     	// ================================================================================================== //
     	
-        DiffuseOrenNayerDeprecated orenNayer = sl.include(SLImports.orenNayer());
-        SpecularPhongDeprecated phong = sl.include(SLImports.phong());
-        AttenuationDeprecated attenuation = sl.include(SLImports.attenuation());
+        DiffuseOrenNayer orenNayer = sl.include(new DiffuseOrenNayer());
+        SpecularPhong phong = sl.include(new SpecularPhong());
+        Attenuation attenuation = sl.include(new Attenuation());
     	
         SLDeclare<SLLight> Light = sl.declare(() -> new SLLight());
         
@@ -147,12 +146,12 @@ public class StandardMaterialBuilder extends ShaderLanguage {
             SLVec3 lightVector = sl.sub( lightPosition.xyz() , vPosition );
             
             SLFloat lightDistance = sl.length(lightVector);
-            SLFloat falloff = sl.call(attenuation.attenuation(), light.radius, light.falloff, lightDistance);
+            SLFloat falloff = sl.call(attenuation.attenuation, light.radius, light.falloff, lightDistance);
             
             SLVec3 L = sl.normalize(lightVector);
             
-            SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong(), L, V, fNormal, shininess), specularScale, falloff);
-            SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer(), L, V, fNormal, roughness, albedo), falloff);
+            SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong, L, V, fNormal, shininess), specularScale, falloff);
+            SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer, L, V, fNormal, roughness, albedo), falloff);
             SLVec3 ambient = light.ambient;
             
             sl.set(finalColor, sl.add(finalColor, sl.add(fDiffuse.mul(sl.add(diffuse, ambient)), specular)));
@@ -161,7 +160,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         }
         sl.slEndLoop();
         
-        finalColor = sl.call(glslGamma.toGammaVec3(), finalColor);
+        finalColor = sl.call(glslGamma.toGammaVec3, finalColor);
         
     	gl_FragColor(sl.vec4(finalColor, 1f));
     	//gl_FragColor(sl.vec4(fNormal, 1f));

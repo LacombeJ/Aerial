@@ -144,4 +144,8 @@ public class Vector4 extends Vector<Vector4> {
         return vectors;
     }
     
+    public static Vector4[] unpackArray(float[] values) {
+        return unpack(values).toArray(new Vector4[values.length/4]);
+    }
+    
 }

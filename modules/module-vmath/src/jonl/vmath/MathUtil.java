@@ -17,7 +17,6 @@
 package jonl.vmath;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 
 public class MathUtil {
     
@@ -74,35 +73,6 @@ public class MathUtil {
         }
         fb.flip();
         return fb;
-    }
-    
-    public static float[] getFloatArray(Vector<?>[] v) {
-        float[] list = new float[v[0].size()*v.length];
-        int index = 0;
-        for (int i=0; i<v.length; i++) {
-            for (int j=0; j<v[i].size(); j++) {
-                list[index++] = v[i].get(j);
-            }
-        }
-        return list;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T extends Vector<T>> T[] getVectorArray(float[] f, Vector<T> a, Vector<T>[] array) {
-        ArrayList<T> list = new ArrayList<>();
-        int i=0;
-        while (i<f.length) {
-            T v = a.getEmptyVector();
-            int j=0;
-            while (j<v.size() && i<f.length) {
-                v.set(j,f[i]);
-                i++;
-                j++;
-            }
-            list.add(v);
-        }
-        return (T[]) list.toArray(array);
-        
     }
     
 }

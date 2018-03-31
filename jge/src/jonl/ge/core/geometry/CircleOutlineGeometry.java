@@ -13,11 +13,6 @@ import jonl.vmath.Vector3;
  */
 public class CircleOutlineGeometry extends Geometry {
     
-    private FloatArray vertices;
-    private FloatArray normals;
-    private FloatArray texCoords;
-    private IntArray indices;
-    
     public CircleOutlineGeometry() {
         this(0.5f);
     }
@@ -34,10 +29,10 @@ public class CircleOutlineGeometry extends Geometry {
         
         int numVerts = segments + 1;
         
-        vertices = new FloatArray(3 * numVerts);
-        normals = new FloatArray(3 * numVerts);
-        texCoords = new FloatArray(2 * numVerts);
-        indices = new IntArray(2 * segments);
+        FloatArray vertices = new FloatArray(3 * numVerts);
+        FloatArray normals = new FloatArray(3 * numVerts);
+        FloatArray texCoords = new FloatArray(2 * numVerts);
+        IntArray indices = new IntArray(2 * segments);
 
         int i, s;
         Vector3 vertex = new Vector3();

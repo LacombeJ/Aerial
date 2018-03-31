@@ -1,14 +1,17 @@
 package jonl.ge.core.geometry;
 
-import jonl.jutils.structs.FloatList;
+import java.util.ArrayList;
+
+import jonl.jutils.func.List;
 import jonl.jutils.structs.IntList;
+import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 
 public class GeometryBuilder {
     
-	private FloatList vertices;
-    private FloatList normals;
-    private FloatList texCoords;
+	private ArrayList<Vector3> vertices;
+    private ArrayList<Vector3> normals;
+    private ArrayList<Vector2> texCoords;
     private IntList indices;
     
     int numVerts = 0;
@@ -16,9 +19,9 @@ public class GeometryBuilder {
     boolean calculateTangents = true;
 	
     public GeometryBuilder() {
-    	vertices = new FloatList();
-    	normals = new FloatList();
-    	texCoords = new FloatList();
+    	vertices = new ArrayList<>();
+    	normals = new ArrayList<>();
+    	texCoords = new ArrayList<>();
     	indices = new IntList();
     }
     
@@ -27,9 +30,9 @@ public class GeometryBuilder {
     	
     	//TODO add method of joining duplicated vertices
     	
-    	vertices.put(geometry.getVertices());
-    	normals.put(geometry.getNormals());
-    	texCoords.put(geometry.getTexCoords());
+    	vertices.addAll(List.list(geometry.getVertexArray()));
+    	normals.addAll(List.list(geometry.getNormalArray()));
+    	texCoords.addAll(List.list(geometry.getTexCoordArray()));
     	for (int index : geometry.getIndices()) {
     		indices.put(index + numVerts); 
     	}
@@ -41,11 +44,15 @@ public class GeometryBuilder {
     }
     
     public void addVertex(Vector3 v) {
-        vertices.put(v.toArray());
+        vertices.add(v);
     }
 	
     public Geometry build() {
-    	Geometry geometry = new Geometry(vertices.toArray(),normals.toArray(),texCoords.toArray(),indices.toArray());
+    	Geometry geometry = new Geometry(
+    	        vertices.toArray(new Vector3[vertices.size()]),
+    	        normals.toArray(new Vector3[normals.size()]),
+    	        texCoords.toArray(new Vector2[texCoords.size()]),
+    	        indices.toArray());
     	
     	geometry.setCalculateTangents(calculateTangents);
     	

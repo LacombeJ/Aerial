@@ -199,4 +199,8 @@ public class Vector2 extends Vector<Vector2> {
         return vectors;
     }
     
+    public static Vector2[] unpackArray(float[] values) {
+        return unpack(values).toArray(new Vector2[values.length/2]);
+    }
+    
 }

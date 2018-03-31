@@ -1,7 +1,6 @@
 package jonl.ge.core.geometry;
 
 import jonl.ge.base.BaseGeometry;
-import jonl.vmath.MathUtil;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 
@@ -13,20 +12,25 @@ public class Geometry extends BaseGeometry {
         
     }
     
+    public Geometry(Vector3[] vertices, Vector3[] normals, Vector2[] texCoords, int[] indices) {
+        set(vertices,normals,texCoords,indices);
+    }
+    
     public Geometry(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
         set(vertices,normals,texCoords,indices);
     }
     
     public Geometry(float[] vertices, int[] indices) {
-        this.vertices = vertices;
+        this.vertices = Vector3.unpackArray(vertices);
         this.indices = indices;
     }
     
     public Geometry(Vector3[] vertices, int[] indices) {
-        this(MathUtil.getFloatArray(vertices),indices);
+        this.vertices = vertices;
+        this.indices = indices;
     }
     
-    protected void set(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
+    public void set(Vector3[] vertices, Vector3[] normals, Vector2[] texCoords, int[] indices) {
         update = true;
         this.vertices = vertices;
         this.normals = normals;
@@ -34,60 +38,48 @@ public class Geometry extends BaseGeometry {
         this.indices = indices;
     }
     
-    public float[] getVertices() {
-        return vertices;
-    }
-    public float[] getNormals() {
-        return normals;
-    }
-    public float[] getTexCoords() {
-        return texCoords;
-    }
-    public int[] getIndices() {
-        return indices;
+    public void set(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
+        set(Vector3.unpackArray(vertices), Vector3.unpackArray(normals), Vector2.unpackArray(texCoords), indices);
     }
     
-    public void setVertices(float[] v) {
-        update = true;
-        vertices = v;
-    }
-    public void setNormals(float[] n) {
-        update = true;
-        normals = n;
-    }
-    public void setTexCoords(float[] t) {
-        update = true;
-        texCoords = t;
-    }
-    public void setIndices(int[] i) {
-        update = true;
-        indices = i;
-    }
-    
-    /**
-     * 
-     * @return a read-only copy of the vertex data
-     */
     public Vector3[] getVertexArray() {
-        return MathUtil.getVectorArray(vertices,new Vector3(),new Vector3[0]);
+        return vertices;
     }
     
     public void setVectorArray(Vector3[] array) {
         update = true;
-        vertices = MathUtil.getFloatArray(array);
+        vertices = array;
+    }
+    
+    public Vector3[] getNormalArray() {
+        return normals;
+    }
+    
+    public void setNormalArray(Vector3[] array) {
+        update = true;
+        normals = array;
     }
     
     public Vector2[] getTexCoordArray() {
-        return MathUtil.getVectorArray(texCoords,new Vector2(),new Vector2[0]);
+        return texCoords;
     }
     
     public void setTexCoordArray(Vector2[] array) {
         update = true;
-        texCoords = MathUtil.getFloatArray(array);
+        texCoords = array;
+    }
+    
+    public int[] getIndices() {
+        return indices;
+    }
+    
+    public void setIndices(int[] array) {
+        update = true;
+        indices = array;
     }
     
     public int getNumVertices() {
-        return vertices.length/3;
+        return vertices.length;
     }
     
     public void modify(GeometryOperation op) {

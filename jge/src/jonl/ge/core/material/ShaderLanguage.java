@@ -351,18 +351,10 @@ public class ShaderLanguage {
     
     public void version(String v) { version = "#version "+v+"\n"; }
     
-    public <T extends SLIncludeLibraryDeprecated> T include(SLIncludeDeprecated<T> include) {
-        return include.include(this);
-    }
-    
-    public void include(SLInclude include) {
+    public <T extends SLInclude> T include(T include) {
         include.include(this);
+        return include;
     }
-    
-    public void call(SLCall call) {
-        call.call(this);
-    }
-    
     
     @SuppressWarnings("unchecked")
 	private <T extends SLData> T layout(String layoutType, Class<T> returnClass, int index, String name) {
@@ -603,6 +595,7 @@ public class ShaderLanguage {
     public SLVec3 vec3(float x, float y, float z)                   { return vec3p(x,y,z); }
     public SLVec3 vec3(SLVec2 u, SLFloat z)                         { return vec3p(u,z); }
     public SLVec3 vec3(SLFloat x, SLFloat y, SLFloat z)             { return vec3p(x,y,z); }
+    public SLVec3 vec3(SLFloat x, SLFloat y, float z)               { return vec3p(x,y,z); }
     public SLVec3 vec3(Vector3 v)                                   { return vec3p(v.x,v.y,v.z); }
     public SLVec3 vec3(float v)                                     { return vec3p(v,v,v); }
     public SLVec3 vec3(SLFloat v)                                   { return vec3p(v,v,v); }
@@ -965,6 +958,18 @@ public class ShaderLanguage {
     
     public void gl_FragColor(SLVec4 v) {
         putStatement("gl_FragColor = "+v);
+    }
+    
+    public final SLVec4V gl_FragColor = gl(new SLVec4V(), "gl_FragColor");
+    public final SLVec4V gl_FragCoord = gl(new SLVec4V(), "gl_FragCoord");
+    public final SLVec2V gl_PointCoord = gl(new SLVec2V(), "gl_PointCoord");
+    public final SLFloatV gl_PointSize = gl(new SLFloatV(), "gl_PointSize");
+    
+    private <T extends SLObject> T gl(T v, String name) {
+        v.sl = this;
+        v.type = getType(v);
+        v.name = name;
+        return v;
     }
     
     
@@ -1486,22 +1491,6 @@ public class ShaderLanguage {
     public interface SLInclude {
         void include(ShaderLanguage sl);
     }
-    
-    
-    
-    public interface SLIncludeLibraryDeprecated {
-    	
-    }
-    public interface SLIncludeDeprecated<T extends SLIncludeLibraryDeprecated> {
-    	T include(ShaderLanguage sl);
-    }
-    
-    
-    
-    public interface SLCall {
-        void call(ShaderLanguage sl);
-    }
-    
     
     
 }

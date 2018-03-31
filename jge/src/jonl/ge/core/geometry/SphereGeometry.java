@@ -11,11 +11,6 @@ import jonl.vmath.Vector3;
 
 public class SphereGeometry extends Geometry {
     
-    private FloatArray vertices;
-    private FloatArray normals;
-    private FloatArray texCoords;
-    private IntList indices;
-    
     public SphereGeometry() {
         this(0.5f);
     }
@@ -32,10 +27,10 @@ public class SphereGeometry extends Geometry {
         
         int numVerts = (widthSegments+1) * (heightSegments+1);
         
-        vertices = new FloatArray(3 * numVerts);
-        normals = new FloatArray(3 * numVerts);
-        texCoords = new FloatArray(2 * numVerts);
-        indices = new IntList();
+        FloatArray vertices = new FloatArray(3 * numVerts);
+        FloatArray normals = new FloatArray(3 * numVerts);
+        FloatArray texCoords = new FloatArray(2 * numVerts);
+        IntList indices = new IntList();
         
         float thetaEnd = thetaStart + thetaLength;
         

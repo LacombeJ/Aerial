@@ -12,11 +12,6 @@ import jonl.vmath.Vector3;
 
 public class CylinderGeometry extends Geometry {
     
-    private FloatArray vertices;
-    private FloatArray normals;
-    private FloatArray texCoords;
-    private IntList indices;
-    
     private class Variables {
         int index = 0;
     }
@@ -41,21 +36,21 @@ public class CylinderGeometry extends Geometry {
         
         int numVerts = (heightSegments+1) * (radialSegments+1) + 2 * ( radialSegments + radialSegments + 1);
         
-        vertices = new FloatArray(3 * numVerts);
-        normals = new FloatArray(3 * numVerts);
-        texCoords = new FloatArray(2 * numVerts);
-        indices = new IntList();
+        FloatArray vertices = new FloatArray(3 * numVerts);
+        FloatArray normals = new FloatArray(3 * numVerts);
+        FloatArray texCoords = new FloatArray(2 * numVerts);
+        IntList indices = new IntList();
         
         Variables vars = new Variables();
         
         float halfHeight = height / 2f;
         
-        generateTorso(vars,radiusTop,radiusBottom,height,radialSegments,heightSegments,thetaStart,thetaLength);
+        generateTorso(vars,radiusTop,radiusBottom,height,radialSegments,heightSegments,thetaStart,thetaLength,vertices,normals,texCoords,indices);
         
         if (openEnded == false) {
             
-            if ( radiusTop > 0 ) generateCap(vars, true, radiusTop, radiusBottom, halfHeight, radialSegments, thetaStart, thetaLength);
-            if ( radiusBottom > 0) generateCap(vars, false, radiusTop, radiusBottom, halfHeight, radialSegments, thetaStart, thetaLength);
+            if ( radiusTop > 0 ) generateCap(vars, true, radiusTop, radiusBottom, halfHeight, radialSegments, thetaStart, thetaLength, vertices,normals,texCoords,indices);
+            if ( radiusBottom > 0) generateCap(vars, false, radiusTop, radiusBottom, halfHeight, radialSegments, thetaStart, thetaLength, vertices,normals,texCoords,indices);
             
         }
         
@@ -63,7 +58,8 @@ public class CylinderGeometry extends Geometry {
         
     }
     
-    private void generateTorso(Variables vars, float radiusTop, float radiusBottom, float height, int radialSegments, int heightSegments, float thetaStart, float thetaLength) {
+    private void generateTorso(Variables vars, float radiusTop, float radiusBottom, float height, int radialSegments, int heightSegments, float thetaStart, float thetaLength,
+            FloatArray vertices, FloatArray normals, FloatArray texCoords, IntList indices) {
 
         IntArray2D indexArray = new IntArray2D(heightSegments+1);
         
@@ -150,7 +146,8 @@ public class CylinderGeometry extends Geometry {
 
     }
 
-    void generateCap(Variables scope, boolean top, float radiusTop, float radiusBottom, float halfHeight, float radialSegments, float thetaStart, float thetaLength) {
+    void generateCap(Variables scope, boolean top, float radiusTop, float radiusBottom, float halfHeight, float radialSegments, float thetaStart, float thetaLength,
+            FloatArray vertices, FloatArray normals, FloatArray texCoords, IntList indices) {
 
         int x, centerIndexStart, centerIndexEnd;
 

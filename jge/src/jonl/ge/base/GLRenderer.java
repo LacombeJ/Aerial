@@ -51,14 +51,18 @@ class GLRenderer {
     jonl.jgl.Mesh getOrCreateMesh(BaseGeometry mesh) {
         jonl.jgl.Mesh glmesh = meshMap.get(mesh);
         if (glmesh==null) {
-            glmesh = gl.glGenMesh(mesh.vertices, mesh.normals, mesh.texCoords, mesh.indices);
+            glmesh = gl.glGenMesh(
+                Vector3.pack(mesh.vertices), 
+                Vector3.pack(mesh.normals),
+                Vector2.pack(mesh.texCoords),
+                mesh.indices);
             checkUpdateTangents(mesh, glmesh);
             meshMap.put(mesh,glmesh);
             
         } else if (mesh.update) {
-        	if (mesh.vertices!=null) glmesh.setVertexAttrib(mesh.vertices, 3);
-        	if (mesh.normals!=null) glmesh.setNormalAttrib(mesh.normals, 3);
-        	if (mesh.texCoords!=null) glmesh.setTexCoordAttrib(mesh.texCoords, 2);
+        	if (mesh.vertices!=null) glmesh.setVertexAttrib(Vector3.pack(mesh.vertices), 3);
+        	if (mesh.normals!=null) glmesh.setNormalAttrib(Vector3.pack(mesh.normals), 3);
+        	if (mesh.texCoords!=null) glmesh.setTexCoordAttrib(Vector2.pack(mesh.texCoords), 2);
         	if (mesh.indices!=null) glmesh.setIndices(mesh.indices);
         	checkUpdateTangents(mesh, glmesh);
         }
@@ -172,10 +176,10 @@ class GLRenderer {
     
     static void checkUpdateTangents(BaseGeometry mesh, jonl.jgl.Mesh glmesh) {
     	if (mesh.calculateTangents) {
-        	Tuple2<float[],float[]> calculated = calculateTangents(mesh.vertices, mesh.normals, mesh.texCoords, mesh.indices);
+        	Tuple2<Vector3[],Vector3[]> calculated = calculateTangents(mesh.vertices, mesh.normals, mesh.texCoords, mesh.indices);
         	if (calculated != null) {
-        	    float[] tangents = calculated.x;
-                float[] bitangents = calculated.y;
+        	    float[] tangents = Vector3.pack(calculated.x);
+                float[] bitangents = Vector3.pack(calculated.y);
                 glmesh.setCustomAttrib(3,tangents,3);
                 glmesh.setCustomAttrib(4,bitangents,3);
         	}
@@ -184,71 +188,60 @@ class GLRenderer {
     
     // https://learnopengl.com/#!Advanced-Lighting/Normal-Mapping
     //TODO calculate smooth tangents instead of flat tangents?
-    static Tuple2<float[],float[]> calculateTangents(float[] vertices, float[] normals, float[] texCoords, int[] indices) {
+    private static Tuple2<Vector3[],Vector3[]> calculateTangents(Vector3[] vertices, Vector3[] normals, Vector2[] texCoords, int[] indices) {
         
     	if (vertices!=null && normals!=null && texCoords!=null && indices!=null) {
-    		
-    	    float[] tangents = new float[vertices.length];
-    	    float[] bitangents = new float[vertices.length];
+    		if (texCoords.length!=0 && indices.length!=0) {
+        	    Vector3[] tangents = new Vector3[vertices.length];
+        	    Vector3[] bitangents = new Vector3[vertices.length];
+                
+                for (int i=0; i<indices.length; i+=3) {
+                    
+                    int a = indices[i]*3;
+                    int b = indices[i+1]*3;
+                    int c = indices[i+2]*3;
+                    Vector3 vertexA = vertices[a];
+                    Vector3 vertexB = vertices[b];
+                    Vector3 vertexC = vertices[c];
+                    
+                    int ta = indices[i]*2;
+                    int tb = indices[i+1]*2;
+                    int tc = indices[i+2]*2;
+                    Vector2 texCoordA = texCoords[ta];
+                    Vector2 texCoordB = texCoords[tb];
+                    Vector2 texCoordC = texCoords[tc];
+                    
+                    Vector3 edge1 = Mathf.sub(vertexB,vertexA);
+                    Vector3 edge2 = Mathf.sub(vertexC,vertexA);
+                    Vector2 deltaUV1 = Mathf.sub(texCoordB,texCoordA);
+                    Vector2 deltaUV2 = Mathf.sub(texCoordC,texCoordA);
+                    
+                    float f =  1f / Vector2.cross(deltaUV1,deltaUV2);
+                    
+                    Vector3 tangent = new Vector3();
+                    tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+                    tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+                    tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+                    tangent.normalize();
+                    
+                    Vector3 bitangent = new Vector3();
+                    bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+                    bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+                    bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+                    bitangent.normalize();
+                    
+                    tangents[a] = tangent;
+                    tangents[b] = tangent;
+                    tangents[c] = tangent;
+                    
+                    bitangents[a] = bitangent;
+                    bitangents[b] = bitangent;
+                    bitangents[c] = bitangent;
+                }
+                
+                return new Tuple2<>(tangents,bitangents);
             
-            for (int i=0; i<indices.length; i+=3) {
-            	
-                int a = indices[i]*3;
-                int b = indices[i+1]*3;
-                int c = indices[i+2]*3;
-                Vector3 vertexA = new Vector3(vertices[a],vertices[a+1],vertices[a+2]);
-                Vector3 vertexB = new Vector3(vertices[b],vertices[b+1],vertices[b+2]);
-                Vector3 vertexC = new Vector3(vertices[c],vertices[c+1],vertices[c+2]);
-                
-                int ta = indices[i]*2;
-                int tb = indices[i+1]*2;
-                int tc = indices[i+2]*2;
-                Vector2 texCoordA = new Vector2(texCoords[ta],texCoords[ta+1]);
-                Vector2 texCoordB = new Vector2(texCoords[tb],texCoords[tb+1]);
-                Vector2 texCoordC = new Vector2(texCoords[tc],texCoords[tc+1]);
-                
-                Vector3 edge1 = Mathf.sub(vertexB,vertexA);
-                Vector3 edge2 = Mathf.sub(vertexC,vertexA);
-                Vector2 deltaUV1 = Mathf.sub(texCoordB,texCoordA);
-                Vector2 deltaUV2 = Mathf.sub(texCoordC,texCoordA);
-                
-                float f =  1f / Vector2.cross(deltaUV1,deltaUV2);
-                
-                Vector3 tangent = new Vector3();
-                tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-                tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-                tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-                tangent.normalize();
-                
-                Vector3 bitangent = new Vector3();
-                bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-                bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-                bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-                bitangent.normalize();
-                
-                tangents[a  ] = tangent.x;
-                tangents[a+1] = tangent.y;
-                tangents[a+2] = tangent.z;
-                tangents[b  ] = tangent.x;
-                tangents[b+1] = tangent.y;
-                tangents[b+2] = tangent.z;
-                tangents[c  ] = tangent.x;
-                tangents[c+1] = tangent.y;
-                tangents[c+2] = tangent.z;
-                
-                bitangents[a  ] = bitangent.x;
-                bitangents[a+1] = bitangent.y;
-                bitangents[a+2] = bitangent.z;
-                bitangents[b  ] = bitangent.x;
-                bitangents[b+1] = bitangent.y;
-                bitangents[b+2] = bitangent.z;
-                bitangents[c  ] = bitangent.x;
-                bitangents[c+1] = bitangent.y;
-                bitangents[c+2] = bitangent.z;
-                
-            }
-            
-            return new Tuple2<>(tangents,bitangents);
+    		}
         }
     	
     	return null;

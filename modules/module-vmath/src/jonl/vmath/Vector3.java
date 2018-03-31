@@ -234,4 +234,8 @@ public class Vector3 extends Vector<Vector3> {
         return vectors;
     }
     
+    public static Vector3[] unpackArray(float[] values) {
+        return unpack(values).toArray(new Vector3[values.length/3]);
+    }
+    
 }
