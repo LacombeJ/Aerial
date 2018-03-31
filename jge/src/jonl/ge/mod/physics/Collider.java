@@ -1,11 +1,11 @@
-package jonl.ge.base.physics;
+package jonl.ge.mod.physics;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
 
 import jonl.ge.core.Component;
 
-public abstract class BaseCollider extends Component {
+public abstract class Collider extends Component {
 
     protected CollisionShape shape;
-    
+
 }

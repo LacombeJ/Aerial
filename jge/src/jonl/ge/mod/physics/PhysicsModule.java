@@ -1,4 +1,4 @@
-package jonl.ge.base.physics;
+package jonl.ge.mod.physics;
 
 import java.util.ArrayList;
 import javax.vecmath.Quat4f;
@@ -20,7 +20,6 @@ import jonl.ge.core.Delegate;
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
-import jonl.ge.core.physics.RigidBody;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.vmath.Quaternion;

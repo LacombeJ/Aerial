@@ -1,13 +1,13 @@
 package jonl.ge.core;
 
 import jonl.aui.Widget;
-import jonl.ge.base.app.ApplicationWindow;
 import jonl.ge.base.SceneManager;
-import jonl.ge.base.app.AbstractApplication;
-import jonl.ge.base.app.EditorAssets;
-import jonl.ge.base.app.EditorGUI;
-import jonl.ge.base.app.EditorInput;
 import jonl.ge.core.Input.CursorState;
+import jonl.ge.core.app.AbstractApplication;
+import jonl.ge.core.app.ApplicationWindow;
+import jonl.ge.core.app.EditorAssets;
+import jonl.ge.core.app.EditorGUI;
+import jonl.ge.core.app.EditorInput;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Target;
 

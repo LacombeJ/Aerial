@@ -1,4 +1,4 @@
-package jonl.ge.base.app;
+package jonl.ge.core.app;
 
 import jonl.ge.core.Window;
 import jonl.vmath.Vector2;

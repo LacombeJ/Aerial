@@ -1,4 +1,4 @@
-package jonl.ge.base.light;
+package jonl.ge.core.light;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import jonl.ge.core.Camera;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Material;
 import jonl.ge.core.Service;
-import jonl.ge.core.light.Light;
 import jonl.ge.utils.GLUtils;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;

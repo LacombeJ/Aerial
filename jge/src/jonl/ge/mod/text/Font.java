@@ -1,4 +1,4 @@
-package jonl.ge.core.text;
+package jonl.ge.mod.text;
 
 public final class Font {
 

@@ -1,4 +1,4 @@
-package jonl.ge.core.physics;
+package jonl.ge.mod.physics;
 
 public class CollisionShape {
 

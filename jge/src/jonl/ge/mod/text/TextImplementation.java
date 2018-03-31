@@ -1,6 +1,5 @@
-package jonl.ge.base.text;
+package jonl.ge.mod.text;
 
-import jonl.ge.core.text.Text;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Texture;
 

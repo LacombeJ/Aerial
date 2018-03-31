@@ -1,4 +1,4 @@
-package jonl.ge.core.physics;
+package jonl.ge.mod.physics;
 
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
@@ -8,14 +8,15 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.MotionState;
 
-import jonl.ge.base.physics.BaseRigidBody;
-import jonl.ge.base.physics.PhysicsModule;
+import jonl.ge.core.Property;
 import jonl.ge.core.Transform;
 import jonl.vmath.Quaternion;
 import jonl.vmath.Vector3;
 
-public class RigidBody extends BaseRigidBody {
+public class RigidBody extends Property {
 
+    protected com.bulletphysics.dynamics.RigidBody rb;
+    
     public boolean hasInertia = true;
     public boolean kinematic = false;
     public float mass = 1;
@@ -27,7 +28,16 @@ public class RigidBody extends BaseRigidBody {
     }
     
     @Override
-    protected void createRigidBody() {
+    public void create() {
+        createRigidBody();
+    }
+    
+    @Override
+    public void update() {
+        
+    }
+    
+    private void createRigidBody() {
         
         Transform T = computeWorldTransform();
         

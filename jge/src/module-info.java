@@ -6,7 +6,7 @@ module jonl.ge {
 	exports jonl.ge.core.light;
 	exports jonl.ge.core.material;
 	exports jonl.ge.core.render;
-	exports jonl.ge.core.text;
+	exports jonl.ge.mod.text;
 	exports jonl.ge.ext;
 	exports jonl.ge.utils;
 	

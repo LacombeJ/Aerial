@@ -3,8 +3,8 @@
 import java.util.ArrayList;
 
 import jonl.ge.base.BaseScene;
-import jonl.ge.base.app.AbstractApplication;
 import jonl.ge.core.Input.CursorState;
+import jonl.ge.core.app.AbstractApplication;
 import jonl.jutils.func.List;
 import jonl.jutils.structs.TreeForest;
 

@@ -1,10 +1,7 @@
-package jonl.ge.base.app;
+package jonl.ge.core.app;
 
 import java.util.HashMap;
 
-import jonl.ge.base.light.LightModule;
-import jonl.ge.base.physics.PhysicsModule;
-import jonl.ge.base.text.TextModule;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Input;
@@ -14,7 +11,10 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Time;
 import jonl.ge.core.Window;
 import jonl.ge.core.Input.CursorState;
+import jonl.ge.core.light.LightModule;
 import jonl.ge.mod.fx.FXModule;
+import jonl.ge.mod.physics.PhysicsModule;
+import jonl.ge.mod.text.TextModule;
 import jonl.jutils.call.Caller;
 import jonl.jutils.misc.SystemUtils;
 import jonl.jutils.structs.AttributeMap;

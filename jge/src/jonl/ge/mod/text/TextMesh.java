@@ -1,4 +1,4 @@
-package jonl.ge.core.text;
+package jonl.ge.mod.text;
 
 import jonl.ge.core.Component;
 import jonl.vmath.Vector3;

@@ -1,10 +1,8 @@
-package jonl.ge.base.text;
+package jonl.ge.mod.text;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import jonl.ge.core.text.Font;
-import jonl.ge.core.text.Text;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Texture;
 import jonl.jgl.Texture.Filter;

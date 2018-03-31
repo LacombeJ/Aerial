@@ -1,4 +1,4 @@
-package jonl.ge.base.text;
+package jonl.ge.mod.text;
 
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Camera;
@@ -8,9 +8,6 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.geometry.PlaneGeometry;
-import jonl.ge.core.text.Align;
-import jonl.ge.core.text.Text;
-import jonl.ge.core.text.TextMesh;
 import jonl.ge.utils.GLUtils;
 import jonl.ge.utils.PresetData;
 import jonl.jgl.GraphicsLibrary;

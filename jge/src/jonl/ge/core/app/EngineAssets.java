@@ -1,4 +1,4 @@
-package jonl.ge.base.app;
+package jonl.ge.core.app;
 
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Material;
@@ -6,7 +6,7 @@ import jonl.ge.core.Mesh;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.light.Light;
 import jonl.ge.core.material.GeneratedMaterial;
-import jonl.ge.core.text.Font;
+import jonl.ge.mod.text.Font;
 import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
 
