@@ -11,11 +11,19 @@ import jonl.ge.core.Property;
  */
 public class PerspectiveUpdate extends Property {
 
-    Camera camera;
+    Camera camera = null;
+    
+    public PerspectiveUpdate(Camera camera) {
+        this.camera = camera;
+    }
+    
+    public PerspectiveUpdate() {
+        
+    }
     
     @Override
     public void create() {
-        camera = getComponent(Camera.class);
+        if (camera==null) camera = getComponent(Camera.class);
         perspective();
     }
     

@@ -4,7 +4,8 @@ import jonl.ge.core.material.ShaderLanguage;
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
 import jonl.ge.core.material.ShaderLanguage.SLFunc;
 import jonl.ge.core.material.ShaderLanguage.SLInclude;
-import jonl.ge.core.material.ShaderLanguage.SLIncludeLibrary;
+import jonl.ge.core.material.ShaderLanguage.SLIncludeDeprecated;
+import jonl.ge.core.material.ShaderLanguage.SLIncludeLibraryDeprecated;
 import jonl.ge.core.material.ShaderLanguage.SLMat3;
 import jonl.ge.core.material.ShaderLanguage.SLVec2;
 import jonl.ge.core.material.ShaderLanguage.SLVec3;
@@ -19,10 +20,62 @@ public class SLImports {
 	
 	// GLSL Gamma
 	// https://github.com/glslify/glsl-gamma
+	public static class GLSLGamma implements SLInclude {
+
+	    public SLFloat gamma;
+	    public SLFunc<SLFloat> toLinear;
+	    public SLFunc<SLVec2> toLinearVec2;
+	    public SLFunc<SLVec3> toLinearVec3;
+	    public SLFunc<SLVec4> toLinearVec4;
+	    public SLFunc<SLFloat> toGamma;
+	    public SLFunc<SLVec2> toGammaVec2;
+	    public SLFunc<SLVec3> toGammaVec3;
+	    public SLFunc<SLVec4> toGammaVec4;
+	    
+        @SuppressWarnings("unchecked")
+        @Override
+        public void include(ShaderLanguage sl) {
+            SLFloat gamma = sl.slFloatc(2.2f);
+            
+            toLinear = sl.slFunc(
+                "return pow(v, "+gamma+");",
+                SLFloat.class, arg("float","v"));
+            
+            toLinearVec2 = sl.slFunc(
+                "return pow(v, vec2("+gamma+"));",
+                SLVec2.class, arg("vec2","v"));
+            
+            toLinearVec3 = sl.slFunc(
+                "return pow(v, vec3("+gamma+"));",
+                SLVec3.class, arg("vec3","v"));
+            
+            toLinearVec4 = sl.slFunc(
+                "return pow(v, vec4("+gamma+"));",
+                SLVec4.class, arg("vec4","v"));
+            
+            
+            toGamma = sl.slFunc(
+                "return pow(v, 1.0 / "+gamma+");",
+                SLFloat.class, arg("float","v"));
+            
+            toGammaVec2 = sl.slFunc(
+                "return pow(v, vec2(1.0 / "+gamma+"));",
+                SLVec2.class, arg("vec2","v"));
+            
+            toGammaVec3 = sl.slFunc(
+                "return pow(v, vec3(1.0 / "+gamma+"));",
+                SLVec3.class, arg("vec3","v"));
+            
+            toGammaVec4 = sl.slFunc(
+                "return pow(v, vec4(1.0 / "+gamma+"));",
+                SLVec4.class, arg("vec4","v"));
+        }
+	    
+	}
 	
-	public static class GLSLGamma implements SLIncludeLibrary {
+	public static class GLSLGammaDeprecated implements SLIncludeLibraryDeprecated {
 		
-		GLSLGamma(
+		GLSLGammaDeprecated(
 				SLFunc<SLFloat> toLinear,
 				SLFunc<SLVec2> toLinearVec2,
 				SLFunc<SLVec3> toLinearVec3,
@@ -64,10 +117,10 @@ public class SLImports {
 		public SLFunc<SLVec4> toGammaVec4() { return toGammaVec4; }
 		
     }
-	private static class GLSLGammaInclude implements SLInclude<GLSLGamma> {
+	private static class GLSLGammaInclude implements SLIncludeDeprecated<GLSLGammaDeprecated> {
 		@SuppressWarnings("unchecked")
 		@Override
-		public GLSLGamma include(ShaderLanguage sl) {
+		public GLSLGammaDeprecated include(ShaderLanguage sl) {
 
 			SLFloat gamma = sl.slFloatc(2.2f);
 	    	
@@ -104,7 +157,7 @@ public class SLImports {
     			"return pow(v, vec4(1.0 / "+gamma+"));",
     			SLVec4.class, arg("vec4","v"));
 	    	
-	    	return new GLSLGamma(
+	    	return new GLSLGammaDeprecated(
     			toLinear,
     			toLinearVec2,
     			toLinearVec3,
@@ -117,24 +170,24 @@ public class SLImports {
 		}
 	}
 	private static GLSLGammaInclude glslGamma = new GLSLGammaInclude();
-    public static SLInclude<GLSLGamma> glslGamma() { return glslGamma; }
+    public static SLIncludeDeprecated<GLSLGammaDeprecated> glslGamma() { return glslGamma; }
     
     
     
     
     // Diffuse Oren-Nayer
     // https://github.com/glslify/glsl-diffuse-oren-nayar
-	public static class DiffuseOrenNayer implements SLIncludeLibrary {
-		DiffuseOrenNayer(SLFunc<SLFloat> orenNayer) {
+	public static class DiffuseOrenNayerDeprecated implements SLIncludeLibraryDeprecated {
+		DiffuseOrenNayerDeprecated(SLFunc<SLFloat> orenNayer) {
 			this.orenNayer = orenNayer;
 		}
 		private SLFunc<SLFloat> orenNayer;
 		public SLFunc<SLFloat> orenNayer() { return orenNayer; }
 	 }
- 	private static class DiffuseOrenNayerInclude implements SLInclude<DiffuseOrenNayer> {
+ 	private static class DiffuseOrenNayerInclude implements SLIncludeDeprecated<DiffuseOrenNayerDeprecated> {
  		@SuppressWarnings("unchecked")
  		@Override
- 		public DiffuseOrenNayer include(ShaderLanguage sl) {
+ 		public DiffuseOrenNayerDeprecated include(ShaderLanguage sl) {
  			
  			String PI = "3.14159265";
  			
@@ -160,27 +213,27 @@ public class SLImports {
  	        		arg("float","albedo")
  			);
  	    	
- 	    	return new DiffuseOrenNayer(orenNayer);
+ 	    	return new DiffuseOrenNayerDeprecated(orenNayer);
  		}
  	}
 	private static DiffuseOrenNayerInclude orenNayer = new DiffuseOrenNayerInclude();
-	public static SLInclude<DiffuseOrenNayer> orenNayer() { return orenNayer; }
+	public static SLIncludeDeprecated<DiffuseOrenNayerDeprecated> orenNayer() { return orenNayer; }
 	
 	
 	
 	// Specular phong
 	// https://github.com/glslify/glsl-specular-phong/blob/master/index.glsl
-	public static class SpecularPhong implements SLIncludeLibrary {
-		SpecularPhong(SLFunc<SLFloat> phong) {
+	public static class SpecularPhongDeprecated implements SLIncludeLibraryDeprecated {
+		SpecularPhongDeprecated(SLFunc<SLFloat> phong) {
 			this.phong = phong;
 		}
 		private SLFunc<SLFloat> phong;
 		public SLFunc<SLFloat> phong() { return phong; }
 	 }
- 	private static class SpecularPhongInclude implements SLInclude<SpecularPhong> {
+ 	private static class SpecularPhongInclude implements SLIncludeDeprecated<SpecularPhongDeprecated> {
  		@SuppressWarnings("unchecked")
  		@Override
- 		public SpecularPhong include(ShaderLanguage sl) {
+ 		public SpecularPhongDeprecated include(ShaderLanguage sl) {
  			
  			String body =
  					"  vec3 R = -reflect(lightDirection, surfaceNormal);\n" + 
@@ -193,18 +246,18 @@ public class SLImports {
  	        		arg("float","shininess")
  			);
  	    	
- 	    	return new SpecularPhong(phong);
+ 	    	return new SpecularPhongDeprecated(phong);
  		}
  	}
 	private static SpecularPhongInclude phong = new SpecularPhongInclude();
-	public static SLInclude<SpecularPhong> phong() { return phong; }
+	public static SLIncludeDeprecated<SpecularPhongDeprecated> phong() { return phong; }
 	
 	
 	
 	// Perturb-normal
     // https://github.com/glslify/glsl-perturb-normal/blob/master/index.glsl
-	public static class PerturbNormal implements SLIncludeLibrary {
-		PerturbNormal(SLFunc<SLVec3> perturb, SLFunc<SLMat3> cotangent) {
+	public static class PerturbNormalDeprecated implements SLIncludeLibraryDeprecated {
+		PerturbNormalDeprecated(SLFunc<SLVec3> perturb, SLFunc<SLMat3> cotangent) {
 			this.perturb = perturb;
 			this.cotangent = cotangent;
 		}
@@ -213,10 +266,10 @@ public class SLImports {
 		public SLFunc<SLVec3> pertub() { return perturb; }
 		public SLFunc<SLMat3> cotangent() { return cotangent; }
 	 }
- 	private static class PerturbNormalInclude implements SLInclude<PerturbNormal> {
+ 	private static class PerturbNormalInclude implements SLIncludeDeprecated<PerturbNormalDeprecated> {
  		@SuppressWarnings("unchecked")
  		@Override
- 		public PerturbNormal include(ShaderLanguage sl) {
+ 		public PerturbNormalDeprecated include(ShaderLanguage sl) {
  			
  			// Cotangent
  			// http://www.thetenthplanet.de/archives/1180
@@ -258,28 +311,28 @@ public class SLImports {
  			);
  	        
  	    	
- 	    	return new PerturbNormal(perturb, cotangent);
+ 	    	return new PerturbNormalDeprecated(perturb, cotangent);
  		}
  	}
 	private static PerturbNormalInclude perturbNormal = new PerturbNormalInclude();
-	public static SLInclude<PerturbNormal> perturbNormal() { return perturbNormal; }
+	public static SLIncludeDeprecated<PerturbNormalDeprecated> perturbNormal() { return perturbNormal; }
 	
 	
 	
 	// Attenuation-normal
     // https://github.com/glslify/glsl-Attenuation-normal/blob/master/index.glsl
 	
-	public static class Attenuation implements SLIncludeLibrary {
-		Attenuation(SLFunc<SLFloat> attenuation) {
+	public static class AttenuationDeprecated implements SLIncludeLibraryDeprecated {
+		AttenuationDeprecated(SLFunc<SLFloat> attenuation) {
 			this.attenuation = attenuation;
 		}
 		private SLFunc<SLFloat> attenuation;
 		public SLFunc<SLFloat> attenuation() { return attenuation; }
 	 }
- 	private static class AttenuationInclude implements SLInclude<Attenuation> {
+ 	private static class AttenuationInclude implements SLIncludeDeprecated<AttenuationDeprecated> {
  		@SuppressWarnings("unchecked")
  		@Override
- 		public Attenuation include(ShaderLanguage sl) {
+ 		public AttenuationDeprecated include(ShaderLanguage sl) {
  			
  			// Attenuation
  			// https://github.com/stackgl/glsl-lighting-walkthrough/blob/master/lib/shaders/madams-attenuation.glsl
@@ -296,11 +349,11 @@ public class SLImports {
  	        		arg("float","d")
  			);
  	    	
- 	    	return new Attenuation(attenuation);
+ 	    	return new AttenuationDeprecated(attenuation);
  		}
  	}
 	private static AttenuationInclude attenuation = new AttenuationInclude();
-	public static SLInclude<Attenuation> attenuation() { return attenuation; }
+	public static SLIncludeDeprecated<AttenuationDeprecated> attenuation() { return attenuation; }
 	
 	
 	

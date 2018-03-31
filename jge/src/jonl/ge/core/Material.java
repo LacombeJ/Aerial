@@ -10,9 +10,7 @@ import jonl.ge.core.material.TextureMaterial;
 import jonl.jutils.misc.TypeUtils;
 
 public abstract class Material extends BaseMaterial {
-    
-    
-    
+
     /**
      * Available uniform object primitives and classes:
      * boolean, int, float, Vector2, Vector3, Vector4, Matrix2, Matrix3, Matrix4, TextureUniform

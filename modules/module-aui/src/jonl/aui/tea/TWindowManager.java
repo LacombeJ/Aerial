@@ -127,7 +127,7 @@ class TWindowManager {
                     window.height = Mathi.max(sizeHint.height, window.height, 1);
                 }
                 
-                glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,false);
+                glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,Window.WINDOW,false);
                 
                 
                 TPoint aligned = getPositionAlignment(halign, valign);

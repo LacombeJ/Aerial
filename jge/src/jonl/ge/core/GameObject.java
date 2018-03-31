@@ -61,6 +61,9 @@ public final class GameObject extends BaseSceneObject<GameObject> {
     public void addComponent(Component c) {
         c.gameObject = this;
         components.add(c);
+        if (scene!=null && c instanceof Property) {
+            ((Property)c).create();
+        }
     }
     
     public boolean removeComponent(Component c) {
@@ -157,6 +160,14 @@ public final class GameObject extends BaseSceneObject<GameObject> {
     
     public GameObject findGameObjectOfType(Class<? extends Component> c) {
         return scene.findGameObjectOfType(c);
+    }
+    
+    /** @return parent().computeWorldTransform() or Transform.identity() if there is no parent. */
+    public Transform parentWorldTransform() {
+        if (parent()==null) {
+            return Transform.identity();
+        }
+        return parent().computeWorldTransform();
     }
     
     public Transform computeWorldTransform() {

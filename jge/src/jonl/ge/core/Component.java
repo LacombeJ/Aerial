@@ -3,6 +3,7 @@ package jonl.ge.core;
 import java.util.ArrayList;
 
 import jonl.ge.core.Input.CursorState;
+import jonl.vmath.Matrix4;
 
 public abstract class Component {
 
@@ -24,8 +25,16 @@ public abstract class Component {
     	return gameObject.getParent();
     }
     
+    public Transform parentWorldTransform() {
+        return gameObject.parentWorldTransform();
+    }
+    
     public Transform computeWorldTransform() {
         return gameObject.computeWorldTransform();
+    }
+    
+    public Matrix4 computeWorldMatrix() {
+        return gameObject.computeWorldMatrix();
     }
     
     public Transform transform() {

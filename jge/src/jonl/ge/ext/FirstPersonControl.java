@@ -61,8 +61,8 @@ public class FirstPersonControl extends Property {
     }
     
     void moveForward(float z) {
-        transform.translation.x -= forward.x*z;
-        transform.translation.z -= forward.z*z;
+        transform.translation.x += forward.x*z;
+        transform.translation.z += forward.z*z;
     }
     
     void moveBackward(float z) {

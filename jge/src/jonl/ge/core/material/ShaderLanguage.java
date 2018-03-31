@@ -52,7 +52,7 @@ public class ShaderLanguage {
     private boolean inFunction = false;
     private int functionCount = 0;
     
-    
+    private final String varKey;
     
     //To id unique generated materials we use a static unique_gm for every GSLuilder
     //with another int everytime the GSL is changed and return _gm_[unique_gm_id]_[unique_gm_changed]
@@ -61,8 +61,17 @@ public class ShaderLanguage {
     int unique_gm_changed = 0;
     static int unique_gm_count = 0;
     
-    public ShaderLanguage() {
+    /**
+     * This key will be appended to uniform names to handle linking errors between shaders of the same program
+     * @param key
+     */
+    public ShaderLanguage(String key) {
         unique_gm_id = unique_gm_count++;
+        varKey = key;
+    }
+    
+    public ShaderLanguage() {
+        this("");
     }
     
     
@@ -177,7 +186,7 @@ public class ShaderLanguage {
     }
     
     private String genUniformName() {
-        String name = "_gmuni_"+uniformNameId;
+        String name = varKey+"_gmuni_"+uniformNameId;
         uniformNameId++;
         return name;
     }
@@ -342,10 +351,17 @@ public class ShaderLanguage {
     
     public void version(String v) { version = "#version "+v+"\n"; }
     
-    public <T extends SLIncludeLibrary> T include(SLInclude<T> include) {
+    public <T extends SLIncludeLibraryDeprecated> T include(SLIncludeDeprecated<T> include) {
         return include.include(this);
     }
     
+    public void include(SLInclude include) {
+        include.include(this);
+    }
+    
+    public void call(SLCall call) {
+        call.call(this);
+    }
     
     
     @SuppressWarnings("unchecked")
@@ -377,14 +393,18 @@ public class ShaderLanguage {
         putAttribute(String.format("%s %s %s",attributeType,v.type,v.name));
         return (T) v;
     }
+    /** puts: in [type] [name];\n */
     public <T extends SLData> T attributeIn(Class<T> returnClass, String name) {
     	return attribute("in",returnClass,name);
     }
+    /** puts: out [type] [name];\n */
 	public <T extends SLData> T attributeOut(Class<T> returnClass, String name) {
     	return attribute("out",returnClass,name);
     }
-	public void attributeIn(String a) { putAttribute(String.format("in %s",a)); }
-    public void attributeOut(String a) { putAttribute(String.format("out %s",a)); }
+	/** puts: in [attrib];\n */
+	public void attributeIn(String attrib) { putAttribute(String.format("in %s",attrib)); }
+	/** puts: out [attrib];\n */
+    public void attributeOut(String attrib) { putAttribute(String.format("out %s",attrib)); }
 	
 	
     
@@ -1463,16 +1483,24 @@ public class ShaderLanguage {
     }
     
     
-    public interface SLIncludeLibrary {
+    public interface SLInclude {
+        void include(ShaderLanguage sl);
+    }
+    
+    
+    
+    public interface SLIncludeLibraryDeprecated {
     	
     }
-    public interface SLInclude<T extends SLIncludeLibrary> {
+    public interface SLIncludeDeprecated<T extends SLIncludeLibraryDeprecated> {
     	T include(ShaderLanguage sl);
     }
     
     
     
-    
+    public interface SLCall {
+        void call(ShaderLanguage sl);
+    }
     
     
     

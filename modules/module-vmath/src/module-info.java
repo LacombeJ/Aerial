@@ -3,6 +3,6 @@ module jonl.vmath {
     
 	exports jonl.vmath;
     
-	requires java.base;
+	//requires java.base;
 	
 }

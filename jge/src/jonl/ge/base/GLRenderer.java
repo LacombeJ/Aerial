@@ -6,7 +6,6 @@ import jonl.ge.core.FrameBuffer;
 import jonl.ge.core.Texture;
 import jonl.ge.core.TextureUniform;
 import jonl.ge.core.geometry.Geometry;
-import jonl.ge.core.text.Font;
 import jonl.ge.utils.GLUtils;
 import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
@@ -29,7 +28,6 @@ class GLRenderer {
 	private int version = 430;
 
     private HashMap<BaseGeometry,jonl.jgl.Mesh>    		meshMap     	= new HashMap<>();
-    private HashMap<Font,jonl.jgl.Font>                 fontMap     	= new HashMap<>();
     private HashMap<BaseTexture,jonl.jgl.Texture>     	textureMap  	= new HashMap<>();
     private HashMap<FrameBuffer,jonl.jgl.FrameBuffer>   bufferMap   	= new HashMap<>();
     
@@ -66,15 +64,6 @@ class GLRenderer {
         }
         mesh.update = false;
         return glmesh;
-    }
-    
-    jonl.jgl.Font getOrCreateFont(Font font) {
-        jonl.jgl.Font glfont = fontMap.get(font);
-        if (glfont==null) {
-            glfont = gl.glGenFont(font.font(),font.type(),font.size(),font.antialias());
-            fontMap.put(font,glfont);
-        }
-        return glfont;
     }
     
     jonl.jgl.Texture getOrCreateTexture(Texture texture) {

@@ -24,8 +24,6 @@ import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 import jonl.jgl.GraphicsLibrary.Blend;
 import jonl.jgl.GraphicsLibrary.Face;
-import jonl.jgl.GraphicsLibrary.Hint;
-import jonl.jgl.GraphicsLibrary.HintTarget;
 import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.GraphicsLibrary.PMode;
 import jonl.jgl.GraphicsLibrary.Target;
@@ -122,12 +120,19 @@ class SceneRenderer {
                 
                 gl.glUseProgram(program);
                 
+                float windowWidth = g.window().width();
+                float windowHeight = g.window().height();
+                
                 //TODO meshes should be able to choose which uniforms it needs?
                 program.setUniformMat4("MVP",MVP.toArray());
                 program.setUniformMat4("MV",V.get().multiply(M).toArray());
                 program.setUniformMat4("M",M.toArray());
                 program.setUniformMat4("V",V.toArray());
                 program.setUniformMat4("P",P.toArray());
+                program.setUniform("_width", windowWidth);
+                program.setUniform("_height", windowHeight);
+                program.setUniform("_near", camera.near());
+                program.setUniform("_far", camera.far());
                 
                 List<Uniform> uniforms = mat.uniforms();
                 for (Uniform u : uniforms) {
@@ -148,15 +153,16 @@ class SceneRenderer {
                 
                 if (mat instanceof PointsMaterial) {
                     gl.glEnable(Target.PROGRAM_POINT_SIZE);
-                    gl.glDisable(Target.POINT_SMOOTH);
-                    gl.glHint(HintTarget.POINT_SMOOTH_HINT, Hint.FASTEST);
                 }
                 
                 gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));
                 
                 if (mesh.isWireframe()) {
                     gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.FILL);
-                    
+                }
+                
+                if (mat instanceof PointsMaterial) {
+                    gl.glDisable(Target.PROGRAM_POINT_SIZE);
                 }
                 
                 gl.glEnable(Target.CULL_FACE);

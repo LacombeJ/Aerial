@@ -118,6 +118,11 @@ public abstract class AbstractApplication {
         return info.getString(key);
     }
     
+    /**
+     * Used to add functionality without changing api
+     * @param call
+     * @return null if call failed, true or an object if succeeded
+     */
     public Object call(String call) {
         return caller.call(call);
     }

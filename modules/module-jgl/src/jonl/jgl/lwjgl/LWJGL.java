@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
 import jonl.jgl.AbstractGraphicsLibrary;
-import jonl.jgl.Font;
 import jonl.jgl.FrameBuffer;
 import jonl.jgl.Mesh;
 import jonl.jgl.Program;
@@ -163,11 +162,6 @@ class LWJGL extends AbstractGraphicsLibrary {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D,((LWJGLTexture)texture).getID());
         GL11.glGetTexImage(GL11.GL_TEXTURE_2D,0,GL11.GL_RGBA,GL11.GL_FLOAT,pixels);
         return pixels;
-    }
-    
-    @Override
-    public Font glGenFont(String font, int type, int size, boolean antialias) {
-        return new LWJGLFont(this,font,type,size,antialias);
     }
     
     @Override

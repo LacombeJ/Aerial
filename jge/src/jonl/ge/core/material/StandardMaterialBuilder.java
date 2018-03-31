@@ -3,10 +3,10 @@ package jonl.ge.core.material;
 import jonl.ge.base.Construct;
 import jonl.ge.utils.SLImports;
 import jonl.ge.utils.SLUtils;
-import jonl.ge.utils.SLImports.Attenuation;
-import jonl.ge.utils.SLImports.DiffuseOrenNayer;
-import jonl.ge.utils.SLImports.GLSLGamma;
-import jonl.ge.utils.SLImports.SpecularPhong;
+import jonl.ge.utils.SLImports.AttenuationDeprecated;
+import jonl.ge.utils.SLImports.DiffuseOrenNayerDeprecated;
+import jonl.ge.utils.SLImports.GLSLGammaDeprecated;
+import jonl.ge.utils.SLImports.SpecularPhongDeprecated;
 
 /**
  * This material builder extends the fragment shader
@@ -17,7 +17,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
 	
 	private StandardMaterial build = null;
 	
-	GLSLGamma glslGamma;
+	GLSLGammaDeprecated glslGamma;
 	SLVec3 vPosition;
     SLVec3 vNormal;
     SLVec2 vTexCoord;
@@ -107,9 +107,9 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     	// Declares
     	// ================================================================================================== //
     	
-        DiffuseOrenNayer orenNayer = sl.include(SLImports.orenNayer());
-        SpecularPhong phong = sl.include(SLImports.phong());
-        Attenuation attenuation = sl.include(SLImports.attenuation());
+        DiffuseOrenNayerDeprecated orenNayer = sl.include(SLImports.orenNayer());
+        SpecularPhongDeprecated phong = sl.include(SLImports.phong());
+        AttenuationDeprecated attenuation = sl.include(SLImports.attenuation());
     	
         SLDeclare<SLLight> Light = sl.declare(() -> new SLLight());
         

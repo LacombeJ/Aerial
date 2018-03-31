@@ -32,6 +32,8 @@ public class Application extends AbstractApplication {
     
     private SceneManager manager = new SceneManager();
 	
+    private boolean esc = true;
+    
 	public Application() {
 		super();
 		
@@ -40,11 +42,26 @@ public class Application extends AbstractApplication {
 		    return true;
 		});
 		
+		caller.implement("SET_ESC", (args) -> {
+            esc = args.getBoolean(0);
+            return true;
+        });
+		
 	}
 	
 	@Override
 	public void start() {
-		glWindow = new GLFWWindow(title,width,height,true,fullscreen,resizable,true,samples,true);
+		glWindow = new GLFWWindow(
+	        title,
+	        width,
+	        height,
+	        true,
+	        fullscreen,
+	        resizable,
+	        true,
+	        samples,
+	        jonl.jgl.Window.MONITOR,
+	        true);
         
         width = glWindow.getWidth();
         height = glWindow.getHeight();
@@ -68,6 +85,9 @@ public class Application extends AbstractApplication {
                 //when synchronization is not used between two windows
                 synchronized (Application.class) {
                     manager.update();
+                    if (esc && input.isKeyPressed(Input.K_ESCAPE)) {
+                        close();
+                    }
                 }
             }
         });

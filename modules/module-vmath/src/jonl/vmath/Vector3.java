@@ -90,12 +90,36 @@ public class Vector3 extends Vector<Vector3> {
         return this;
     }
     
+    /**
+     * Returns the angle from the ground, a value from [-pi/2 to pi/2]<br>
+     * Examples:
+     * <pre>
+     * Vector3(1,0,0).theta() = 0
+     * Vector3(1,1,0).theta() = pi/4
+     * Vector3(1,-1,0).theta() = -pi/4
+     * Vector3(0,1,0).theta() = pi/2
+     * Vector3(0,-1,0).theta() = -pi/2
+     * </pre>
+     * @return the angle from the ground, a value from [-pi/2 to pi/2]
+     */
     public float theta() {
-    	return - Mathf.atan( y / Mathf.sqrt(x*x+z*z) );
+    	return Mathf.atan( y / Mathf.sqrt(x*x+z*z) );
     }
     
+    /**
+     * Returns the angle of the x,z component of the vector, a value of [0,2pi)<br>
+     * Examples:
+     * <pre>
+     * Vector3(1,0,0).phi() = 0
+     * Vector3(0,0,1).phi() = pi/2
+     * Vector3(-1,0,0).phi() = pi
+     * Vector3(0,0,-1).phi() = 3pi/2
+     * Vector3(5,10,5).phi() = pi/4
+     * </pre>
+     * @return the angle of the x,z component of the vector, a value of [0,2pi)
+     */
     public float phi() {
-    	return Mathf.rad(-x,-z) - Mathf.PI_OVER_4;
+    	return Mathf.rad(x,z);
     }
     
     public static float thetaBetween(Vector3 u, Vector3 v) {
@@ -173,7 +197,7 @@ public class Vector3 extends Vector<Vector3> {
     }
     
     //TODO Make sure these align with Matrix4 and Quaternion definition of forward, up, right
-    public static final Vector3 forward()   { return new Vector3(0,0,1); }
+    public static final Vector3 forward()   { return new Vector3(0,0,-1); }
     public static final Vector3 up()        { return new Vector3(0,1,0); }
     public static final Vector3 right()     { return new Vector3(1,0,0); }
     

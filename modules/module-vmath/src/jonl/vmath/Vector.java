@@ -276,7 +276,7 @@ public abstract class Vector<V extends Vector<V>> {
     
     @SuppressWarnings("unchecked")
     public V floor() {
-        for (int i=1; i<size(); i++) {
+        for (int i=0; i<size(); i++) {
             set(i, Mathf.floor(get(i)));
         }
         return (V) this;
@@ -284,7 +284,7 @@ public abstract class Vector<V extends Vector<V>> {
     
     @SuppressWarnings("unchecked")
     public V ceil() {
-        for (int i=1; i<size(); i++) {
+        for (int i=0; i<size(); i++) {
             set(i, Mathf.ceil(get(i)));
         }
         return (V) this;
@@ -292,15 +292,31 @@ public abstract class Vector<V extends Vector<V>> {
     
     @SuppressWarnings("unchecked")
     public V round() {
-        for (int i=1; i<size(); i++) {
+        for (int i=0; i<size(); i++) {
             set(i, Mathf.round(get(i)));
         }
         return (V) this;
     }
     
     @SuppressWarnings("unchecked")
+    public V clamp(float min, float max) {
+        for (int i=0; i<size(); i++) {
+            set(i, Mathf.clamp(get(i), min, max));
+        }
+        return (V) this;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public V clamp(V min, V max) {
+        for (int i=0; i<size(); i++) {
+            set(i, Mathf.clamp(get(i), min.get(i), max.get(i)));
+        }
+        return (V) this;
+    }
+    
+    @SuppressWarnings("unchecked")
     public V fract() {
-        for (int i=1; i<size(); i++) {
+        for (int i=0; i<size(); i++) {
             set(i, Mathf.fract(get(i)));
         }
         return (V) this;
@@ -308,7 +324,7 @@ public abstract class Vector<V extends Vector<V>> {
     
     @SuppressWarnings("unchecked")
     public V mod(float v) {
-        for (int i=1; i<size(); i++) {
+        for (int i=0; i<size(); i++) {
             set(i, Mathf.mod(get(i),v));
         }
         return (V) this;

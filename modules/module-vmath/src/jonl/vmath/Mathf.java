@@ -2,10 +2,13 @@ package jonl.vmath;
 
 import java.util.Arrays;
 
+
+
 /**
  * The Mathf class for single-precision math <p>
  * Extension to java math class<p>
- * Some methods from libGDX
+ * Some methods from libGDX and THREE.js
+ * https://github.com/mrdoob/three.js/blob/master/src/math/Math.js
  * 
  * @author Jonathan Lacombe
  */
@@ -43,6 +46,8 @@ public final class Mathf {
 
     public static final float POSITIVE_INFINITY = Float.POSITIVE_INFINITY;
     public static final float NEGATIVE_INFINITY = Float.NEGATIVE_INFINITY;
+    
+    public static final float NaN = Float.NaN;
     
     /* ******************************************************************************** */
     /* *****************************    Simple METHODS      *************************** */
@@ -222,7 +227,9 @@ public final class Mathf {
     }
     
     
-    
+    /* ******************************************************************************** */
+    /* ***************************    Extended METHODS      *************************** */
+    /* ******************************************************************************** */
     
     
     public static float average(float... values) {
@@ -320,6 +327,10 @@ public final class Mathf {
             return mod_range + min;
         }
         return max - mod_range;
+    }
+    
+    public static float modulo(float n, float m) {
+        return ( ( n % m ) + m ) % m;
     }
     
     public static float lerp(float alpha, float a, float b) {

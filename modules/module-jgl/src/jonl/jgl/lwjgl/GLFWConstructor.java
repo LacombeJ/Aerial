@@ -1,5 +1,7 @@
 package jonl.jgl.lwjgl;
 
+import jonl.jgl.Window;
+
 /**
  * 
  * @author Jonathan Lacombe
@@ -17,10 +19,11 @@ public class GLFWConstructor {
     private boolean resizable = false;
     private boolean decorated = true;
     private int multiSamples = 4;
+    private int resolutionType = Window.WINDOW;
     private boolean vsyncEnabled = true;
     
     public GLFWWindow construct() {
-        return new GLFWWindow(title,width,height,visible,fullscreen,resizable,decorated,multiSamples,vsyncEnabled);
+        return new GLFWWindow(title,width,height,visible,fullscreen,resizable,decorated,multiSamples,resolutionType,vsyncEnabled);
     }
     
     public GLFWConstructor setTitle(String title) {
@@ -53,6 +56,10 @@ public class GLFWConstructor {
     }
     public GLFWConstructor setMultiSamples(int multiSamples) {
         this.multiSamples = multiSamples;
+        return this;
+    }
+    public GLFWConstructor setResolutionType(int resolutionType) {
+        this.resolutionType = resolutionType;
         return this;
     }
     public GLFWConstructor setVsyncEnabled(boolean vsyncEnabled) {

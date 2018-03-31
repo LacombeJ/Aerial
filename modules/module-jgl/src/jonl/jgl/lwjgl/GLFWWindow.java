@@ -77,7 +77,7 @@ public final class GLFWWindow implements Window {
      * @param visible window becomes visible when {@link #start()} is called
      */
     public GLFWWindow(String title, int width, int height, boolean visible, boolean fullscreen,
-            boolean resizable, boolean decorated, int multiSample, boolean vsyncEnabled) {
+            boolean resizable, boolean decorated, int multiSample, int resolutionType, boolean vsyncEnabled) {
         
         GLFWInstance.init();
         
@@ -118,7 +118,7 @@ public final class GLFWWindow implements Window {
         CreateWindowResponse response = GLFWInstance.create(
                 new CreateWindowRequest(this, title, width, height,
                         fullscreen, resizable, decorated, multiSample,
-                        windowPosCallback, windowSizeCallback));
+                        resolutionType, windowPosCallback, windowSizeCallback));
         
         this.id = response.id;
         this.title = response.title;
@@ -148,7 +148,7 @@ public final class GLFWWindow implements Window {
     }
     
     public GLFWWindow(String title, int width, int height, boolean visible, boolean resizable) {
-        this(title,width,height,visible,false,resizable,true,4,true);
+        this(title,width,height,visible,false,resizable,true,4,Window.WINDOW,true);
     }
     
     public GLFWWindow(String title, int width, int height) {

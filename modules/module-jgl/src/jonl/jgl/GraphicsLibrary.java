@@ -117,9 +117,6 @@ public interface GraphicsLibrary {
     
     
     
-    public Font glGenFont(String font, int type, int size, boolean antialias);
-    
-    
     /** @return a new framebuffer with no attached textue */
     public FrameBuffer glGenFramebuffer(int width, int height);
     

@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
+import jonl.jgl.Window;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.parallel.Processor;
@@ -320,10 +321,11 @@ class GLFWInstance {
         final int width, height;
         final boolean fullscreen, resizable, decorated;
         final int multiSample;
+        final int resolutionType;
         final Callback2D<Integer,Integer> windowPosCallback;
         final Callback2D<Integer,Integer> windowSizeCallback;
         CreateWindowRequest(GLFWWindow window, String title, int width, int height,
-                boolean fullscreen, boolean resizable, boolean decorated, int multiSample,
+                boolean fullscreen, boolean resizable, boolean decorated, int multiSample, int resolutionType,
                 Callback2D<Integer,Integer> windowPosCallback, Callback2D<Integer,Integer> windowSizeCallback) {
             this.window = window;
             this.title = title;
@@ -333,6 +335,7 @@ class GLFWInstance {
             this.resizable = resizable;
             this.decorated = decorated;
             this.multiSample = multiSample;
+            this.resolutionType = resolutionType;
             this.windowPosCallback = windowPosCallback;
             this.windowSizeCallback = windowSizeCallback;
         }
@@ -375,6 +378,14 @@ class GLFWInstance {
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, request.multiSample);
         
+        //Get screen dimensions
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+        screenWidth = mode.width();
+        screenHeight = mode.height();
+        
+        int windowWidth = request.width;
+        int windowHeight = request.height;
+        
         if (!request.fullscreen) {
             GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE,(resizable=request.resizable) ?
                     GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
@@ -383,9 +394,13 @@ class GLFWInstance {
         } else {
             resizable = false;
             decorated = false;
+            if (request.resolutionType == Window.MONITOR) {
+                windowWidth = screenWidth;
+                windowHeight = screenHeight;
+            }
         }
         
-        id = GLFW.glfwCreateWindow(width=request.width,height=request.height,title=request.title,
+        id = GLFW.glfwCreateWindow(width=windowWidth,height=windowHeight,title=request.title,
                 (fullscreen=request.fullscreen) ? GLFW.glfwGetPrimaryMonitor() : MemoryUtil.NULL,
                 MemoryUtil.NULL);
         
@@ -394,11 +409,8 @@ class GLFWInstance {
         }
         
         //Centers window
-        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-        screenWidth = mode.width();
-        screenHeight = mode.height();
-        x = (screenWidth - request.width) / 2;
-        y = (screenHeight - request.height) / 2;
+        x = (screenWidth - windowWidth) / 2;
+        y = (screenHeight - windowHeight) / 2;
         GLFW.glfwSetWindowPos(id,x,y);
         GLFW.glfwSetWindowPosCallback(id, (windowID,wx,wy)->{
             request.windowPosCallback.f(wx, wy);

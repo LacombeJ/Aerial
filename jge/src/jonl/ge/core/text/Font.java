@@ -2,9 +2,9 @@ package jonl.ge.core.text;
 
 public final class Font {
 
-    public final static int PLAIN = jonl.jgl.Font.PLAIN;
-    public final static int BOLD = jonl.jgl.Font.BOLD;
-    public final static int ITALIC = jonl.jgl.Font.ITALIC;
+    public final static int PLAIN = 0;
+    public final static int BOLD = 1;
+    public final static int ITALIC = 2;
     
     final String font;
     final int type;

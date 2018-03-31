@@ -56,6 +56,14 @@ public interface Window {
     
     // ------------------------------------------------------------------------
     
+    // Resolution type
+    
+    /** Using passed in window size for the resolution */
+    public final static int WINDOW = 0;
+    
+    /** Using the size of the monitor for a fullscreen resolution (100%) */
+    public final static int MONITOR = 1;
+    
     /**
      * Sets the loader for this window whose method is called
      * when start is called and before the window is shown

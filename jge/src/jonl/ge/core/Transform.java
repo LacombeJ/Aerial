@@ -11,6 +11,10 @@ public class Transform {
     public Quaternion   rotation;
     public Vector3      translation;
     
+    public static Transform identity() {
+        return new Transform();
+    }
+    
     public Transform() {
         scale = new Vector3(1,1,1);
         rotation = new Quaternion();
@@ -53,7 +57,8 @@ public class Transform {
     }
     
     /**
-     * Multiplication
+     * Multiplication<br>
+     * multiply(inverse(this)) = Transform.identity
      * @return this transform after it has been multiplied by the given transform parent
      */
     public Transform multiply(Transform parent) {
@@ -66,8 +71,9 @@ public class Transform {
     }
     
     /**
-     * Reverse multiplication
-     * @return this transform after it has been multiplied by the inverse transform of the parent (parent-1 * this)
+     * Reverse multiplication<br>
+     * inverse(multiply(this)) = Transform.identity
+     * @return this transform after it has been multiplied by the inverse transform of the parent (parent^(-1) * this)
      */
     public Transform inverse(Transform parent) {
     	
@@ -91,15 +97,15 @@ public class Transform {
     // TODO add: public void lookAt(Vector3 v)
     
     public Vector3 up() {
-		return rotation.get().conjugate().transform(new Vector3(0,1,0));
+		return rotation.get().conjugate().transform(Vector3.up());
     }
     
     public Vector3 right() {
-		return rotation.get().conjugate().transform(new Vector3(1,0,0));
+		return rotation.get().conjugate().transform(Vector3.right());
     }
     
     public Vector3 forward() {
-		return rotation.get().conjugate().transform(new Vector3(0,0,-1));
+		return rotation.get().conjugate().transform(Vector3.forward());
     }
     
     @Override
