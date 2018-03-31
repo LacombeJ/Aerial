@@ -14,6 +14,7 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Time;
 import jonl.ge.core.Window;
 import jonl.ge.core.Input.CursorState;
+import jonl.ge.mod.fx.FXModule;
 import jonl.jutils.call.Caller;
 import jonl.jutils.misc.SystemUtils;
 import jonl.jutils.structs.AttributeMap;
@@ -46,6 +47,7 @@ public abstract class AbstractApplication {
         add(new LightModule());
         add(new TextModule());
         add(PhysicsModule.instance());
+        add(FXModule.instance());
     }
     
     // -------------------------------------------------------

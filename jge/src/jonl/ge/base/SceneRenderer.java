@@ -14,7 +14,6 @@ import jonl.ge.core.Transform;
 import jonl.ge.core.Window;
 import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.light.Light;
-import jonl.ge.core.material.PointsMaterial;
 import jonl.ge.core.render.CameraCull;
 import jonl.ge.core.render.CameraTarget;
 import jonl.ge.core.render.RenderTarget;
@@ -151,21 +150,16 @@ class SceneRenderer {
                     gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.LINE); 
                 }
                 
-                if (mat instanceof PointsMaterial) {
-                    gl.glEnable(Target.PROGRAM_POINT_SIZE);
-                    gl.glEnable(Target.POINT_SPRITE);
-                }
+                jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(g,mesh,gl) );
                 
                 gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));
+                
+                jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(g,mesh,gl) );
                 
                 if (mesh.isWireframe()) {
                     gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.FILL);
                 }
-                
-                if (mat instanceof PointsMaterial) {
-                    gl.glDisable(Target.PROGRAM_POINT_SIZE);
-                }
-                
+
                 gl.glEnable(Target.CULL_FACE);
                 
                 gl.glUseProgram(null);

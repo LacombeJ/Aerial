@@ -167,11 +167,11 @@ class LWJGLMesh implements Mesh {
         FloatBuffer fb = MemoryUtil.memAllocFloat(data.length);
         fb.put(data).flip();
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER,fb,GL15.GL_STATIC_DRAW);
-        MemoryUtil.memFree(fb);
         for (int i=0; i<count; i++) {
             int stride = (count<=1) ? 0 : FLOAT_SIZE*size*count;
             GL20.glVertexAttribPointer(loc+i,size,GL11.GL_FLOAT,false,stride,FLOAT_SIZE*size*i);
         }
+        MemoryUtil.memFree(fb);
     }
     
     private void setDivisor(int loc, int count) {

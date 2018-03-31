@@ -60,10 +60,10 @@ class GLRenderer {
             meshMap.put(mesh,glmesh);
             
         } else if (mesh.update) {
-        	if (mesh.vertices!=null) glmesh.setVertexAttrib(Vector3.pack(mesh.vertices), 3);
-        	if (mesh.normals!=null) glmesh.setNormalAttrib(Vector3.pack(mesh.normals), 3);
-        	if (mesh.texCoords!=null) glmesh.setTexCoordAttrib(Vector2.pack(mesh.texCoords), 2);
-        	if (mesh.indices!=null) glmesh.setIndices(mesh.indices);
+        	if (mesh.vertices!=null && mesh.vertices.length>0) glmesh.setVertexAttrib(Vector3.pack(mesh.vertices), 3);
+        	if (mesh.normals!=null && mesh.normals.length>0) glmesh.setNormalAttrib(Vector3.pack(mesh.normals), 3);
+        	if (mesh.texCoords!=null && mesh.texCoords.length>0) glmesh.setTexCoordAttrib(Vector2.pack(mesh.texCoords), 2);
+        	if (mesh.indices!=null && mesh.indices.length>0) glmesh.setIndices(mesh.indices);
         	checkUpdateTangents(mesh, glmesh);
         }
         mesh.update = false;

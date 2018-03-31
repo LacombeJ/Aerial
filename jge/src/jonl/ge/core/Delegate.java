@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jonl.ge.core.light.Light;
+import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
@@ -50,6 +51,10 @@ public class Delegate {
 	
 	private final ArrayList<Callback2D<GameObject, Transform>> parentWorldTransformUpdate = new ArrayList<>();
 	
+	private final ArrayList<Callback3D<GameObject, Mesh, GraphicsLibrary>> glPreRender = new ArrayList<>();
+	
+	private final ArrayList<Callback3D<GameObject, Mesh, GraphicsLibrary>> glPostRender = new ArrayList<>();
+	
 	
 	/** @return Updating material programs with scene light and camera information */
 	public ArrayList<Callback3D<Program,Material,Camera>> onProgramUpdate() { return programUpdate; }
@@ -62,5 +67,11 @@ public class Delegate {
     
     /** @return Called right before world transform is calculated and passes gameObject and its PARENT's world transform */
     public ArrayList<Callback2D<GameObject, Transform>> onParentWorldTransformUpdate() { return parentWorldTransformUpdate; }
+    
+    /** @return Called right before glRender is called */
+    public ArrayList<Callback3D<GameObject, Mesh, GraphicsLibrary>> onGLPreRender() { return glPreRender; }
+    
+    /** @return Called right after glRender is called */
+    public ArrayList<Callback3D<GameObject, Mesh, GraphicsLibrary>> onGLPostRender() { return glPostRender; }
 	
 }

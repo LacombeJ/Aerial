@@ -46,9 +46,7 @@ import jonl.jgl.Program;
 import jonl.jgl.Shader;
 import jonl.jgl.Texture;
 
-
 /**
- * 
  * 
  * @author Jonathan Lacombe
  *

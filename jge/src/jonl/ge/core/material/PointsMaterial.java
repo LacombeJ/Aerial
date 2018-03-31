@@ -78,7 +78,7 @@ public class PointsMaterial extends GeneratedShader {
         if (useSizeAttenuation) {
             sl.gl_PointSize(sl.slFloat(size+" * ((_height/2) / - mvPosition.z)"));
         } else {
-            sl.gl_PointSize(sl.slFloat(size+"+ 0.0"));
+            sl.gl_PointSize(size);
         }
         
         sl.include(FogShader.fogVertex("mvPosition"));
