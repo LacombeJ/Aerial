@@ -11,6 +11,12 @@ import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.func.Callback3D;
 
+/**
+ * Used to extend the engine by adding external functionality
+ * 
+ * @author Jonathan
+ *
+ */
 public class Delegate {
 	
 	// Base

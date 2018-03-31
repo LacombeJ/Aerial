@@ -3,7 +3,7 @@ package jonl.ge.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import jonl.ge.core.geometry.Geometry;
+import jonl.ge.core.Geometry;
 import jonl.jutils.misc.ArrayUtils;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;

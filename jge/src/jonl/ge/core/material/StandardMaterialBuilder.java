@@ -1,6 +1,5 @@
 package jonl.ge.core.material;
 
-import jonl.ge.base.Construct;
 import jonl.ge.utils.SLUtils;
 import jonl.ge.utils.SLImports.Attenuation;
 import jonl.ge.utils.SLImports.DiffuseOrenNayer;
@@ -41,7 +40,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     		build_1();
     	}    	
     	
-        StandardMaterial mat = new StandardMaterial(Construct.UNINITIALIZED);
+        StandardMaterial mat = new StandardMaterial(0);
         
         mat.diffuse = copyData(diffuse);
         mat.specular = copyData(specular);

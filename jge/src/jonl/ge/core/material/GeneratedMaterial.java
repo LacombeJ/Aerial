@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import jonl.ge.base.Construct;
 import jonl.ge.core.Material;
 import jonl.ge.core.material.GeneratedMaterialBuilder.SLShader;
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
@@ -67,7 +66,7 @@ public class GeneratedMaterial extends Material {
         this(new Vector3(0.5f,0.5f,0.5f));
     }
     
-    GeneratedMaterial(Construct construct) {
+    GeneratedMaterial(int _construct) {
         
     }
     

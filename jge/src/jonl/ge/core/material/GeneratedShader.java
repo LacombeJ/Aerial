@@ -55,6 +55,10 @@ public class GeneratedShader extends ShaderMaterial {
         return null;
     }
     
+    public Object getUniformData(String id) {
+        return getUniform(id).data;
+    }
+    
     String getUniformString(ArrayList<SLUniform> uniforms) {
         StringBuilder sb = new StringBuilder();
         for (SLUniform u : uniforms) {

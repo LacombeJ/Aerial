@@ -1,7 +1,5 @@
 package jonl.ge.core;
 
-import jonl.ge.core.geometry.Geometry;
-
 public class Mesh extends Component {
 
     public boolean cullFace = true;

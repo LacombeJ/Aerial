@@ -132,7 +132,7 @@ public class SLUtils {
     }
     
     /**
-     * Based on {@link jonl.ge.core.geometry.Geometry#scaleTexCoords(float,float,float,float) Geometry.scaleTexCoords(float,float,float,float)}
+     * Based on {@link jonl.ge.core.Geometry#scaleTexCoords(float,float,float,float) Geometry.scaleTexCoords(float,float,float,float)}
      * @param sl
      * @return
      */

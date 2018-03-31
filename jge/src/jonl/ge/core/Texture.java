@@ -1,9 +1,10 @@
 package jonl.ge.core;
 
-import jonl.ge.base.BaseTexture;
 import jonl.jutils.misc.ArrayUtils;
 
-public class Texture extends BaseTexture {
+public class Texture {
+    
+    float data[];
     
     public final int width;
     public final int height;

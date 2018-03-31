@@ -17,15 +17,6 @@ import jonl.jutils.func.Callback3D;
  *
  */
 public class FXModule extends Attachment {
-
-    private static FXModule instance;
-    
-    public static FXModule instance() {
-        if (instance == null) {
-            instance = new FXModule();
-        }
-        return instance;
-    }
     
     private Service service;
     private Callback2D<GameObject,Camera> onGameObjectRender;
@@ -36,7 +27,7 @@ public class FXModule extends Attachment {
         new DepthSort()
     };
     
-    private FXModule() {
+    public FXModule() {
         super("fx-module");
         
         onGameObjectRender = (g,camera) -> { onGameObjectRender(g,camera); };

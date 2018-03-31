@@ -46,8 +46,8 @@ public abstract class AbstractApplication {
         
         add(new LightModule());
         add(new TextModule());
-        add(PhysicsModule.instance());
-        add(FXModule.instance());
+        add(new FXModule());
+        add(new PhysicsModule());
     }
     
     // -------------------------------------------------------

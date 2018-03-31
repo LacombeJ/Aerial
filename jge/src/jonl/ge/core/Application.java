@@ -1,7 +1,5 @@
 package jonl.ge.core;
 
-import jonl.ge.base.Engine;
-import jonl.ge.base.SceneManager;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.ge.core.app.ApplicationInput;

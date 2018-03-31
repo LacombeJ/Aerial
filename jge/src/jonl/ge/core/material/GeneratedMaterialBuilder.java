@@ -3,12 +3,10 @@ package jonl.ge.core.material;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import jonl.ge.base.Construct;
-
 //TODO calculate values before rendering for peformance?
 /**
  * Shader Material Builder
- * @author Jonathan Lacosle
+ * @author Jonathan
  *
  */
 public class GeneratedMaterialBuilder extends ShaderLanguage {
@@ -60,7 +58,7 @@ public class GeneratedMaterialBuilder extends ShaderLanguage {
     
     
     public GeneratedMaterial build() {
-        GeneratedMaterial mat = new GeneratedMaterial(Construct.UNINITIALIZED);
+        GeneratedMaterial mat = new GeneratedMaterial(0);
         apply(mat);
         return mat;
     }

@@ -2,6 +2,7 @@ package jonl.ge.core.geometry;
 
 import java.util.ArrayList;
 
+import jonl.ge.core.Geometry;
 import jonl.jutils.func.List;
 import jonl.jutils.structs.IntList;
 import jonl.vmath.Vector2;

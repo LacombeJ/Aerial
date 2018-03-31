@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import jonl.ge.core.Camera;
 import jonl.ge.core.GameObject;
+import jonl.ge.core.Geometry;
 import jonl.ge.core.Material;
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
-import jonl.ge.core.geometry.Geometry;
-import jonl.ge.core.material.PointsMaterial;
 import jonl.jgl.GraphicsLibrary;
 import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jutils.func.List;
@@ -25,7 +24,13 @@ public class DepthSort extends FXService {
         if (mesh != null) {
             Geometry geometry = mesh.getGeometry();
             Material mat = mesh.getMaterial();
+            
             if (mat instanceof PointsMaterial) {
+                
+                // We want to update the glMesh to change the rendering order from back to front
+                // but we don't want to modify the underlying Geometry so we grab the gl mesh instead
+                
+                jonl.jgl.Mesh glMesh = service.getOrCreateMesh(geometry);
                 
                 Transform cameraWorld = service.getWorldTransform(camera.gameObject());
                 Matrix4 V = Camera.computeViewMatrix(cameraWorld);
@@ -37,7 +42,6 @@ public class DepthSort extends FXService {
                 
                 Matrix4 MVP = VP.get().multiply(M);
                 
-                
                 Vector3[] vertices = geometry.getVertexArray();
                 ArrayList<Vertex> toOrder = new ArrayList<>();
                 
@@ -48,8 +52,9 @@ public class DepthSort extends FXService {
                 ArrayList<Vertex> sorted = List.order(toOrder, (v0,v1) -> Float.compare(v0.depth, v1.depth));
                 ArrayList<Vector3> sorted3 = List.map(sorted, (v) -> v.vertex);
                 
-                geometry.setVectorArray(sorted3.toArray(new Vector3[sorted3.size()]));
+                float[] vertexArray = Vector3.pack(sorted3);
                 
+                glMesh.setVertexAttrib(vertexArray, vertexArray.length/3);
             }
         }
     }

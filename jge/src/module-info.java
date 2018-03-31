@@ -6,12 +6,20 @@ module jonl.ge {
 	exports jonl.ge.core.light;
 	exports jonl.ge.core.material;
 	exports jonl.ge.core.render;
+	
+	exports jonl.ge.mod.misc;
+	
+	exports jonl.ge.mod.fx;
+	exports jonl.ge.mod.physics;
 	exports jonl.ge.mod.text;
-	exports jonl.ge.ext;
+	
+	exports jonl.ge.shaders;
+	
 	exports jonl.ge.utils;
 	
-	//requires java.base;
-	//requires java.desktop;
+	
+	requires java.base;
+	requires java.desktop;
 	
 	requires jbullet;
 	requires vecmath;

@@ -2,6 +2,7 @@ package jonl.ge.core.app;
 
 import jonl.aui.Window;
 import jonl.ge.core.GameObject;
+import jonl.ge.core.Geometry;
 import jonl.ge.core.Input;
 import jonl.ge.core.Material;
 import jonl.ge.core.Mesh;
@@ -9,7 +10,6 @@ import jonl.ge.core.Property;
 import jonl.ge.core.Transform;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.geometry.BoxGeometry;
-import jonl.ge.core.geometry.Geometry;
 import jonl.ge.core.light.Light;
 import jonl.ge.core.material.GeneratedMaterial;
 import jonl.vmath.Mathf;

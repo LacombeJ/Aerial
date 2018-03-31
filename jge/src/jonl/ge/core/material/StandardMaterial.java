@@ -1,6 +1,5 @@
 package jonl.ge.core.material;
 
-import jonl.ge.base.Construct;
 import jonl.ge.core.material.ShaderLanguage.SLVec3;
 
 public class StandardMaterial extends GeneratedShader {
@@ -9,7 +8,7 @@ public class StandardMaterial extends GeneratedShader {
     public SLVec3   specular    = null;
     public SLVec3   normal      = null;
 	
-	StandardMaterial(Construct construct) {
+	StandardMaterial(int _construct) {
 		
 	}
 	

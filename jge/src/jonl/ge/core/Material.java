@@ -1,6 +1,7 @@
 package jonl.ge.core;
 
-import jonl.ge.base.BaseMaterial;
+import java.util.List;
+
 import jonl.ge.core.material.GeneratedMaterial;
 import jonl.ge.core.material.GeneratedShader;
 import jonl.ge.core.material.ShaderMaterial;
@@ -9,8 +10,18 @@ import jonl.ge.core.material.StandardMaterial;
 import jonl.ge.core.material.TextureMaterial;
 import jonl.jutils.misc.TypeUtils;
 
-public abstract class Material extends BaseMaterial {
+public abstract class Material {
 
+    protected abstract String vertexShader(int version);
+    
+    protected abstract String geometryShader(int version);
+    
+    protected abstract String fragmentShader(int version);
+
+    protected abstract List<Uniform> uniforms();
+    
+    protected abstract String shaderKey();
+    
     /**
      * Available uniform object primitives and classes:
      * boolean, int, float, Vector2, Vector3, Vector4, Matrix2, Matrix3, Matrix4, TextureUniform
@@ -19,7 +30,7 @@ public abstract class Material extends BaseMaterial {
      * 
      */
     public abstract void setUniform(String name, Object object);
-
+    
     public GeneratedMaterial asGeneratedMaterial() {
     	return TypeUtils.cast(this, GeneratedMaterial.class);
     }
@@ -42,6 +53,15 @@ public abstract class Material extends BaseMaterial {
     
     public TextureMaterial asTextureMaterial() {
     	return TypeUtils.cast(this, TextureMaterial.class);
+    }
+    
+    protected class Uniform {
+        String name;
+        Object data;
+        public Uniform(String name, Object data) {
+            this.name = name;
+            this.data = data;
+        }
     }
     
 }

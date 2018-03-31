@@ -1,22 +1,23 @@
 package jonl.ge.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import jonl.ge.base.BaseSceneObject;
 import jonl.ge.core.Input.CursorState;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.List;
+import jonl.jutils.structs.AttributeMap;
+import jonl.jutils.structs.TreeNode;
 import jonl.vmath.Matrix4;
 
-public final class GameObject extends BaseSceneObject<GameObject> {
+public final class GameObject extends TreeNode<GameObject> {
     
     String name = "GameObject";
+    
+    Transform transform;
     
     private Scene scene;
     final ArrayList<Component> components = new ArrayList<>();
     
-    private final HashMap<String,Object> dataMap = new HashMap<>();
+    private final AttributeMap dataMap = new AttributeMap();
     
     public GameObject() {
         transform = new Transform();
@@ -217,16 +218,9 @@ public final class GameObject extends BaseSceneObject<GameObject> {
     	return scene.service();
     }
     
-    public void putData(String key, Object data) {
-        dataMap.put(key, data);
-    }
-    
-    public Object getData(String key) {
-        return dataMap.get(key);
-    }
-    
-    public boolean hasData(String key) {
-        return dataMap.containsKey(key);
+    /** @return GameObject data */
+    public AttributeMap data() {
+        return dataMap;
     }
     
     @Override

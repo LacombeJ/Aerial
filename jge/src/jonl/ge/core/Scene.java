@@ -2,19 +2,23 @@
 
 import java.util.ArrayList;
 
-import jonl.ge.base.BaseScene;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.jutils.func.List;
+import jonl.jutils.structs.AttributeMap;
 import jonl.jutils.structs.TreeForest;
 
-public class Scene extends BaseScene {
+public class Scene {
+    
+    TreeForest<GameObject> root = null;
     
     String name = "Scene";
     AbstractApplication application;
     boolean persistent = false;
     boolean created = false;
     ArrayList<GameObject> priors = new ArrayList<>();
+    
+    AttributeMap data = new AttributeMap();
     
     public Scene() {
     	root = new TreeForest<>();
@@ -26,6 +30,11 @@ public class Scene extends BaseScene {
     
     public void setName(String name) {
         this.name = name;
+    }
+    
+    /** @return Scene data */
+    public AttributeMap data() {
+        return data;
     }
     
     public void add(GameObject g) {
@@ -41,8 +50,7 @@ public class Scene extends BaseScene {
     /**
      * Resets scene unless persistent
      */
-    @Override
-    protected void create() {
+    void create() {
         if (root==null || !persistent) {
             List.iterate(priors, (g)->g.create());
             priors = new ArrayList<>();
@@ -50,8 +58,7 @@ public class Scene extends BaseScene {
         }
     }
     
-    @Override
-    protected void update() {
+    void update() {
     	List.iterate(root.getChildren(), (g)->g.update()); //copy of children to prevent concurrent modification
     }
     
@@ -76,7 +83,7 @@ public class Scene extends BaseScene {
     }
     
     public GameObject findGameObjectWithData(String key) {
-    	return root.getDescendant((g) -> g.hasData(key));
+    	return root.getDescendant((g) -> g.data().containsKey(key));
     }
     
     public <T extends Component> GameObject findGameObject(Class<T> c) {

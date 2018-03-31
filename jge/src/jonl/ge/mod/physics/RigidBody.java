@@ -15,6 +15,8 @@ import jonl.vmath.Vector3;
 
 public class RigidBody extends Property {
 
+    PhysicsWorld world;
+    
     protected com.bulletphysics.dynamics.RigidBody rb;
     
     public boolean hasInertia = true;
@@ -29,6 +31,8 @@ public class RigidBody extends Property {
     
     @Override
     public void create() {
+        world = (PhysicsWorld) scene().data().get("physics-world");
+        
         createRigidBody();
     }
     
@@ -71,7 +75,7 @@ public class RigidBody extends Property {
             rb.setCollisionFlags(collisionFlags);
         }
         
-        PhysicsModule.instance().add(rb);
+        world.add(rb);
     }
     
     public Vector3 getLinearVelocity() {
