@@ -4,14 +4,15 @@ import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TButton;
 import jonl.aui.tea.TSizeHint;
+import jonl.vmath.Color;
 import jonl.vmath.Vector4;
 
 public class TButtonStyle extends TWidgetStyle<TButton> {
     
-    private TColor textColor;
-    private TColor buttonColor;
-    private TColor hoverColor;
-    private TColor toggleColor;
+    private Color textColor;
+    private Color buttonColor;
+    private Color hoverColor;
+    private Color toggleColor;
     private int border = 4;
     private float maxValue = 30;
     
@@ -28,8 +29,8 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
             float fIntensityValue = info.get("fIntensityValue", 0f);
             
             float fMaxValue = info.get("fMaxValue", maxValue);
-            TColor cButton = info.get("cButton", buttonColor);
-            TColor cHover = info.get("cHover", hoverColor);
+            Color cButton = info.get("cButton", buttonColor);
+            Color cHover = info.get("cHover", hoverColor);
             
             if (info.get("bIsMouseWithin", false)) {
                 if (fIntensityValue<fMaxValue) {
@@ -49,7 +50,7 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
             Vector4 secondary = (button.checked()) ? toggleColor.toVector() : cHover.toVector();
             Vector4 color = primary.lerp(secondary, v);
             
-            g.renderRect(0,0,button.width(),button.height(),TColor.fromVector(color));
+            g.renderRect(0,0,button.width(),button.height(),Color.fromVector(color));
             float x = button.width()/2;
             float y = button.height()/2;
             if (button.icon()!=null) {
@@ -71,15 +72,15 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
         
     }
     
-    public TColor textColor() { return textColor; }
-    public TColor buttonColor() { return buttonColor; }
-    public TColor hoverColor() { return hoverColor; }
-    public TColor toggleColor() { return toggleColor; }
+    public Color textColor() { return textColor; }
+    public Color buttonColor() { return buttonColor; }
+    public Color hoverColor() { return hoverColor; }
+    public Color toggleColor() { return toggleColor; }
     
-    public void textColor(TColor textColor) { this.textColor = textColor; }
-    public void buttonColor(TColor buttonColor) { this.buttonColor = buttonColor; }
-    public void hoverColor(TColor hoverColor) { this.hoverColor = hoverColor; }
-    public void toggleColor(TColor toggleColor) { this.toggleColor = toggleColor; }
+    public void textColor(Color textColor) { this.textColor = textColor; }
+    public void buttonColor(Color buttonColor) { this.buttonColor = buttonColor; }
+    public void hoverColor(Color hoverColor) { this.hoverColor = hoverColor; }
+    public void toggleColor(Color toggleColor) { this.toggleColor = toggleColor; }
     
 
 }

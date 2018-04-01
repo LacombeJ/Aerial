@@ -3,9 +3,8 @@ package jonl.jgl.lwjgl;
 import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
 import jonl.jgl.Closer;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
 import jonl.jgl.Runner;
@@ -201,7 +200,7 @@ public final class GLFWWindow implements Window {
      */
     private void makeContext() {
         GLFW.glfwMakeContextCurrent(id);
-        GL.createCapabilities();
+        org.lwjgl.opengl.GL.createCapabilities();
         if (vsyncEnabled) {
             GLFW.glfwSwapInterval(1);
         }
@@ -390,7 +389,7 @@ public final class GLFWWindow implements Window {
     }
 
     @Override
-    public GraphicsLibrary getGraphicsLibrary() {
+    public GL getGraphicsLibrary() {
         return gl;
     }
     

@@ -15,17 +15,16 @@ import jonl.aui.tea.event.TEventType;
 import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TScrollEvent;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Input;
 import jonl.jgl.Window;
-import jonl.jutils.io.Console;
 import jonl.vmath.Matrix4;
 
 public class ApplicationUI extends TWidget {
 
     Window window;
     TInput input;
-    GraphicsLibrary gl;
+    GL gl;
     
     UILayout layout;
     TWidget widget;
@@ -81,8 +80,15 @@ public class ApplicationUI extends TWidget {
     }
 
     public void setWidget(Widget widget) {
-        this.widget = (TWidget) widget;
-        widgetLayout().setWidget(widget);
+        if (widget != null) {
+            this.widget = (TWidget) widget;
+            widgetLayout().setWidget(widget);
+        } else {
+            if (!widgetLayout().isEmpty()) {
+                widgetLayout().remove(0);
+            }
+        }
+        
     }
     
     @Override
@@ -97,7 +103,26 @@ public class ApplicationUI extends TWidget {
     
     @Override
     public void setCursor(TCursor cursor) {
-        Console.log("Set cursor not implemented yet.");
+        switch (cursor) {
+        case ARROW:
+            window.setCursor(Window.ARROW_CURSOR);
+            break;
+        case IBEAM:
+            window.setCursor(Window.IBEAM_CURSOR);
+            break;
+        case CROSSHAIR:
+            window.setCursor(Window.CROSSHAIR_CURSOR);
+            break;
+        case HAND:
+            window.setCursor(Window.HAND_CURSOR);
+            break;
+        case HRESIZE:
+            window.setCursor(Window.HRESIZE_CURSOR);
+            break;
+        case VRESIZE:
+            window.setCursor(Window.VRESIZE_CURSOR);
+            break;
+        }
     }
     
     private void handleInput() {

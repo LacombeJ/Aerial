@@ -1,7 +1,7 @@
 package jonl.aui.tea;
 
 import jonl.aui.Margin;
-import jonl.aui.tea.graphics.TColor;
+import jonl.vmath.Color;
 
 public class TTabContent extends TPanel {
 
@@ -18,7 +18,7 @@ public class TTabContent extends TPanel {
         TLayout layout = widgetLayout();
         Margin margin = layout.margin();
         tg.renderRect(0, 0, width(), height(), style().tabButton().toggleColor());
-        tg.renderRect(margin.left, margin.bottom, width()-margin.width(), height()-margin.height(), TColor.WHITE);
+        tg.renderRect(margin.left, margin.bottom, width()-margin.width(), height()-margin.height(), Color.WHITE);
     }
     
 }

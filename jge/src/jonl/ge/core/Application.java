@@ -7,7 +7,7 @@ import jonl.ge.core.app.ApplicationWindow;
 import jonl.ge.core.ui.ApplicationUI;
 import jonl.ge.core.ui.UI;
 import jonl.jgl.AudioDevice;
-import jonl.jgl.AudioLibrary;
+import jonl.jgl.AL;
 import jonl.jgl.lwjgl.ALDevice;
 import jonl.jgl.lwjgl.GLFWWindow;
 
@@ -25,7 +25,7 @@ public class Application extends AbstractApplication {
     
     private AudioDevice audio;
     @SuppressWarnings("unused") //TODO handle al
-    private AudioLibrary al;
+    private AL al;
     
     private Input input;
     private Window window;

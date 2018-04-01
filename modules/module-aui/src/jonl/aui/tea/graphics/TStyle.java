@@ -1,18 +1,20 @@
 package jonl.aui.tea.graphics;
 
+import jonl.vmath.Color;
+
 public interface TStyle {
 
-    TColor primary();
-    TColor secondary();
-    TColor tertiary();
+    Color primary();
+    Color secondary();
+    Color tertiary();
     
-    TColor background();
-    TColor foreground();
+    Color background();
+    Color foreground();
     
-    TColor light();
-    TColor dark();
+    Color light();
+    Color dark();
     
-    TColor textColor();
+    Color textColor();
     
     TFont font();
     
@@ -28,17 +30,17 @@ public interface TStyle {
     
     // Setters
     
-    void primary(TColor primary);
-    void secondary(TColor secondary);
-    void tertiary(TColor tertiary);
+    void primary(Color primary);
+    void secondary(Color secondary);
+    void tertiary(Color tertiary);
     
-    void background(TColor light);
-    void foreground(TColor dark);
+    void background(Color light);
+    void foreground(Color dark);
     
-    void light(TColor light);
-    void dark(TColor dark);
+    void light(Color light);
+    void dark(Color dark);
     
-    void textColor(TColor textColor);
+    void textColor(Color textColor);
     
     void font(TFont font);
     

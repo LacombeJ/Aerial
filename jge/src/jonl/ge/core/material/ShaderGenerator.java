@@ -3,18 +3,18 @@ package jonl.ge.core.material;
 import java.util.HashMap;
 
 import jonl.ge.utils.GLUtils;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Program;
 
 class ShaderGenerator {
     
     private HashMap<String,Program> programMap = new HashMap<>();
     
-    private GraphicsLibrary gl;
+    private GL gl;
     
     private int version = 430;
     
-    ShaderGenerator(GraphicsLibrary gl) {
+    ShaderGenerator(GL gl) {
         this.gl = gl;
     }
     

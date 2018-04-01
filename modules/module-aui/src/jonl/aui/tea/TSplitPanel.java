@@ -1,10 +1,12 @@
 package jonl.aui.tea;
 
 import jonl.aui.Align;
+import jonl.aui.Signal;
 import jonl.aui.SplitPanel;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
+import jonl.jutils.func.Callback;
 import jonl.vmath.Mathd;
 import jonl.vmath.Vector4;
 
@@ -16,6 +18,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     private Align align = Align.HORIZONTAL;
     
     private double ratio = 0.5f;
+    
+    Signal<Callback<Double>> changed = new Signal<>();
     
     private boolean inAdjustState = false;
     
@@ -105,7 +109,13 @@ public class TSplitPanel extends TWidget implements SplitPanel {
         if (this.ratio != ratio) {
             this.ratio = ratio;
             invalidateLayout();
+            changed().emit((cb)->cb.f(this.ratio));
         }
+    }
+    
+    @Override
+    public Signal<Callback<Double>> changed() {
+        return changed;
     }
     
     // ------------------------------------------------------------------------

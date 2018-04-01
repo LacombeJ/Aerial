@@ -1,10 +1,11 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.tea.TToolBar;
+import jonl.vmath.Color;
 
 public class TToolBarStyle extends TWidgetStyle<TToolBar> {
     
-    private TColor color;
+    private Color color;
     
     public TToolBarStyle(TStyle style) {
         super(style);
@@ -17,8 +18,8 @@ public class TToolBarStyle extends TWidgetStyle<TToolBar> {
         
     }
     
-    public TColor color() { return color; }
+    public Color color() { return color; }
     
-    public void color(TColor color) { this.color = color; }
+    public void color(Color color) { this.color = color; }
     
 }

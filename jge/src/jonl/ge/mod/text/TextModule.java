@@ -10,12 +10,10 @@ import jonl.ge.core.Transform;
 import jonl.ge.core.geometry.PlaneGeometry;
 import jonl.ge.utils.GLUtils;
 import jonl.ge.utils.PresetData;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Mesh;
 import jonl.jgl.Program;
 import jonl.jgl.Texture;
-import jonl.jgl.GraphicsLibrary.Mode;
-import jonl.jgl.GraphicsLibrary.Target;
 import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
 import jonl.vmath.Matrix4;
@@ -28,7 +26,7 @@ public class TextModule extends Attachment {
     private Callback0D load;
     private Callback2D<GameObject,Camera> renderText;
     
-    private GraphicsLibrary gl;
+    private GL gl;
     private Program fontProgram;
     private Mesh mesh;
     
@@ -127,12 +125,12 @@ public class TextModule extends Attachment {
             GLUtils.setTexture(fontProgram, "texture", texture, 0);
             
             if (!textMesh.getDepthTest()) {
-                gl.glDisable(Target.DEPTH_TEST);
+                gl.glDisable(GL.DEPTH_TEST);
             }
             
-            gl.glRender(mesh, Mode.TRIANGLES);
+            gl.glRender(mesh, GL.TRIANGLES);
             
-            gl.glEnable(Target.CULL_FACE);
+            gl.glEnable(GL.CULL_FACE);
             
             gl.glUseProgram(null);
         }

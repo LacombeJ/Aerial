@@ -1,30 +1,34 @@
 package jonl.ge.mod.fx;
 
 import java.util.ArrayList;
-
 import jonl.ge.core.Camera;
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Geometry;
 import jonl.ge.core.Material;
 import jonl.ge.core.Mesh;
+import jonl.ge.core.Scene;
 import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
-import jonl.jgl.GraphicsLibrary;
-import jonl.jgl.GraphicsLibrary.Target;
+import jonl.jgl.GL;
 import jonl.jutils.func.List;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
 
 public class DepthSort extends FXService {
-
+    
+    @Override
+    void prepare(Scene scene, Service service) {
+        
+    }
+    
     @Override
     void update(GameObject g, Camera camera, Service service) {
+        
         Mesh mesh = g.getComponent(Mesh.class);
         if (mesh != null) {
             Geometry geometry = mesh.getGeometry();
             Material mat = mesh.getMaterial();
-            
             if (mat instanceof PointsMaterial) {
                 
                 // We want to update the glMesh to change the rendering order from back to front
@@ -47,38 +51,62 @@ public class DepthSort extends FXService {
                 
                 for (int i=0; i<vertices.length; i++) {
                     Vector4 screen = MVP.multiply(new Vector4(vertices[i],1));
-                    toOrder.add(new Vertex(vertices[i], screen));
+                    
+                    float invW = 1 / screen.w;
+
+                    screen.x *= invW;
+                    screen.y *= invW;
+                    screen.z *= invW;
+
+                    boolean visible =
+                        screen.x >= - 1 && screen.x <= 1 &&
+                        screen.y >= - 1 && screen.y <= 1 &&
+                        screen.z >= - 1 && screen.z <= 1;
+                        
+                    if (visible) {
+                        toOrder.add(new Vertex(vertices[i], screen.z));
+                    }
+                    
                 }
-                ArrayList<Vertex> sorted = List.order(toOrder, (v0,v1) -> Float.compare(v0.depth, v1.depth));
+                
+                ArrayList<Vertex> sorted = List.order(toOrder, (v0,v1) -> - Float.compare(v0.depth, v1.depth));
+                
                 ArrayList<Vector3> sorted3 = List.map(sorted, (v) -> v.vertex);
                 
                 float[] vertexArray = Vector3.pack(sorted3);
                 
                 glMesh.setVertexAttrib(vertexArray, vertexArray.length/3);
+                
             }
         }
     }
     
     @Override
-    void begin(GameObject g, Mesh mesh, GraphicsLibrary gl, Service service) {
-        gl.glEnable(Target.PROGRAM_POINT_SIZE);
-        gl.glEnable(Target.POINT_SPRITE);
+    void begin(GameObject g, Mesh mesh, GL gl, Service service) {
+        Material mat = mesh.getMaterial();
+        if (mat instanceof PointsMaterial) {
+            PointsMaterial pm = (PointsMaterial)mat;
+            gl.glEnable(GL.PROGRAM_POINT_SIZE);
+            if (pm.hasTexture()) {
+                gl.glEnable(GL.POINT_SPRITE);
+            }
+            
+        }
     }
 
     @Override
-    void end(GameObject g, Mesh mesh, GraphicsLibrary gl, Service service) {
-        gl.glDisable(Target.PROGRAM_POINT_SIZE);
-        gl.glDisable(Target.POINT_SPRITE);
+    void end(GameObject g, Mesh mesh, GL gl, Service service) {
+        gl.glDisable(GL.PROGRAM_POINT_SIZE);
+        gl.glDisable(GL.POINT_SPRITE);
     }
     
     static class Vertex {
         Vector3 vertex;
         float depth;
-        Vertex(Vector3 vertex, Vector4 screen) {
+        Vertex(Vector3 vertex, float depth) {
             this.vertex = vertex;
-            depth = - screen.z / screen.w;
+            this.depth = depth;
         }
     }
-
     
 }

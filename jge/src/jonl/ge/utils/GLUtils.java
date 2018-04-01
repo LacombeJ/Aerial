@@ -2,10 +2,9 @@ package jonl.ge.utils;
 
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Texture;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Program;
 import jonl.jgl.Shader;
-import jonl.jgl.GraphicsLibrary.ShaderType;
 import jonl.jutils.io.FileUtils;
 import jonl.vmath.Matrix2;
 import jonl.vmath.Matrix3;
@@ -16,21 +15,21 @@ import jonl.vmath.Vector4;
 
 public class GLUtils {
 
-    public static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String fragSource) {
+    public static Program createProgramFromSource(GL gl, String vertSource, String fragSource) {
         Program program = gl.glCreateProgram();
-        Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);
-        Shader fragShader = gl.glCreateShader(ShaderType.FRAGMENT_SHADER,fragSource);
+        Shader vertShader = gl.glCreateShader(GL.VERTEX_SHADER,vertSource);
+        Shader fragShader = gl.glCreateShader(GL.FRAGMENT_SHADER,fragSource);
         program.attach(vertShader);
         program.attach(fragShader);
         program.link();
         return program;
     }
     
-    public static Program createProgramFromSource(GraphicsLibrary gl, String vertSource, String geomSource, String fragSource) {
+    public static Program createProgramFromSource(GL gl, String vertSource, String geomSource, String fragSource) {
         Program program = gl.glCreateProgram();
-        Shader vertShader = gl.glCreateShader(ShaderType.VERTEX_SHADER,vertSource);
-        Shader geomShader = gl.glCreateShader(ShaderType.GEOMETRY_SHADER,geomSource);
-        Shader fragShader = gl.glCreateShader(ShaderType.FRAGMENT_SHADER,fragSource);
+        Shader vertShader = gl.glCreateShader(GL.VERTEX_SHADER,vertSource);
+        Shader geomShader = gl.glCreateShader(GL.GEOMETRY_SHADER,geomSource);
+        Shader fragShader = gl.glCreateShader(GL.FRAGMENT_SHADER,fragSource);
         program.attach(vertShader);
         program.attach(geomShader);
         program.attach(fragShader);
@@ -38,7 +37,7 @@ public class GLUtils {
         return program;
     }
     
-    public static Program createProgram(GraphicsLibrary gl, String vertFile, String fragFile) {
+    public static Program createProgram(GL gl, String vertFile, String fragFile) {
         return createProgramFromSource(gl,FileUtils.readFromFile(vertFile).toString(),FileUtils.readFromFile(fragFile).toString());
     }
     
@@ -112,12 +111,12 @@ public class GLUtils {
         }
     }
     
-    public static jonl.jgl.GraphicsLibrary.Mode map(Mesh.Mode mode) {
+    public static jonl.jgl.GL.Mode map(Mesh.Mode mode) {
         switch (mode) {
-        case TRIANGLES  : return jonl.jgl.GraphicsLibrary.Mode.TRIANGLES;
-        case LINES      : return jonl.jgl.GraphicsLibrary.Mode.LINES;
-        case LINE_STRIP : return jonl.jgl.GraphicsLibrary.Mode.LINE_STRIP;
-        case POINTS     : return jonl.jgl.GraphicsLibrary.Mode.POINTS;
+        case TRIANGLES  : return jonl.jgl.GL.TRIANGLES;
+        case LINES      : return jonl.jgl.GL.LINES;
+        case LINE_STRIP : return jonl.jgl.GL.LINE_STRIP;
+        case POINTS     : return jonl.jgl.GL.POINTS;
         default         : return null;
         }
     }

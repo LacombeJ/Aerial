@@ -5,7 +5,7 @@ import java.util.HashMap;
 import jonl.ge.utils.GLUtils;
 import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Program;
 import jonl.jutils.func.Tuple2;
 import jonl.vmath.Mathf;
@@ -19,7 +19,7 @@ import jonl.vmath.Vector4;
 class GLRenderer {
 
 	
-	private GraphicsLibrary gl;
+	private GL gl;
 	
 	private int version = 430;
 
@@ -32,7 +32,7 @@ class GLRenderer {
     // TODO find a better way to do this ? Maybe use PlaneGeometry ?
     private Geometry rectGeometry = Loader.loadMesh(PresetData.rectMesh());
     
-    GLRenderer(Service service, GraphicsLibrary gl) {
+    GLRenderer(Service service, GL gl) {
         this.gl = gl;
         
         service.implementGetOrCreateMesh(mesh -> getOrCreateMesh(mesh));

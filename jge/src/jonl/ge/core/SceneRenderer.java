@@ -10,36 +10,29 @@ import jonl.ge.core.render.CameraTarget;
 import jonl.ge.core.render.RenderTarget;
 import jonl.ge.core.render.RenderTexture;
 import jonl.ge.utils.GLUtils;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Program;
-import jonl.jgl.GraphicsLibrary.Blend;
-import jonl.jgl.GraphicsLibrary.Face;
-import jonl.jgl.GraphicsLibrary.Mask;
-import jonl.jgl.GraphicsLibrary.PMode;
-import jonl.jgl.GraphicsLibrary.Target;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
 class SceneRenderer {
 
 	private SceneManager manager;
-	private GraphicsLibrary gl;
+	private GL gl;
 	private GLRenderer glr;
 	
-	public SceneRenderer(SceneManager manager, Service service, GraphicsLibrary gl) {
+	public SceneRenderer(SceneManager manager, Service service, GL gl) {
 		this.manager = manager;
 		this.gl = gl;
 		this.glr = new GLRenderer(service, gl);
 		
-		service.implementGetGL(() -> this.gl);
+		service.implementGetGL( () -> this.gl );
 		
-		service.implementRenderCameraSeparately((camera,scene)->{
-			renderCameraSeparately(camera, scene);
-		});
+		service.implementRenderCameraSeparately( (c,s) -> renderCameraSeparately(c, s) );
 		
-		service.implementRenderTexture((renderTexture)->{
-			renderRenderTexture(renderTexture);
-		});
+		service.implementRenderTexture( (t) ->  renderRenderTexture(t) );
+		
+		service.implementTargetInvalid( (c,g) -> targetInvalid(c,g) );
 		
 	}
 	
@@ -47,9 +40,9 @@ class SceneRenderer {
 		int version = gl.glGetGLSLVersioni();
         glr.setGLSLVersion(version);
         
-        gl.glEnable(Target.DEPTH_TEST);
-        gl.glEnable(Target.CULL_FACE);
-        gl.glBlendFunc(Blend.NORMAL);
+        gl.glEnable(GL.DEPTH_TEST);
+        gl.glEnable(GL.CULL_FACE);
+        gl.glBlendFunc(GL.NORMAL);
 	}
 	
 	void render(Scene scene) {
@@ -132,13 +125,13 @@ class SceneRenderer {
                 jonl.jutils.func.List.iterate(manager.delegate().onProgramUpdate(), (cb) -> cb.f(program,mat,camera) );
                 
                 if (mesh.cullFace) {
-                    gl.glEnable(Target.CULL_FACE);
+                    gl.glEnable(GL.CULL_FACE);
                 } else {
-                    gl.glDisable(Target.CULL_FACE);
+                    gl.glDisable(GL.CULL_FACE);
                 }
                 
                 if (mesh.isWireframe()) {
-                    gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.LINE); 
+                    gl.glPolygonMode(GL.FRONT_AND_BACK, GL.LINE); 
                 }
                 
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(g,mesh,gl) );
@@ -148,10 +141,10 @@ class SceneRenderer {
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(g,mesh,gl) );
                 
                 if (mesh.isWireframe()) {
-                    gl.glPolygonMode(Face.FRONT_AND_BACK, PMode.FILL);
+                    gl.glPolygonMode(GL.FRONT_AND_BACK, GL.FILL);
                 }
 
-                gl.glEnable(Target.CULL_FACE);
+                gl.glEnable(GL.CULL_FACE);
                 
                 gl.glUseProgram(null);
             }
@@ -200,18 +193,25 @@ class SceneRenderer {
         }
         
         gl.glViewport(left,bottom,width,height);
-        gl.glClearColor(camera.getClearColor());
-        if (camera.scissorEnabled()) {
-            gl.glScissor(left,bottom,width,height);
-            gl.glEnable(Target.SCISSOR_TEST);
-            gl.glClear(Mask.COLOR_BUFFER_BIT,Mask.DEPTH_BUFFER_BIT);
-            gl.glDisable(Target.SCISSOR_TEST);
+        Vector4 c = camera.clearColor;
+        gl.glClearColor(c.x, c.y, c.z, c.w); //rgba
+        if (camera.scissorMode != Camera.NONE) {
+            gl.glEnable(GL.SCISSOR_TEST);
+            if (camera.scissorMode == Camera.VIEWPORT) {
+                gl.glScissor(left,bottom,width,height);
+            } else {
+                gl.glScissor(camera.scissorLeft, camera.scissorBottom, camera.scissorRight, camera.scissorTop);
+            }
+            gl.glClear(GL.COLOR_BUFFER_BIT,GL.DEPTH_BUFFER_BIT);
+        } else {
+            gl.glDisable(GL.SCISSOR_TEST);
         }
         
         return view;
     }
     
     private void detachCamera(Camera camera) {
+        gl.glDisable(GL.SCISSOR_TEST);
     	if (camera instanceof CameraTarget || camera instanceof RenderTarget) {
             gl.glBindFramebuffer(null);
         }
@@ -228,11 +228,11 @@ class SceneRenderer {
         }
         
         Camera.Target targ = camera.getTargetType();
-        if (targ==Camera.Target.EXCEPT) {
+        if (targ==Camera.EXCEPT) {
             if (camera.hasTarget(g)) {
                 return true;
             }
-        } else if (targ==Camera.Target.ONLY) {
+        } else if (targ==Camera.ONLY) {
             if (!camera.hasTarget(g)) {
                 return true;
             }
@@ -258,9 +258,9 @@ class SceneRenderer {
         gl.glClearColor(0,0,0,1);
         
         gl.glScissor(0,0,width,height);
-        gl.glEnable(Target.SCISSOR_TEST);
-        gl.glClear(Mask.COLOR_BUFFER_BIT,Mask.DEPTH_BUFFER_BIT);
-        gl.glDisable(Target.SCISSOR_TEST);
+        gl.glEnable(GL.SCISSOR_TEST);
+        gl.glClear(GL.COLOR_BUFFER_BIT,GL.DEPTH_BUFFER_BIT);
+        gl.glDisable(GL.SCISSOR_TEST);
         
         Material mat = rt.getMaterial();
         Matrix4 canvas = Matrix4.orthographic(-0.5f, 0.5f, -0.5f, 0.5f, -1, 1);
@@ -276,7 +276,7 @@ class SceneRenderer {
             glr.setUniform(program,u.name,u.data);
         }
         
-        gl.glRender(glr.getOrCreateMesh(glr.getRectGeometry()),GraphicsLibrary.Mode.TRIANGLES);
+        gl.glRender(glr.getOrCreateMesh(glr.getRectGeometry()),GL.TRIANGLES);
         
         gl.glUseProgram(null);
         

@@ -3,11 +3,18 @@ package jonl.ge.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import jonl.jutils.misc.ArrayUtils;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
 public class Camera extends Component {
+    
+    public static final ScissorMode NONE        = ScissorMode.NONE;
+    public static final ScissorMode VIEWPORT    = ScissorMode.VIEWPORT;
+    public static final ScissorMode CUSTOM      = ScissorMode.CUSTOM;
+    
+    public static final Target ALL      = Target.ALL;
+    public static final Target EXCEPT   = Target.EXCEPT;
+    public static final Target ONLY     = Target.ONLY;
     
 	int order = 0; //order in which to render cameras (higher order renders last)
 	
@@ -25,16 +32,16 @@ public class Camera extends Component {
     float viewRight = 1;
     float viewTop = 1;
     
-    float[] clearColor = { 0, 0, 0, 1 };
-    boolean scissor = true;
+    Vector4 clearColor = new Vector4(0,0,0,1);
+    ScissorMode scissorMode = VIEWPORT;
+    int scissorLeft = 0;
+    int scissorRight = 0;
+    int scissorTop = 0;
+    int scissorBottom = 0;
+    
     boolean scaleProjection = false;
     boolean shouldClearColor = true;
     
-    public enum Target {
-        ALL,
-        EXCEPT,
-        ONLY,
-    }
     private Target type = Target.ALL;
     private List<GameObject> targets = new ArrayList<>();
     
@@ -140,24 +147,31 @@ public class Camera extends Component {
         return new Vector4(viewLeft,viewBottom,viewRight,viewTop);
     }
     
-    public float[] getClearColor() {
-    	return ArrayUtils.copy(clearColor);
+    public Vector4 getClearColor() {
+    	return clearColor.get();
     }
     
-    public void setClearColor(float[] color) {
+    public void setClearColor(Vector4 color) {
         clearColor = color;
     }
     
     public void setClearColor(float r, float g, float b, float a) {
-        clearColor = new float[]{r,g,b,a};
+        clearColor = new Vector4(r,g,b,a);
     }
     
-    public boolean scissorEnabled() {
-    	return scissor;
+    public ScissorMode getScissorMode() {
+    	return scissorMode;
     }
     
-    public void setScissor(boolean scissor) {
-        this.scissor = scissor;
+    public void setScissorMode(ScissorMode scissor) {
+        this.scissorMode = scissor;
+    }
+    
+    public void setScissor(int left, int bottom, int right, int top) {
+        scissorLeft = left;
+        scissorBottom = bottom;
+        scissorRight = right;
+        scissorTop = top;
     }
     
     public void enableClearColor(boolean clearColor) {
@@ -220,5 +234,16 @@ public class Camera extends Component {
         return view;
     }
     
+    public enum Target {
+        ALL,
+        EXCEPT,
+        ONLY,
+    }
+    
+    public enum ScissorMode {
+        NONE,
+        VIEWPORT,
+        CUSTOM
+    }
     
 }

@@ -28,5 +28,8 @@ public class Time {
         return (float) TimeUtils.timeConvert(timeSinceStart, TimeMetric.NANO, TimeMetric.SECOND);
     }
     
+    public float fps() {
+        return (float) clock.rate();
+    }
     
 }

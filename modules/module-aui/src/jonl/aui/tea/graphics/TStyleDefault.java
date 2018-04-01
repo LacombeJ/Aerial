@@ -1,18 +1,20 @@
 package jonl.aui.tea.graphics;
 
+import jonl.vmath.Color;
+
 public class TStyleDefault implements TStyle {
 
-    protected TColor primary = TColor.fromFloat(0.8f, 0.8f, 0.8f);
-    protected TColor secondary = TColor.fromFloat(0.7f, 0.7f, 0.71f);
-    protected TColor tertiary = TColor.fromFloat(0.6f, 0.6f, 0.61f);
+    protected Color primary = Color.fromFloat(0.8f, 0.8f, 0.8f);
+    protected Color secondary = Color.fromFloat(0.7f, 0.7f, 0.71f);
+    protected Color tertiary = Color.fromFloat(0.6f, 0.6f, 0.61f);
     
-    protected TColor background = TColor.WHITE;
-    protected TColor foreground = TColor.fromFloat(0.1f, 0.1f, 0.15f);
+    protected Color background = Color.WHITE;
+    protected Color foreground = Color.fromFloat(0.1f, 0.1f, 0.15f);
     
-    protected TColor light = TColor.fromFloat(0.95f, 0.95f, 0.97f);
-    protected TColor dark = TColor.fromFloat(0.05f, 0.07f, 0.1f);
+    protected Color light = Color.fromFloat(0.95f, 0.95f, 0.97f);
+    protected Color dark = Color.fromFloat(0.05f, 0.07f, 0.1f);
     
-    protected TColor textColor = TColor.BLACK;
+    protected Color textColor = Color.BLACK;
     
     protected TFont font = new TFont("Calibri",TFont.PLAIN,15,false);
     
@@ -37,17 +39,17 @@ public class TStyleDefault implements TStyle {
     
     // Getters
     
-    public TColor primary() { return primary; }
-    public TColor secondary() { return secondary; }
-    public TColor tertiary() { return tertiary; }
+    public Color primary() { return primary; }
+    public Color secondary() { return secondary; }
+    public Color tertiary() { return tertiary; }
     
-    public TColor background() { return background; }
-    public TColor foreground() { return foreground; }
+    public Color background() { return background; }
+    public Color foreground() { return foreground; }
     
-    public TColor light() { return light; }
-    public TColor dark() { return dark; }
+    public Color light() { return light; }
+    public Color dark() { return dark; }
     
-    public TColor textColor() { return textColor; }
+    public Color textColor() { return textColor; }
     
     public TFont font() { return font; }
     
@@ -63,17 +65,17 @@ public class TStyleDefault implements TStyle {
     
     // Setters
     
-    public void primary(TColor primary) { this.primary = primary; }
-    public void secondary(TColor secondary) { this.secondary = secondary; }
-    public void tertiary(TColor tertiary) { this.tertiary = tertiary; }
+    public void primary(Color primary) { this.primary = primary; }
+    public void secondary(Color secondary) { this.secondary = secondary; }
+    public void tertiary(Color tertiary) { this.tertiary = tertiary; }
     
-    public void background(TColor background) { this.background = background; }
-    public void foreground(TColor foreground) { this.foreground = foreground; }
+    public void background(Color background) { this.background = background; }
+    public void foreground(Color foreground) { this.foreground = foreground; }
     
-    public void light(TColor light) { this.light = light; }
-    public void dark(TColor dark) { this.dark = dark; }
+    public void light(Color light) { this.light = light; }
+    public void dark(Color dark) { this.dark = dark; }
     
-    public void textColor(TColor textColor) { this.textColor = textColor; }
+    public void textColor(Color textColor) { this.textColor = textColor; }
     
     public void font(TFont font) { this.font = font; }
     

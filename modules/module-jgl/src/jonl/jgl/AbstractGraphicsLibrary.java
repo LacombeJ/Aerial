@@ -17,7 +17,7 @@ import jonl.jutils.misc.ImageUtils;
  * @author Jonathan Lacombe
  *
  */
-public abstract class AbstractGraphicsLibrary implements GraphicsLibrary {
+public abstract class AbstractGraphicsLibrary implements GL {
     
     @Override
     public void glClearColor(float[] color) {

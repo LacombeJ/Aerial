@@ -5,7 +5,7 @@ import jonl.aui.VAlign;
 import jonl.aui.Widget;
 import jonl.aui.Window;
 import jonl.jgl.Closer;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
 
@@ -112,7 +112,7 @@ public class TWindow extends TWidget implements Window {
         return windowManager.window();
     }
     
-    public GraphicsLibrary gl() {
+    public GL gl() {
         return windowManager.getGL();
     }
     

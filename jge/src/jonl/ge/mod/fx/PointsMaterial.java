@@ -25,10 +25,13 @@ import jonl.vmath.Vector3;
  */
 public class PointsMaterial extends GeneratedShader {
     
+    private boolean hasTexture;
+    
     public PointsMaterial(Texture texture, Vector4 color, float size, boolean useSizeAttenuation) {
         super(vertexShader(useSizeAttenuation,size), fragmentShader(texture,color));
         setColor(color);
         setSize(size);
+        hasTexture = (texture!=null);
     }
     
     public PointsMaterial(Vector4 color, float size, boolean useSizeAttenuation) {
@@ -53,6 +56,10 @@ public class PointsMaterial extends GeneratedShader {
     
     public void setSize(float size) {
         setUniform("size", size);
+    }
+    
+    public boolean hasTexture() {
+        return hasTexture;
     }
 
     @Override

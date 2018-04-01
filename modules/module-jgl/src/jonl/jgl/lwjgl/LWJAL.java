@@ -5,12 +5,12 @@ import java.nio.ShortBuffer;
 import org.lwjgl.openal.AL10;
 
 import jonl.jgl.AudioBuffer;
-import jonl.jgl.AudioLibrary;
+import jonl.jgl.AL;
 import jonl.jgl.AudioSource;
 import jonl.jgl.utils.AudioData;
 import jonl.jgl.utils.RawAudio;
 
-class LWJAL implements AudioLibrary {
+class LWJAL implements AL {
 
     @Override
     public String alGetError() {

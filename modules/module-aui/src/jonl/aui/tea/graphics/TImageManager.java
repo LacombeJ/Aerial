@@ -1,6 +1,6 @@
 package jonl.aui.tea.graphics;
 
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Texture;
 import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
@@ -9,11 +9,11 @@ import jonl.jutils.structs.Pool;
 
 public class TImageManager {
 
-GraphicsLibrary gl;
+GL gl;
     
     Pool<TImage,Texture> textMap;
     
-    public TImageManager(GraphicsLibrary gl) {
+    public TImageManager(GL gl) {
         
         this.gl = gl;
         

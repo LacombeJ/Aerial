@@ -5,9 +5,9 @@ import jonl.aui.HAlign;
 import jonl.aui.Margin;
 import jonl.aui.VAlign;
 import jonl.aui.tea.event.TMouseEvent;
-import jonl.aui.tea.graphics.TColor;
 import jonl.jgl.Input;
 import jonl.jgl.Window;
+import jonl.vmath.Color;
 import jonl.vmath.Mathi;
 
 public class TFrameBar extends TWidget {
@@ -63,7 +63,7 @@ public class TFrameBar extends TWidget {
         close.setMinSize(buttonWidth, buttonHeight);
         close.setMaxSize(buttonWidth, buttonHeight);
         close.info().put("cButton", frame.color);
-        close.info().put("cHover", TColor.RED);
+        close.info().put("cHover", Color.RED);
         close.info().put("fMaxValue", 4f);
         close.clicked().connect(()->{
             frame.window().close();
@@ -76,7 +76,7 @@ public class TFrameBar extends TWidget {
     @Override
     public void paint(TGraphics g) {
         g.renderRect(0,0,width(),height(),frame.color);
-        g.renderText(frame.title(), width()/2f, height()/2f, HAlign.CENTER, VAlign.MIDDLE, style().font(), TColor.WHITE);
+        g.renderText(frame.title(), width()/2f, height()/2f, HAlign.CENTER, VAlign.MIDDLE, style().font(), Color.WHITE);
         paint().emit(cb->cb.f(g));
     }
     

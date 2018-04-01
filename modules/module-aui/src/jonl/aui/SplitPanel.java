@@ -1,5 +1,7 @@
 package jonl.aui;
 
+import jonl.jutils.func.Callback;
+
 public interface SplitPanel extends Widget {
     
     void setSplit(Widget w1, Widget w2, Align align, double ratio);
@@ -19,5 +21,7 @@ public interface SplitPanel extends Widget {
     double ratio();
     
     void setRatio(double ratio);
+    
+    Signal<Callback<Double>> changed();
     
 }

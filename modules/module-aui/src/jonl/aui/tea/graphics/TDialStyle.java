@@ -2,15 +2,16 @@ package jonl.aui.tea.graphics;
 
 import jonl.aui.tea.TDial;
 import jonl.aui.tea.TSizeHint;
+import jonl.vmath.Color;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
 public class TDialStyle extends TWidgetStyle<TDial> {
     
-    private TColor handColor;
-    private TColor dialColor;
-    private TColor adjustColor;
+    private Color handColor;
+    private Color dialColor;
+    private Color adjustColor;
     private int minDim = 64;
     private int border = 4;
     private int maxIntensityValue = 30;
@@ -82,11 +83,11 @@ public class TDialStyle extends TWidgetStyle<TDial> {
         
     }
     
-    public TColor buttonColor() { return handColor; }
-    public TColor hoverColor() { return dialColor; }
+    public Color buttonColor() { return handColor; }
+    public Color hoverColor() { return dialColor; }
     
-    public void buttonColor(TColor buttonColor) { this.handColor = buttonColor; }
-    public void hoverColor(TColor hoverColor) { this.dialColor = hoverColor; }
+    public void buttonColor(Color buttonColor) { this.handColor = buttonColor; }
+    public void hoverColor(Color hoverColor) { this.dialColor = hoverColor; }
     
 
 }

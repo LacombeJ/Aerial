@@ -3,7 +3,7 @@ package jonl.ge.mod.text;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Texture;
 import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
@@ -19,7 +19,7 @@ import jonl.jutils.misc.AwtFont;
  */
 class DynamicTextImplementation implements TextImplementation {
 
-    GraphicsLibrary gl;
+    GL gl;
     
     HashMap<Font, AwtFont> fontMap;
     HashMap<Text, Texture> textMap;
@@ -35,7 +35,7 @@ class DynamicTextImplementation implements TextImplementation {
     }
 
     @Override
-    public void load(GraphicsLibrary gl) {
+    public void load(GL gl) {
         this.gl = gl;
     }
     

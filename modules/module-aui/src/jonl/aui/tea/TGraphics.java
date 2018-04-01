@@ -6,19 +6,17 @@ import jonl.vmath.*;
 import jonl.aui.Graphics;
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
-import jonl.aui.tea.graphics.TColor;
 import jonl.aui.tea.graphics.TFont;
 import jonl.aui.tea.graphics.TImage;
 import jonl.aui.tea.graphics.TImageManager;
 import jonl.aui.tea.graphics.TMesh;
 import jonl.aui.tea.graphics.TTextManager;
 import jonl.jgl.*;
-import jonl.jgl.GraphicsLibrary.*;
 import jonl.jgl.utils.*;
 
 public class TGraphics implements Graphics {
 
-    GraphicsLibrary gl;
+    GL gl;
     
     Function0D<Integer> windowHeight;
     
@@ -43,7 +41,7 @@ public class TGraphics implements Graphics {
     Program basic;
 
     
-    public TGraphics(GraphicsLibrary gl, Function0D<Integer> windowHeight) {
+    public TGraphics(GL gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
         this.windowHeight = windowHeight;
         
@@ -72,17 +70,17 @@ public class TGraphics implements Graphics {
     int[] currentCut;
     
     public void beginGL() {
-        gl.glDisable(Target.DEPTH_TEST);
-        gl.glEnable(Target.SCISSOR_TEST);
-        gl.glEnable(Target.BLEND);
-        gl.glBlendFunc(Blend.NORMAL);
+        gl.glDisable(GL.DEPTH_TEST);
+        gl.glEnable(GL.SCISSOR_TEST);
+        gl.glEnable(GL.BLEND);
+        gl.glBlendFunc(GL.NORMAL);
     }
     
     public void endGL() {
-        gl.glEnable(Target.DEPTH_TEST);
-        gl.glDisable(Target.SCISSOR_TEST);
-        gl.glDisable(Target.BLEND);
-        gl.glBlendFunc(Blend.NORMAL);
+        gl.glEnable(GL.DEPTH_TEST);
+        gl.glDisable(GL.SCISSOR_TEST);
+        gl.glDisable(GL.BLEND);
+        gl.glBlendFunc(GL.NORMAL);
     }
     
     public void paint(TWidget w) {
@@ -125,14 +123,14 @@ public class TGraphics implements Graphics {
     }
     
     public void renderCircleOutline(float x, float y, float w, float h, Vector4 color) {
-        render(circleOutline,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,Mode.LINE_STRIP);
+        render(circleOutline,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,GL.LINE_STRIP);
     }
     
     public void renderRect(float x, float y, float w, float h, Vector4 color) {
         render(box,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color);
     }
     
-    public void renderRect(float x, float y, float w, float h, TColor color) {
+    public void renderRect(float x, float y, float w, float h, Color color) {
         render(box,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector());
     }
     
@@ -142,20 +140,20 @@ public class TGraphics implements Graphics {
     }
     
     public void renderRectOutline(float x, float y, float w, float h, Vector4 color) {
-        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,Mode.LINE_STRIP);
+        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,GL.LINE_STRIP);
     }
     
-    public void renderRectOutline(float x, float y, float w, float h, TColor color) {
-        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector(),Mode.LINE_STRIP);
+    public void renderRectOutline(float x, float y, float w, float h, Color color) {
+        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector(),GL.LINE_STRIP);
     }
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
             TFont font, Vector4 color) {
-        renderText(string,x,y,halign,valign,font,TColor.fromVector(color));
+        renderText(string,x,y,halign,valign,font,Color.fromVector(color));
     }
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
-            TFont font, TColor color) {
+            TFont font, Color color) {
         if (string!="") {
             textManager.render(string, x+offsetX, y+offsetY, halign, valign, font, color, ortho, fontRect, fontProgram);
         }
@@ -172,7 +170,7 @@ public class TGraphics implements Graphics {
     
     // Top-left orientation
     
-    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color, Mode mode) {
+    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color, GL.Mode mode) {
         Matrix4 mat = Matrix4.identity();
         mat.translate(trans);
         mat.rotate(rot);
@@ -185,7 +183,7 @@ public class TGraphics implements Graphics {
         gl.glUseProgram(null);
     }
     private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color) {
-        render(mesh,trans,rot,scale,color,Mode.TRIANGLES);
+        render(mesh,trans,rot,scale,color,GL.TRIANGLES);
     }
     
     private void render(Mesh mesh, Matrix4 mat, Vector4 color) {        
@@ -213,8 +211,8 @@ public class TGraphics implements Graphics {
     private Program loadProgramFromSource(String vertSource, String fragSource) {
         Program p = gl.glCreateProgram();
         
-        Shader vert = gl.glCreateShader(ShaderType.VERTEX_SHADER);
-        Shader frag = gl.glCreateShader(ShaderType.FRAGMENT_SHADER);
+        Shader vert = gl.glCreateShader(GL.VERTEX_SHADER);
+        Shader frag = gl.glCreateShader(GL.FRAGMENT_SHADER);
         
         vert.compileSource(vertSource);
         frag.compileSource(fragSource);
@@ -226,7 +224,7 @@ public class TGraphics implements Graphics {
         return p;
     }
     
-    public GraphicsLibrary getGL() {
+    public GL getGL() {
         return gl;
     }
     

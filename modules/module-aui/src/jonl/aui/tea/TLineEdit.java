@@ -6,8 +6,8 @@ import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.VAlign;
 import jonl.aui.tea.event.TMouseEvent;
-import jonl.aui.tea.graphics.TColor;
 import jonl.jutils.func.Callback;
+import jonl.vmath.Color;
 import jonl.vmath.Vector4;
 
 public class TLineEdit extends TWidget implements LineEdit {
@@ -58,8 +58,8 @@ public class TLineEdit extends TWidget implements LineEdit {
         float fIntensityValue = info().get("fIntensityValue", 0f);
         
         float fMaxValue = info().get("fMaxValue", 30);
-        TColor cNormal = info().get("cNormal", TColor.BLACK);
-        TColor cHover = info().get("cHover", TColor.fromInt(0, 0, 255));
+        Color cNormal = info().get("cNormal", Color.BLACK);
+        Color cHover = info().get("cHover", Color.fromInt(0, 0, 255));
         
         if (info().get("bIsMouseWithin", false)) {
             if (fIntensityValue<fMaxValue) {
@@ -82,9 +82,9 @@ public class TLineEdit extends TWidget implements LineEdit {
         float x = border/2;
         float y = height/2;
         
-        g.renderRect(0, 0, width, height, TColor.WHITE);
+        g.renderRect(0, 0, width, height, Color.WHITE);
         g.renderRectOutline(0, 0, width, height, color);
-        g.renderText(text(),x,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),TColor.BLACK);
+        g.renderText(text(),x,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),Color.BLACK);
         
         paint().emit(cb->cb.f(g));
     }

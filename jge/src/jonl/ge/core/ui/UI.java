@@ -29,9 +29,9 @@ import jonl.aui.WidgetItem;
 import jonl.aui.Window;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWidget;
-import jonl.aui.tea.graphics.TColor;
 import jonl.aui.tea.graphics.TStyle;
 import jonl.aui.tea.graphics.TStyleDark;
+import jonl.vmath.Color;
 
 public class UI implements UIManager {
 
@@ -43,7 +43,7 @@ public class UI implements UIManager {
         ui = TUIManager.instance();
         
         TStyle style = new TStyleDark();
-        TColor transparent = TColor.fromFloat(0,0,0,0);
+        Color transparent = Color.fromFloat(0,0,0,0);
         style.background(transparent);
         ui.setStyle(style);
         

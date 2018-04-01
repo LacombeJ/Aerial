@@ -9,9 +9,11 @@ import jonl.jgl.Texture.Wrap;
 import jonl.jgl.utils.MeshData;
 
 /**
+ * Graphics Library
+ * 
  * @author Jonathan Lacombe
  */
-public interface GraphicsLibrary {
+public interface GL {
 
     /** Clears given buffers */
     public void glClear(Mask... masks);
@@ -167,11 +169,24 @@ public interface GraphicsLibrary {
     /** Uses the given program or 0 if null */
     public void glUseProgram(Program program);
 
+    
+    // Enums
+    
+    public final static Mask COLOR_BUFFER_BIT = Mask.COLOR_BUFFER_BIT;
+    public final static Mask DEPTH_BUFFER_BIT = Mask.DEPTH_BUFFER_BIT;
     public static enum Mask {
         COLOR_BUFFER_BIT,
         DEPTH_BUFFER_BIT
     }
     
+    public final static Target CULL_FACE            = Target.CULL_FACE;
+    public final static Target DEPTH_TEST           = Target.DEPTH_TEST;
+    public final static Target STENCIL_TEST         = Target.STENCIL_TEST;
+    public final static Target SCISSOR_TEST         = Target.SCISSOR_TEST;
+    public final static Target BLEND                = Target.BLEND;
+    public final static Target POINT_SMOOTH         = Target.POINT_SMOOTH;
+    public final static Target PROGRAM_POINT_SIZE   = Target.PROGRAM_POINT_SIZE;
+    public final static Target POINT_SPRITE         = Target.POINT_SPRITE;
     public static enum Target {
         CULL_FACE,
         DEPTH_TEST,
@@ -183,18 +198,30 @@ public interface GraphicsLibrary {
         POINT_SPRITE
     }
     
+    public final static HintTarget POINT_SMOOTH_HINT    = HintTarget.POINT_SMOOTH_HINT;
+    public final static HintTarget LINE_SMOOTH_HINT     = HintTarget.LINE_SMOOTH_HINT;
+    public final static HintTarget POLYGON_SMOOTH_HINT  = HintTarget.POLYGON_SMOOTH_HINT;
     public static enum HintTarget {
         POINT_SMOOTH_HINT,
         LINE_SMOOTH_HINT,
         POLYGON_SMOOTH_HINT
     }
     
+    public final static Hint FASTEST    = Hint.FASTEST;
+    public final static Hint NICEST     = Hint.NICEST;
+    public final static Hint DONT_CARE  = Hint.DONT_CARE;
     public static enum Hint {
         FASTEST,
         NICEST,
         DONT_CARE
     }
     
+    public final static Blend NORMAL    = Blend.NORMAL;
+    public final static Blend MULTIPLY  = Blend.MULTIPLY;
+    public final static Blend ADDITIVE  = Blend.ADDITIVE;
+    public final static Blend SCREEN    = Blend.SCREEN;
+    public final static Blend SUBTRACT  = Blend.SUBTRACT;
+    public final static Blend DARKEN    = Blend.DARKEN;
     public static enum Blend {
         /** src=SRC_ALPHA dst=ONE_MINUS_SRC_ALPHA   */
         NORMAL,
@@ -215,6 +242,16 @@ public interface GraphicsLibrary {
         DARKEN
     }
     
+    public final static Factor ZERO                 = Factor.ZERO;
+    public final static Factor ONE                  = Factor.ONE;
+    public final static Factor SRC_COLOR            = Factor.SRC_COLOR;
+    public final static Factor ONE_MINUS_SRC_COLOR  = Factor.ONE_MINUS_SRC_COLOR;
+    public final static Factor SRC_ALPHA            = Factor.SRC_ALPHA;
+    public final static Factor ONE_MINUS_SRC        = Factor.ONE_MINUS_SRC;
+    public final static Factor DST_ALPHA            = Factor.DST_ALPHA;
+    public final static Factor ONE_MINUS_DST_ALPHA  = Factor.ONE_MINUS_DST_ALPHA;
+    public final static Factor ONE_MINUS_SRC_ALPHA  = Factor.ONE_MINUS_SRC_ALPHA;
+    public final static Factor ONE_MINUS_DST_COLOR  = Factor.ONE_MINUS_DST_COLOR;
     public static enum Factor {
         ZERO,
         ONE,
@@ -228,12 +265,19 @@ public interface GraphicsLibrary {
         ONE_MINUS_DST_COLOR
     }
     
+    public final static Face FRONT              = Face.FRONT;
+    public final static Face BACK               = Face.BACK;
+    public final static Face FRONT_AND_BACK     = Face.FRONT_AND_BACK;
     public static enum Face {
         FRONT,
         BACK,
         FRONT_AND_BACK
     }
     
+    public final static Mode POINTS     = Mode.POINTS;
+    public final static Mode LINES      = Mode.LINES;
+    public final static Mode LINE_STRIP = Mode.LINE_STRIP;
+    public final static Mode TRIANGLES  = Mode.TRIANGLES;
     public static enum Mode {
         POINTS,
         LINES,
@@ -241,12 +285,20 @@ public interface GraphicsLibrary {
         TRIANGLES
     }
     
+    public final static PMode POINT = PMode.POINT;
+    public final static PMode LINE  = PMode.LINE;
+    public final static PMode FILL  = PMode.FILL;
     public static enum PMode {
         POINT,
         LINE,
         FILL
     }
     
+    public final static ShaderType VERTEX_SHADER            = ShaderType.VERTEX_SHADER;
+    public final static ShaderType FRAGMENT_SHADER          = ShaderType.FRAGMENT_SHADER;
+    public final static ShaderType GEOMETRY_SHADER          = ShaderType.GEOMETRY_SHADER;
+    public final static ShaderType TESS_CONTROL_SHADER      = ShaderType.TESS_CONTROL_SHADER;
+    public final static ShaderType TESS_EVALUATION_SHADER   = ShaderType.TESS_EVALUATION_SHADER;
     public static enum ShaderType {
         VERTEX_SHADER,
         FRAGMENT_SHADER,

@@ -12,12 +12,11 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TScrollEvent;
 import jonl.aui.tea.spatial.TPoint;
 import jonl.jgl.Closer;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Input;
 import jonl.jgl.Loader;
 import jonl.jgl.Window;
 import jonl.jgl.Window.Insets;
-import jonl.jgl.GraphicsLibrary.Mask;
 import jonl.jgl.lwjgl.GLFWWindow;
 import jonl.jutils.parallel.SequentialProcessor;
 import jonl.vmath.Mathi;
@@ -28,7 +27,7 @@ class TWindowManager {
     // ------------------------------------------------------------------------
     
     private GLFWWindow glWindow;
-    private GraphicsLibrary gl;
+    private GL gl;
     private Input input;
     
     private String title = "Window";
@@ -224,7 +223,7 @@ class TWindowManager {
         gl.glViewport(0,0,window.width,window.height);
         gl.glScissor(0,0,window.width,window.height);
         gl.glClearColor(1,1,1,1);
-        gl.glClear(Mask.COLOR_BUFFER_BIT);
+        gl.glClear(GL.COLOR_BUFFER_BIT);
         
         //TODO swap this with something for new layout manager
         //This is here because for TFrames (internally undecorated windows) , the GLFW
@@ -319,7 +318,7 @@ class TWindowManager {
         return glWindow;
     }
     
-    GraphicsLibrary getGL() {
+    GL getGL() {
         return gl;
     }
     

@@ -156,7 +156,7 @@ public interface Window {
     public void setCursor(int cursorId);
     
     public Input getInput();
-    public GraphicsLibrary getGraphicsLibrary();
+    public GL getGraphicsLibrary();
     
     public void addSizeListener(Int2ChangedListener sl);
     public void removeSizeListener(Int2ChangedListener sl);

@@ -1,11 +1,12 @@
 package jonl.ge.core;
 
 import jonl.ge.core.render.RenderTexture;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.func.Function;
 import jonl.jutils.func.Function0D;
+import jonl.jutils.func.Function2D;
 
 /**
  * Used to extend the engine by getting internal functionality
@@ -42,12 +43,12 @@ public class Service {
 		return worldTransform.f(go);
 	}
 	
-	private Function0D<GraphicsLibrary> graphicsLibrary = null;
-	public void implementGetGL(Function0D<GraphicsLibrary> implementation)
+	private Function0D<GL> graphicsLibrary = null;
+	public void implementGetGL(Function0D<GL> implementation)
 	{
 	    graphicsLibrary = implementation;
 	}
-	public GraphicsLibrary getGL() {
+	public GL getGL() {
 	    return graphicsLibrary.f();
 	}
 	
@@ -85,6 +86,15 @@ public class Service {
     }
     public jonl.jgl.Program getOrCreateProgram(Material material) {
         return getOrCreateProgram.f(material);
+    }
+    
+    private Function2D<Camera,GameObject,Boolean> targetInvalid = null;
+    public void implementTargetInvalid(Function2D<Camera,GameObject,Boolean> implementation)
+    {
+        targetInvalid = implementation;
+    }
+    public boolean targetInvalid(Camera camera, GameObject g) {
+        return targetInvalid.f(camera,g);
     }
 	
 }

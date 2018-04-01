@@ -7,13 +7,12 @@ import jonl.ge.core.app.ApplicationWindow;
 import jonl.ge.core.app.EditorAssets;
 import jonl.ge.core.app.EditorGUI;
 import jonl.ge.core.app.EditorInput;
-import jonl.jgl.GraphicsLibrary;
-import jonl.jgl.GraphicsLibrary.Target;
+import jonl.jgl.GL;
 
 public class Editor extends AbstractApplication {
 
 	final jonl.jgl.Window glWindow;
-    final GraphicsLibrary gl;
+    final GL gl;
     final EditorInput input;
     final Window window;
     final EditorGUI gui;
@@ -47,14 +46,14 @@ public class Editor extends AbstractApplication {
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
             synchronized (Editor.class) {
-                gl.glEnable(Target.CULL_FACE);
-                gl.glEnable(Target.DEPTH_TEST);
+                gl.glEnable(GL.CULL_FACE);
+                gl.glEnable(GL.DEPTH_TEST);
                 int[] box = gl.glGetScissor();
                 manager.update();
                 gl.glScissor(box);
-                gl.glDisable(Target.CULL_FACE);
-                gl.glDisable(Target.DEPTH_TEST);
-                gl.glEnable(Target.SCISSOR_TEST);
+                gl.glDisable(GL.CULL_FACE);
+                gl.glDisable(GL.DEPTH_TEST);
+                gl.glEnable(GL.SCISSOR_TEST);
             }
         });
         
@@ -77,7 +76,7 @@ public class Editor extends AbstractApplication {
         GameObject control = EditorAssets.control(gui.window);
         
         camera  = new Camera();
-        camera.setClearColor(new float[]{0.1f,0.2f,0.4f,1f});
+        camera.setClearColor(0.1f,0.2f,0.4f,1f);
         camera.scaleProjection = true;
         
         control.addComponent(camera);

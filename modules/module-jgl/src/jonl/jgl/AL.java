@@ -4,7 +4,13 @@ import java.nio.ShortBuffer;
 
 import jonl.jgl.utils.AudioData;
 
-public interface AudioLibrary {
+/**
+ * Audio Library
+ * 
+ * @author Jonathan
+ *
+ */
+public interface AL {
 
     /** @return string associated with an error or null if no error was found */
     public String alGetError();

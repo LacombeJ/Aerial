@@ -1,6 +1,6 @@
 package jonl.ge.core;
 
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jutils.func.List;
 
 class SceneManager {
@@ -16,7 +16,7 @@ class SceneManager {
 		
 	}
 	
-	void create(Delegate delegate, Service service, GraphicsLibrary gl) {
+	void create(Delegate delegate, Service service, GL gl) {
 		updater = new SceneUpdater(this, service);
 		renderer = new SceneRenderer(this, service, gl);
 		

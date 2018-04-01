@@ -27,9 +27,9 @@ public class CanvasObject {
         
         camera = new Camera();
         camera.setOrder(10);
-        camera.setScissor(false);
+        camera.setScissorMode(Camera.NONE);
         camera.enableClearColor(false);
-        camera.setTargetType(Camera.Target.ONLY);
+        camera.setTargetType(Camera.ONLY);
         camera.setOrthographicBox(576, 1024, -1, 1);
         
         canvas.addComponent(camera);

@@ -3,9 +3,8 @@ package jonl.aui.tea.graphics;
 import java.awt.image.BufferedImage;
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
-import jonl.jgl.GraphicsLibrary;
+import jonl.jgl.GL;
 import jonl.jgl.Texture;
-import jonl.jgl.GraphicsLibrary.Mode;
 import jonl.jgl.Mesh;
 import jonl.jgl.Program;
 import jonl.jgl.Texture.Filter;
@@ -13,6 +12,7 @@ import jonl.jgl.Texture.Internal;
 import jonl.jgl.Texture.Wrap;
 import jonl.jutils.misc.AwtFont;
 import jonl.jutils.structs.LimitingPool;
+import jonl.vmath.Color;
 import jonl.vmath.Matrix4;
 
 /**
@@ -23,11 +23,11 @@ import jonl.vmath.Matrix4;
  */
 public class TTextManager {
 
-    GraphicsLibrary gl;
+    GL gl;
     
     LimitingPool<TText,Texture> textMap;
     
-    public TTextManager(GraphicsLibrary gl) {
+    public TTextManager(GL gl) {
         
         this.gl = gl;
         
@@ -35,7 +35,7 @@ public class TTextManager {
         
     }
     
-    public void render(String text, float mx, float my, HAlign halign, VAlign valign, TFont font, TColor color, Matrix4 ortho, Mesh mesh, Program fontProgram) {
+    public void render(String text, float mx, float my, HAlign halign, VAlign valign, TFont font, Color color, Matrix4 ortho, Mesh mesh, Program fontProgram) {
         TText ttext = new TText(text);
         ttext.setAlign(TText.CENTER);
         ttext.setFont(font);
@@ -76,7 +76,7 @@ public class TTextManager {
         fontProgram.setUniform("fontColor", color.r, color.g, color.b, color.a);
         fontProgram.setTexture("texture", texture, 0);
         
-        gl.glRender(mesh, Mode.TRIANGLES);
+        gl.glRender(mesh, GL.TRIANGLES);
         
         gl.glUseProgram(null);
     }
