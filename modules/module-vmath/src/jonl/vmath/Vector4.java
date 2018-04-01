@@ -134,7 +134,7 @@ public class Vector4 extends Vector<Vector4> {
         ArrayList<Vector4> vectors = new ArrayList<>();
         for (int i=0; i<values.length/4; i++) {
             Vector4 v = new Vector4(
-                values[i],
+                values[i*4],
                 values[i*4+1],
                 values[i*4+2],
                 values[i*4+3]

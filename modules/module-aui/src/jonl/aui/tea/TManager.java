@@ -9,7 +9,7 @@ public class TManager {
     
     private TManagerEvent event;
     
-    TManager() {
+    public TManager() {
         event = new TManagerEvent();
     }
     

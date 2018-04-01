@@ -188,7 +188,7 @@ public class TManagerEvent {
         }
         return sendEvent(widget, e);
     }
-    boolean fireMouseButtonPressed(TWidget widget, TMouseEvent e) {
+    public boolean fireMouseButtonPressed(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -213,7 +213,7 @@ public class TManagerEvent {
         checkDoubleClick(widget, e, wasInClickState);
         return sendEvent(widget, e);
     }
-    boolean fireMouseButtonReleased(TWidget widget, TMouseEvent e) {
+    public boolean fireMouseButtonReleased(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,true)) {
             return false;
         }
@@ -232,7 +232,7 @@ public class TManagerEvent {
         return sendMouseEventAndHandleClickAndMouseFocus(widget, e, wasInClickState);
     }
     
-    boolean fireMouseEnter(TWidget widget, TMouseEvent e) {
+    public boolean fireMouseEnter(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -249,7 +249,7 @@ public class TManagerEvent {
         return sendEvent(widget,e);
     }
     
-    boolean fireMouseExit(TWidget widget, TMouseEvent e) {
+    public boolean fireMouseExit(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -269,7 +269,7 @@ public class TManagerEvent {
         return sendEvent(widget,e);
     }
     
-    boolean fireMouseMove(TWidget widget, TMouseEvent e) {
+    public boolean fireMouseMove(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -298,7 +298,7 @@ public class TManagerEvent {
         return sendEvent(widget,e);
     }
     
-    boolean fireScroll(TWidget widget, TScrollEvent e) {
+    public boolean fireScroll(TWidget widget, TScrollEvent e) {
         ArrayList<TWidget> children = widget.getChildren();
         for (TWidget child : children) {
             int x = e.x - child.x;
@@ -320,25 +320,25 @@ public class TManagerEvent {
      * @param e
      * @return
      */
-    boolean fireKeyPressed(TWidget widget, TKeyEvent e) {
+    public boolean fireKeyPressed(TWidget widget, TKeyEvent e) {
         if (keyboardFocusWidget!=null) {
             return sendEvent(keyboardFocusWidget, e);
         }
         return sendEvent(widget, e);
     }
     
-    boolean fireKeyReleased(TWidget widget, TKeyEvent e) {
+    public boolean fireKeyReleased(TWidget widget, TKeyEvent e) {
         if (keyboardFocusWidget!=null) {
             return sendEvent(keyboardFocusWidget, e);
         }
         return sendEvent(widget, e);
     }
     
-    void firePositionChanged(TWidget w, TMoveEvent e) {
+    public void firePositionChanged(TWidget w, TMoveEvent e) {
         sendEvent(w,e);
     }
     
-    void fireSizeChanged(TWidget w, TResizeEvent e) {
+    public void fireSizeChanged(TWidget w, TResizeEvent e) {
         sendEvent(w,e);
     }
     
@@ -357,7 +357,7 @@ public class TManagerEvent {
     
     // ------------------------------------------------------------------------
     
-    static final TPoint relative(TWidget ancestor, TWidget target, int x, int y) {
+    public static final TPoint relative(TWidget ancestor, TWidget target, int x, int y) {
         if (ancestor==target) {
             return new TPoint(x,y);
         }
@@ -379,23 +379,23 @@ public class TManagerEvent {
         return null;
     }
     
-    static final boolean within(TWidget widget, int x, int y) {
+    public static final boolean within(TWidget widget, int x, int y) {
         return x>=0 && x<widget.width && y>=0 && y<widget.height;
     }
     
-    static final TMouseEvent event(TMouseEvent e, TEventType t) {
+    public static final TMouseEvent event(TMouseEvent e, TEventType t) {
         return new TMouseEvent(t, e.button, e.x, e.y, e.globalX, e.globalY, e.dx, e.dy);
     }
     
-    static final TMouseEvent event(TMouseEvent e, int x, int y) {
+    public static final TMouseEvent event(TMouseEvent e, int x, int y) {
         return new TMouseEvent(e.type, e.button, x, y, e.globalX, e.globalY, e.dx, e.dy);
     }
     
-    static final TMouseEvent event(TMouseEvent e, TEventType t, int x, int y) {
+    public static final TMouseEvent event(TMouseEvent e, TEventType t, int x, int y) {
         return new TMouseEvent(t, e.button, x, y, e.globalX, e.globalY, e.dx, e.dy);
     }
     
-    static final TScrollEvent event(TScrollEvent e, int x, int y) {
+    public static final TScrollEvent event(TScrollEvent e, int x, int y) {
         return new TScrollEvent(e.type, e.sx, e.sy, x, y, e.globalX, e.globalY, e.dx, e.dy);
     }
     

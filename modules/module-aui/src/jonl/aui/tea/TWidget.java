@@ -6,7 +6,6 @@ import jonl.aui.Graphics;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
-import jonl.aui.Window;
 import jonl.aui.tea.event.TEvent;
 import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
@@ -58,10 +57,6 @@ public abstract class TWidget implements Widget {
             info.put(key, value);
             return true;
         });
-    }
-    
-    {
-        
     }
     
     // AUI Widget Methods
@@ -132,9 +127,6 @@ public abstract class TWidget implements Widget {
 
     @Override
     public int windowX() {
-        if (this instanceof Window) {
-            return 0;
-        }
         if (parent()!=null) {
             return x + parent().windowX();
         }
@@ -143,9 +135,6 @@ public abstract class TWidget implements Widget {
 
     @Override
     public int windowY() {
-        if (this instanceof Window) {
-            return 0;
-        }
         if (parent()!=null) {
             return y + parent().windowY();
         }
@@ -180,6 +169,7 @@ public abstract class TWidget implements Widget {
     
     // ------------------------------------------------------------------------
     
+    /** Should be implemented by all root-level widgets */
     protected TManager _root_manager() {
         return null;
     }
@@ -389,7 +379,7 @@ public abstract class TWidget implements Widget {
     /**
      * This calls layout().invalidateSizeHint(). Call whenever layout should change.
      */
-    void invalidateLayout() {
+    protected void invalidateLayout() {
         if (manager() != null && layout != null) {
             //manager().layout().invalidateLayout(layout);
             layout.invalidateLayout();
@@ -399,7 +389,7 @@ public abstract class TWidget implements Widget {
     /**
      * This called parent's layout().invalidateSizeHint(). Call whenever min, max, policy, or size hint is invalidated and needs to be recalculated.
      */
-    void invalidateSizeHint() {
+    protected void invalidateSizeHint() {
         if (manager() != null && parentLayout != null) {
             //manager().layout().invalidateSizeHint(parentLayout);
             parentLayout.invalidateSizeHint();

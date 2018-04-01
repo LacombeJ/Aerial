@@ -14,7 +14,7 @@ public abstract class TLayoutItem implements LayoutItem {
     
     // ------------------------------------------------------------------------
     
-    TWidget asWidget() {
+    public TWidget asWidget() {
         return (TWidget) ((TWidgetItem)this).widget();
     }
 

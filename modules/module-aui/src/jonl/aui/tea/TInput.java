@@ -10,9 +10,9 @@ public class TInput implements Input {
     
     private Function0D<Integer> windowHeight;
     
-    public TInput(Input input, Function0D<Integer> windowWidth) {
+    public TInput(Input input, Function0D<Integer> windowHeight) {
         this.input = input;
-        this.windowHeight = windowWidth;
+        this.windowHeight = windowHeight;
     }
     
     @Override

@@ -198,16 +198,16 @@ class GLRenderer {
                 
                 for (int i=0; i<indices.length; i+=3) {
                     
-                    int a = indices[i]*3;
-                    int b = indices[i+1]*3;
-                    int c = indices[i+2]*3;
+                    int a = indices[i];
+                    int b = indices[i+1];
+                    int c = indices[i+2];
                     Vector3 vertexA = vertices[a];
                     Vector3 vertexB = vertices[b];
                     Vector3 vertexC = vertices[c];
                     
-                    int ta = indices[i]*2;
-                    int tb = indices[i+1]*2;
-                    int tc = indices[i+2]*2;
+                    int ta = indices[i];
+                    int tb = indices[i+1];
+                    int tc = indices[i+2];
                     Vector2 texCoordA = texCoords[ta];
                     Vector2 texCoordB = texCoords[tb];
                     Vector2 texCoordC = texCoords[tc];

@@ -225,7 +225,7 @@ public class Vector3 extends Vector<Vector3> {
         ArrayList<Vector3> vectors = new ArrayList<>();
         for (int i=0; i<values.length/3; i++) {
             Vector3 v = new Vector3(
-                values[i],
+                values[i*3],
                 values[i*3+1],
                 values[i*3+2]
             );

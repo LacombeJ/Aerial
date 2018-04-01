@@ -43,16 +43,11 @@ public class TGraphics implements Graphics {
     Program basic;
 
     
-    TGraphics(GraphicsLibrary gl, Function0D<Integer> windowHeight) {
+    public TGraphics(GraphicsLibrary gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
         this.windowHeight = windowHeight;
         
         int version = gl.glGetGLSLVersioni();
-        
-        gl.glDisable(Target.DEPTH_TEST);
-        gl.glEnable(Target.SCISSOR_TEST);
-        gl.glEnable(Target.BLEND);
-        gl.glBlendFunc(Blend.NORMAL);
         
         box = gl.glGenMesh(TMesh.BOX.data);
         circle = gl.glGenMesh(TMesh.CIRCLE.data);
@@ -70,13 +65,27 @@ public class TGraphics implements Graphics {
         imageManager = new TImageManager(gl);
     }
     
-    void setOrtho(Matrix4 ortho) {
+    public void setOrtho(Matrix4 ortho) {
         this.ortho = ortho;
     }
     
     int[] currentCut;
     
-    void paint(TWidget w) {
+    public void beginGL() {
+        gl.glDisable(Target.DEPTH_TEST);
+        gl.glEnable(Target.SCISSOR_TEST);
+        gl.glEnable(Target.BLEND);
+        gl.glBlendFunc(Blend.NORMAL);
+    }
+    
+    public void endGL() {
+        gl.glEnable(Target.DEPTH_TEST);
+        gl.glDisable(Target.SCISSOR_TEST);
+        gl.glDisable(Target.BLEND);
+        gl.glBlendFunc(Blend.NORMAL);
+    }
+    
+    public void paint(TWidget w) {
         boolean firstCut = false;
         int[] box = getBox(w);
         if (currentCut==null) {
@@ -86,7 +95,6 @@ public class TGraphics implements Graphics {
             currentCut = cutOut(currentCut,box);
         }
         int[] cut = new int[] {currentCut[0], windowHeight.f()-currentCut[1]-currentCut[3], currentCut[2], currentCut[3]}; // top left orientation
-        gl.glEnable(Target.SCISSOR_TEST);
         gl.glScissor(cut);
         float ox = offsetX;
         float oy = offsetY;

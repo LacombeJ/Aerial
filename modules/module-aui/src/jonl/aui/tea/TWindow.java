@@ -27,6 +27,7 @@ public class TWindow extends TWidget implements Window {
         this(new TWindowLayout());
     }
     
+    @Override
     protected TManager _root_manager() {
         return manager;
     }
@@ -47,6 +48,16 @@ public class TWindow extends TWidget implements Window {
         widgetLayout().setWidget(widget);
     }
 
+    @Override
+    public int windowX() {
+        return 0;
+    }
+
+    @Override
+    public int windowY() {
+        return 0;
+    }
+    
     @Override
     public String title() {
         return windowManager.title();

@@ -191,7 +191,7 @@ public class Vector2 extends Vector<Vector2> {
         ArrayList<Vector2> vectors = new ArrayList<>();
         for (int i=0; i<values.length/2; i++) {
             Vector2 v = new Vector2(
-                values[i],
+                values[i*2],
                 values[i*2+1]
             );
             vectors.add(v);

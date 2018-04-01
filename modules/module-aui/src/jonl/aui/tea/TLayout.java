@@ -12,7 +12,7 @@ import jonl.jutils.func.Wrapper;
 
 public abstract class TLayout implements Layout {
 
-    TWidget parent = null;
+    protected TWidget parent = null;
     
     private ArrayList<TLayoutItem> items = new ArrayList<>();
     

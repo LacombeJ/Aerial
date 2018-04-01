@@ -176,6 +176,7 @@ class TWindowManager {
             
             glWindow.setLoader(()->{
                 graphics = new TGraphics(gl,()->window.height);
+                graphics.beginGL();
                 ortho = Matrix4.orthographic(0,glWindow.getWidth(),glWindow.getHeight(),0,-1,1);
                 graphics.setOrtho(ortho);
                 loader.load();
@@ -229,7 +230,6 @@ class TWindowManager {
         //This is here because for TFrames (internally undecorated windows) , the GLFW
         //size changed is not called on creation.
         window.invalidateLayout();
-        //window.layoutDirtyChildren();
         
         graphics.paint(window);
     }
