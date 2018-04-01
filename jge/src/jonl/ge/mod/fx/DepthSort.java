@@ -66,7 +66,6 @@ public class DepthSort extends FXService {
                     if (visible) {
                         toOrder.add(new Vertex(vertices[i], screen.z));
                     }
-                    
                 }
                 
                 ArrayList<Vertex> sorted = List.order(toOrder, (v0,v1) -> - Float.compare(v0.depth, v1.depth));
@@ -74,9 +73,9 @@ public class DepthSort extends FXService {
                 ArrayList<Vector3> sorted3 = List.map(sorted, (v) -> v.vertex);
                 
                 float[] vertexArray = Vector3.pack(sorted3);
-                
-                glMesh.setVertexAttrib(vertexArray, vertexArray.length/3);
-                
+                if (vertexArray.length!=0) {
+                    glMesh.setVertexAttrib(vertexArray, 3);
+                }
             }
         }
     }
