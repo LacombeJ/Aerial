@@ -8,9 +8,9 @@ import jonl.ge.core.material.ShaderLanguage.SLTexU;
 import jonl.ge.core.material.ShaderLanguage.SLVec2;
 import jonl.ge.core.material.ShaderLanguage.SLVec4;
 import jonl.ge.core.material.ShaderLanguage.SLVec4U;
-import jonl.ge.shaders.Fog;
-import jonl.ge.shaders.LogDepth;
-import jonl.ge.shaders.SLImports;
+import jonl.ge.core.shaders.Fog;
+import jonl.ge.core.shaders.LogDepth;
+import jonl.ge.core.shaders.SLImports;
 import jonl.vmath.Vector4;
 import jonl.vmath.Vector3;
 

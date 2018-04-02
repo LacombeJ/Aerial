@@ -14,7 +14,7 @@ module jonl.ge {
 	exports jonl.ge.mod.physics;
 	exports jonl.ge.mod.text;
 	
-	exports jonl.ge.shaders;
+	exports jonl.ge.core.shaders;
 	
 	exports jonl.ge.utils;
 	

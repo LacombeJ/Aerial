@@ -1,4 +1,4 @@
-package jonl.ge.shaders;
+package jonl.ge.core.shaders;
 
 import jonl.ge.core.material.ShaderLanguage.SLInclude;
 import jonl.ge.core.material.ShaderLanguage.SLVec4U;

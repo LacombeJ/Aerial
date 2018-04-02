@@ -1,4 +1,4 @@
-package jonl.ge.shaders;
+package jonl.ge.core.shaders;
 
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
 import jonl.ge.core.material.ShaderLanguage.SLInclude;
