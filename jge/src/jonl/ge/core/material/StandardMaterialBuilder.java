@@ -1,10 +1,10 @@
 package jonl.ge.core.material;
 
-import jonl.ge.utils.SLUtils;
-import jonl.ge.utils.SLImports.Attenuation;
-import jonl.ge.utils.SLImports.DiffuseOrenNayer;
-import jonl.ge.utils.SLImports.GLSLGamma;
-import jonl.ge.utils.SLImports.SpecularPhong;
+import jonl.ge.shaders.SLUtils;
+import jonl.ge.shaders.SLImports.Attenuation;
+import jonl.ge.shaders.SLImports.DiffuseOrenNayer;
+import jonl.ge.shaders.SLImports.GLSLGamma;
+import jonl.ge.shaders.SLImports.SpecularPhong;
 
 /**
  * This material builder extends the fragment shader

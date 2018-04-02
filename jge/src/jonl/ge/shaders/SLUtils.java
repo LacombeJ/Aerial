@@ -1,4 +1,4 @@
-package jonl.ge.utils;
+package jonl.ge.shaders;
 
 import jonl.ge.core.material.ShaderLanguage;
 import jonl.ge.core.material.ShaderLanguage.SLBool;

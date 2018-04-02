@@ -6,16 +6,16 @@ import jonl.ge.core.material.ShaderLanguage.SLVec3;
 import jonl.ge.core.material.ShaderLanguage.SLVec3U;
 import jonl.vmath.Vector3;
 
-public class FogShader {
+public class Fog {
 
-    public static SLInclude fogVertex(String mvPosition) {
+    public static SLInclude vertex(String mvPosition) {
         return (sl) -> {
             SLFloat fogDepth = sl.attributeOut(SLFloat.class, "fogDepth");
             sl.putStatement(fogDepth+" = -"+mvPosition+".z");
         };
     }
     
-    public static SLInclude fogFragment() {
+    public static SLInclude fragment() {
         return (sl) -> {
             SLFloat fogDepth = sl.attributeIn(SLFloat.class, "fogDepth");
             

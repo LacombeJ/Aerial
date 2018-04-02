@@ -2,6 +2,7 @@ package jonl.ge.core.material;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import jonl.ge.core.Texture;
 import jonl.ge.core.TextureUniform;
@@ -46,6 +47,8 @@ public class ShaderLanguage {
     private int variableCount = 0;
     
     private String version = "#version 130\n";
+    
+    private final HashMap<String,String> slExtensions = new HashMap<>();
     
     private final ArrayList<String> slFunctionList = new ArrayList<>();
     private ArrayList<String> slFunctionBuilder = new ArrayList<>();
@@ -140,6 +143,10 @@ public class ShaderLanguage {
         StringBuilder sb = new StringBuilder();
         
         sb.append(version);
+        
+        for (Entry<String,String> entry : slExtensions.entrySet()) {
+            sb.append(entry.getValue());
+        }
         
         for (String s : slStructList) {
         	sb.append(s);
@@ -350,6 +357,10 @@ public class ShaderLanguage {
     // -----------------------------------------------------------------------------
     
     public void version(String v) { version = "#version "+v+"\n"; }
+    
+    public void enable(String ext) {
+        slExtensions.put(ext,"#extension "+ext+" : enable\n");
+    }
     
     public <T extends SLInclude> T include(T include) {
         include.include(this);

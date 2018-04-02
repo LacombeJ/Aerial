@@ -12,6 +12,7 @@ import jonl.ge.core.render.RenderTexture;
 import jonl.ge.utils.GLUtils;
 import jonl.jgl.GL;
 import jonl.jgl.Program;
+import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector4;
 
@@ -116,6 +117,8 @@ class SceneRenderer {
                 program.setUniform("_height", windowHeight);
                 program.setUniform("_near", camera.near());
                 program.setUniform("_far", camera.far());
+                float logDepthBufFC = 2.0f / (Mathf.log(camera.far() + 1.0f) / Mathf.LN2);
+                program.setUniform("_logDepthBufFC", logDepthBufFC);
                 
                 List<Uniform> uniforms = mat.uniforms();
                 for (Uniform u : uniforms) {

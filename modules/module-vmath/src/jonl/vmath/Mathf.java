@@ -39,6 +39,8 @@ public final class Mathf {
     public static final float DEGREES_TO_RADIANS   = PI/180f;
     public static final float RADIANS_TO_DEGREES   = 180f/PI;
     
+    public static final float LN2 = 0.6931471805599453f;
+    
     /**
      * A constant epsilon for comparing floats
      */

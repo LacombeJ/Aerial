@@ -8,8 +8,9 @@ import jonl.ge.core.material.ShaderLanguage.SLTexU;
 import jonl.ge.core.material.ShaderLanguage.SLVec2;
 import jonl.ge.core.material.ShaderLanguage.SLVec4;
 import jonl.ge.core.material.ShaderLanguage.SLVec4U;
-import jonl.ge.shaders.FogShader;
-import jonl.ge.utils.SLImports;
+import jonl.ge.shaders.Fog;
+import jonl.ge.shaders.LogDepth;
+import jonl.ge.shaders.SLImports;
 import jonl.vmath.Vector4;
 import jonl.vmath.Vector3;
 
@@ -72,6 +73,8 @@ public class PointsMaterial extends GeneratedShader {
         
         sl.version("330");
         
+        sl.include(LogDepth.vertex_header());
+        
         sl.layoutIn(0,"vec4 vertex");
         
         sl.uniform("mat4 MVP");
@@ -90,7 +93,8 @@ public class PointsMaterial extends GeneratedShader {
             sl.gl_PointSize(size);
         }
         
-        sl.include(FogShader.fogVertex("mvPosition"));
+        sl.include(LogDepth.vertex());
+        sl.include(Fog.vertex("mvPosition"));
         
         return sl;
     }
@@ -119,7 +123,8 @@ public class PointsMaterial extends GeneratedShader {
         
         sl.gl_FragColor(diffuseColor);
         
-        sl.include(FogShader.fogFragment());
+        sl.include(LogDepth.fragment());
+        sl.include(Fog.fragment());
         
         return sl;
     }
