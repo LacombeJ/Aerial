@@ -43,6 +43,7 @@ class SceneRenderer {
         
         gl.glEnable(GL.DEPTH_TEST);
         gl.glEnable(GL.CULL_FACE);
+        gl.glEnable(GL.BLEND);
         gl.glBlendFunc(GL.NORMAL);
 	}
 	

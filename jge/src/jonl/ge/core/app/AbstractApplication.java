@@ -55,7 +55,8 @@ public abstract class AbstractApplication {
     public abstract void start();
     public abstract void close();
     
-    public abstract void setScene(Scene scene);
+    public abstract void addScene(Scene scene);
+    public abstract void removeScene(Scene scene);
     
     public abstract Input input();
     public abstract Window window();

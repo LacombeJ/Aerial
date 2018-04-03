@@ -1,11 +1,13 @@
 package jonl.ge.core;
 
+import java.util.ArrayList;
+
 import jonl.jgl.GL;
 import jonl.jutils.func.List;
 
 class SceneManager {
 
-	private Scene scene;
+    private ArrayList<Scene> scenes = new ArrayList<>();
 	
 	private SceneUpdater updater;
 	private SceneRenderer renderer;
@@ -23,27 +25,36 @@ class SceneManager {
 		this.delegate = delegate;
 	}
 	
-	Scene getScene() {
-		return scene;
+	Scene getScene(int index) {
+		return scenes.get(index);
 	}
 	
-	void setScene(Scene scene) {
-		this.scene = scene;
+	void addScene(Scene scene) {
+		scenes.add(scene);
+	}
+	
+	void removeScene(Scene scene) {
+	    scenes.remove(scene);
 	}
 	
 	void load() {
 	    List.iterate(delegate.onLoad(), (cb) -> cb.f() );
-		scene.create();
-		List.iterate(delegate.onSceneCreate(), (cb) -> cb.f(scene) );
+	    for (Scene scene : scenes) {
+	        scene.create();
+	        List.iterate(delegate.onSceneCreate(), (cb) -> cb.f(scene) );
+	    }
+		
 		renderer.load();
 	}
 	
 	void update() {
 	    List.iterate(delegate.onUpdate(), (cb) -> cb.f() );
-		scene.time().update();
-		updater.update(scene);
-		List.iterate(delegate.onSceneUpdate(), (cb) -> cb.f(scene) );
-		renderer.render(scene);
+	    for (Scene scene : scenes) {
+	        scene.time().update();
+	        updater.update(scene);
+	        List.iterate(delegate.onSceneUpdate(), (cb) -> cb.f(scene) );
+	        renderer.render(scene);
+	    }
 	}
 	
 	void close() {

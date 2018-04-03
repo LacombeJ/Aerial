@@ -86,7 +86,7 @@ public class Editor extends AbstractApplication {
         
         s.add(control);
         
-        setScene(s);
+        addScene(s);
         
         s.create();
     }
@@ -119,10 +119,16 @@ public class Editor extends AbstractApplication {
 	}
 
 	@Override
-	public void setScene(Scene scene) {
+	public void addScene(Scene scene) {
 		scene.application = this;
-		manager.setScene(scene);
+		manager.addScene(scene);
 	}
+	
+	@Override
+    public void removeScene(Scene scene) {
+        scene.application = null;
+        manager.removeScene(scene);
+    }
 
 	@Override
 	public Input input() {
