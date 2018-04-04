@@ -153,8 +153,6 @@ public class EditorGUI {
         propertiesPanel.add(sb);
         propertiesPanel.add(bg);
         propertiesPanel.add(spacer);
-        
-        propertiesPanel.add(ui.dial());
     }
     
     private void updateBackgroundColor() {

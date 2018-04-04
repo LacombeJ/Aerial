@@ -1,6 +1,7 @@
 package jonl.ge.core;
 
 import jonl.aui.Widget;
+import jonl.aui.tea.TGraphics;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.ge.core.app.ApplicationWindow;
@@ -10,6 +11,7 @@ import jonl.ge.core.app.EditorInput;
 import jonl.ge.mod.misc.CameraControl;
 import jonl.jgl.GL;
 import jonl.vmath.Color;
+import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
 
@@ -43,22 +45,33 @@ public class Editor extends AbstractApplication {
         gui.window.setLoader(()->{
             putInfo();
             manager.load();
+            
+            gl.glDisable(GL.DEPTH_TEST);
+            gl.glDisable(GL.CULL_FACE);
         });
         
         gui.editorViewer.paint().connect((g)->{
+            TGraphics tg = (TGraphics)g;
+            
             setViewport(camera);
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
+            
             synchronized (Editor.class) {
-                gl.glEnable(GL.CULL_FACE);
                 gl.glEnable(GL.DEPTH_TEST);
+                gl.glEnable(GL.CULL_FACE);
                 int[] box = gl.glGetScissor();
                 manager.update();
-                gl.glScissor(box);
-                gl.glDisable(GL.CULL_FACE);
-                gl.glDisable(GL.DEPTH_TEST);
                 gl.glEnable(GL.SCISSOR_TEST);
+                gl.glScissor(box);
+                gl.glDisable(GL.DEPTH_TEST);
+                gl.glDisable(GL.CULL_FACE);
             }
+            
+            //Reset viewport and projection
+            Matrix4 ortho = Matrix4.orthographic(0,glWindow.getWidth(),glWindow.getHeight(),0,-1,1);
+            tg.setOrtho(ortho);
+            gl.glViewport(0,0,glWindow.getWidth(),glWindow.getHeight());
         });
         
         gui.window.setCloser(()->{
