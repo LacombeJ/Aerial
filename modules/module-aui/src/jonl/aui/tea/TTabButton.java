@@ -4,9 +4,9 @@ import jonl.vmath.Mathi;
 
 public class TTabButton extends TRadioButton {
 
-    private int border = 8;
-    private int width = 70;
-    private int height = 32;
+    private int border = 4;
+    private int width = 50;
+    private int height = 24;
     
     public TTabButton(String text) {
         super(text);

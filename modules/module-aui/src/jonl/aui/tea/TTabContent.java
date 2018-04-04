@@ -8,7 +8,7 @@ public class TTabContent extends TPanel {
     public TTabContent() {
         super();
         TFillLayout tabContentLayout = new TFillLayout();
-        tabContentLayout.setMargin(9, 9, 9, 9);
+        tabContentLayout.setMargin(2,2,2,2);
         setWidgetLayout(tabContentLayout);
     }
     

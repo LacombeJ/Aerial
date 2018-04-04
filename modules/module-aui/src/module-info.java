@@ -7,8 +7,8 @@ module jonl.aui {
 	exports jonl.aui.tea.graphics;
 	exports jonl.aui.tea.spatial;
 	
-	//requires java.base;
-    //requires java.desktop;
+	requires java.base;
+    requires java.desktop;
 	
 	requires transitive jonl.jgl;
 	requires transitive jonl.utils;

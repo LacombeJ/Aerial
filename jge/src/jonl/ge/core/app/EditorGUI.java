@@ -2,6 +2,7 @@ package jonl.ge.core.app;
 
 import jonl.aui.Align;
 import jonl.aui.HAlign;
+import jonl.aui.Label;
 import jonl.aui.MenuBar;
 import jonl.aui.MenuButton;
 import jonl.aui.Panel;
@@ -38,9 +39,6 @@ public class EditorGUI {
                     public Panel editorViewer;
                 public Panel propertiesPanel;
     
-    public boolean resizable = true;
-    public boolean fullscreen = false;
-    
     public EditorGUI(Editor editor) {
         this.editor = editor;
     }
@@ -56,7 +54,7 @@ public class EditorGUI {
         window.setWidth(1024);
         window.setHeight(576);
         window.setPosition(HAlign.CENTER,VAlign.MIDDLE);
-        window.setResizable(resizable);
+        window.setResizable(true);
         
         // Main panel
         main = ui.panel(ui.listLayout(Align.VERTICAL));
@@ -75,8 +73,10 @@ public class EditorGUI {
         window.setWidget(main);
         
         window.create();
+        window.maximize();
         
         window.setVisible(true);
+        
         
     }
     
@@ -119,7 +119,7 @@ public class EditorGUI {
     private void createSideSplitPanel() {
         createViewPanel();
         createPropertiesPanel();
-        sideSplitPanel = ui.splitPanel(viewPanel, propertiesPanel, Align.HORIZONTAL, 0.8);
+        sideSplitPanel = ui.splitPanel(viewPanel, propertiesPanel, Align.HORIZONTAL, 0.85);
     }
     
     private void createViewPanel() {
@@ -136,11 +136,17 @@ public class EditorGUI {
     private void createPropertiesPanel() {
         propertiesPanel = ui.panel(ui.listLayout(Align.VERTICAL));
         
+        Label label = ui.label("Background color:");
         Slider sr = ui.slider(Align.HORIZONTAL);
         Slider sg = ui.slider(Align.HORIZONTAL);
         Slider sb = ui.slider(Align.HORIZONTAL);
         Panel bg = ui.panel();
         SpacerItem spacer = ui.spacerItem();
+        
+        Color color = Color.fromVector(editor.getBackground());
+        sr.setValue((int)(color.r*100));
+        sg.setValue((int)(color.g*100));
+        sb.setValue((int)(color.b*100));
         
         Callback<Integer> slot = (v) -> updateBackgroundColor();
         
@@ -148,6 +154,7 @@ public class EditorGUI {
         sg.changed().connect(slot);
         sb.changed().connect(slot);
         
+        propertiesPanel.add(label);
         propertiesPanel.add(sr);
         propertiesPanel.add(sg);
         propertiesPanel.add(sb);
@@ -156,9 +163,9 @@ public class EditorGUI {
     }
     
     private void updateBackgroundColor() {
-        Slider sr = (Slider) propertiesPanel.getWidget(0);
-        Slider sg = (Slider) propertiesPanel.getWidget(1);
-        Slider sb = (Slider) propertiesPanel.getWidget(2);
+        Slider sr = (Slider) propertiesPanel.getWidget(1);
+        Slider sg = (Slider) propertiesPanel.getWidget(2);
+        Slider sb = (Slider) propertiesPanel.getWidget(3);
         float r = sr.value()/100f;
         float g = sg.value()/100f;
         float b = sb.value()/100f;

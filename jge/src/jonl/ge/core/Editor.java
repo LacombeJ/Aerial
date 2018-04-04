@@ -10,7 +10,6 @@ import jonl.ge.core.app.EditorGUI;
 import jonl.ge.core.app.EditorInput;
 import jonl.ge.mod.misc.CameraControl;
 import jonl.jgl.GL;
-import jonl.vmath.Color;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
@@ -27,11 +26,13 @@ public class Editor extends AbstractApplication {
     
     Camera camera;
 	
+    Vector4 background = new Vector4(0.5f,0.5f,0.55f,1f);
+    
 	public Editor() {
 		super();
 		
 		gui = new EditorGUI(this);
-        
+		
         gui.create();
         
         glWindow = gui.window.window();
@@ -93,7 +94,7 @@ public class Editor extends AbstractApplication {
         GameObject control = EditorAssets.control(gui.window);
         
         camera  = new Camera();
-        camera.setClearColor(Color.fromFloat(0.5f,0.5f,0.55f).toVector());
+        camera.setClearColor(background);
         camera.scaleProjection = true;
         control.addComponent(camera);
         
@@ -204,18 +205,18 @@ public class Editor extends AbstractApplication {
 
 	@Override
 	public boolean isResizable() {
-		return gui.resizable;
+	    //Editor should always be resizable
+	    return true;
 	}
 
 	@Override
 	public void setResizable(boolean resizable) {
-		gui.window.setResizable(resizable);
-        gui.resizable = resizable;
+	    //Editor should always be resizable
 	}
 
 	@Override
 	public boolean isFullscreen() {
-		return gui.fullscreen;
+		return false;
 	}
 
 	@Override
@@ -226,8 +227,13 @@ public class Editor extends AbstractApplication {
 	// ------------------------------------------------------------------------
 	
 	public void setBackground(Vector4 color) {
-        camera.setClearColor(color);
+	    background = color.get();
+        camera.setClearColor(background);
     }
+	
+	public Vector4 getBackground() {
+	    return background.get();
+	}
 	
 	
 

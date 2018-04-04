@@ -133,4 +133,19 @@ public class TWindow extends TWidget implements Window {
         windowManager.setCursor(cursor);
     }
     
+    @Override
+    public void maximize() {
+        windowManager.window().maximize();
+    }
+    
+    @Override
+    public void minimize() {
+        windowManager.window().minimize();
+    }
+    
+    @Override
+    public void restore() {
+        windowManager.window().restore();
+    }
+    
 }
