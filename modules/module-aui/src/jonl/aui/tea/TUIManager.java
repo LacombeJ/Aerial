@@ -103,6 +103,11 @@ public class TUIManager implements UIManager {
     public TSplitPanel splitPanel() {
         return new TSplitPanel();
     }
+    
+    @Override
+    public TSplitPanel splitPanel(Align align) {
+        return new TSplitPanel(align);
+    }
 
     @Override
     public TSplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio) {

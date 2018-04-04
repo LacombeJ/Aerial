@@ -19,8 +19,8 @@ module jonl.ge {
 	exports jonl.ge.utils;
 	
 	
-	requires java.base;
-	requires java.desktop;
+	//requires java.base;
+	//requires java.desktop;
 	
 	requires jbullet;
 	requires vecmath;

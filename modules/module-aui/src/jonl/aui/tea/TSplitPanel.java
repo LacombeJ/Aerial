@@ -30,6 +30,11 @@ public class TSplitPanel extends TWidget implements SplitPanel {
         setWidgetLayout(new TSplitLayout());
     }
     
+    public TSplitPanel(Align align) {
+        this();
+        setAlign(align);
+    }
+    
     public TSplitPanel(Widget w1, Widget w2, Align align, double ratio) {
         this();
         setSplit(w1,w2,align,ratio);

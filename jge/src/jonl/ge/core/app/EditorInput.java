@@ -70,7 +70,7 @@ public class EditorInput implements Input {
 
     @Override
     public float getDY() {
-        return input.getDY();
+        return - input.getDY();
     }
 
     @Override

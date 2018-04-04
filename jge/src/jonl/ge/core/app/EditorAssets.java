@@ -25,11 +25,9 @@ public class EditorAssets {
         
         EditorControl ec = new EditorControl();
         MouseGrab mg = new MouseGrab(window);
-        //FirstPersonControl fpc = new FirstPersonControl();
         
         control.addComponent(ec);
         control.addComponent(mg);
-        //control.addComponent(fpc);
         
         Light pl = new Light();
         control.addComponent(pl);
@@ -167,6 +165,7 @@ public class EditorAssets {
         
         @Override
         public void update() {
+            //TODO handle open/close and integration with TUI
             //Using these open and close variables to call the sw._Input()
             //methods after the cursor moves back after the grab state as it
             //might affect the input then

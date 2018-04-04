@@ -7,7 +7,11 @@ import jonl.ge.core.app.ApplicationWindow;
 import jonl.ge.core.app.EditorAssets;
 import jonl.ge.core.app.EditorGUI;
 import jonl.ge.core.app.EditorInput;
+import jonl.ge.mod.misc.CameraControl;
 import jonl.jgl.GL;
+import jonl.vmath.Color;
+import jonl.vmath.Vector3;
+import jonl.vmath.Vector4;
 
 public class Editor extends AbstractApplication {
 
@@ -76,10 +80,18 @@ public class Editor extends AbstractApplication {
         GameObject control = EditorAssets.control(gui.window);
         
         camera  = new Camera();
-        camera.setClearColor(0.1f,0.2f,0.4f,1f);
+        camera.setClearColor(Color.fromFloat(0.5f,0.5f,0.55f).toVector());
         camera.scaleProjection = true;
-        
         control.addComponent(camera);
+        
+        CameraControl cc = new CameraControl();
+        control.addComponent(cc);
+        control.addCreate(()->{
+            cc.lookAt(new Vector3(0,0,0));
+        });
+        
+        control.transform().translation.set(5,5,5);
+        
         
         GameObject b = EditorAssets.cube();
         s.add(b);
@@ -93,12 +105,13 @@ public class Editor extends AbstractApplication {
     
     void setViewport(Camera camera) {
         Widget view = gui.editorViewer;
-        double px = view.windowX();
-        double py = view.windowY();
-        double pw = view.width();
-        double ph = view.height();
         double width = getWidth();
         double height = getHeight();
+        double yDiff = view.windowY() - view.y();
+        double px = view.windowX();
+        double py = view.windowY() - yDiff; //Using yDiff because of TWidget orientation of top-left
+        double pw = view.width();
+        double ph = view.height();
         float left = (float) (px / width);
         float right = (float) ((px+pw) / width);
         float bottom = (float) (py / height);
@@ -196,5 +209,13 @@ public class Editor extends AbstractApplication {
 	public void setFullscreen(boolean fullscreen) {
 		//Cannot fullscreen TODO
 	}
+	
+	// ------------------------------------------------------------------------
+	
+	public void setBackground(Vector4 color) {
+        camera.setClearColor(color);
+    }
+	
+	
 
 }

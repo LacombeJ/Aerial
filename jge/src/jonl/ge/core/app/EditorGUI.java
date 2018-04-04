@@ -2,38 +2,41 @@ package jonl.ge.core.app;
 
 import jonl.aui.Align;
 import jonl.aui.HAlign;
+import jonl.aui.MenuBar;
+import jonl.aui.MenuButton;
 import jonl.aui.Panel;
-import jonl.aui.ScrollPanel;
+import jonl.aui.Slider;
+import jonl.aui.SpacerItem;
 import jonl.aui.SplitPanel;
-import jonl.aui.Tree;
-import jonl.aui.TreeItem;
+import jonl.aui.TabPanel;
+import jonl.aui.ToolBar;
+import jonl.aui.ToolButton;
 import jonl.aui.UIManager;
 import jonl.aui.VAlign;
-import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
+import jonl.aui.tea.graphics.TStyleDark;
 import jonl.ge.core.Editor;
-import jonl.vmath.Vector4;
+import jonl.jutils.func.Callback;
+import jonl.vmath.Color;
 
 public class EditorGUI {
 
 	public Editor editor;
     
-	public UIManager ui;
+	public TUIManager ui;
     
     public TWindow window;
-    public Panel menuBarAndRest;
-    public Panel menuBar;
-    public Panel toolBarAndMainSplit;
-    public Panel toolBar;
-    public SplitPanel mainSplit;
-    public ScrollPanel hierarchyScroll;
-    public Tree tree;
-    public SplitPanel editorSplit;
-    public SplitPanel consoleSplit;
-    public Panel editorViewer;
-    public Panel tabPanel;
-    public Panel propertyPanel;
+    public Panel main;
+        public MenuBar menuBar;
+        public ToolBar toolBar;
+        public SplitPanel mainSplitPanel;
+            public TabPanel contentPanel;
+                public Panel hierarchyPanel;
+            public SplitPanel sideSplitPanel;
+                public TabPanel viewPanel;
+                    public Panel editorViewer;
+                public Panel propertiesPanel;
     
     public boolean resizable = true;
     public boolean fullscreen = false;
@@ -45,93 +48,123 @@ public class EditorGUI {
     public void create() {
         
         ui = TUIManager.instance();
+        ui.setStyle(new TStyleDark());
         
-        //Window
+        // Window
         window = (TWindow) ui.window();
         window.setTitle("Engine");
         window.setWidth(1024);
         window.setHeight(576);
         window.setPosition(HAlign.CENTER,VAlign.MIDDLE);
         window.setResizable(resizable);
+        
+        // Main panel
+        main = ui.panel(ui.listLayout(Align.VERTICAL));
+        main.layout().setMargin(0,0,0,0);
+        main.layout().setSpacing(0);
+        
+        createMenuBar();
+        main.add(menuBar);
+        
+        createToolBar();
+        main.add(toolBar);
+        
+        createMainSplitPanel();
+        main.add(mainSplitPanel);
+        
+        window.setWidget(main);
+        
         window.create();
-        {
-            //menuBarAndRest = ui.fixedSplitPanel();
-            {
-                menuBar = ui.panel();
-                //toolBarAndMainSplit = ui.fixedSplitPanel();
-                {
-                    toolBar = ui.panel();
-                    mainSplit = ui.splitPanel();
-                    {
-                        hierarchyScroll = ui.scrollPanel();
-                        {
-                            tree = ui.tree();
-                        }
-                        //hierarchyScroll.setScroll(tree,0,0,200,800);
-                        editorSplit = ui.splitPanel();
-                        {
-                            consoleSplit = ui.splitPanel();
-                            {
-                                editorViewer = ui.panel();
-                                tabPanel = ui.panel();
-                            }
-                            consoleSplit.setSplit(tabPanel,editorViewer,Align.VERTICAL,0.2);
-                            propertyPanel = ui.panel();
-                        }
-                        editorSplit.setSplit(consoleSplit,propertyPanel,Align.HORIZONTAL,0.7);
-                    }
-                    mainSplit.setSplit(hierarchyScroll,editorSplit,Align.HORIZONTAL,0.2);
-                }
-                //toolBarAndMainSplit.setSplit(toolBar,mainSplit,Border.TOP,32);
-            }
-            //menuBarAndRest.setSplit(menuBar,toolBarAndMainSplit,Border.TOP,20);
-        }
-        window.setWidget(menuBarAndRest);
-        
-        //TODO remove TGraphics cast with an implementation in graphics
-        
-        menuBar.paint().connect((g)->{
-            ((TGraphics)g).renderRect(0,0,menuBar.width(),menuBar.height(),new Vector4(0.7f,0.7f,0.8f,1));
-        });
-        
-        toolBar.paint().connect((g)->{
-            ((TGraphics)g).renderRect(0,0,toolBar.width(),toolBar.height(),new Vector4(0.9f,0.9f,0.9f,1));
-        });
-        
-        TreeItem item = ui.treeItem("TreeRoot");
-        {
-            TreeItem child0 = ui.treeItem("Child0");
-            {
-                TreeItem child0_0 = ui.treeItem("Leaf0");
-                child0.addItem(child0_0);
-            }
-            TreeItem child1 = ui.treeItem("Child1");
-            TreeItem child2 = ui.treeItem("Child2");
-            item.addItem(child0);
-            item.addItem(child1);
-            item.addItem(child2);
-        }
-        
-        TreeItem item2 = ui.treeItem("AnotherTreeRoot");
-        {
-            TreeItem child0 = ui.treeItem("Child0");
-            {
-                TreeItem child0_0 = ui.treeItem("Leaf0");
-                child0.addItem(child0_0);
-            }
-            TreeItem child1 = ui.treeItem("Child1");
-            TreeItem child2 = ui.treeItem("Child2");
-            item2.addItem(child0);
-            item2.addItem(child1);
-            item2.addItem(child2);
-        }
-        
-        tree.addItem(item);
-        tree.addItem(item2);
         
         window.setVisible(true);
         
     }
     
+    private void createMenuBar() {
+        menuBar = ui.menuBar();
+        MenuButton file = ui.menuButton("File");
+        MenuButton edit = ui.menuButton("Edit");
+        menuBar.add(file);
+        menuBar.add(edit);
+    }
+    
+    private void createToolBar() {
+        toolBar = ui.toolBar();
+        ToolButton newButton = ui.toolButton();
+        ToolButton save = ui.toolButton();
+        ToolButton saveAll = ui.toolButton();
+        toolBar.add(newButton);
+        toolBar.add(save);
+        toolBar.add(saveAll);
+    }
+    
+    private void createMainSplitPanel() {
+        createContentPanel();
+        createSideSplitPanel();
+        
+        mainSplitPanel = ui.splitPanel(contentPanel, sideSplitPanel, Align.HORIZONTAL, 0.15);
+    }
+    
+    private void createContentPanel() {
+        contentPanel = ui.tabPanel();
+        
+        createHierarchyPanel();
+        contentPanel.add(hierarchyPanel, "Hierarchy");
+    }
+    
+    private void createHierarchyPanel() {
+        hierarchyPanel = ui.panel();
+    }
+    
+    private void createSideSplitPanel() {
+        createViewPanel();
+        createPropertiesPanel();
+        sideSplitPanel = ui.splitPanel(viewPanel, propertiesPanel, Align.HORIZONTAL, 0.8);
+    }
+    
+    private void createViewPanel() {
+        viewPanel = ui.tabPanel();
+        
+        createEditorViewer();
+        viewPanel.add(editorViewer, "Editor");
+    }
+    
+    private void createEditorViewer() {
+        editorViewer = ui.panel();
+    }
+    
+    private void createPropertiesPanel() {
+        propertiesPanel = ui.panel(ui.listLayout(Align.VERTICAL));
+        
+        Slider sr = ui.slider(Align.HORIZONTAL);
+        Slider sg = ui.slider(Align.HORIZONTAL);
+        Slider sb = ui.slider(Align.HORIZONTAL);
+        Panel bg = ui.panel();
+        SpacerItem spacer = ui.spacerItem();
+        
+        Callback<Integer> slot = (v) -> updateBackgroundColor();
+        
+        sr.changed().connect(slot);
+        sg.changed().connect(slot);
+        sb.changed().connect(slot);
+        
+        propertiesPanel.add(sr);
+        propertiesPanel.add(sg);
+        propertiesPanel.add(sb);
+        propertiesPanel.add(bg);
+        propertiesPanel.add(spacer);
+        
+        propertiesPanel.add(ui.dial());
+    }
+    
+    private void updateBackgroundColor() {
+        Slider sr = (Slider) propertiesPanel.getWidget(0);
+        Slider sg = (Slider) propertiesPanel.getWidget(1);
+        Slider sb = (Slider) propertiesPanel.getWidget(2);
+        float r = sr.value()/100f;
+        float g = sg.value()/100f;
+        float b = sb.value()/100f;
+        editor.setBackground(Color.fromFloat(r,g,b).toVector());
+    }
     
 }

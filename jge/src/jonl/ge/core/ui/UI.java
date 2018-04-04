@@ -127,6 +127,11 @@ public class UI implements UIManager {
     public SplitPanel splitPanel() {
         return ui.splitPanel();
     }
+    
+    @Override
+    public SplitPanel splitPanel(Align align) {
+        return ui.splitPanel(align);
+    }
 
     @Override
     public SplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio) {

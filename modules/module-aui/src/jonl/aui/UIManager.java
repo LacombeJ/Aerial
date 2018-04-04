@@ -32,6 +32,8 @@ public interface UIManager {
     
     SplitPanel splitPanel();
     
+    SplitPanel splitPanel(Align align);
+    
     SplitPanel splitPanel(Widget w1, Widget w2, Align align, double ratio);
     
     ScrollPanel scrollPanel();
