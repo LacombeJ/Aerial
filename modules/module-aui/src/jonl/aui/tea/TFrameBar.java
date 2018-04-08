@@ -30,7 +30,7 @@ public class TFrameBar extends TWidget {
         layout.setMargin(0,0,0,0);
         layout.setSpacing(0);
         
-        layout.add(new TSpacerItem());
+        layout.add(new TSpacer());
         
         TButton minimize = new TButton("--");
         minimize.setMinSize(buttonWidth, buttonHeight);

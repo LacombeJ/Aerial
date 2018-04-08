@@ -4,6 +4,7 @@ import jonl.aui.Align;
 import jonl.aui.Font;
 import jonl.aui.Icon;
 import jonl.aui.Layout;
+import jonl.aui.Margin;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.graphics.TStyleDefault;
@@ -186,18 +187,13 @@ public class TUIManager implements UIManager {
     }
     
     @Override
-    public TSpacerItem spacerItem() {
-        return new TSpacerItem();
+    public TSpacer spacer() {
+        return new TSpacer();
     }
     
     @Override
-    public TSpacerItem spacerItem(Align align) {
-        return new TSpacerItem(align);
-    }
-    
-    @Override
-    public TWidgetItem widgetItem(Widget widget) {
-        return new TWidgetItem(widget);
+    public TSpacer spacer(Align align) {
+        return new TSpacer(align);
     }
 
     @Override
@@ -209,7 +205,15 @@ public class TUIManager implements UIManager {
     public TListLayout listLayout(Align align) {
         return new TListLayout(align);
     }
-
     
+    @Override
+    public TListLayout listLayout(Align align, Margin margin, int spacing) {
+        return new TListLayout(align, margin, spacing);
+    }
+    
+    @Override
+    public TArrayLayout arrayLayout() {
+        return new TArrayLayout();
+    }
     
 }

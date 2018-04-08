@@ -6,7 +6,7 @@ import jonl.aui.SizePolicy;
 
 public abstract class TButtonBar extends TWidget {
 
-private TSpacerItem spacer;
+private TSpacer spacer;
     
     public TButtonBar(Align align) {
         super();
@@ -17,7 +17,7 @@ private TSpacerItem spacer;
         
         setWidgetLayout(menuBarLayout);
         
-        spacer = new TSpacerItem(align);
+        spacer = new TSpacer();
         
         if (align == Align.HORIZONTAL) {
             this.setSizePolicy(new SizePolicy(SizePolicy.EXPANDING, SizePolicy.FIXED));

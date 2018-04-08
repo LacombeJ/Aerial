@@ -51,13 +51,13 @@ public class TSplitLayout extends TLayout {
         TSplitPanel splitPane = (TSplitPanel) parent;
         
         if (splitPane.align() == Align.HORIZONTAL) {
-            int width = freeAllocate(widthPrefs());
-            int height = freeMaxAllocate(heightPrefs());
+            int width = freeAllocate(getWidthPreferences());
+            int height = freeMaxAllocate(getHeightPreferences());
             width += spacing();
             return new TSizeHint(width,height);
         } else {
-            int width = freeMaxAllocate(widthPrefs());
-            int height = freeAllocate(heightPrefs());
+            int width = freeMaxAllocate(getWidthPreferences());
+            int height = freeAllocate(getHeightPreferences());
             height += spacing();
             return new TSizeHint(width,height);
         }

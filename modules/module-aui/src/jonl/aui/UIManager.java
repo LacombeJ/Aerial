@@ -66,14 +66,16 @@ public interface UIManager {
     
     Font font(String font, int size);
     
-    SpacerItem spacerItem();
+    Spacer spacer();
     
-    SpacerItem spacerItem(Align align);
-    
-    WidgetItem widgetItem(Widget widget);
+    Spacer spacer(Align align);
     
     ListLayout listLayout();
     
     ListLayout listLayout(Align align);
+    
+    ListLayout listLayout(Align align, Margin margin, int spacing);
+    
+    ArrayLayout arrayLayout();
     
 }

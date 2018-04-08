@@ -2,10 +2,12 @@ package jonl.aui;
 
 public class Margin {
 
-    public int left;
-    public int right;
-    public int top;
-    public int bottom;
+    public static final Margin ZERO = new Margin(0,0,0,0);
+    
+    public final int left;
+    public final int right;
+    public final int top;
+    public final int bottom;
     
     public Margin(int left, int right, int top, int bottom) {
         this.left = left;

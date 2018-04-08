@@ -161,10 +161,29 @@ class TLayoutManager {
             this.min = min;
             this.max = max;
         }
+        
+        SizePreference(int policy, int hint) {
+            this(policy,hint,0,Integer.MAX_VALUE);
+        }
+        
         @Override
         public String toString() {
             return "SizePreference("+policy+","+min+","+max+","+hint+")";
         }
+    }
+    
+    static SizePreference stack(SizePreference[] prefs) {
+        int policy = 0;
+        int hint = 0;
+        int min = 0;
+        int max = Integer.MAX_VALUE;
+        for (SizePreference pref : prefs) {
+            policy = Math.max(policy, pref.policy);
+            hint = Math.max(hint, pref.hint);
+            min = Math.max(min, pref.min);
+            max = Math.min(max, pref.max);
+        }
+        return new SizePreference(policy,hint,min,max);
     }
     
     static int freeWidth(TWidget widget) {
@@ -246,8 +265,8 @@ class TLayoutManager {
            A) Find all preferences of the same policy and allocate the remaining extraDimension
               space such that: (in priority)
               - as much space is filled as possible
-              - allocated sizes are as equal as possible
               - allocated sizes are not greater than max size
+              - allocated sizes are as equal as possible
               If there is still extraDimensions left, continue to next policy
         5) Return size arrays and newDimension and totalDimension values
         */
@@ -294,10 +313,10 @@ class TLayoutManager {
     }
     
     static void allocateExtra(ArrayList<SizePreference> policy, Wrapper<Integer> extraDimension, int[] size) {
-        ArrayList<SizePreference> rest = List.sort(policy, (a,b) -> Integer.compare(a.max, b.max));
+        ArrayList<SizePreference> rest = jonl.jutils.func.List.sort(policy, (a,b) -> Integer.compare(a.max, b.max));
         
         while (rest.size() > 0) {
-            SizePreference p = List.first(rest);
+            SizePreference p = jonl.jutils.func.List.first(rest);
             
             int ideal = extraDimension.x / rest.size();
             int actual = Mathi.min(ideal, p.max-size[p.i]); //max-size (actual difference)
@@ -306,7 +325,7 @@ class TLayoutManager {
             extraDimension.x -= actual;
             
             if (rest.size()>1) {
-                rest = List.tail(rest);
+                rest = jonl.jutils.func.List.tail(rest);
             } else {
                 // Try to add rest of extraDimension if possible
                 // TODO maybe better to add 1 to multiple sizes instead of all to one? (7,7,9) vs (7,8,8)
@@ -335,26 +354,28 @@ class TLayoutManager {
         return new SizePreference(widget.sizePolicy().vertical(), widget.sizeHint().height, widget.minHeight(),widget.maxHeight());
     }
     
-    static SizePreference[] getWidthPreferences(TLayout layout) {
-        SizePreference[] prefs = new SizePreference[layout.count()];
+    static SizePreference[] getWidthPreferences(ArrayList<TLayoutItem> items) {
+        SizePreference[] prefs = new SizePreference[items.size()];
         for (int i=0; i<prefs.length; i++) {
-            TLayoutItem item = layout.getItem(i);
-            prefs[i] = getWidthPreference(item);
+            prefs[i] = getWidthPreference(items.get(i));
         }
         return prefs;
+    }
+    
+    static SizePreference[] getHeightPreferences(ArrayList<TLayoutItem> items) {
+        SizePreference[] prefs = new SizePreference[items.size()];
+        for (int i=0; i<prefs.length; i++) {
+            prefs[i] = getHeightPreference(items.get(i));
+        }
+        return prefs;
+    }
+    
+    static SizePreference[] getWidthPreferences(TLayout layout) {
+        return getWidthPreferences(List.map(layout.items(), (item) -> (TLayoutItem)item));
     }
     
     static SizePreference[] getHeightPreferences(TLayout layout) {
-        SizePreference[] prefs = new SizePreference[layout.count()];
-        for (int i=0; i<prefs.length; i++) {
-            TLayoutItem item = layout.getItem(i);
-            prefs[i] = getHeightPreference(item);
-        }
-        return prefs;
+        return getHeightPreferences(List.map(layout.items(), (item) -> (TLayoutItem)item));
     }
-    
-    
-    
-    
     
 }

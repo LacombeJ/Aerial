@@ -20,8 +20,8 @@ public class TFrameLayout extends TLayout {
             
             if (frame.widget() != null) {
                 TLayoutItem item = getItem(indexOf(frame.widget()));
-                int wWidth = allocate(widthPref(item), width);
-                int wHeight = allocate(heightPref(item), height);
+                int wWidth = allocate(getWidthPreference(item), width);
+                int wHeight = allocate(getHeightPreference(item), height);
                 setPositionAndSize(item.asWidget(), sx, sy, wWidth, wHeight);
             }
             

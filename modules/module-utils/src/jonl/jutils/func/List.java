@@ -156,6 +156,16 @@ public class List
             list.set(i,x.get(j));
         }
     }
+    
+    public static <X> ArrayList<X> append(java.util.List<X> listA, java.util.List<X> listB) {
+        ArrayList<X> ret = List.list(listA);
+        ret.addAll(listB);
+        return ret;
+    }
+    
+    public static <X> ArrayList<X> prepend(java.util.List<X> listA, java.util.List<X> listB) {
+        return append(listB,listA);
+    }
 	
     public static <X> ArrayList<X> sub(java.util.List<X> list, int fromIndex, int toIndex) {
         subListRangeCheck(fromIndex, toIndex, list.size());
@@ -265,6 +275,18 @@ public class List
 	            }
             );
 	    return ret==null ? new ArrayList<ArrayList<X>>() : ret;
+	}
+	
+	/**
+	 * @return all combinations of elements in this list where order does not matter
+	 */
+	public static <X> ArrayList<ArrayList<X>> combination(java.util.List<X> list) {
+	    if (list.size()==0) {
+	        return wrap(new ArrayList<X>());
+	    }
+	    ArrayList<ArrayList<X>> sub = combination(tail(list));
+	    ArrayList<ArrayList<X>> sub2 = List.map(sub, s -> addFirst(s,head(list)));
+	    return List.append(sub,sub2);
 	}
 	
 	public static <X> X find(java.util.List<X> list, Function<X,Boolean> function) {

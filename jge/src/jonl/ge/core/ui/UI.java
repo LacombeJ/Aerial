@@ -1,6 +1,7 @@
 package jonl.ge.core.ui;
 
 import jonl.aui.Align;
+import jonl.aui.ArrayLayout;
 import jonl.aui.Button;
 import jonl.aui.Dial;
 import jonl.aui.Font;
@@ -10,13 +11,14 @@ import jonl.aui.Label;
 import jonl.aui.Layout;
 import jonl.aui.LineEdit;
 import jonl.aui.ListLayout;
+import jonl.aui.Margin;
 import jonl.aui.MenuBar;
 import jonl.aui.MenuButton;
 import jonl.aui.Overlay;
 import jonl.aui.Panel;
 import jonl.aui.ScrollPanel;
 import jonl.aui.Slider;
-import jonl.aui.SpacerItem;
+import jonl.aui.Spacer;
 import jonl.aui.SplitPanel;
 import jonl.aui.TabPanel;
 import jonl.aui.ToolBar;
@@ -25,7 +27,6 @@ import jonl.aui.Tree;
 import jonl.aui.TreeItem;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
-import jonl.aui.WidgetItem;
 import jonl.aui.Window;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWidget;
@@ -40,13 +41,13 @@ public class UI implements UIManager {
     private TWidget widget;
     
     public UI() {
+        
         ui = TUIManager.instance();
         
         TStyle style = new TStyleDark();
         Color transparent = Color.fromFloat(0,0,0,0);
         style.background(transparent);
         ui.setStyle(style);
-        
         
     }
     
@@ -209,20 +210,15 @@ public class UI implements UIManager {
     }
 
     @Override
-    public SpacerItem spacerItem() {
-        return ui.spacerItem();
+    public Spacer spacer() {
+        return ui.spacer();
     }
-
+    
     @Override
-    public SpacerItem spacerItem(Align align) {
-        return ui.spacerItem(align);
+    public Spacer spacer(Align align) {
+        return ui.spacer(align);
     }
-
-    @Override
-    public WidgetItem widgetItem(Widget widget) {
-        return ui.widgetItem(widget);
-    }
-
+    
     @Override
     public ListLayout listLayout() {
         return ui.listLayout();
@@ -232,5 +228,15 @@ public class UI implements UIManager {
     public ListLayout listLayout(Align align) {
         return ui.listLayout(align);
     }
-
+    
+    @Override
+    public ListLayout listLayout(Align align, Margin margin, int spacing) {
+        return ui.listLayout(align,margin,spacing);
+    }
+    
+    @Override
+    public ArrayLayout arrayLayout() {
+        return ui.arrayLayout();
+    }
+    
 }

@@ -91,6 +91,14 @@ public class Mathi {
         return x < min ? min : (x > max ? max : x);
     }
 
+    public static int clampAdd(int... values) {
+        long sum = 0;
+        for (int v : values) {
+            sum += v;
+        }
+        return (int) Mathl.clamp(sum,Integer.MIN_VALUE,Integer.MAX_VALUE);
+    }
+    
     public static int ceilMultiple(int i, int mult) {
         if (i%mult==0) return i;
         int j = i/mult;
@@ -170,6 +178,8 @@ public class Mathi {
         }
         return ret;
     }
+
+    
     
     
     

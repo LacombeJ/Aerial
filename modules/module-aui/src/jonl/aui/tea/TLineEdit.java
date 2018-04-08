@@ -20,7 +20,7 @@ public class TLineEdit extends TWidget implements LineEdit {
     
     public TLineEdit() {
         super();
-        setSizePolicy(new SizePolicy(SizePolicy.PREFERRED, SizePolicy.FIXED));
+        setSizePolicy(new SizePolicy(SizePolicy.EXPANDING, SizePolicy.FIXED));
     }
     
     public TLineEdit(String text) {

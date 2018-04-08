@@ -16,8 +16,8 @@ public abstract class TLayout implements Layout {
     
     private ArrayList<TLayoutItem> items = new ArrayList<>();
     
-    private Margin margin = new Margin(9,9,9,9);
-    private int spacing = 6;
+    protected Margin margin = new Margin(9,9,9,9);
+    protected int spacing = 6;
     
     private TSizeHint sizeHint;
     
@@ -229,6 +229,10 @@ public abstract class TLayout implements Layout {
         TLayoutManager.setPositionAndSize(w, x, y, width, height);
     }
     
+    protected SizePreference stack(SizePreference[] prefs) {
+        return TLayoutManager.stack(prefs);
+    }
+    
     protected int freeWidth(TWidget widget) {
         return TLayoutManager.freeWidth(widget);
     }
@@ -253,27 +257,35 @@ public abstract class TLayout implements Layout {
         return TLayoutManager.freeHeight(items);
     }
     
-    protected SizePreference widthPref(TLayoutItem item) {
+    protected SizePreference getWidthPreference(TLayoutItem item) {
         return TLayoutManager.getWidthPreference(item);
     }
     
-    protected SizePreference heightPref(TLayoutItem item) {
+    protected SizePreference getHeightPreference(TLayoutItem item) {
         return TLayoutManager.getHeightPreference(item);
     }
     
-    protected SizePreference widthPref(TWidget widget) {
+    protected SizePreference getWidthPreference(TWidget widget) {
         return TLayoutManager.getWidthPreference(widget);
     }
     
-    protected SizePreference heightPref(TWidget widget) {
+    protected SizePreference getHeightPreference(TWidget widget) {
         return TLayoutManager.getHeightPreference(widget);
     }
     
-    protected SizePreference[] widthPrefs() {
+    protected SizePreference[] getWidthPreferences(ArrayList<TLayoutItem> items) {
+        return TLayoutManager.getWidthPreferences(items);
+    }
+    
+    protected SizePreference[] getHeightPreferences(ArrayList<TLayoutItem> items) {
+        return TLayoutManager.getHeightPreferences(items);
+    }
+    
+    protected SizePreference[] getWidthPreferences() {
         return TLayoutManager.getWidthPreferences(this);
     }
     
-    protected SizePreference[] heightPrefs() {
+    protected SizePreference[] getHeightPreferences() {
         return TLayoutManager.getHeightPreferences(this);
     }
     

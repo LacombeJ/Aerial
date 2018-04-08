@@ -2,9 +2,8 @@ package jonl.aui.tea;
 
 import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
-import jonl.aui.WidgetItem;
 
-public class TWidgetItem extends TLayoutItem implements WidgetItem {
+public class TWidgetItem extends TLayoutItem {
 
     private TWidget widget;
     
@@ -12,7 +11,6 @@ public class TWidgetItem extends TLayoutItem implements WidgetItem {
         this.widget = (TWidget) widget;
     }
     
-    @Override
     public TWidget widget() {
         return widget;
     }

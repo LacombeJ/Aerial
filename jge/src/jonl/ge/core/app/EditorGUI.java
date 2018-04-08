@@ -1,13 +1,15 @@
 package jonl.ge.core.app;
 
 import jonl.aui.Align;
+import jonl.aui.ArrayLayout;
 import jonl.aui.HAlign;
 import jonl.aui.Label;
+import jonl.aui.LineEdit;
 import jonl.aui.MenuBar;
 import jonl.aui.MenuButton;
 import jonl.aui.Panel;
 import jonl.aui.Slider;
-import jonl.aui.SpacerItem;
+import jonl.aui.Spacer;
 import jonl.aui.SplitPanel;
 import jonl.aui.TabPanel;
 import jonl.aui.ToolBar;
@@ -137,39 +139,55 @@ public class EditorGUI {
         propertiesPanel = ui.panel(ui.listLayout(Align.VERTICAL));
         
         Label label = ui.label("Background color:");
+        
+        ArrayLayout array = ui.arrayLayout();
+        Panel panel = ui.panel(array);
+        
+        array.add(ui.label("Red:"),0,0);
+        array.add(ui.label("Green:"),1,0);
+        array.add(ui.label("Blue:"),2,0);
+        
+        LineEdit redText = ui.lineEdit("");
+        LineEdit greenText = ui.lineEdit("");
+        LineEdit blueText = ui.lineEdit("");
+        
+        redText.setMaxSize(30,Integer.MAX_VALUE);
+        greenText.setMaxSize(30,Integer.MAX_VALUE);
+        blueText.setMaxSize(30,Integer.MAX_VALUE);
+        
+        array.add(redText,0,1);
+        array.add(greenText,1,1);
+        array.add(blueText,2,1);
+        
         Slider sr = ui.slider(Align.HORIZONTAL);
         Slider sg = ui.slider(Align.HORIZONTAL);
         Slider sb = ui.slider(Align.HORIZONTAL);
-        Panel bg = ui.panel();
-        SpacerItem spacer = ui.spacerItem();
+        
+        array.add(sr,0,2);
+        array.add(sg,1,2);
+        array.add(sb,2,2);
+        
+        Spacer spacer = ui.spacer();
         
         Color color = Color.fromVector(editor.getBackground());
         sr.setValue((int)(color.r*100));
         sg.setValue((int)(color.g*100));
         sb.setValue((int)(color.b*100));
         
-        Callback<Integer> slot = (v) -> updateBackgroundColor();
+        Callback<Integer> slot = (v) -> {
+            redText.setText(sr.value()+"");
+            greenText.setText(sg.value()+"");
+            blueText.setText(sb.value()+"");
+            editor.setBackground(Color.fromFloat(sr.value()/100f,sg.value()/100f,sb.value()/100f).toVector());
+        };
         
         sr.changed().connect(slot);
         sg.changed().connect(slot);
         sb.changed().connect(slot);
         
         propertiesPanel.add(label);
-        propertiesPanel.add(sr);
-        propertiesPanel.add(sg);
-        propertiesPanel.add(sb);
-        propertiesPanel.add(bg);
+        propertiesPanel.add(panel);
         propertiesPanel.add(spacer);
-    }
-    
-    private void updateBackgroundColor() {
-        Slider sr = (Slider) propertiesPanel.getWidget(1);
-        Slider sg = (Slider) propertiesPanel.getWidget(2);
-        Slider sb = (Slider) propertiesPanel.getWidget(3);
-        float r = sr.value()/100f;
-        float g = sg.value()/100f;
-        float b = sb.value()/100f;
-        editor.setBackground(Color.fromFloat(r,g,b).toVector());
     }
     
 }

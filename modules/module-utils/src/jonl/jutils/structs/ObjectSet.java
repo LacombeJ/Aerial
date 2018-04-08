@@ -14,6 +14,11 @@ public class ObjectSet<X> implements Set<X> {
     //TODO change backed structure
     ArrayList<X> list = new ArrayList<X>();
     
+    /** @return the array list backing this object */
+    public ArrayList<X> getArrayList() {
+        return list;
+    }
+    
     @Override
     public int size() {
         return list.size();

@@ -75,7 +75,7 @@ public class StringUtils {
             if (n<=0) return "";
             if (n==1) return ".";
             if (n==2) return "..";
-            if (n==3) return str.charAt(0)+".."; //TODO check case where str is empty? ""
+            if (n==3) return str.charAt(0)+"..";
             String front = str.substring(0, n-3);
             return padBackMatch(front,'.',n);
         }
@@ -91,6 +91,18 @@ public class StringUtils {
     
     public static String spaces(String string, int level) {
         return padBack(string,' ',level);
+    }
+    
+    public static String tuple(Object... objs) {
+        String ret = "(";
+        for (int i=0; i<objs.length; i++) {
+            ret += objs[i];
+            if (i!=objs.length-1) {
+                ret+=",";
+            }
+        }
+        ret += ")";
+        return ret;
     }
     
 }
