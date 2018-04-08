@@ -83,7 +83,7 @@ public class TLineEdit extends TWidget implements LineEdit {
         float y = height/2;
         
         g.renderRect(0, 0, width, height, Color.WHITE);
-        g.renderRectOutline(0, 0, width, height, color);
+        g.renderRectOutline(0, 0, width, height, color, 2f);
         g.renderText(text(),x,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),Color.BLACK);
         
         paint().emit(cb->cb.f(g));

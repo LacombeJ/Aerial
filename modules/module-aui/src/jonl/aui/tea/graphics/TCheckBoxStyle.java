@@ -15,7 +15,7 @@ public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
     private Color toggleColor;
     private int border = 4;
     private float maxValue = 30;
-    int boxDim = 40;
+    int boxDim = 12;
     int boxD = 4;
     
     public TCheckBoxStyle(TStyle style) {
@@ -55,7 +55,7 @@ public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
             float y = button.height()/2;
             
             g.renderRect(boxD, y - boxDim/2, boxDim, boxDim, Color.WHITE);
-            g.renderRectOutline(boxD, y - boxDim/2, boxDim, boxDim, color, boxD/2);
+            g.renderRectOutline(boxD, y - boxDim/2, boxDim, boxDim, color, 2f);
             g.renderText(button.text(),boxDim+boxD+border,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),textColor);
             
             if (button.checked()) {
