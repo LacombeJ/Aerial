@@ -217,28 +217,28 @@ public class TArrayLayout extends TLayout implements ArrayLayout {
         int widthMax = 0;
         int heightMax = 0;
         
-        for (int i=0; i<rows; i++) {
-            int sum = 0;
-            for (int j=0; j<cols; j++) {
-                TLayoutItem item = getItem(i,j);
-                if (item != null) {
-                    sum += freeWidth(item);
-                }
-            }
-            widthMax = Mathi.max(widthMax, sum);
-        }
-        
         for (int j=0; j<cols; j++) {
-            int sum = 0;
+            int maxWidth = 0;
             for (int i=0; i<rows; i++) {
                 TLayoutItem item = getItem(i,j);
                 if (item != null) {
-                    sum += freeHeight(item);
+                    maxWidth = Mathi.max(maxWidth, freeWidth(item));
                 }
             }
-            heightMax = Mathi.max(heightMax, sum);
+            widthMax += maxWidth;
         }
         
+        for (int i=0; i<rows; i++) {
+            int maxHeight = 0;
+            for (int j=0; j<cols; j++) {
+                TLayoutItem item = getItem(i,j);
+                if (item != null) {
+                    maxHeight = Mathi.max(maxHeight, freeHeight(item));
+                }
+            }
+            heightMax += maxHeight;
+        }
+                
         int width = widthMax + margin().width() + spacing()*(cols-1);
         int height = heightMax + margin().height() + spacing()*(rows-1);
         
