@@ -23,6 +23,7 @@ public interface TStyle {
     TButtonStyle menuButton();
     TButtonStyle toolButton();
     TButtonStyle tabButton();
+    TCheckBoxStyle checkBox();
     TDialStyle dial();
     TToolBarStyle toolBar();
     
@@ -49,6 +50,7 @@ public interface TStyle {
     void menuButton(TButtonStyle menuButton);
     void toolButton(TButtonStyle toolButton);
     void tabButton(TButtonStyle tabButton);
+    void checkBox(TCheckBoxStyle checkBox);
     void dial(TDialStyle dial);
     void toolBar(TToolBarStyle toolBar);
     

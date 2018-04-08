@@ -12,6 +12,10 @@ public interface UIManager {
     
     Button button(String text);
     
+    Button checkBox();
+    
+    Button checkBox(String text);
+    
     Label label();
     
     Label label(String text);

@@ -126,16 +126,19 @@ public abstract class TLayout implements Layout {
     @Override
     public void remove(LayoutItem item) {
         items.remove(item);
+        invalidateLayout();
     }
     
     @Override
     public void remove(int index) {
         items.remove(index);
+        invalidateLayout();
     }
     
     @Override
     public void removeAll() {
         items.clear();
+        invalidateLayout();
     }
     
     @Override

@@ -3,6 +3,9 @@ package jonl.aui.tea;
 import jonl.jutils.func.Function0D;
 import jonl.jutils.misc.*;
 import jonl.vmath.*;
+
+import java.awt.image.BufferedImage;
+
 import jonl.aui.Graphics;
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
@@ -39,6 +42,8 @@ public class TGraphics implements Graphics {
     
     Program solid;
     Program basic;
+    
+    Texture check;
 
     
     public TGraphics(GL gl, Function0D<Integer> windowHeight) {
@@ -55,6 +60,8 @@ public class TGraphics implements Graphics {
         
         fontRect = gl.glGenMesh(TMesh.BOX.data);
         fontProgram = loadProgramFromSource(Presets.fontVSSource(version),Presets.fontFSSource(version));
+        
+        check = createCheck();
         
         solid = loadProgramFromSource(Presets.solidVSSource(version),Presets.solidFSSource(version));
         basic = loadProgramFromSource(Presets.basicVSSource(version),Presets.basicFSSource(version));
@@ -139,12 +146,24 @@ public class TGraphics implements Graphics {
         render(box,matrix,color);
     }
     
-    public void renderRectOutline(float x, float y, float w, float h, Vector4 color) {
+    public void renderRectOutline(float x, float y, float w, float h, Vector4 color, float thickness) {
+        gl.glLineWidth(thickness);
         render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,GL.LINE_STRIP);
+        gl.glLineWidth(1f);
+    }
+    
+    public void renderRectOutline(float x, float y, float w, float h, Color color, float thickness) {
+        gl.glLineWidth(thickness);
+        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector(),GL.LINE_STRIP);
+        gl.glLineWidth(1f);
+    }
+    
+    public void renderRectOutline(float x, float y, float w, float h, Vector4 color) {
+        renderRectOutline(x,y,w,h,color,1);
     }
     
     public void renderRectOutline(float x, float y, float w, float h, Color color) {
-        render(boxOutline,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector(),GL.LINE_STRIP);
+        renderRectOutline(x,y,w,h,color,1);
     }
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
@@ -162,6 +181,10 @@ public class TGraphics implements Graphics {
     public void renderImage(TImage image, float x, float y) {
         Texture texture = imageManager.getOrCreateTexture(image);
         renderTexture(texture,x,y,texture.getWidth(),texture.getHeight());
+    }
+    
+    public void renderCheck(float x, float y) {
+        renderTexture(check,x,y,check.getWidth(),check.getHeight());
     }
     
     public void renderTexture(Texture texture, float x, float y, float w, float h) {
@@ -267,6 +290,25 @@ public class TGraphics implements Graphics {
         int height = y1 - y;
         
         return new int[]{x,y,width,height};
+    }
+    
+    Texture createCheck() {
+        int[][] check = {
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,62},{0,0,0,42},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,84},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,94},{0,0,0,255},{0,0,0,158},{0,0,0,42},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,158},{0,0,0,255},{0,0,0,94},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},
+            {0,0,0,42},{0,0,0,62},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,0},
+            {0,0,0,84},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,94},{0,0,0,255},{0,0,0,158},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,42},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,62},{0,0,0,158},{0,0,0,255},{0,0,0,94},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,190},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,42},{0,0,0,84},{0,0,0,42},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+        };
+        BufferedImage data = ImageUtils.load(check,12,12);
+        return gl.glGenTexture(data);
     }
     
 }

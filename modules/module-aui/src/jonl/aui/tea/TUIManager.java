@@ -54,6 +54,16 @@ public class TUIManager implements UIManager {
     public TButton button(String text) {
         return new TButton(text);
     }
+    
+    @Override
+    public TCheckBox checkBox() {
+        return new TCheckBox();
+    }
+
+    @Override
+    public TCheckBox checkBox(String text) {
+        return new TCheckBox(text);
+    }
 
     @Override
     public TLabel label() {

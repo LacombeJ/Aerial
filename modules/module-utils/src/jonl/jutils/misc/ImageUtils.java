@@ -29,6 +29,18 @@ public class ImageUtils {
         return new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
     }
     
+    public static BufferedImage load(int[][] data, int width, int height) {
+        BufferedImage image = load(width,height);
+        for (int i=0; i<height; i++) {
+            for (int j=0; j<width; j++) {
+                int index = width*i + j;
+                int color = getRgbaInt(data[index]);
+                image.setRGB(j,i,color);
+            }
+        }
+        return image;
+    }
+    
     //TODO handle other image formats (if needed)
     /** Saves image using png format */
     public static void save(BufferedImage image, String file) {

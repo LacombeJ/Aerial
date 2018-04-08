@@ -187,11 +187,11 @@ class TLayoutManager {
     }
     
     static int freeWidth(TWidget widget) {
-        return Mathi.max(widget.sizeHint().width, widget.minWidth());
+        return Mathi.min(Mathi.max(widget.sizeHint().width, widget.minWidth()),widget.maxWidth());
     }
     
     static int freeHeight(TWidget widget) {
-        return Mathi.max(widget.sizeHint().height, widget.minHeight());
+        return Mathi.min(Mathi.max(widget.sizeHint().height, widget.minHeight()),widget.maxHeight());
     }
     
     static int freeWidth(TLayoutItem item) {
@@ -229,7 +229,7 @@ class TLayoutManager {
             SizePreference pref = prefs[i];
             pref.i = i;
             
-            int minHint = Mathi.max(pref.hint, pref.min);
+            int minHint = Mathi.min(Mathi.max(pref.hint, pref.min), pref.max);
             finalDimension += minHint;
         }
         return finalDimension;
@@ -288,7 +288,7 @@ class TLayoutManager {
             SizePreference pref = prefs[i];
             pref.i = i;
             
-            int minHint = Mathi.max(pref.hint, pref.min);
+            int minHint = Mathi.min(Mathi.max(pref.hint, pref.min), pref.max);
             size[i] = minHint;
             minDimension += minHint;
             

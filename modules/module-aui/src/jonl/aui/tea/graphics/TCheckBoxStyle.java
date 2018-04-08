@@ -2,12 +2,12 @@ package jonl.aui.tea.graphics;
 
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
-import jonl.aui.tea.TButton;
+import jonl.aui.tea.TCheckBox;
 import jonl.aui.tea.TSizeHint;
 import jonl.vmath.Color;
 import jonl.vmath.Vector4;
 
-public class TButtonStyle extends TWidgetStyle<TButton> {
+public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
     
     private Color textColor;
     private Color buttonColor;
@@ -15,8 +15,10 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
     private Color toggleColor;
     private int border = 4;
     private float maxValue = 30;
+    int boxDim = 40;
+    int boxD = 4;
     
-    public TButtonStyle(TStyle style) {
+    public TCheckBoxStyle(TStyle style) {
         super(style);
         
         textColor = style.textColor();
@@ -30,11 +32,7 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
             
             float fMaxValue = info.get("fMaxValue", maxValue);
             Color cButton = info.get("cButton", buttonColor);
-            Color cHover = info.get("cHover", hoverColor);
-            Color cToggle = info.get("cHover", toggleColor);
-            HAlign halign = info.get("halign", HAlign.CENTER);
-            VAlign valign = info.get("valign", VAlign.MIDDLE);
-            float xoffset = info.get("xoffset", 0f);
+            Color cHover = info.get("cHover", Color.fromInt(0, 0, 255));
             
             if (info.get("bIsMouseWithin", false)) {
                 if (fIntensityValue<fMaxValue) {
@@ -50,22 +48,20 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
             info.put("fIntensityValue", fIntensityValue);
             
             float v = fIntensityValue / fMaxValue;
-            Vector4 primary = (button.checked()) ? cToggle.toVector() : cButton.toVector();
-            Vector4 secondary = (button.checked()) ? cToggle.toVector() : cHover.toVector();
+            Vector4 primary = cButton.toVector();
+            Vector4 secondary = cHover.toVector();
             Vector4 color = primary.lerp(secondary, v);
             
-            g.renderRect(0,0,button.width(),button.height(),Color.fromVector(color));
-            float x = button.width()/2;
             float y = button.height()/2;
-            if (button.icon()!=null) {
-                g.renderImage((TImage) button.icon(), x, y);
+            
+            g.renderRect(boxD, y - boxDim/2, boxDim, boxDim, Color.WHITE);
+            g.renderRectOutline(boxD, y - boxDim/2, boxDim, boxDim, color, boxD/2);
+            g.renderText(button.text(),boxDim+boxD+border,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),textColor);
+            
+            if (button.checked()) {
+                g.renderCheck(boxD+6, y - boxDim/2+6);
             }
-            if (halign==HAlign.LEFT) {
-                x = border;
-            } else if (halign==HAlign.RIGHT) {
-                x = button.width() - border;
-            }
-            g.renderText(button.text(),xoffset+x,y,halign,valign,style().font(),textColor);
+            
         });
         
         this.setSizeHint((button,i)->{
@@ -74,7 +70,7 @@ public class TButtonStyle extends TWidgetStyle<TButton> {
                 hint.width = Math.max(hint.width, button.icon().width()) + border;
                 hint.height = Math.max(hint.height, button.icon().height()) + border;
             }
-            hint.width = Math.max(hint.width, (int) style().font().getWidth(button.text()) + 2*border);
+            hint.width = Math.max(hint.width, (int) style().font().getWidth(button.text()) + 2*border + boxDim + boxD);
             hint.height = Math.max(hint.height, (int) style().font().getHeight() + border);
             return hint;
         });

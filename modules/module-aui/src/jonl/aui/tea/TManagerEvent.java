@@ -141,7 +141,7 @@ public class TManagerEvent {
         if (wasInClickState) {
             sendEvent(widget, event(e, TEventType.MouseButtonClick));
             if (widget.event().timeSinceLastClick.elapsed() < DOUBLE_CLICK_SPEED_MS) {
-                sendEvent(widget, event(e, TEventType.MouseButtonClick));
+                sendEvent(widget, event(e, TEventType.MouseButtonDoubleClick));
             }
             widget.event().timeSinceLastClick = new Time();
         }

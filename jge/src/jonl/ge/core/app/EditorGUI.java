@@ -127,6 +127,8 @@ public class EditorGUI {
     private void createViewPanel() {
         viewPanel = ui.tabPanel();
         
+        
+        
         createEditorViewer();
         viewPanel.add(editorViewer, "Editor");
     }

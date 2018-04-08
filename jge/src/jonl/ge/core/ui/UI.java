@@ -3,6 +3,7 @@ package jonl.ge.core.ui;
 import jonl.aui.Align;
 import jonl.aui.ArrayLayout;
 import jonl.aui.Button;
+import jonl.aui.CheckBox;
 import jonl.aui.Dial;
 import jonl.aui.Font;
 import jonl.aui.Frame;
@@ -77,6 +78,16 @@ public class UI implements UIManager {
     @Override
     public Button button(String text) {
         return ui.button(text);
+    }
+    
+    @Override
+    public CheckBox checkBox() {
+        return ui.checkBox();
+    }
+
+    @Override
+    public CheckBox checkBox(String text) {
+        return ui.checkBox(text);
     }
 
     @Override

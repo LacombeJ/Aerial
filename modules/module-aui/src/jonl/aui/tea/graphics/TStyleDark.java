@@ -23,6 +23,7 @@ public class TStyleDark extends TStyleDefault {
         menuButton = new TButtonStyle(this);
         toolButton = new TButtonStyle(this);
         tabButton = new TButtonStyle(this);
+        checkBox = new TCheckBoxStyle(this);
         dial = new TDialStyle(this);
         toolBar = new TToolBarStyle(this);
         

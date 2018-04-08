@@ -3,8 +3,11 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.Align;
+import jonl.aui.HAlign;
+import jonl.aui.Signal;
 import jonl.aui.TabPanel;
 import jonl.aui.Widget;
+import jonl.jutils.func.Callback0D;
 
 public class TTabPanel extends TWidget implements TabPanel {
 
@@ -14,6 +17,9 @@ public class TTabPanel extends TWidget implements TabPanel {
     private int index = 0;
     private ArrayList<String> labels;
     private ArrayList<TWidget> widgets;
+    
+    private boolean closeable = false;
+    private Signal<Callback0D> newTab = new Signal<>();
     
     public TTabPanel() {
         tabBar = new TTabBar();
@@ -30,6 +36,10 @@ public class TTabPanel extends TWidget implements TabPanel {
         tabPanelLayout.add(tabContent);
         
         setWidgetLayout(tabPanelLayout);
+        
+        tabBar.newTabButton.clicked().connect(()->{
+            newTab().emit((cb)->cb.f());
+        });
     }
     
     private void addWidgetContent(Widget widget) {
@@ -63,8 +73,16 @@ public class TTabPanel extends TWidget implements TabPanel {
         widgets.add((TWidget) widget);
         labels.add(label);
         TTabButton button = new TTabButton(label);
+        button.info().put("halign",HAlign.LEFT);
+        button.info().put("xoffset",4f);
         button.clicked().connect(()->{
             setIndex(indexOf(widget));
+        });
+        if (closeable) {
+            button.setCloseButton(true);
+        }
+        button.closeButton.clicked().connect(()->{
+            remove(widget);
         });
         tabBar.add(button);
         refreshContent();
@@ -82,6 +100,7 @@ public class TTabPanel extends TWidget implements TabPanel {
     public void remove(int index) {
         widgets.remove(index);
         labels.remove(index);
+        tabBar.remove(tabBar.get(index));
         refreshContent();
     }
 
@@ -104,6 +123,30 @@ public class TTabPanel extends TWidget implements TabPanel {
     public void setIndex(int index) {
         this.index = index;
         refreshContent();
+    }
+    
+    @Override
+    public void setWidget(Widget widget) {
+        setIndex(indexOf(widget));
+    }
+    
+    @Override
+    public void setCloseable(boolean enabled) {
+        closeable = enabled;
+    }
+    
+    @Override
+    public void setAddable(boolean enabled) {
+        if (enabled) {
+            tabBar.addNewTabButton();
+        } else {
+            tabBar.removeNewTabButton();
+        }
+    }
+    
+    @Override
+    public Signal<Callback0D> newTab() {
+        return newTab;
     }
 
 }
