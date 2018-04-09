@@ -15,12 +15,21 @@ public class TMesh {
         this.data = data;
     }
     
+    public final static TMesh LINE;
     public final static TMesh BOX;
     public final static TMesh BOX_OUTLINE;
     public final static TMesh CIRCLE;
     public final static TMesh CIRCLE_OUTLINE;
     
     static {
+        // Line
+        {
+            Vector3 v0 = new Vector3(0,0,0);
+            Vector3 v1 = new Vector3(1,0,0);
+            int[] indices = { 0, 1 };
+            float[] vertices = Vector3.pack(v0, v1);
+            LINE = new TMesh(new MeshData(vertices,null,null,indices));
+        }
         // BOX
         {
             float d = 0.5f;

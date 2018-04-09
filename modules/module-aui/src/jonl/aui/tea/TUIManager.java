@@ -109,6 +109,16 @@ public class TUIManager implements UIManager {
     public TPanel panel(Layout layout) {
         return new TPanel(layout);
     }
+    
+    @Override
+    public TTitlePanel titlePanel(String title) {
+        return new TTitlePanel(title);
+    }
+
+    @Override
+    public TTitlePanel titlePanel(String title, Layout layout) {
+        return new TTitlePanel(title,layout);
+    }
 
     @Override
     public TSplitPanel splitPanel() {

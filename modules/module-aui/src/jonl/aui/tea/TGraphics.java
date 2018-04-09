@@ -31,6 +31,8 @@ public class TGraphics implements Graphics {
     
     Matrix4 ortho;
     
+    Mesh line;
+    
     Mesh box;
     Mesh circle;
     
@@ -51,6 +53,8 @@ public class TGraphics implements Graphics {
         this.windowHeight = windowHeight;
         
         int version = gl.glGetGLSLVersioni();
+        
+        line = gl.glGenMesh(TMesh.LINE.data);
         
         box = gl.glGenMesh(TMesh.BOX.data);
         circle = gl.glGenMesh(TMesh.CIRCLE.data);
@@ -118,6 +122,16 @@ public class TGraphics implements Graphics {
         if (firstCut) {
             currentCut = null;
         }
+    }
+    
+    public void renderLine(float x1, float y1, float x2, float y2, Color color, float thickness) {
+        float[] verts = new float[] {x1,-y1,0,x2,-y2,0};
+        line.setVertexAttrib(verts,3);
+        gl.glLineWidth(thickness);
+        float w = x2-x1;
+        float h = y2-y1;
+        render(line,new Vector3(offsetX,offsetY,0), new Vector3(0,0,0), new Vector3(1,1,1), color.toVector(),GL.LINE_STRIP);
+        gl.glLineWidth(1f);
     }
     
     public void renderCircle(float x, float y, float w, float h, Vector4 color) {

@@ -14,7 +14,6 @@ import jonl.aui.SplitPanel;
 import jonl.aui.TabPanel;
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
-import jonl.aui.UIManager;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
@@ -140,10 +139,8 @@ public class EditorGUI {
     private void createPropertiesPanel() {
         propertiesPanel = ui.panel(ui.listLayout(Align.VERTICAL));
         
-        Label label = ui.label("Background color:");
-        
         ArrayLayout array = ui.arrayLayout();
-        Panel panel = ui.panel(array);
+        Panel panel = ui.titlePanel("Background Color",array);
         
         array.add(ui.label("Red:"),0,0);
         array.add(ui.label("Green:"),1,0);
@@ -187,7 +184,6 @@ public class EditorGUI {
         sg.changed().connect(slot);
         sb.changed().connect(slot);
         
-        propertiesPanel.add(label);
         propertiesPanel.add(panel);
         propertiesPanel.add(spacer);
     }

@@ -22,6 +22,7 @@ import jonl.aui.Slider;
 import jonl.aui.Spacer;
 import jonl.aui.SplitPanel;
 import jonl.aui.TabPanel;
+import jonl.aui.TitlePanel;
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
 import jonl.aui.Tree;
@@ -133,6 +134,16 @@ public class UI implements UIManager {
     @Override
     public Panel panel(Layout layout) {
         return ui.panel(layout);
+    }
+    
+    @Override
+    public TitlePanel titlePanel(String title) {
+        return ui.titlePanel(title);
+    }
+
+    @Override
+    public TitlePanel titlePanel(String title, Layout layout) {
+        return ui.titlePanel(title, layout);
     }
 
     @Override

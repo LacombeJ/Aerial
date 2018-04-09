@@ -34,6 +34,10 @@ public interface UIManager {
     
     Panel panel(Layout layout);
     
+    TitlePanel titlePanel(String title);
+    
+    TitlePanel titlePanel(String title, Layout layout);
+    
     SplitPanel splitPanel();
     
     SplitPanel splitPanel(Align align);
