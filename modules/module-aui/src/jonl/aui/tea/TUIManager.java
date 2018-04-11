@@ -91,6 +91,11 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public TDial dial(int min, int max) {
+        return new TDial(min,max);
+    }
+    
+    @Override
     public TSlider slider() {
         return new TSlider();
     }
@@ -98,6 +103,11 @@ public class TUIManager implements UIManager {
     @Override
     public TSlider slider(Align align) {
         return new TSlider(align);
+    }
+    
+    @Override
+    public TSlider slider(Align align, int min, int max) {
+        return new TSlider(align, min, max);
     }
 
     @Override

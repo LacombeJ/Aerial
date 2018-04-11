@@ -14,7 +14,7 @@ public class TDial extends TWidget implements Dial {
 
     private int minValue = 0;
     private int maxValue = 100;
-    private int value;
+    private int value = 0;
     
     private float ox = 0;
     private float oy = 0;
@@ -26,9 +26,15 @@ public class TDial extends TWidget implements Dial {
     private final Signal<Callback0D> pressed = new Signal<>();
     private final Signal<Callback0D> released = new Signal<>();
     
-    public TDial() {
+    public TDial(int min, int max) {
         super();
+        minValue = min;
+        maxValue = max;
         setMouseFocusSupport(true);
+    }
+    
+    public TDial() {
+        this(0,100);
     }
     
     @Override

@@ -103,6 +103,7 @@ public final class GameObject extends TreeNode<GameObject> {
     }
     
     void create() {
+      //Makes a copy of lists to prevent concurrent modification
         List.iterate(List.list(components), (c) -> {
         	if (c instanceof Property) {
         		Property p = (Property) c;
@@ -113,8 +114,13 @@ public final class GameObject extends TreeNode<GameObject> {
     }
     
     void update() {
-        //Make a copy of lists to prevent concurrent modification
-        List.iterate(List.list(components), (c) -> c.updateComponent());
+        //Makes a copy of lists to prevent concurrent modification
+        List.iterate(List.list(components), (c) -> {
+            if (c instanceof Property) {
+                Property p = (Property) c;
+                p.update();
+            }
+        } );
         List.iterate(List.list(children()), (g) -> g.update());
     }
     

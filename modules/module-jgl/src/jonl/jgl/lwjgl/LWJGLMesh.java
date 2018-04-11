@@ -60,7 +60,7 @@ class LWJGLMesh implements Mesh {
         texCoordID      = (texCoordData==null || texCoordData.length==0)    ? -1 : GL15.glGenBuffers();
         indicesID       = (indices==null || indices.length==0)              ? -1 : GL15.glGenBuffers();
         
-        verticesCount   = vertexData.length;
+        verticesCount   = vertexData.length/3;
         indicesCount    = (indices==null) ? 0 : indices.length;
         
         //Vertices
@@ -182,6 +182,7 @@ class LWJGLMesh implements Mesh {
     
     @Override
     public void setVertexAttrib(float[] vertices, int size) {
+        verticesCount = vertices.length;
         GL30.glBindVertexArray(id);
         setAttrib(vertexID,0,vertices,size,1);
         GL30.glBindVertexArray(0);

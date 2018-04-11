@@ -39,7 +39,6 @@ public class Camera extends Component {
     int scissorTop = 0;
     int scissorBottom = 0;
     
-    boolean scaleProjection = false;
     boolean shouldClearColor = true;
     
     private Target type = Target.ALL;
@@ -182,19 +181,6 @@ public class Camera extends Component {
     public Matrix4 getProjection() {
         return projection.get();
     }
-    
-    
-    
-    @Override
-    void updateComponent() {
-        if (scaleProjection) {
-            aspect = window().aspect();
-            setPerspective();
-        }
-    }
-    
-    
-    
     
     public Target getTargetType() {
         return type;

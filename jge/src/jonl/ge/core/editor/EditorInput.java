@@ -1,4 +1,4 @@
-package jonl.ge.core.app;
+package jonl.ge.core.editor;
 
 import jonl.aui.Widget;
 import jonl.ge.core.Input;

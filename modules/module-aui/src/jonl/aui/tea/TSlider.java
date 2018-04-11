@@ -22,11 +22,13 @@ public class TSlider extends TWidget implements Slider {
     private final Signal<Callback0D> pressed = new Signal<>();
     private final Signal<Callback0D> released = new Signal<>();
     
-    public TSlider(Align align, TSliderButton button, TSliderLayout layout) {
+    public TSlider(Align align, TSliderButton button, TSliderLayout layout, int min, int max) {
         super();
         
         setMouseFocusSupport(true);
         
+        minValue = min;
+        maxValue = max;
         this.align = align;
         this.button = button;
         this.button.setSlider(this);
@@ -41,8 +43,12 @@ public class TSlider extends TWidget implements Slider {
         }
     }
     
+    public TSlider(Align align, int min, int max) {
+        this(align, new TSliderButton(20,20), new TSliderLayout(),min,max);
+    }
+    
     public TSlider(Align align) {
-        this(align, new TSliderButton(20,20), new TSliderLayout());
+        this(align, new TSliderButton(20,20), new TSliderLayout(),0,100);
     }
     
     public TSlider() {

@@ -138,11 +138,15 @@ class SceneRenderer {
                     gl.glPolygonMode(GL.FRONT_AND_BACK, GL.LINE); 
                 }
                 
+                gl.glLineWidth(mesh.thickness);
+                
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(g,mesh,gl) );
                 
                 gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));
                 
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(g,mesh,gl) );
+                
+                gl.glLineWidth(1);
                 
                 if (mesh.isWireframe()) {
                     gl.glPolygonMode(GL.FRONT_AND_BACK, GL.FILL);

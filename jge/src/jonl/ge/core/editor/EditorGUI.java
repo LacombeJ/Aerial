@@ -1,13 +1,13 @@
-package jonl.ge.core.app;
+package jonl.ge.core.editor;
 
 import jonl.aui.Align;
 import jonl.aui.ArrayLayout;
 import jonl.aui.HAlign;
-import jonl.aui.Label;
 import jonl.aui.LineEdit;
 import jonl.aui.MenuBar;
 import jonl.aui.MenuButton;
 import jonl.aui.Panel;
+import jonl.aui.ScrollPanel;
 import jonl.aui.Slider;
 import jonl.aui.Spacer;
 import jonl.aui.SplitPanel;
@@ -24,6 +24,7 @@ import jonl.vmath.Color;
 
 public class EditorGUI {
 
+    EditorCore core;
 	public Editor editor;
     
 	public TUIManager ui;
@@ -38,9 +39,10 @@ public class EditorGUI {
             public SplitPanel sideSplitPanel;
                 public TabPanel viewPanel;
                     public Panel editorViewer;
-                public Panel propertiesPanel;
+                public ScrollPanel propertiesPanel;
     
-    public EditorGUI(Editor editor) {
+    public EditorGUI(EditorCore core, Editor editor) {
+        this.core = core;
         this.editor = editor;
     }
     
@@ -137,8 +139,20 @@ public class EditorGUI {
     }
     
     private void createPropertiesPanel() {
-        propertiesPanel = ui.panel(ui.listLayout(Align.VERTICAL));
+        propertiesPanel = ui.scrollPanel();
         
+        Panel properties = ui.panel(ui.listLayout(Align.VERTICAL));
+        
+        Spacer spacer = ui.spacer();
+        
+        properties.add(background());
+        properties.add(grid());
+        properties.add(spacer);
+        
+        propertiesPanel.setWidget(properties);
+    }
+    
+    private Panel background() {
         ArrayLayout array = ui.arrayLayout();
         Panel panel = ui.titlePanel("Background Color",array);
         
@@ -149,6 +163,10 @@ public class EditorGUI {
         LineEdit redText = ui.lineEdit("");
         LineEdit greenText = ui.lineEdit("");
         LineEdit blueText = ui.lineEdit("");
+        
+        redText.setMinSize(30,0);
+        greenText.setMinSize(30,0);
+        blueText.setMaxSize(30,0);
         
         redText.setMaxSize(30,Integer.MAX_VALUE);
         greenText.setMaxSize(30,Integer.MAX_VALUE);
@@ -166,13 +184,13 @@ public class EditorGUI {
         array.add(sg,1,2);
         array.add(sb,2,2);
         
-        Spacer spacer = ui.spacer();
-        
         Color color = Color.fromVector(editor.getBackground());
         sr.setValue((int)(color.r*100));
         sg.setValue((int)(color.g*100));
         sb.setValue((int)(color.b*100));
-        
+        redText.setText(sr.value()+"");
+        greenText.setText(sg.value()+"");
+        blueText.setText(sb.value()+"");
         Callback<Integer> slot = (v) -> {
             redText.setText(sr.value()+"");
             greenText.setText(sg.value()+"");
@@ -184,8 +202,56 @@ public class EditorGUI {
         sg.changed().connect(slot);
         sb.changed().connect(slot);
         
-        propertiesPanel.add(panel);
-        propertiesPanel.add(spacer);
+        return panel;
+    }
+    
+    private Panel grid() {
+        ArrayLayout array = ui.arrayLayout();
+        Panel panel = ui.titlePanel("Grid",array);
+        
+        //Scale ranges from 0f to 5f;
+        //We are using floating point with range from 0 to 5000
+        
+        array.add(ui.label("Grid size:"),0,0);
+        array.add(ui.label("Grid scale:"),1,0);
+        
+        LineEdit gridSizeEdit = ui.lineEdit("");
+        LineEdit gridScaleEdit = ui.lineEdit("");
+        
+        gridSizeEdit.setMinSize(30,0);
+        gridScaleEdit.setMinSize(30,0);
+        
+        gridSizeEdit.setMaxSize(30,Integer.MAX_VALUE);
+        gridScaleEdit.setMaxSize(30,Integer.MAX_VALUE);
+        
+        array.add(gridSizeEdit,0,1);
+        array.add(gridScaleEdit,1,1);
+        
+        Slider gridSizeSlider = ui.slider(Align.HORIZONTAL,0,20);
+        Slider gridScaleSlider = ui.slider(Align.HORIZONTAL,0,5000);
+        
+        array.add(gridSizeSlider,0,2);
+        array.add(gridScaleSlider,1,2);
+        
+        gridSizeSlider.setValue(core.scene.gridSize);
+        gridScaleSlider.setValue((int)(core.scene.gridScale*1000));
+        
+        gridSizeEdit.setText(gridSizeSlider.value()+"");
+        gridScaleEdit.setText((gridScaleSlider.value()/1000f)+"");
+        
+        Callback<Integer> slot = (v) -> {
+            gridSizeEdit.setText(gridSizeSlider.value()+"");
+            gridScaleEdit.setText((gridScaleSlider.value()/1000f)+"");
+            
+            core.scene.gridSize = gridSizeSlider.value();
+            core.scene.gridScale = gridScaleSlider.value() / 1000f;
+            core.scene.updateGrid();
+        };
+        
+        gridSizeSlider.changed().connect(slot);
+        gridScaleSlider.changed().connect(slot);
+        
+        return panel;
     }
     
 }

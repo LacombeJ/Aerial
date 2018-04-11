@@ -10,6 +10,7 @@ public class Mesh extends Component {
     Geometry geometry; //TODO hide variables, getters and setters?
     Material material = null;
     Mode mode;
+    float thickness = 1;
     
     boolean wireframe = false;
     
@@ -60,6 +61,14 @@ public class Mesh extends Component {
     
     public void setWireframe(boolean wireframe) {
         this.wireframe = wireframe;
+    }
+    
+    public float getThickness() {
+        return thickness;
+    }
+    
+    public void setThickness(float thickness) {
+        this.thickness = thickness;
     }
 
 }

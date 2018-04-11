@@ -32,9 +32,7 @@ public class TScrollLayout extends TLayout implements Layout {
         TScrollPanel scrollPanel = (TScrollPanel)parent;
         
         int horHeight = freeHeight(scrollPanel.horBar);
-        int verWidth = freeHeight(scrollPanel.verBar);
-        
-        
+        int verWidth = freeWidth(scrollPanel.verBar);
         
         return new TSizeHint(verWidth, horHeight);
     }

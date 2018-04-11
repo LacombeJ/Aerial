@@ -26,9 +26,13 @@ public interface UIManager {
     
     Dial dial();
     
+    Dial dial(int min, int max);
+    
     Slider slider();
     
     Slider slider(Align align);
+    
+    Slider slider(Align align, int min, int max);
     
     Panel panel();
     

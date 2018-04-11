@@ -1,6 +1,5 @@
-package jonl.ge.core.app;
+package jonl.ge.core.editor;
 
-import jonl.aui.Window;
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Geometry;
 import jonl.ge.core.Input;
@@ -19,12 +18,12 @@ import jonl.vmath.Vector3;
 public class EditorAssets {
 
     /* Mesh Assets */
-	public static GameObject control(Window window) {
+	public static GameObject control() {
         GameObject control = new GameObject();
         control.setName("EditorControl");
         
         EditorControl ec = new EditorControl();
-        MouseGrab mg = new MouseGrab(window);
+        MouseGrab mg = new MouseGrab();
         
         control.addComponent(ec);
         control.addComponent(mg);
@@ -152,12 +151,11 @@ public class EditorAssets {
     
 	public static class MouseGrab extends Property {
 
-        Window window;
         boolean open = false;
         boolean close = false;
         
-        MouseGrab(Window window) {
-            this.window = window;
+        MouseGrab() {
+            
         }
         
         @Override
@@ -170,26 +168,15 @@ public class EditorAssets {
             //methods after the cursor moves back after the grab state as it
             //might affect the input then
             
-            if (open) {
-                //window.openInput();
-                open = false;
-            }
-            if (close) {
-                //window.closeInput();
-                close = false;
-            }
-            
             EditorInput i = (EditorInput) input();
             if (i.isButtonPressed(Input.MB_RIGHT)) {
                 if (getCursorState()==CursorState.NORMAL) {
                     setCursorState(CursorState.GRABBED);
-                    close = true;
                 }
             }
             if (!i.glIsButtonDown(Input.MB_RIGHT)) {
                 if (getCursorState()==CursorState.GRABBED) {
                     setCursorState(CursorState.NORMAL);
-                    open = true;
                 }
             }
             

@@ -5,9 +5,11 @@ import jonl.aui.tea.TGraphics;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.ge.core.app.ApplicationWindow;
-import jonl.ge.core.app.EditorAssets;
-import jonl.ge.core.app.EditorGUI;
-import jonl.ge.core.app.EditorInput;
+import jonl.ge.core.editor.EditorAssets;
+import jonl.ge.core.editor.EditorCore;
+import jonl.ge.core.editor.EditorGUI;
+import jonl.ge.core.editor.EditorInput;
+import jonl.ge.core.editor.EditorScene;
 import jonl.ge.mod.misc.CameraControl;
 import jonl.jgl.GL;
 import jonl.vmath.Matrix4;
@@ -20,30 +22,26 @@ public class Editor extends AbstractApplication {
     final GL gl;
     final EditorInput input;
     final Window window;
-    final EditorGUI gui;
     
     private SceneManager manager = new SceneManager();
     
-    Camera camera;
-	
-    Vector4 background = new Vector4(0.5f,0.5f,0.55f,1f);
+    private EditorCore core = new EditorCore(this);
     
 	public Editor() {
 		super();
 		
-		gui = new EditorGUI(this);
-		
-        gui.create();
+        core.gui.create();
         
-        glWindow = gui.window.window();
+        glWindow = core.gui.window.window();
         gl = glWindow.getGraphicsLibrary();
-        input = new EditorInput(gui.editorViewer, gui.window.input());
+        input = new EditorInput(core.gui.editorViewer, core.gui.window.input());
         window = new ApplicationWindow(this);
         manager.create(delegate, service, glWindow.getGraphicsLibrary());
         
+        
         initialize();
         
-        gui.window.setLoader(()->{
+        core.gui.window.setLoader(()->{
             putInfo();
             manager.load();
             
@@ -51,10 +49,10 @@ public class Editor extends AbstractApplication {
             gl.glDisable(GL.CULL_FACE);
         });
         
-        gui.editorViewer.paint().connect((g)->{
+        core.gui.editorViewer.paint().connect((g)->{
             TGraphics tg = (TGraphics)g;
             
-            setViewport(camera);
+            setViewport(core.scene.camera);
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
             
@@ -75,7 +73,7 @@ public class Editor extends AbstractApplication {
             gl.glViewport(0,0,glWindow.getWidth(),glWindow.getHeight());
         });
         
-        gui.window.setCloser(()->{
+        core.gui.window.setCloser(()->{
         	manager.close();
         });
 	}
@@ -88,37 +86,16 @@ public class Editor extends AbstractApplication {
     }
     
     void initialize() {
-    	
-        Scene s = new Scene();
-
-        GameObject control = EditorAssets.control(gui.window);
         
-        camera  = new Camera();
-        camera.setClearColor(background);
-        camera.scaleProjection = true;
-        control.addComponent(camera);
+        core.scene.create();
         
-        CameraControl cc = new CameraControl();
-        control.addComponent(cc);
-        control.addCreate(()->{
-            cc.lookAt(new Vector3(0,0,0));
-        });
+        addScene(core.scene.scene);
         
-        control.transform().translation.set(5,5,5);
-        
-        
-        GameObject b = EditorAssets.cube();
-        s.add(b);
-        
-        s.add(control);
-        
-        addScene(s);
-        
-        s.create();
+        core.scene.scene.create();
     }
     
     void setViewport(Camera camera) {
-        Widget view = gui.editorViewer;
+        Widget view = core.gui.editorViewer;
         double width = getWidth();
         double height = getHeight();
         double yDiff = view.windowY() - view.y();
@@ -179,28 +156,28 @@ public class Editor extends AbstractApplication {
 
 	@Override
 	public String getTitle() {
-		return gui.window.title();
+		return core.gui.window.title();
 	}
 
 	@Override
 	public void setTitle(String title) {
-		gui.window.setTitle(title);
+	    core.gui.window.setTitle(title);
 	}
 
 	@Override
 	public int getWidth() {
-		return gui.editorViewer.width();
+		return core.gui.editorViewer.width();
 	}
 
 	@Override
 	public int getHeight() {
-		return gui.editorViewer.height();
+		return core.gui.editorViewer.height();
 	}
 
 	@Override
 	public void setSize(int width, int height) {
-		gui.window.setWidth(width);
-        gui.window.setHeight(height);
+	    core.gui.window.setWidth(width);
+	    core.gui.window.setHeight(height);
 	}
 
 	@Override
@@ -227,12 +204,12 @@ public class Editor extends AbstractApplication {
 	// ------------------------------------------------------------------------
 	
 	public void setBackground(Vector4 color) {
-	    background = color.get();
-        camera.setClearColor(background);
+	    core.scene.background = color.get();
+	    core.scene.camera.setClearColor(core.scene.background);
     }
 	
 	public Vector4 getBackground() {
-	    return background.get();
+	    return core.scene.background.get();
 	}
 	
 	

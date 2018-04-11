@@ -115,6 +115,11 @@ public class UI implements UIManager {
     public Dial dial() {
         return ui.dial();
     }
+    
+    @Override
+    public Dial dial(int min, int max) {
+        return ui.dial(min, max);
+    }
 
     @Override
     public Slider slider() {
@@ -124,6 +129,11 @@ public class UI implements UIManager {
     @Override
     public Slider slider(Align align) {
         return ui.slider(align);
+    }
+    
+    @Override
+    public Slider slider(Align align, int min, int max) {
+        return ui.slider(align, min, max);
     }
 
     @Override

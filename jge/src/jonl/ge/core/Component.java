@@ -9,10 +9,6 @@ public abstract class Component {
 
     GameObject gameObject;
     
-    void updateComponent() {
-        //TODO remove since not all components need this
-    }
-    
     public GameObject gameObject() {
         return gameObject;
     }

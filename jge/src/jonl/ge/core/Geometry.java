@@ -7,10 +7,10 @@ import jonl.vmath.Vector3;
 public class Geometry {
     
     boolean update = false;
-    Vector3[] vertices;
-    Vector3[] normals;
-    Vector2[] texCoords;
-    int[] indices;
+    Vector3[] vertices = new Vector3[0];
+    Vector3[] normals = new Vector3[0];
+    Vector2[] texCoords = new Vector2[0];
+    int[] indices = new int[0];
     
     boolean calculateTangents = true;
     Vector3[] tangents;

@@ -46,7 +46,6 @@ public class TGraphics implements Graphics {
     Program basic;
     
     Texture check;
-
     
     public TGraphics(GL gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
@@ -126,10 +125,10 @@ public class TGraphics implements Graphics {
     
     public void renderLine(float x1, float y1, float x2, float y2, Color color, float thickness) {
         float[] verts = new float[] {x1,-y1,0,x2,-y2,0};
+        //TODO have widgets create their own line geometries to render (would also have to clean up?)
+        //instead of setting vertex attrib each frame?
         line.setVertexAttrib(verts,3);
         gl.glLineWidth(thickness);
-        float w = x2-x1;
-        float h = y2-y1;
         render(line,new Vector3(offsetX,offsetY,0), new Vector3(0,0,0), new Vector3(1,1,1), color.toVector(),GL.LINE_STRIP);
         gl.glLineWidth(1f);
     }
