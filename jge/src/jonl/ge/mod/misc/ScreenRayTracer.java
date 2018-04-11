@@ -26,7 +26,7 @@ public class ScreenRayTracer extends RayTracer {
     /**
      * 
      * @param camera
-     * @param xy screen coorindate in unit space (0,1)
+     * @param xy screen coordinate in unit space (0,1)
      */
     public ScreenRayTracer(Camera camera, Vector2 xy) {
         this(rayFromCamera(camera,xy.x,xy.y));

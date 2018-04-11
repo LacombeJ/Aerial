@@ -210,7 +210,17 @@ public class Camera extends Component {
         targets = new ArrayList<GameObject>();
     }
     
+    public Matrix4 computeViewMatrix() {
+        Transform worldTransform = gameObject().computeWorldTransform();
+        return Camera.computeViewMatrix(worldTransform);
+    }
     
+    public Matrix4 computeViewProjectionMatrix() {
+        Transform worldTransform = gameObject().computeWorldTransform();
+        Matrix4 V = Camera.computeViewMatrix(worldTransform);
+        Matrix4 P = getProjection();
+        return P.multiply(V);
+    }
     
     /** @return computes the view matrix given a transform */
     public static Matrix4 computeViewMatrix(Transform transform) {

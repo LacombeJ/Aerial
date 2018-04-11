@@ -1,6 +1,7 @@
 package jonl.ge.core.editor;
 
 import jonl.aui.Widget;
+import jonl.aui.tea.TInput;
 import jonl.ge.core.Input;
 import jonl.ge.core.InputEvent;
 import jonl.vmath.Vector2;
@@ -55,7 +56,11 @@ public class EditorInput implements Input {
 
     @Override
     public float getY() {
-        return input.getY() - box.windowY();
+        float y = input.getY() - box.windowY();
+        if (input instanceof TInput) {
+            y = ((TInput)input).windowHeight() - y;
+        }
+        return y - box.windowY();
     }
     
     @Override
@@ -70,7 +75,11 @@ public class EditorInput implements Input {
 
     @Override
     public float getDY() {
-        return - input.getDY();
+        float dy = input.getDY();
+        if (input instanceof TInput) {
+            dy = -dy;
+        }
+        return dy;
     }
 
     @Override

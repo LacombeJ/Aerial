@@ -11,6 +11,7 @@ public class Mesh extends Component {
     Material material = null;
     Mode mode;
     float thickness = 1;
+    boolean depthTest = true;
     
     boolean wireframe = false;
     
@@ -71,4 +72,12 @@ public class Mesh extends Component {
         this.thickness = thickness;
     }
 
+    public boolean getDepthTest() {
+        return depthTest;
+    }
+    
+    public void setDepthTest(boolean enable) {
+        depthTest = enable;
+    }
+    
 }

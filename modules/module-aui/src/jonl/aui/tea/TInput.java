@@ -15,6 +15,10 @@ public class TInput implements Input {
         this.windowHeight = windowHeight;
     }
     
+    public int windowHeight() {
+        return windowHeight.f();
+    }
+    
     @Override
     public boolean checkEvent(InputEvent e) {
         return input.checkEvent(e);

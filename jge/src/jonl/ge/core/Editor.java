@@ -5,15 +5,10 @@ import jonl.aui.tea.TGraphics;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.ge.core.app.ApplicationWindow;
-import jonl.ge.core.editor.EditorAssets;
 import jonl.ge.core.editor.EditorCore;
-import jonl.ge.core.editor.EditorGUI;
 import jonl.ge.core.editor.EditorInput;
-import jonl.ge.core.editor.EditorScene;
-import jonl.ge.mod.misc.CameraControl;
 import jonl.jgl.GL;
 import jonl.vmath.Matrix4;
-import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
 
 public class Editor extends AbstractApplication {

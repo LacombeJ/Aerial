@@ -1,16 +1,11 @@
 package jonl.ge.core.editor;
 
 import jonl.ge.core.GameObject;
-import jonl.ge.core.Geometry;
 import jonl.ge.core.Input;
-import jonl.ge.core.Material;
-import jonl.ge.core.Mesh;
 import jonl.ge.core.Property;
 import jonl.ge.core.Transform;
 import jonl.ge.core.Input.CursorState;
-import jonl.ge.core.geometry.BoxGeometry;
 import jonl.ge.core.light.Light;
-import jonl.ge.core.material.GeneratedMaterial;
 import jonl.vmath.Mathf;
 import jonl.vmath.Quaternion;
 import jonl.vmath.Vector3;
@@ -34,15 +29,7 @@ public class EditorAssets {
         return control;
     }
 	
-	public static GameObject cube() {
-	    GameObject cube = new GameObject();
-        cube.setName("Cube");
-        Geometry geometry = new BoxGeometry();
-        Material material = new GeneratedMaterial();
-        Mesh mesh = new Mesh(geometry,material);
-        cube.addComponent(mesh);
-        return cube;
-	}
+	
     
     
 	public static class EditorControl extends Property {

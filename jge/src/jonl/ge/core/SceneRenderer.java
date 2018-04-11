@@ -81,7 +81,10 @@ class SceneRenderer {
     }
     
     private void renderCamera(Camera camera, List<Light> lights, List<GameObject> gameObjects) {
-        Matrix4 V = setupCamera(camera);
+        setupCamera(camera);
+        
+        Transform cameraTransform = manager.updater().getWorldTransform(camera.gameObject());
+        Matrix4 V = Camera.computeViewMatrix(cameraTransform);
         Matrix4 P = camera.getProjection();
         Matrix4 VP = P.get().multiply(V);
         
@@ -138,6 +141,10 @@ class SceneRenderer {
                     gl.glPolygonMode(GL.FRONT_AND_BACK, GL.LINE); 
                 }
                 
+                if (!mesh.depthTest) {
+                    gl.glDisable(GL.DEPTH_TEST);
+                }
+                
                 gl.glLineWidth(mesh.thickness);
                 
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(g,mesh,gl) );
@@ -147,6 +154,10 @@ class SceneRenderer {
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(g,mesh,gl) );
                 
                 gl.glLineWidth(1);
+                
+                if (!mesh.depthTest) {
+                    gl.glEnable(GL.DEPTH_TEST);
+                }
                 
                 if (mesh.isWireframe()) {
                     gl.glPolygonMode(GL.FRONT_AND_BACK, GL.FILL);
@@ -166,12 +177,7 @@ class SceneRenderer {
      * Sets up the gl viewport, clear color, scissor, and view matrix for the camera
      * @return the view matrix of the camera
      */
-    private Matrix4 setupCamera(Camera camera) {
-        GameObject g = camera.gameObject();
-        Transform t = manager.updater().getWorldTransform(g);
-        
-        Matrix4 view = Camera.computeViewMatrix(t);
-        
+    private void setupCamera(Camera camera) {
         int left=0, bottom=0, right=0, top=0, width=0, height=0;
         if (camera instanceof CameraTarget) {
         	CameraTarget ct = (CameraTarget) camera;
@@ -214,8 +220,6 @@ class SceneRenderer {
         } else {
             gl.glDisable(GL.SCISSOR_TEST);
         }
-        
-        return view;
     }
     
     private void detachCamera(Camera camera) {

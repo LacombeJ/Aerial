@@ -484,6 +484,14 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
 		);
     }
     
+    public static Matrix4 rotation(float xrad, float yrad, float zrad) {
+        return Matrix4.identity().rotate(xrad, yrad, zrad);
+    }
+    
+    public static Matrix4 rotation(Vector3 rotation) {
+        return Matrix4.identity().rotate(rotation);
+    }
+    
     public static Matrix4 scaled(float x, float y, float z) {
         return Matrix4.identity().scale(x, y, z);
     }
