@@ -18,6 +18,7 @@ import jonl.ge.core.geometry.GeometryOperation;
 import jonl.ge.core.geometry.SphereGeometry;
 import jonl.ge.core.material.GeneratedMaterial;
 import jonl.ge.core.material.SolidMaterial;
+import jonl.ge.mod.axis.TranslationAxis;
 import jonl.ge.mod.misc.CameraControl;
 import jonl.ge.mod.misc.PerspectiveUpdate;
 import jonl.ge.mod.misc.RayHit;
@@ -37,8 +38,10 @@ public class EditorScene {
     Editor editor;
     
     public Scene scene;
+    public Scene overlayScene;
     
     public Camera camera;
+    public Camera overlayCamera;
     
     public Vector4 background = new Vector4(0.5f,0.5f,0.55f,1f);
     
@@ -47,6 +50,8 @@ public class EditorScene {
     int gridSize = 5;
     float gridScale = 1f;
     
+    TranslationAxis translationAxis;
+    
     public EditorScene(EditorCore core, Editor editor) {
         this.core = core;
         this.editor = editor;
@@ -54,7 +59,17 @@ public class EditorScene {
     
     public void create() {
         scene = new Scene();
+        overlayScene = new Scene();
         
+        prepareScene();
+        prepareOverlayScene();
+        
+        createScene();
+        createOverlayScene();
+        
+    }
+    
+    private void prepareScene() {
         GameObject control = EditorAssets.control();
         
         camera  = new Camera();
@@ -72,20 +87,38 @@ public class EditorScene {
         
         control.transform().translation.set(5,5,5);
         
-        AxisHandler ah = new AxisHandler(camera);
-        control.addComponent(ah);
+        scene.add(control);
+    }
+    
+    private void prepareOverlayScene() {
+        GameObject overlay = new GameObject();
         
-        //scene.add(cube());
-        scene.add(sphere());
+        overlayCamera = new Camera();
+        overlayCamera.enableClearColor(false);
+        overlayCamera.setOrthographicBox(1,1,-1,1);
+        overlay.transform().translation.set(0.5f,0.5f,0); // To move to unit screen space (0,1)
+        
+        overlay.addComponent(overlayCamera);
+        
+        overlayScene.add(overlay);
+    }
+    
+    private void createScene() {
+        GameObject sphere = sphere();
+        scene.add(sphere);
         
         GameObject grid = grid();
         scene.add(grid);
         
-        GameObject translateAxis = translateAxis();
-        scene.add(translateAxis);
-        
-        scene.add(control);
-        
+        translationAxis = new TranslationAxis(camera);
+        scene.add(translationAxis.get());
+        translationAxis.get().addUpdate(()->{
+            sphere.transform().translation.set(translationAxis.get().transform().translation);
+        });
+    }
+    
+    private void createOverlayScene() {
+        overlayScene.add(translationAxis.overlay());
     }
     
     public GameObject cube() {
@@ -112,76 +145,6 @@ public class EditorScene {
         cube.transform().translation.set(1,0,2);
 
         return cube;
-    }
-    
-    public GameObject translateAxis() {
-        
-        GameObject go = new GameObject();
-        
-        ScreenSpaceScale sss = new ScreenSpaceScale(camera);
-        go.addComponent(sss);
-        
-        GameObject xAxis = axis("_xaxis",new Vector3(1,0,0));
-        GameObject yAxis = axis("_yaxis",new Vector3(0,1,0));
-        GameObject zAxis = axis("_zaxis",new Vector3(0,0,1));
-        
-        go.addChild(xAxis);
-        go.addChild(yAxis);
-        go.addChild(zAxis);
-        
-        return go;
-        
-    }
-    
-    public GameObject axis(String name, Vector3 axis) {
-        
-        GameObject go = new GameObject();
-        go.setName(name);
-        
-        SolidMaterial material = new SolidMaterial(new Vector4(axis,1f));
-        
-        // Some geometry operations
-        GeometryOperation scaleOp = GeometryOperation.transform(Matrix4.scaled(0.1f,0.2f,0.1f));
-        GeometryOperation translateOp = GeometryOperation.transform(Matrix4.translation(0,1,0));
-        GeometryOperation rotateOp = null;
-        if (axis.equals(new Vector3(0,0,1))) {
-            rotateOp = GeometryOperation.transform(Matrix4.rotation(Mathf.PI_OVER_2,0,0));
-        } else if (axis.equals(new Vector3(1,0,0))) {
-            //rotateOp = GeometryOperation.transform(Matrix4.rotation(axis.get().scale(Mathf.PI_OVER_2)));
-            rotateOp = GeometryOperation.transform(Matrix4.rotation(0,0,-Mathf.PI_OVER_2));
-        }
-        
-        // Line
-        GameObject goLine = new GameObject();
-        GeometryBuilder gb = new GeometryBuilder();
-        gb.addVertex(new Vector3(0,0,0));
-        gb.addVertex(new Vector3(0,1,0));
-        Geometry lineGeometry = gb.build();
-        if (rotateOp!=null) {
-            lineGeometry.modify(rotateOp);
-        }
-        Mesh lineMesh = new Mesh(lineGeometry,material);
-        lineMesh.setMode(Mode.LINES);
-        lineMesh.setThickness(3f);
-        lineMesh.setDepthTest(false);
-        goLine.addComponent(lineMesh);
-        
-        // Arrow / Cone
-        GameObject goArrow = new GameObject();
-        ConeGeometry arrow = new ConeGeometry();
-        arrow.modify(scaleOp);
-        arrow.modify(translateOp);
-        if (rotateOp!=null) {
-            arrow.modify(rotateOp);
-        }
-        Mesh arrowMesh = new Mesh(arrow,material);
-        arrowMesh.setDepthTest(false);
-        goArrow.addComponent(arrowMesh);
-        
-        go.addChild(goArrow);
-        go.addChild(goLine);
-        
-        return go;
     }
     
     public GameObject grid() {
@@ -236,114 +199,6 @@ public class EditorScene {
         return grid.toArray(new Vector3[grid.size()]);
     }
     
-    static class AxisHandler extends Property {
-
-        Camera camera;
-        GameObject xaxis;
-        GameObject yaxis;
-        GameObject zaxis;
-        
-        Vector3 highlight = Color.YELLOW.toVector().xyz();
-        
-        AxisHandler(Camera camera) {
-            this.camera = camera;
-        }
-        
-        @Override
-        public void create() {
-            xaxis = findGameObject("_xaxis");
-            yaxis = findGameObject("_yaxis");
-            zaxis = findGameObject("_zaxis");
-        }
-
-        @Override
-        public void update() {
-            Vector2 mouse = window().toUnitSpace(input().getXY());
-            
-            ScreenRayTracer srt = new ScreenRayTracer(camera,mouse.x,mouse.y);
-            
-            float scale = xaxis.parent().transform().scale.x;
-            
-            float r = 0.1f;
-            float l = 1f;
-            
-            RayHit x = null;
-            RayHit y = null;
-            RayHit z = null;
-            
-            {
-                Vector3 min = new Vector3(0,-r,-r).scale(scale);
-                Vector3 max = new Vector3(l,r,r).scale(scale);
-                x = srt.boundingBox(min,max);
-                
-                if (x!=null) {
-                    setColor(xaxis,highlight);
-                } else {
-                    setColor(xaxis,new Vector3(1,0,0));
-                }
-            }
-            {
-                Vector3 min = new Vector3(-r,0,-r).scale(scale);
-                Vector3 max = new Vector3(r,1,r).scale(scale);
-                y = srt.boundingBox(min,max);
-            }
-            {
-                Vector3 min = new Vector3(-r,-r,0).scale(scale);
-                Vector3 max = new Vector3(r,r,1).scale(scale);
-                z = srt.boundingBox(min,max);
-            }
-            
-            setColor(xaxis,new Vector3(1,0,0));
-            setColor(yaxis,new Vector3(0,1,0));
-            setColor(zaxis,new Vector3(0,0,1));
-            
-            String hit = hit(x,y,z);
-            if (hit!=null) {
-                if (hit.equals("x")) {
-                    setColor(xaxis,highlight);
-                } else if (hit.equals("y")) {
-                    setColor(yaxis,highlight);
-                } else if (hit.equals("z")) {
-                    setColor(zaxis,highlight);
-                } 
-            }
-            
-        }
-        
-        private String hit(RayHit x, RayHit y, RayHit z) {
-            float shortest = Float.MAX_VALUE;
-            String hit = "";
-            if (x!=null) {
-                if (x.distance()<shortest) {
-                    hit = "x";
-                    shortest = x.distance();
-                }
-            }
-            if (y!=null) {
-                if (y.distance()<shortest) {
-                    hit = "y";
-                    shortest = y.distance();
-                }
-            }
-            if (z!=null) {
-                if (z.distance()<shortest) {
-                    hit = "z";
-                    shortest = z.distance();
-                }
-            }
-            if (shortest!=Float.MAX_VALUE) {
-                return hit;
-            }
-            return null;
-        }
-        
-        private void setColor(GameObject axis, Vector3 color) {
-            GameObject line = axis.getChildAt(0);
-            Mesh mesh = line.getComponent(Mesh.class);
-            SolidMaterial material = mesh.getMaterial().asSolidMaterial();
-            material.setColor(color);
-        }
-        
-    }
+    
     
 }

@@ -182,7 +182,7 @@ class LWJGLMesh implements Mesh {
     
     @Override
     public void setVertexAttrib(float[] vertices, int size) {
-        verticesCount = vertices.length;
+        verticesCount = vertices.length / 3;
         GL30.glBindVertexArray(id);
         setAttrib(vertexID,0,vertices,size,1);
         GL30.glBindVertexArray(0);

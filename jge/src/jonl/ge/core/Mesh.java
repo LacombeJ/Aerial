@@ -12,7 +12,7 @@ public class Mesh extends Component {
     Mode mode;
     float thickness = 1;
     boolean depthTest = true;
-    
+    boolean visible = true;
     boolean wireframe = false;
     
     public enum Mode {
@@ -78,6 +78,14 @@ public class Mesh extends Component {
     
     public void setDepthTest(boolean enable) {
         depthTest = enable;
+    }
+    
+    public boolean isVisible() {
+        return visible;
+    }
+    
+    public void setVisible(boolean enable) {
+        visible = enable;
     }
     
 }

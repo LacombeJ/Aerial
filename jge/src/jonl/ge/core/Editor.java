@@ -48,6 +48,7 @@ public class Editor extends AbstractApplication {
             TGraphics tg = (TGraphics)g;
             
             setViewport(core.scene.camera);
+            setViewport(core.scene.overlayCamera);
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
             
@@ -85,6 +86,7 @@ public class Editor extends AbstractApplication {
         core.scene.create();
         
         addScene(core.scene.scene);
+        addScene(core.scene.overlayScene);
         
         core.scene.scene.create();
     }

@@ -102,7 +102,37 @@ public class RayTracer {
         
         Vector3 hit = ray.origin().add(ray.direction().multiply(tNear));
         
+        // TODO why is normal null, is there a way to calculate normal?
         return new RayHit(tNear,hit,null);
+    }
+    
+    // https://www.siggraph.org//education/materials/HyperGraph/raytrace/rayplane_intersection.htm
+    public RayHit plane(Vector3 unitNormal, float dist) {
+        
+        Vector3 origin = ray.origin();
+        Vector3 dir = ray.direction();
+        
+        float incident = unitNormal.dot(dir);
+        
+        // Ray is parallel to the plane (or on the plane)
+        if (incident==0) {
+            return null;
+        }
+        
+        // If incident > 0 , normal of ray is pointing away
+        // Do we ignore or add an option for one-sided intersections?
+        
+        float t = - (unitNormal.dot(origin) + dist) / incident;
+        
+        // Plane is behind origin, need ray to go backwards for intersection
+        if (t < 0) {
+            return null;
+        }
+        
+        Vector3 hit = origin.get().add(dir.get().scale(t));
+        
+        return new RayHit(t,hit,unitNormal.get());
+        
     }
     
     

@@ -97,7 +97,8 @@ class SceneRenderer {
             jonl.jutils.func.List.iterate(manager.delegate().onGameObjectRender(), (cb) -> cb.f(g,camera) );
             
             Mesh mesh = g.getComponent(Mesh.class);
-            if (mesh != null) {
+            if (mesh != null && mesh.isVisible()) {
+                
                 Material mat = mesh.getMaterial();
                 Geometry geometry = mesh.getGeometry();
                 
@@ -146,6 +147,7 @@ class SceneRenderer {
                 }
                 
                 gl.glLineWidth(mesh.thickness);
+                gl.glPointSize(mesh.thickness);
                 
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(g,mesh,gl) );
                 
@@ -154,6 +156,7 @@ class SceneRenderer {
                 jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(g,mesh,gl) );
                 
                 gl.glLineWidth(1);
+                gl.glPointSize(1);
                 
                 if (!mesh.depthTest) {
                     gl.glEnable(GL.DEPTH_TEST);
@@ -216,7 +219,10 @@ class SceneRenderer {
             } else {
                 gl.glScissor(camera.scissorLeft, camera.scissorBottom, camera.scissorRight, camera.scissorTop);
             }
-            gl.glClear(GL.COLOR_BUFFER_BIT,GL.DEPTH_BUFFER_BIT);
+            if (camera.shouldClearColor)
+            {
+                gl.glClear(GL.COLOR_BUFFER_BIT,GL.DEPTH_BUFFER_BIT);
+            }
         } else {
             gl.glDisable(GL.SCISSOR_TEST);
         }
