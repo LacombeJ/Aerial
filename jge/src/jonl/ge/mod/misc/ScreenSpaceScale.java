@@ -57,7 +57,7 @@ public class ScreenSpaceScale extends Property {
         
         float screenSize = srcScreen.dist(dstScreen);
         
-        float scalar = scale / screenSize;
+        float scalar = window().aspect() * scale / screenSize;
         
         //TODO handle scale with hierarchy
         transform().scale.set(new Vector3(scalar));

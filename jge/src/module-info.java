@@ -8,10 +8,11 @@ module jonl.ge {
 	exports jonl.ge.core.render;
 	exports jonl.ge.core.ui;
 	
-	exports jonl.ge.mod.misc;
-	
+	exports jonl.ge.mod.axis;
 	exports jonl.ge.mod.fx;
+	exports jonl.ge.mod.misc;
 	exports jonl.ge.mod.physics;
+	exports jonl.ge.mod.ray;
 	exports jonl.ge.mod.text;
 	
 	exports jonl.ge.core.shaders;

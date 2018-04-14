@@ -40,6 +40,7 @@ class SceneManager {
 	void load() {
 	    List.iterate(delegate.onLoad(), (cb) -> cb.f() );
 	    for (Scene scene : scenes) {
+	        List.iterate(delegate.onScenePreCreate(), (cb) -> cb.f(scene) );
 	        scene.create();
 	        List.iterate(delegate.onSceneCreate(), (cb) -> cb.f(scene) );
 	    }

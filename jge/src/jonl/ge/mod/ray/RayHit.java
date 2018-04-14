@@ -1,4 +1,4 @@
-package jonl.ge.mod.misc;
+package jonl.ge.mod.ray;
 
 import jonl.vmath.Vector3;
 

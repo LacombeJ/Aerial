@@ -88,7 +88,6 @@ public class Editor extends AbstractApplication {
         addScene(core.scene.scene);
         addScene(core.scene.overlayScene);
         
-        core.scene.scene.create();
     }
     
     void setViewport(Camera camera) {

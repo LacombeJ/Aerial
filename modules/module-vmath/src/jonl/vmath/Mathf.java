@@ -188,6 +188,18 @@ public final class Mathf {
         return Math.round(a);
     }
     
+    /**
+     * Round to the nearest number location to a value with the increment starting from start
+     * 
+     * @param a
+     * @param start
+     * @param increment
+     * @return
+     */
+    public static float round(float a, float start, float increment) {
+        return round((a-start)/increment)*increment + start;
+    }
+    
     public static float sin(float rad) {
         return (float) Math.sin(rad);
     }

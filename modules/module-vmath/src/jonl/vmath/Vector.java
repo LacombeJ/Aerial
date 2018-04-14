@@ -1,5 +1,7 @@
 package jonl.vmath;
 
+import java.util.function.Function;
+
 /**
  * Class representing an abstract vector
  * 
@@ -34,6 +36,14 @@ public abstract class Vector<V extends Vector<V>> {
         for (int i=0; i<size(); i++) {
             set(i,v.get(i));
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public V each(Function<Float,Float> func) {
+        for (int i=0; i<size(); i++) {
+            set(i, func.apply(get(i)));
+        }
+        return (V) this;
     }
     
     /** @return the dot product of this and the given vector */

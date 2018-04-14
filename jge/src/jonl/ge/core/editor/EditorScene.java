@@ -6,28 +6,27 @@ import jonl.ge.core.Camera;
 import jonl.ge.core.Editor;
 import jonl.ge.core.GameObject;
 import jonl.ge.core.Geometry;
+import jonl.ge.core.Input;
 import jonl.ge.core.Material;
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Mesh.Mode;
 import jonl.ge.core.Property;
 import jonl.ge.core.Scene;
 import jonl.ge.core.geometry.BoxGeometry;
-import jonl.ge.core.geometry.ConeGeometry;
 import jonl.ge.core.geometry.GeometryBuilder;
-import jonl.ge.core.geometry.GeometryOperation;
 import jonl.ge.core.geometry.SphereGeometry;
 import jonl.ge.core.material.GeneratedMaterial;
 import jonl.ge.core.material.SolidMaterial;
 import jonl.ge.mod.axis.TranslationAxis;
 import jonl.ge.mod.misc.CameraControl;
 import jonl.ge.mod.misc.PerspectiveUpdate;
-import jonl.ge.mod.misc.RayHit;
-import jonl.ge.mod.misc.ScreenRayTracer;
-import jonl.ge.mod.misc.ScreenSpaceScale;
+import jonl.ge.mod.ray.RayComponent;
+import jonl.ge.mod.ray.RayComponentHit;
+import jonl.ge.mod.ray.RayComponents;
+import jonl.ge.mod.ray.RayHit;
+import jonl.ge.mod.ray.ScreenRayTracer;
 import jonl.jutils.io.Console;
 import jonl.vmath.Color;
-import jonl.vmath.Mathf;
-import jonl.vmath.Matrix4;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
@@ -87,6 +86,11 @@ public class EditorScene {
         
         control.transform().translation.set(5,5,5);
         
+        translationAxis = new TranslationAxis(camera);
+        
+        control.addComponent(new Intersector());
+        control.addComponent(new Selector());
+        
         scene.add(control);
     }
     
@@ -107,14 +111,13 @@ public class EditorScene {
         GameObject sphere = sphere();
         scene.add(sphere);
         
+        GameObject cube = cube();
+        scene.add(cube);
+        
         GameObject grid = grid();
         scene.add(grid);
         
-        translationAxis = new TranslationAxis(camera);
-        scene.add(translationAxis.get());
-        translationAxis.get().addUpdate(()->{
-            sphere.transform().translation.set(translationAxis.get().transform().translation);
-        });
+        
     }
     
     private void createOverlayScene() {
@@ -129,22 +132,24 @@ public class EditorScene {
         Mesh mesh = new Mesh(geometry,material);
         
         cube.addComponent(mesh);
+        cube.addComponent(new RayComponent());
 
         return cube;
     }
     
     public GameObject sphere() {
-        GameObject cube = new GameObject();
-        cube.setName("Sphere");
+        GameObject sphere = new GameObject();
+        sphere.setName("Sphere");
         Geometry geometry = new SphereGeometry();
         Material material = new GeneratedMaterial();
         Mesh mesh = new Mesh(geometry,material);
         
-        cube.addComponent(mesh);
+        sphere.addComponent(mesh);
+        sphere.addComponent(new RayComponent());
         
-        cube.transform().translation.set(1,0,2);
+        sphere.transform().translation.set(1,0,2);
 
-        return cube;
+        return sphere;
     }
     
     public GameObject grid() {
@@ -199,6 +204,65 @@ public class EditorScene {
         return grid.toArray(new Vector3[grid.size()]);
     }
     
+    class Intersector extends Property {
+
+        Selector selector;
+        RayComponents rayComponents;
+        
+        @Override
+        public void create() {
+            rayComponents = scene().data().getAsType("ray-components",RayComponents.class);
+            selector = getComponent(Selector.class);
+        }
+
+        @Override
+        public void update() {
+            if (input().isButtonPressed(Input.MB_LEFT)) {
+                Vector2 mouse = window().toUnitSpace(input().getXY());
+                ScreenRayTracer srt = new ScreenRayTracer(camera,mouse.x,mouse.y);
+                
+                RayComponentHit hit = rayComponents.hit(srt.ray());
+                if (hit != null) {
+                    if (!translationAxis.isHovered()) {
+                        RayComponent component = hit.component();
+                        GameObject object = component.gameObject();
+                        selector.select(object);
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    class Selector extends Property {
+
+        GameObject selected;
+        
+        @Override
+        public void create() {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void update() {
+            if (selected!=null) {
+                selected.transform().translation.set(translationAxis.get().transform().translation);
+            }
+        }
+        
+        public void select(GameObject go) {
+            if (selected!=go) {
+                if (selected!=null) {
+                    scene().remove(translationAxis.get());
+                }
+                scene().add(translationAxis.get());
+                translationAxis.get().transform().set(go.transform());
+                selected = go;
+            }
+        }
+        
+    }
     
     
 }

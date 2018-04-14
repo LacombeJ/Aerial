@@ -6,14 +6,17 @@ import jonl.ge.core.Geometry;
 import jonl.ge.core.Input;
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Property;
+import jonl.ge.core.Transform;
 import jonl.ge.core.Mesh.Mode;
 import jonl.ge.core.geometry.ConeGeometry;
 import jonl.ge.core.geometry.GeometryBuilder;
 import jonl.ge.core.geometry.GeometryOperation;
 import jonl.ge.core.material.SolidMaterial;
-import jonl.ge.mod.misc.RayHit;
-import jonl.ge.mod.misc.ScreenRayTracer;
 import jonl.ge.mod.misc.ScreenSpaceScale;
+import jonl.ge.mod.ray.RayHit;
+import jonl.ge.mod.ray.ScreenRayTracer;
+import jonl.jutils.func.Function;
+import jonl.jutils.func.Wrapper;
 import jonl.vmath.Color;
 import jonl.vmath.Mathf;
 import jonl.vmath.Matrix4;
@@ -22,7 +25,11 @@ import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
 
 public class TranslationAxis {
-
+    
+    SnapPolicy snapPolicy = SnapPolicy.DISABLED;
+    float snapDistance = 1f;
+    boolean hover = false;
+    
     Camera camera;
     GameObject axis;
     
@@ -38,11 +45,11 @@ public class TranslationAxis {
         
         axis = new GameObject();
         
-        ScreenSpaceScale sss = new ScreenSpaceScale(camera, 0.05f);
-        axis.addComponent(sss);
-        
         AxisHandler ah = new AxisHandler();
         axis.addComponent(ah);
+        
+        ScreenSpaceScale sss = new ScreenSpaceScale(camera, 0.03f);
+        axis.addComponent(sss);
         
         xaxis = axis("_xaxis",new Vector3(1,0,0));
         yaxis = axis("_yaxis",new Vector3(0,1,0));
@@ -63,6 +70,26 @@ public class TranslationAxis {
     
     public GameObject overlay() {
         return overlay;
+    }
+    
+    public SnapPolicy getPolicy() {
+        return snapPolicy;
+    }
+    
+    public void setPolicy(SnapPolicy policy) {
+        snapPolicy = policy;
+    }
+    
+    public float getSnapDistance() {
+        return snapDistance;
+    }
+    
+    public void setSnapDistance(float distance) {
+        snapDistance = distance;
+    }
+    
+    public boolean isHovered() {
+        return hover;
     }
 
     GameObject axis(String name, Vector3 axis) {
@@ -121,8 +148,10 @@ public class TranslationAxis {
         
         Vector3 highlight = Color.YELLOW.toVector().xyz();
         
-        GameObject moving = null;
-        Vector3 movingAxis = new Vector3(0,0,0);
+        GameObject dragObject = null;
+        Vector3 dragAxis = new Vector3(0,0,0);
+        
+        Vector3 translationOnClick = null;
         
         Vector2 start = new Vector2();
         Vector2 src = new Vector2();
@@ -140,42 +169,74 @@ public class TranslationAxis {
         @Override
         public void update() {
             
-            if (!input().isButtonDown(Input.MB_LEFT)) {
-                moving = null;
-            }
-            
             boolean clicked = input().isButtonPressed(Input.MB_LEFT);
+            boolean down = input().isButtonDown(Input.MB_LEFT);
+            
             Vector2 mouse = window().toUnitSpace(input().getXY());
-            ScreenRayTracer srt = new ScreenRayTracer(camera,mouse.x,mouse.y);
+            
+            Transform transform = transform().get();
+            
+            Vector3 origin = transform.translation.get();
             
             float scale = xaxis.parent().transform().scale.x;
             
-            //TODO is it okay to use local transform?
-            Vector3 translate = transform().translation.get();
+            float tip = 0.1f * scale; //To get tip of arrow
+            float len = 1 + tip;
             
-            float r = 0.1f;
-            float d = 0.1f * scale; //To get tip of arrow
-            float len = 1 + d;
+            Matrix4 VP = camera.computeViewProjectionMatrix();
             
-            RayHit x = null;
-            RayHit y = null;
-            RayHit z = null;
+            Wrapper<RayHit> x = new Wrapper<>(null);
+            Wrapper<RayHit> y = new Wrapper<>(null);
+            Wrapper<RayHit> z = new Wrapper<>(null);
+            
+            getRayHits(mouse,origin,len,scale,x,y,z);
+            
+            if (x.x!=null || y.x!=null || z.x!=null) {
+                hover = true;
+            } else {
+                hover = false;
+            }
+            
+            if (!down) {
+                dragObject = null;
+                start = null;
+            }
+              
+            if (clicked) {
+                handleClick(origin, len, scale, VP, x.x, y.x, z.x);
+            }
+            
+            if (dragObject!=null) {
+                handleDrag(mouse, origin, len, scale, VP);
+            } else {
+                handleMove(x.x, y.x, z.x);
+            }
+            
+        }
+        
+        private void getRayHits(Vector2 mouse, Vector3 origin, float len, float scale, Wrapper<RayHit> x, Wrapper<RayHit> y, Wrapper<RayHit> z) {
+            ScreenRayTracer srt = new ScreenRayTracer(camera,mouse.x,mouse.y);
+            
+            float r = 0.1f; // arrow bounding box "radius"
             
             {
-                Vector3 min = new Vector3(0,-r,-r).scale(scale).add(translate);
-                Vector3 max = new Vector3(len,r,r).scale(scale).add(translate);
-                x = srt.boundingBox(min,max);
+                Vector3 min = new Vector3(0,-r,-r).scale(scale).add(origin);
+                Vector3 max = new Vector3(len,r,r).scale(scale).add(origin);
+                x.x = srt.boundingBox(min,max);
             }
             {
-                Vector3 min = new Vector3(-r,0,-r).scale(scale).add(translate);
-                Vector3 max = new Vector3(r,len,r).scale(scale).add(translate);
-                y = srt.boundingBox(min,max);
+                Vector3 min = new Vector3(-r,0,-r).scale(scale).add(origin);
+                Vector3 max = new Vector3(r,len,r).scale(scale).add(origin);
+                y.x = srt.boundingBox(min,max);
             }
             {
-                Vector3 min = new Vector3(-r,-r,0).scale(scale).add(translate);
-                Vector3 max = new Vector3(r,r,len).scale(scale).add(translate);
-                z = srt.boundingBox(min,max);
+                Vector3 min = new Vector3(-r,-r,0).scale(scale).add(origin);
+                Vector3 max = new Vector3(r,r,len).scale(scale).add(origin);
+                z.x = srt.boundingBox(min,max);
             }
+        }
+        
+        private void handleMove(RayHit x, RayHit y, RayHit z) {
             
             setColor(xaxis,new Vector3(1,0,0));
             setColor(yaxis,new Vector3(0,1,0));
@@ -185,82 +246,105 @@ public class TranslationAxis {
             if (hit!=null) {
                 if (hit.equals("x")) {
                     setColor(xaxis,highlight);
-                    if (clicked) {
-                        moving = xaxis;
-                        movingAxis = new Vector3(1,0,0);
-                    }
                 } else if (hit.equals("y")) {
                     setColor(yaxis,highlight);
-                    if (clicked) {
-                        moving = yaxis;
-                        movingAxis = new Vector3(0,1,0);
-                    }
                 } else if (hit.equals("z")) {
                     setColor(zaxis,highlight);
-                    if (clicked) {
-                        moving = zaxis;
-                        movingAxis = new Vector3(0,0,1);
-                    }
-                } 
+                }
             }
+        }
+        
+        private void handleClick(Vector3 origin, float len, float scale, Matrix4 VP, RayHit x, RayHit y, RayHit z) {
             
-            Matrix4 VP = camera.computeViewProjectionMatrix();
-            
-            if (clicked) {
+            String hit = hit(x,y,z);
+            if (hit!=null) {
+                if (hit.equals("x")) {
+                    dragObject = xaxis;
+                    dragAxis = new Vector3(1,0,0);
+                } else if (hit.equals("y")) {
+                    dragObject = yaxis;
+                    dragAxis = new Vector3(0,1,0);
+                } else if (hit.equals("z")) {
+                    dragObject = zaxis;
+                    dragAxis = new Vector3(0,0,1);
+                } 
                 
-                Vector3 srcVector = new Vector3(0,0,0).add(translate);
-                Vector3 dstVector = movingAxis.get().scale(len*scale).add(translate);
+                Vector3 srcVector = new Vector3(0,0,0).add(origin);
+                Vector3 dstVector = dragAxis.get().scale(len*scale).add(origin);
                 
                 src = Matrix4.toScreenSpace(VP,srcVector).xy();
                 dst = Matrix4.toScreenSpace(VP,dstVector).xy();
+                
+                translationOnClick = origin.get();
+            }
+        }
+        
+        private void handleDrag(Vector2 mouse, Vector3 origin, float len, float scale, Matrix4 VP) {
+            
+            Vector2 ray = dst.get().sub(src);
+            Vector2 mouseRay = mouse.get().sub(src);
+            
+            Vector2 proj = mouseRay.proj(ray);
+            
+            Vector2 v = proj.get().add(src);
+            
+            if (start==null) {
+                start = v.get();
             }
             
-            if (moving!=null) {
-                
-                Vector2 ray = dst.get().sub(src);
-                Vector2 mouseRay = mouse.get().sub(src);
-                
-                Vector2 proj = mouseRay.proj(ray);
-                
-                Vector2 v = proj.get().add(src);
-                
-                if (clicked) {
-                    start = v.get();
-                }
-                
-                Vector2 startRay = start.get().sub(src);
-                
-                Vector2 newOrig = v.get().sub(startRay);
-                
-                //TODO find actual plane from axis orientation
-                //TODO handle finding proper x and z plane normals and non-standard orientations
-                Vector3 planeNormal = new Vector3();
-                float distance = 0;
-                if (moving==xaxis || moving==zaxis) {
-                    // TODO why does this only work when negative ? (maybe its ray tracer?)
-                    planeNormal = new Vector3(0,-1,0);
-                    distance = translate.y;
-                } else if (moving==yaxis) {
-                    // TODO Calculate the plane that faces the camera ? Or does this work fine?
-                    planeNormal = new Vector3(1,0,0);
-                    // TODO why does this only work when negative ?
-                    distance = -translate.x;
-                }
-                
-                ScreenRayTracer newOrigRT = new ScreenRayTracer(camera,newOrig.x,newOrig.y);
-                RayHit rayHit = newOrigRT.plane(planeNormal,distance);
-                
-                // Only set axis we are translating
-                if (rayHit != null) {
-                    if (moving==xaxis) {
-                        transform().translation.x = rayHit.hit().x;
-                    } else if (moving==yaxis) {
-                        transform().translation.y = rayHit.hit().y;
-                    } else if (moving==zaxis) {
-                        transform().translation.z = rayHit.hit().z;
-                    }
+            Vector2 startRay = start.get().sub(src);
+            
+            Vector2 newOrig = v.get().sub(startRay);
+            
+            //TODO find actual plane from axis orientation
+            //TODO handle finding proper x and z plane normals and non-standard orientations
+            Vector3 planeNormal = new Vector3();
+            float distance = 0;
+            if (dragObject==xaxis || dragObject==zaxis) {
+                // TODO why does this only work when negative ? (maybe its ray tracer?)
+                planeNormal = new Vector3(0,-1,0);
+                distance = origin.y;
+            } else if (dragObject==yaxis) {
+                // TODO Calculate the plane that faces the camera ? Or does this work fine?
+                planeNormal = new Vector3(1,0,0);
+                // TODO why does this only work when negative ?
+                distance = -origin.x;
+            }
+            
+            ScreenRayTracer newOrigRT = new ScreenRayTracer(camera,newOrig.x,newOrig.y);
+            RayHit rayHit = newOrigRT.plane(planeNormal,distance);
+            
+            // Only set axis we are translating
+            float s = 0;
+            if (rayHit != null) {
+                if (dragObject==xaxis) {
+                    s = translationOnClick.x;
+                } else if (dragObject==yaxis) {
+                    s = translationOnClick.y;
+                } else if (dragObject==zaxis) {
+                    s = translationOnClick.z;
                 }
             }
+            
+            Function<Float,Float> snap = (f) -> f; //default, no snapping
+            
+            if (snapPolicy==SnapPolicy.GLOBAL) {
+                snap = (f) -> Mathf.round(f,0,snapDistance);
+            } else if (snapPolicy==SnapPolicy.RELATIVE) {
+                final float start = s;
+                snap = (f) -> Mathf.round(f,start,snapDistance);
+            }
+            
+            if (rayHit != null) {
+                if (dragObject==xaxis) {
+                    transform().translation.x = snap.f(rayHit.hit().x);
+                } else if (dragObject==yaxis) {
+                    transform().translation.y = snap.f(rayHit.hit().y);
+                } else if (dragObject==zaxis) {
+                    transform().translation.z = snap.f(rayHit.hit().z);
+                }
+            }
+            
         }
         
         private String hit(RayHit x, RayHit y, RayHit z) {

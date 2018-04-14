@@ -1,4 +1,4 @@
-package jonl.ge.mod.misc;
+package jonl.ge.mod.ray;
 
 import jonl.ge.core.Camera;
 import jonl.ge.core.Transform;

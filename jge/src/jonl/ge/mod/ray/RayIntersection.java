@@ -1,21 +1,11 @@
-package jonl.ge.mod.misc;
+package jonl.ge.mod.ray;
 
 import jonl.vmath.Mathf;
 import jonl.vmath.Vector3;
 
-public class RayTracer {
+public class RayIntersection {
 
-    private Ray ray;
-    
-    public RayTracer(Ray ray) {
-        this.ray = ray;
-    }
-    
-    public Ray ray() {
-        return ray;
-    }
-    
-    public RayHit sphere(Vector3 center, float radius) {
+    public static RayHit sphere(Ray ray, Vector3 center, float radius) {
         Vector3 offset = ray.origin().sub(center);
         float a = ray.direction().mag2();
         float b = 2 * ray.direction().dot(offset);
@@ -29,7 +19,7 @@ public class RayTracer {
         return null;
     }
     
-    public RayHit triangle(Vector3 a, Vector3 b, Vector3 c) {
+    public static RayHit triangle(Ray ray, Vector3 a, Vector3 b, Vector3 c) {
         Vector3 origin = ray.origin();
         Vector3 dir = ray.direction();
         
@@ -58,7 +48,7 @@ public class RayTracer {
     }
     
     // http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm
-    public RayHit boundingBox(Vector3 min, Vector3 max) {
+    public static RayHit boundingBox(Ray ray, Vector3 min, Vector3 max) {
         Vector3 origin = ray.origin();
         Vector3 dir = ray.direction();
         
@@ -107,7 +97,7 @@ public class RayTracer {
     }
     
     // https://www.siggraph.org//education/materials/HyperGraph/raytrace/rayplane_intersection.htm
-    public RayHit plane(Vector3 unitNormal, float dist) {
+    public static RayHit plane(Ray ray, Vector3 unitNormal, float dist) {
         
         Vector3 origin = ray.origin();
         Vector3 dir = ray.direction();
@@ -134,7 +124,5 @@ public class RayTracer {
         return new RayHit(t,hit,unitNormal.get());
         
     }
-    
-    
     
 }

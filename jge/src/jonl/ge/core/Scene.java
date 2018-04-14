@@ -46,6 +46,14 @@ public class Scene {
         	priors.add(g);
         }
     }
+    
+    public void remove(GameObject g) {
+        g.setScene(null);
+        root.removeChild(g);
+        if (!created) {
+            priors.remove(g);
+        }
+    }
 
     /**
      * Resets scene unless persistent

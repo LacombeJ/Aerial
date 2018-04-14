@@ -213,7 +213,7 @@ public class EditorGUI {
         //We are using floating point with range from 0 to 5000
         
         array.add(ui.label("Grid size:"),0,0);
-        array.add(ui.label("Grid scale:"),1,0);
+        //array.add(ui.label("Grid scale:"),1,0);
         
         LineEdit gridSizeEdit = ui.lineEdit("");
         LineEdit gridScaleEdit = ui.lineEdit("");
@@ -225,13 +225,13 @@ public class EditorGUI {
         gridScaleEdit.setMaxSize(30,Integer.MAX_VALUE);
         
         array.add(gridSizeEdit,0,1);
-        array.add(gridScaleEdit,1,1);
+        //array.add(gridScaleEdit,1,1);
         
         Slider gridSizeSlider = ui.slider(Align.HORIZONTAL,0,20);
         Slider gridScaleSlider = ui.slider(Align.HORIZONTAL,0,5000);
         
         array.add(gridSizeSlider,0,2);
-        array.add(gridScaleSlider,1,2);
+        //array.add(gridScaleSlider,1,2);
         
         gridSizeSlider.setValue(core.scene.gridSize);
         gridScaleSlider.setValue((int)(core.scene.gridScale*1000));

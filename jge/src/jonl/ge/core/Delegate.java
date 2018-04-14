@@ -25,6 +25,7 @@ public class Delegate {
 	private final ArrayList<Callback0D> appUpdate = new ArrayList<>();
 	private final ArrayList<Callback0D> appClose = new ArrayList<>();
 	
+	private final ArrayList<Callback<Scene>> scenePreCreate = new ArrayList<>();
 	private final ArrayList<Callback<Scene>> sceneCreate = new ArrayList<>();
 	private final ArrayList<Callback<Scene>> sceneUpdate = new ArrayList<>();
 	
@@ -38,6 +39,9 @@ public class Delegate {
 	/** @return Callback list for app close call */
 	public ArrayList<Callback0D> onClose() { return appClose; }
 	
+	
+	/** @return Callback list for scene create call */
+    public ArrayList<Callback<Scene>> onScenePreCreate() { return scenePreCreate; }
 	
 	/** @return Callback list for scene create call */
 	public ArrayList<Callback<Scene>> onSceneCreate() { return sceneCreate; }
@@ -79,5 +83,5 @@ public class Delegate {
     
     /** @return Called right after glRender is called */
     public ArrayList<Callback3D<GameObject, Mesh, GL>> onGLPostRender() { return glPostRender; }
-	
+
 }
