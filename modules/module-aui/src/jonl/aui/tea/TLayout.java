@@ -184,6 +184,16 @@ public abstract class TLayout implements Layout {
     public boolean isEmpty() {
         return items.isEmpty();
     }
+    
+    @Override
+    public boolean contains(Widget widget) {
+        return indexOf(widget) != -1;
+    }
+    
+    @Override
+    public boolean contains(LayoutItem item) {
+        return indexOf(item) != -1;
+    }
 
     @Override
     public Margin margin() {
@@ -211,6 +221,36 @@ public abstract class TLayout implements Layout {
     }
     
     // ------------------------------------------------------------------------
+    
+    protected void addNoInvalidate(LayoutItem item) {
+        if (items.add((TLayoutItem) item)) {
+            ((TLayoutItem)item).layout = this;
+            if (item instanceof TWidgetItem) {
+                TWidget widget = ((TWidgetItem) item).asWidget();
+                widget.parentLayout = this;
+            }
+        }
+    }
+    
+    protected void addNoInvalidate(Widget widget) {
+        addNoInvalidate(new TWidgetItem(widget));
+    }
+    
+    protected void removeNoInvalidate(Widget widget) {
+        for (TLayoutItem item : items) {
+            if (item instanceof TWidgetItem) {
+                TWidget tw = item.asWidget();
+                if (tw == widget) {
+                    removeNoInvalidate(item);
+                    break;
+                }
+            }
+        }
+    }
+    
+    protected void removeNoInvalidate(LayoutItem item) {
+        items.remove(item);
+    }
     
     protected void invalidateLayout() {
         TLayoutManager.invalidateLayout(this);

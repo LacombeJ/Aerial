@@ -10,14 +10,17 @@ public class TSliderLayout extends TLayout {
         TSlider slider = (TSlider)parent;
         TButton button = slider.button;
         
+        int bwidth = freeWidth(button);
+        int bheight = freeHeight(button);
+        
         if (slider.align == Align.HORIZONTAL) {
-            int x = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.width - button.width));
-            int y = slider.height/2 - button.height/2;
-            setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
+            int x = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.width - bwidth));
+            int y = slider.height/2 - bheight/2;
+            setPositionAndSize(button, x, y, bwidth, bheight);
         } else {
-            int x = slider.width/2 - button.width/2;
-            int y = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.height - button.height));
-            setPositionAndSize(button, x, y, button.sizeHint().width, button.sizeHint().height);
+            int x = slider.width/2 - bwidth/2;
+            int y = (int) (Mathf.alpha(slider.value, slider.minValue, slider.maxValue) * (slider.height - bheight));
+            setPositionAndSize(button, x, y, bwidth, bheight);
         }
     }
     

@@ -6,7 +6,6 @@ import jonl.ge.core.Delegate;
 import jonl.ge.core.Scene;
 import jonl.ge.core.Service;
 import jonl.jutils.func.Callback;
-import jonl.jutils.io.Console;
 
 public class RayModule extends Attachment {
     

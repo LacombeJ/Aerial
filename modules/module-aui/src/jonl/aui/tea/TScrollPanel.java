@@ -50,15 +50,14 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
     @Override
     public void setWidget(Widget widget) {
         content.setWidget(widget);
-        updateScrollPanel();
-        
+        invalidateLayout();
     }
     
     void updateScrollPanel() {
         if (widget()!=null) {
             
             int horWidth = 0;
-            if (content.width==widget().width) {
+            if (content.width>=widget().width) {
                 horWidth = content.width;
             } else {
                 double horRatio = (double)(content.width) / widget().width();
@@ -67,7 +66,7 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
             }
             
             int verHeight = 0;
-            if (content.height==widget().height) {
+            if (content.height>=widget().height) {
                 verHeight = content.height;
             } else {
                 double verRatio = (double)(content.height) / widget().height();
@@ -77,6 +76,7 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
             
             horBar.setBarSize(horWidth);
             verBar.setBarSize(verHeight);
+            
         }
     }
 

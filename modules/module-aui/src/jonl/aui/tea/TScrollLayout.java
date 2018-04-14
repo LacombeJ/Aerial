@@ -1,6 +1,7 @@
 package jonl.aui.tea;
 
 import jonl.aui.Layout;
+import jonl.vmath.Mathd;
 
 public class TScrollLayout extends TLayout implements Layout {
 
@@ -11,16 +12,51 @@ public class TScrollLayout extends TLayout implements Layout {
         int width = parent.width;
         int height = parent.height;
         
+        int contentWidgetWidth = freeWidth(scrollPanel.content.widget());
+        int contentWidgetHeight = freeHeight(scrollPanel.content.widget());
+        
         int horHeight = freeHeight(scrollPanel.horBar);
         int verWidth = freeWidth(scrollPanel.verBar);
         
-        // Called updateScrollPanel twice intentionally, problem was that sometimes the bar wouldn't be at its right size
-        // TODO have to track this down to call updateScrollPanel at the right time
+        boolean hasHorBar = false;
+        boolean hasVerBar = false;
         
-        scrollPanel.updateScrollPanel();
+        if (contentWidgetWidth > width) {
+            hasHorBar = true;
+        }
         
-        setPositionAndSize(scrollPanel.horBar, 0, height - horHeight, width - verWidth, horHeight );
-        setPositionAndSize(scrollPanel.verBar, width - verWidth, 0, verWidth, height - horHeight);
+        if (contentWidgetHeight > height) {
+            hasVerBar = true;
+        }
+        
+        if (!hasHorBar) {
+            horHeight = 0;
+        }
+        
+        if (!hasVerBar) {
+            verWidth = 0;
+        }
+        
+        if (hasHorBar && !contains(scrollPanel.horBar)) {
+            addNoInvalidate(scrollPanel.horBar);
+        } else if (!hasHorBar && contains(scrollPanel.horBar)) {
+            removeNoInvalidate(scrollPanel.horBar);
+        }
+        
+        if (hasVerBar && !contains(scrollPanel.verBar)) {
+            addNoInvalidate(scrollPanel.verBar);
+        } else if (!hasVerBar && contains(scrollPanel.verBar)) {
+            removeNoInvalidate(scrollPanel.verBar);
+        }
+            
+        if (hasHorBar) {
+            setPositionAndSize(scrollPanel.horBar, 0, height - horHeight, width - verWidth, horHeight );
+        }
+        
+        if (hasVerBar) {
+            setPositionAndSize(scrollPanel.verBar, width - verWidth, 0, verWidth, height - horHeight);
+        }
+        
         setPositionAndSize(scrollPanel.content, 0, 0, width - verWidth, height - horHeight);
         
         scrollPanel.updateScrollPanel();

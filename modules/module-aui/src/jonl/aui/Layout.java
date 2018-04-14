@@ -40,6 +40,10 @@ public interface Layout {
     
     boolean isEmpty();
     
+    boolean contains(Widget widget);
+    
+    boolean contains(LayoutItem item);
+    
     Margin margin();
     
     void setMargin(Margin margin);
