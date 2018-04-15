@@ -84,6 +84,11 @@ public class TUIManager implements UIManager {
     public TLineEdit lineEdit(String text) {
         return new TLineEdit(text);
     }
+    
+    @Override
+    public TComboBox comboBox() {
+        return new TComboBox();
+    }
 
     @Override
     public TDial dial() {

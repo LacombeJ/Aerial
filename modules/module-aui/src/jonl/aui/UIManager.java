@@ -24,6 +24,8 @@ public interface UIManager {
     
     LineEdit lineEdit(String text);
     
+    ComboBox comboBox();
+    
     Dial dial();
     
     Dial dial(int min, int max);

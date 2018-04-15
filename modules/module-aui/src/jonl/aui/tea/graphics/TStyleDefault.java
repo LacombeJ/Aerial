@@ -24,6 +24,7 @@ public class TStyleDefault implements TStyle {
     protected TButtonStyle toolButton = new TButtonStyle(this);
     protected TButtonStyle tabButton = new TButtonStyle(this);
     protected TCheckBoxStyle checkBox = new TCheckBoxStyle(this);
+    protected TComboBoxStyle comboBox = new TComboBoxStyle(this);
     protected TDialStyle dial = new TDialStyle(this);
     protected TToolBarStyle toolBar = new TToolBarStyle(this);
     
@@ -60,6 +61,7 @@ public class TStyleDefault implements TStyle {
     public TButtonStyle toolButton() { return toolButton; }
     public TButtonStyle tabButton() { return tabButton; }
     public TCheckBoxStyle checkBox() { return checkBox; }
+    public TComboBoxStyle comboBox() { return comboBox; }
     public TDialStyle dial() { return dial; }
     public TToolBarStyle toolBar() { return toolBar; }
     
@@ -87,6 +89,7 @@ public class TStyleDefault implements TStyle {
     public void toolButton(TButtonStyle toolButton)  { this.toolButton = toolButton; }
     public void tabButton(TButtonStyle tabButton)  { this.tabButton = tabButton; }
     public void checkBox(TCheckBoxStyle checkBox)  { this.checkBox = checkBox; }
+    public void comboBox(TComboBoxStyle comboBox)  { this.comboBox = comboBox; }
     public void dial(TDialStyle dial) { this.dial = dial; }
     public void toolBar(TToolBarStyle toolBar) { this.toolBar = toolBar; }
     

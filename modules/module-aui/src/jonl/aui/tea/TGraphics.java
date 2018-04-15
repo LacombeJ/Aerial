@@ -2,8 +2,12 @@ package jonl.aui.tea;
 
 import jonl.jutils.func.Function0D;
 import jonl.jutils.func.List;
-import jonl.jutils.misc.*;
-import jonl.vmath.*;
+import jonl.jutils.misc.ArrayUtils;
+import jonl.jutils.misc.ImageUtils;
+import jonl.vmath.Color;
+import jonl.vmath.Matrix4;
+import jonl.vmath.Vector3;
+import jonl.vmath.Vector4;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -15,9 +19,13 @@ import jonl.aui.tea.graphics.TFont;
 import jonl.aui.tea.graphics.TImage;
 import jonl.aui.tea.graphics.TImageManager;
 import jonl.aui.tea.graphics.TMesh;
+import jonl.aui.tea.graphics.TShader;
 import jonl.aui.tea.graphics.TTextManager;
-import jonl.jgl.*;
-import jonl.jgl.utils.*;
+import jonl.jgl.GL;
+import jonl.jgl.Mesh;
+import jonl.jgl.Program;
+import jonl.jgl.Shader;
+import jonl.jgl.Texture;
 
 public class TGraphics implements Graphics {
 
@@ -45,9 +53,11 @@ public class TGraphics implements Graphics {
     Program fontProgram;
     
     Program solid;
-    Program basic;
+    Program textureProgram;
+    Program gradient;
     
     Texture check;
+    Texture caret;
     
     public TGraphics(GL gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
@@ -64,12 +74,14 @@ public class TGraphics implements Graphics {
         circleOutline = gl.glGenMesh(TMesh.CIRCLE_OUTLINE.data);
         
         fontRect = gl.glGenMesh(TMesh.BOX.data);
-        fontProgram = loadProgramFromSource(Presets.fontVSSource(version),Presets.fontFSSource(version));
+        fontProgram = loadProgramFromSource(TShader.fontVSSource(version),TShader.fontFSSource(version));
         
         check = createCheck();
+        caret = createCaret();
         
-        solid = loadProgramFromSource(Presets.solidVSSource(version),Presets.solidFSSource(version));
-        basic = loadProgramFromSource(Presets.basicVSSource(version),Presets.basicFSSource(version));
+        solid = loadProgramFromSource(TShader.solidVSSource(version),TShader.solidFSSource(version));
+        textureProgram = loadProgramFromSource(TShader.textureVSSource(version),TShader.textureFSSource(version));
+        gradient = loadProgramFromSource(TShader.gradientVSSource(version),TShader.gradientFSSource(version));
         
         textManager = new TTextManager(gl);
         imageManager = new TImageManager(gl);
@@ -184,6 +196,14 @@ public class TGraphics implements Graphics {
         renderRectOutline(x,y,w,h,color,1);
     }
     
+    public void renderGradient(float x, float y, float w, float h, Color botLeft, Color botRight, Color topLeft, Color topRight) {
+        renderGradient(box,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),botLeft.toVector(),botRight.toVector(),topLeft.toVector(),topRight.toVector());
+    }
+    
+    public void renderGradient(float x, float y, float w, float h, Color bot, Color top) {
+        renderGradient(x,y,w,h,bot,bot,top,top);
+    }
+    
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
             TFont font, Vector4 color) {
         renderText(string,x,y,halign,valign,font,Color.fromVector(color));
@@ -201,15 +221,51 @@ public class TGraphics implements Graphics {
         renderTexture(texture,x,y,texture.getWidth(),texture.getHeight());
     }
     
+    public void renderCheck(float x, float y, Color color) {
+        renderTexture(check,x,y,check.getWidth(),check.getHeight(),color.toVector());
+    }
+    
     public void renderCheck(float x, float y) {
-        renderTexture(check,x,y,check.getWidth(),check.getHeight());
+        renderCheck(x,y,Color.WHITE);
+    }
+    
+    public void renderCaret(float x, float y, Color color) {
+        renderTexture(caret,x,y,check.getWidth(),check.getHeight(),color.toVector());
+    }
+    
+    public void renderCaret(float x, float y) {
+        renderCaret(x,y,Color.WHITE);
+    }
+    
+    public void renderTexture(Texture texture, float x, float y, float w, float h, Vector4 color) {
+        render(box,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),texture,color);
     }
     
     public void renderTexture(Texture texture, float x, float y, float w, float h) {
-        render(box,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),texture);
+        render(box,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),texture,Color.WHITE.toVector());
     }
     
     // Top-left orientation
+    
+    private void renderGradient(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 botLeft, Vector4 botRight, Vector4 topLeft, Vector4 topRight, GL.Mode mode) {
+        Matrix4 mat = Matrix4.identity();
+        mat.translate(trans);
+        mat.rotate(rot);
+        mat.scale(scale.x,-scale.y,scale.z);
+        
+        gl.glUseProgram(gradient);
+        gradient.setUniformMat4("MVP",ortho.get().multiply(mat).toArray());
+        gradient.setUniform("color00",botLeft.x, botLeft.y, botLeft.z, botLeft.w);
+        gradient.setUniform("color10",botRight.x, botRight.y, botRight.z, botRight.w);
+        gradient.setUniform("color01",topLeft.x, topLeft.y, topLeft.z, topLeft.w);
+        gradient.setUniform("color11",topRight.x, topRight.y, topRight.z, topRight.w);
+        gl.glRender(mesh, mode);
+        gl.glUseProgram(null);
+    }
+    
+    private void renderGradient(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 botLeft, Vector4 botRight, Vector4 topLeft, Vector4 topRight) {
+        renderGradient(mesh,trans,rot,scale,botLeft,botRight,topLeft,topRight,GL.TRIANGLES);
+    }
     
     private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color, GL.Mode mode) {
         Matrix4 mat = Matrix4.identity();
@@ -236,15 +292,16 @@ public class TGraphics implements Graphics {
         gl.glUseProgram(null);
     }
     
-    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Texture texture) {
+    private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Texture texture, Vector4 color) {
         Matrix4 mat = Matrix4.identity();
         mat.translate(trans);
         mat.rotate(rot);
         mat.scale(scale.x,-scale.y,scale.z);
         
-        gl.glUseProgram(basic);
-        basic.setUniformMat4("MVP",ortho.get().multiply(mat).toArray());
-        basic.setTexture("texture",texture,0);
+        gl.glUseProgram(textureProgram);
+        textureProgram.setUniformMat4("MVP",ortho.get().multiply(mat).toArray());
+        textureProgram.setUniform("color",color.x,color.y,color.z,color.w);
+        textureProgram.setTexture("texture",texture,0);
         gl.glRender(mesh);
         gl.glUseProgram(null);
     }
@@ -313,19 +370,38 @@ public class TGraphics implements Graphics {
     Texture createCheck() {
         int[][] check = {
             {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,62},{0,0,0,42},
-            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,84},
-            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,94},{0,0,0,255},{0,0,0,158},{0,0,0,42},
-            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,158},{0,0,0,255},{0,0,0,94},{0,0,0,0},
-            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},
-            {0,0,0,42},{0,0,0,62},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,0},
-            {0,0,0,84},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,94},{0,0,0,255},{0,0,0,158},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-            {0,0,0,42},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,62},{0,0,0,158},{0,0,0,255},{0,0,0,94},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-            {0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,190},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-            {0,0,0,0},{0,0,0,0},{0,0,0,30},{0,0,0,126},{0,0,0,255},{0,0,0,126},{0,0,0,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,42},{0,0,0,84},{0,0,0,42},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,30},{255,255,255,62},{255,255,255,42},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,30},{255,255,255,126},{255,255,255,255},{255,255,255,84},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,94},{255,255,255,255},{255,255,255,158},{255,255,255,42},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,30},{255,255,255,158},{255,255,255,255},{255,255,255,94},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,30},{255,255,255,126},{255,255,255,255},{255,255,255,126},{255,255,255,30},{0,0,0,0},
+            {255,255,255,42},{255,255,255,62},{255,255,255,30},{0,0,0,0},{0,0,0,0},{255,255,255,30},{255,255,255,126},{255,255,255,255},{255,255,255,126},{255,255,255,30},{0,0,0,0},{0,0,0,0},
+            {255,255,255,84},{255,255,255,255},{255,255,255,126},{255,255,255,30},{0,0,0,0},{255,255,255,94},{255,255,255,255},{255,255,255,158},{255,255,255,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {255,255,255,42},{255,255,255,126},{255,255,255,255},{255,255,255,126},{255,255,255,62},{255,255,255,158},{255,255,255,255},{255,255,255,94},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{255,255,255,30},{255,255,255,126},{255,255,255,255},{255,255,255,190},{255,255,255,255},{255,255,255,126},{255,255,255,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{255,255,255,30},{255,255,255,126},{255,255,255,255},{255,255,255,126},{255,255,255,30},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,42},{255,255,255,84},{255,255,255,42},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
         };
         BufferedImage data = ImageUtils.load(check,12,12);
+        return gl.glGenTexture(data);
+    }
+    
+    Texture createCaret() {
+        int[][] caret = {
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {255,255,255,52},{255,255,255,12},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,12},{255,255,255,52},
+            {255,255,255,243},{255,255,255,195},{255,255,255,12},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,12},{255,255,255,195},{255,255,255,243},
+            {255,255,255,215},{255,255,255,255},{255,255,255,195},{255,255,255,12},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,12},{255,255,255,195},{255,255,255,255},{255,255,255,215},
+            {255,255,255,24},{255,255,255,215},{255,255,255,255},{255,255,255,195},{255,255,255,12},{0,0,0,0},{0,0,0,0},{255,255,255,12},{255,255,255,195},{255,255,255,255},{255,255,255,215},{255,255,255,24},
+            {0,0,0,0},{255,255,255,24},{255,255,255,215},{255,255,255,255},{255,255,255,195},{255,255,255,12},{255,255,255,12},{255,255,255,195},{255,255,255,255},{255,255,255,215},{255,255,255,24},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{255,255,255,24},{255,255,255,215},{255,255,255,255},{255,255,255,198},{255,255,255,198},{255,255,255,255},{255,255,255,215},{255,255,255,24},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,24},{255,255,255,217},{255,255,255,255},{255,255,255,255},{255,255,255,217},{255,255,255,24},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,71},{255,255,255,253},{255,255,255,253},{255,255,255,71},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{255,255,255,75},{255,255,255,75},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+            {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
+        };
+        BufferedImage data = ImageUtils.load(caret,12,12);
         return gl.glGenTexture(data);
     }
     

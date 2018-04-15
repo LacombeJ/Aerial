@@ -2,12 +2,12 @@ package jonl.aui.tea.graphics;
 
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
-import jonl.aui.tea.TCheckBox;
+import jonl.aui.tea.TComboBox;
 import jonl.aui.tea.TSizeHint;
 import jonl.vmath.Color;
 import jonl.vmath.Vector4;
 
-public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
+public class TComboBoxStyle extends TWidgetStyle<TComboBox> {
     
     private Color textColor;
     private Color buttonColor;
@@ -15,10 +15,8 @@ public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
     private Color toggleColor;
     private int border = 4;
     private float maxValue = 30;
-    int boxDim = 12;
-    int boxD = 4;
     
-    public TCheckBoxStyle(TStyle style) {
+    public TComboBoxStyle(TStyle style) {
         super(style);
         
         textColor = style.textColor();
@@ -26,13 +24,16 @@ public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
         hoverColor = style.secondary();
         toggleColor = style.tertiary();
         
-        this.setPainter((button,info,g)->{
+        this.setPainter((comboBox,info,g)->{
             
             float fIntensityValue = info.get("fIntensityValue", 0f);
             
             float fMaxValue = info.get("fMaxValue", maxValue);
             Color cButton = info.get("cButton", buttonColor);
-            Color cHover = info.get("cHover", Color.fromInt(0, 0, 255));
+            Color cHover = info.get("cHover", hoverColor);
+            HAlign halign = info.get("halign", HAlign.LEFT);
+            VAlign valign = info.get("valign", VAlign.MIDDLE);
+            float xoffset = info.get("xoffset", 0f);
             
             if (info.get("bIsMouseWithin", false)) {
                 if (fIntensityValue<fMaxValue) {
@@ -52,25 +53,25 @@ public class TCheckBoxStyle extends TWidgetStyle<TCheckBox> {
             Vector4 secondary = cHover.toVector();
             Vector4 color = primary.lerp(secondary, v);
             
-            float y = button.height()/2;
-            
-            g.renderRect(boxD, y - boxDim/2, boxDim, boxDim, Color.WHITE);
-            g.renderRectOutline(boxD, y - boxDim/2, boxDim, boxDim, color, 2f);
-            g.renderText(button.text(),boxDim+boxD+border,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),textColor);
-            
-            if (button.checked()) {
-                g.renderCheck(boxD+6, y - boxDim/2+6, Color.BLACK);
+            //Color darken = Color.fromVector(color.scale(0.5f));
+            //g.renderGradient(0,0,comboBox.width(),comboBox.height(),Color.fromVector(color),Color.WHITE);
+            Color lighten = Color.fromVector(new Vector4(color.get().scale(1.2f).clamp(0,1).xyz(),color.w));
+            Color darken = Color.fromVector(new Vector4(color.get().scale(0.7f).xyz(),color.w));
+            g.renderGradient(0,0,comboBox.width(),comboBox.height(), darken, lighten);
+            float x = comboBox.width()/2;
+            float y = comboBox.height()/2;
+            if (halign==HAlign.LEFT) {
+                x = border;
+            } else if (halign==HAlign.RIGHT) {
+                x = comboBox.width() - border;
             }
-            
+            g.renderText(comboBox.text(),xoffset+x,y,halign,valign,style().font(),textColor);
+            g.renderCaret(comboBox.width()-y,y,textColor);
         });
         
         this.setSizeHint((button,i)->{
             TSizeHint hint = new TSizeHint();
-            if (button.icon()!=null) {
-                hint.width = Math.max(hint.width, button.icon().width()) + border;
-                hint.height = Math.max(hint.height, button.icon().height()) + border;
-            }
-            hint.width = Math.max(hint.width, (int) style().font().getWidth(button.text()) + 2*border + boxDim + boxD);
+            hint.width = Math.max(hint.width, (int) style().font().getWidth(button.text()) + 2*border);
             hint.height = Math.max(hint.height, (int) style().font().getHeight() + border);
             return hint;
         });

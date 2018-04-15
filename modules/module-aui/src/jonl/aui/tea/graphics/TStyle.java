@@ -24,6 +24,7 @@ public interface TStyle {
     TButtonStyle toolButton();
     TButtonStyle tabButton();
     TCheckBoxStyle checkBox();
+    TComboBoxStyle comboBox();
     TDialStyle dial();
     TToolBarStyle toolBar();
     
@@ -51,6 +52,7 @@ public interface TStyle {
     void toolButton(TButtonStyle toolButton);
     void tabButton(TButtonStyle tabButton);
     void checkBox(TCheckBoxStyle checkBox);
+    void comboBox(TComboBoxStyle comboBox);
     void dial(TDialStyle dial);
     void toolBar(TToolBarStyle toolBar);
     

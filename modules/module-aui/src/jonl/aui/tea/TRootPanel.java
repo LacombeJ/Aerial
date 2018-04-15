@@ -19,17 +19,24 @@ public class TRootPanel extends TWidget {
         widgetLayout().add(new TRootItem(widget));
     }
 
+    public void add(Widget widget, int x, int y, int width, int height) {
+        widgetLayout().add(new TRootItem(widget,x,y,width,height));
+    }
+    
     public void add(Widget widget, int x, int y) {
         widgetLayout().add(new TRootItem(widget,x,y));
-        
+    }
+    
+    public void add(Widget widget, int x, int y, int width, int height, Widget relative) {
+        int px = relative.windowX() + x;
+        int py = relative.windowY() + y;
+        widgetLayout().add(new TRootItem(widget,px,py,width,height));
     }
     
     public void add(Widget widget, int x, int y, Widget relative) {
         int px = relative.windowX() + x;
         int py = relative.windowY() + y;
-            
         widgetLayout().add(new TRootItem(widget,px,py));
-        
     }
     
     public void remove(Widget widget) {
@@ -105,15 +112,23 @@ public class TRootPanel extends TWidget {
 
         int x;
         int y;
+        int width = -1;
+        int height = -1;
         
         public TRootItem(Widget widget) {
             super(widget);
         }
         
-        public TRootItem(Widget widget, int x, int y) {
+        public TRootItem(Widget widget, int x, int y, int width, int height) {
             super(widget);
             this.x = x;
             this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+        
+        public TRootItem(Widget widget, int x, int y) {
+            this(widget,x,y,-1,-1);
         }
         
     }
@@ -132,6 +147,14 @@ public class TRootPanel extends TWidget {
                 int widgetY = item.y;
                 int widgetWidth = this.freeWidth(item);
                 int widgetHeight = this.freeHeight(item);
+                
+                if (item.width!=-1) {
+                   widgetWidth = item.width;
+                }
+                
+                if (item.height!=-1) {
+                    widgetHeight = item.height;
+                }
                 
                 if (widgetX+widgetWidth > width) {
                     widgetX = width-widgetWidth;

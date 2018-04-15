@@ -1,11 +1,8 @@
 package jonl.aui.tea;
 
-import java.util.ArrayList;
-
 import jonl.aui.Align;
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
-import jonl.jutils.func.List;
 
 public class TToolBar extends TButtonBar implements ToolBar {
     
@@ -30,11 +27,6 @@ public class TToolBar extends TButtonBar implements ToolBar {
         super.remove(button);
     }
 
-    @Override
-    public ArrayList<ToolButton> buttons() {
-        return List.map(widgetLayout().widgets(), (w) -> (ToolButton)w);
-    }
-    
     @Override
     public void paint(TGraphics g) {
         style().toolBar().paint(this, info(), g);

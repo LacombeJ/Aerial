@@ -1,7 +1,5 @@
 package jonl.aui;
 
-import java.util.ArrayList;
-
 public interface ToolBar extends Widget {
 
     ToolButton get(int index);
@@ -12,6 +10,6 @@ public interface ToolBar extends Widget {
     
     void removeAll();
     
-    ArrayList<ToolButton> buttons();
+    int count();
     
 }

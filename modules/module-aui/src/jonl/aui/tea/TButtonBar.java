@@ -1,12 +1,14 @@
 package jonl.aui.tea;
 
+import java.util.ArrayList;
+
 import jonl.aui.Align;
 import jonl.aui.Button;
 import jonl.aui.SizePolicy;
 
 public abstract class TButtonBar extends TWidget {
 
-private TSpacer spacer;
+    private TSpacer spacer;
     
     public TButtonBar(Align align) {
         super();
@@ -55,10 +57,26 @@ private TSpacer spacer;
         return widgetLayout().indexOf(button);
     }
     
+    public int count() {
+        return widgetLayout().count() - 1; // exclude spacer
+    }
+    
     public void addSeparator() {
         widgetLayout().remove(spacer);
         widgetLayout().add(new TSpacer(10,10));
         widgetLayout().add(spacer);
+    }
+    
+    ArrayList<TButton> buttons() {
+        ArrayList<TButton> buttons = new ArrayList<>();
+        
+        for (TWidget widget : getChildren()) {
+            if (widget instanceof TButton) {
+                buttons.add((TButton) widget);
+            }
+        }
+        
+        return buttons;
     }
     
 }

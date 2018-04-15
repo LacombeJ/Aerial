@@ -4,6 +4,7 @@ import jonl.aui.Align;
 import jonl.aui.ArrayLayout;
 import jonl.aui.Button;
 import jonl.aui.CheckBox;
+import jonl.aui.ComboBox;
 import jonl.aui.Dial;
 import jonl.aui.Font;
 import jonl.aui.Frame;
@@ -109,6 +110,11 @@ public class UI implements UIManager {
     @Override
     public LineEdit lineEdit(String text) {
         return ui.lineEdit(text);
+    }
+    
+    @Override
+    public ComboBox comboBox() {
+        return ui.comboBox();
     }
 
     @Override
