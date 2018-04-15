@@ -55,4 +55,10 @@ private TSpacer spacer;
         return widgetLayout().indexOf(button);
     }
     
+    public void addSeparator() {
+        widgetLayout().remove(spacer);
+        widgetLayout().add(new TSpacer(10,10));
+        widgetLayout().add(spacer);
+    }
+    
 }

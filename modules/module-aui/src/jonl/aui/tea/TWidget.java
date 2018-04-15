@@ -178,6 +178,14 @@ public abstract class TWidget implements Widget {
         return root()._root_manager();
     }
     
+    protected TRootPanel _root_panel() {
+        return null;
+    }
+    
+    protected TRootPanel rootPanel() {
+        return root()._root_panel();
+    }
+    
     protected TStyle style() {
         return ui.getStyle();
     }
@@ -304,8 +312,8 @@ public abstract class TWidget implements Widget {
             case MouseExit:                 return false;
             case MouseMove:                 return false;
             case Scroll:                    return false;
-            case KeyPress:                    return false;
-            case KeyRelease:                    return false;
+            case KeyPress:                  return false;
+            case KeyRelease:                return false;
             
             default:                        break;
             

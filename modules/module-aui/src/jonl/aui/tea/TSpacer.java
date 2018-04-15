@@ -19,6 +19,7 @@ public class TSpacer extends TLayoutItem implements Spacer {
     public TSpacer(int width, int height) {
         hint.width = width;
         hint.height = height;
+        sizePolicy = new SizePolicy(SizePolicy.FIXED, SizePolicy.FIXED);
     }
     
     public TSpacer(Align align) {

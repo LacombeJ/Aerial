@@ -1,7 +1,6 @@
 package jonl.aui.tea;
 
 import jonl.aui.Layout;
-import jonl.vmath.Mathd;
 
 public class TScrollLayout extends TLayout implements Layout {
 

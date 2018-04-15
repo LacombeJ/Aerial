@@ -176,13 +176,8 @@ public class TUIManager implements UIManager {
     }
     
     @Override
-    public TMenuButton menuButton() {
-        return new TMenuButton();
-    }
-    
-    @Override
-    public TMenuButton menuButton(String text) {
-        return new TMenuButton(text);
+    public TMenu menu(String text) {
+        return new TMenu(text);
     }
     
     @Override

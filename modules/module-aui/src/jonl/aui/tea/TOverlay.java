@@ -51,5 +51,11 @@ public class TOverlay extends TWidget implements Overlay {
         item.height = height;
         invalidateLayout();
     }
+    
+    @Override
+    protected void paint(TGraphics g) {
+        
+        paint().emit(cb->cb.f(g));
+    }
 
 }

@@ -60,9 +60,7 @@ public interface UIManager {
     
     MenuBar menuBar();
     
-    MenuButton menuButton();
-    
-    MenuButton menuButton(String text);
+    Menu menu(String text);
     
     ToolBar toolBar();
     

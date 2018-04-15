@@ -1,36 +1,27 @@
 package jonl.aui.tea;
 
-import java.util.ArrayList;
-
 import jonl.aui.Align;
+import jonl.aui.Menu;
 import jonl.aui.MenuBar;
-import jonl.aui.MenuButton;
-import jonl.jutils.func.List;
 
 public class TMenuBar extends TButtonBar implements MenuBar {
+    
+    public TMenuBar(Align align) {
+        super(align);
+    }
     
     public TMenuBar() {
         super(Align.HORIZONTAL);
     }
     
     @Override
-    public TMenuButton get(int index) {
-        return (TMenuButton) super.get(index);
+    public void add(Menu menu) {
+        super.add((TMenu)menu);
     }
 
     @Override
-    public void add(MenuButton button) {
-        super.add(button);
-    }
-
-    @Override
-    public void remove(MenuButton button) {
-        super.remove(button);
-    }
-
-    @Override
-    public ArrayList<MenuButton> buttons() {
-        return List.map(widgetLayout().widgets(), (w) -> (MenuButton)w);
+    public void addSeparator() {
+        super.addSeparator();
     }
     
 }

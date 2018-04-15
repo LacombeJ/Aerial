@@ -11,7 +11,8 @@ import jonl.jgl.Loader;
 
 public class TWindow extends TWidget implements Window {
 
-    TWidget widget;
+    protected TWidget widget;
+    TRootPanel root;
     
     private TManager manager;
     protected TWindowManager windowManager;
@@ -20,6 +21,9 @@ public class TWindow extends TWidget implements Window {
         super();
         manager = new TManager();
         windowManager = new TWindowManager(this);
+        
+        root = new TRootPanel();
+        layout.add(root);
         setWidgetLayout(layout);
     }
     
@@ -30,6 +34,11 @@ public class TWindow extends TWidget implements Window {
     @Override
     protected TManager _root_manager() {
         return manager;
+    }
+    
+    @Override
+    protected TRootPanel _root_panel() {
+        return root;
     }
     
     @Override
@@ -44,8 +53,11 @@ public class TWindow extends TWidget implements Window {
 
     @Override
     public void setWidget(Widget widget) {
+        if (this.widget!=null) {
+            widgetLayout().remove(this.widget);
+        }
         this.widget = (TWidget) widget;
-        widgetLayout().setWidget(widget);
+        widgetLayout().add(widget);
     }
 
     @Override

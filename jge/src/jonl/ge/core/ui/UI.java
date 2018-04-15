@@ -13,8 +13,8 @@ import jonl.aui.Layout;
 import jonl.aui.LineEdit;
 import jonl.aui.ListLayout;
 import jonl.aui.Margin;
+import jonl.aui.Menu;
 import jonl.aui.MenuBar;
-import jonl.aui.MenuButton;
 import jonl.aui.Overlay;
 import jonl.aui.Panel;
 import jonl.aui.ScrollPanel;
@@ -202,13 +202,8 @@ public class UI implements UIManager {
     }
 
     @Override
-    public MenuButton menuButton() {
-        return ui.menuButton();
-    }
-
-    @Override
-    public MenuButton menuButton(String text) {
-        return ui.menuButton(text);
+    public Menu menu(String text) {
+        return ui.menu(text);
     }
 
     @Override

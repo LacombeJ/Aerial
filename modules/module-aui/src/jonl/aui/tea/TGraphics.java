@@ -1,10 +1,12 @@
 package jonl.aui.tea;
 
 import jonl.jutils.func.Function0D;
+import jonl.jutils.func.List;
 import jonl.jutils.misc.*;
 import jonl.vmath.*;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import jonl.aui.Graphics;
 import jonl.aui.HAlign;
@@ -112,7 +114,10 @@ public class TGraphics implements Graphics {
         offsetX = ox;
         offsetY = oy;
         if (w.hasChildren()) {
-            for (TWidget child : w.getChildren()) {
+            // Flip render order so that children that receive mouse events first, will be rendered
+            // last (so they are on top)
+            ArrayList<TWidget> flip = List.flip(w.getChildren());
+            for (TWidget child : flip) {
                 int[] cc = ArrayUtils.copy(currentCut);
                 paint(child);
                 currentCut = cc;

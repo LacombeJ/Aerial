@@ -11,10 +11,10 @@ import jonl.jutils.func.Callback0D;
 
 public class TButton extends TWidget implements Button {
 
-    private String text = "";
-    private TIcon icon = null;
-    private boolean checkable = false;
-    private boolean checked = false;
+    protected String text = "";
+    protected TIcon icon = null;
+    protected boolean checkable = false;
+    protected boolean checked = false;
     
     private final Signal<Callback0D> pressed = new Signal<>();
     private final Signal<Callback0D> released = new Signal<>();

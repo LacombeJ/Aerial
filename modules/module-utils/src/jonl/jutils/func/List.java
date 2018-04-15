@@ -157,6 +157,18 @@ public class List
         }
     }
     
+    public static <X> ArrayList<X> flip(java.util.List<X> list) {
+        ArrayList<X> ret = new ArrayList<>();
+        for (int i=list.size()-1; i>=0; i--) {
+            ret.add(list.get(i));
+        }
+        return ret;
+    }
+    
+    public static <X> ArrayList<X> reverse(java.util.List<X> list) {
+        return flip(list);
+    }
+    
     public static <X> ArrayList<X> append(java.util.List<X> listA, java.util.List<X> listB) {
         ArrayList<X> ret = List.list(listA);
         ret.addAll(listB);

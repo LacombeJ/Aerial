@@ -4,8 +4,8 @@ import jonl.aui.Align;
 import jonl.aui.ArrayLayout;
 import jonl.aui.HAlign;
 import jonl.aui.LineEdit;
+import jonl.aui.Menu;
 import jonl.aui.MenuBar;
-import jonl.aui.MenuButton;
 import jonl.aui.Panel;
 import jonl.aui.ScrollPanel;
 import jonl.aui.Slider;
@@ -85,8 +85,8 @@ public class EditorGUI {
     
     private void createMenuBar() {
         menuBar = ui.menuBar();
-        MenuButton file = ui.menuButton("File");
-        MenuButton edit = ui.menuButton("Edit");
+        Menu file = ui.menu("File");
+        Menu edit = ui.menu("Edit");
         menuBar.add(file);
         menuBar.add(edit);
     }
