@@ -1,26 +1,33 @@
 package jonl.aui.tea;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import jonl.aui.Align;
 import jonl.aui.TreeItem;
 
 public class TTreeItem implements TreeItem {
 
     TTreeItem parent = null;
     
-    String text = "TreeItem";
+    String text;
     
     boolean expanded = false;
     
-    List<TTreeItem> items = new ArrayList<>();
+    ArrayList<TTreeItem> items = new ArrayList<>();
     
-    public TTreeItem() {
-        
-    }
+    private TreeItemWidget widget;
     
     public TTreeItem(String text) {
         setText(text);
+        widget = new TreeItemWidget();
+    }
+    
+    public TTreeItem() {
+        this("TreeItem");
+    }
+    
+    TreeItemWidget widget() {
+        return widget;
     }
     
     @Override
@@ -122,6 +129,34 @@ public class TTreeItem implements TreeItem {
     @Override
     public boolean isExpanded() {
         return expanded;
+    }
+    
+    // The widget is separated to avoid inheritance conflicts
+    class TreeItemWidget extends TWidget {
+        
+        int border = 4;
+        
+        TButton expandButton;
+        TButton itemButton;
+        
+        TreeItemWidget() {
+            super();
+            TListLayout layout = new TListLayout(Align.HORIZONTAL);
+            setWidgetLayout(layout);
+            
+            layout.setMargin(0,0,0,0);
+            layout.setSpacing(0);
+            
+            expandButton = new TButton();
+            expandButton.setText("+");
+            
+            itemButton = new TButton();
+            itemButton.setText(text);
+            
+            layout.add(expandButton);
+            layout.add(itemButton);
+            
+        }
     }
 
 }

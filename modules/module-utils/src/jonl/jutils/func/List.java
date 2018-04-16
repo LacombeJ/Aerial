@@ -301,6 +301,18 @@ public class List
 	    return List.append(sub,sub2);
 	}
 	
+	public static <X> ArrayList<X> add(java.util.List<X> listA, java.util.List<X> listB) {
+        return append(listA,listB);
+    }
+	
+	public static <X> ArrayList<X> subtract(java.util.List<X> listA, java.util.List<X> listB) {
+        ArrayList<X> res = List.list(listA);
+        for (X x : listB) {
+            res.remove(x);
+        }
+        return res;
+    }
+	
 	public static <X> X find(java.util.List<X> list, Function<X,Boolean> function) {
 	    for (X x : list) {
 	        if (function.f(x)) {

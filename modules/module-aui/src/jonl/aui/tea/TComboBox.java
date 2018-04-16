@@ -12,6 +12,7 @@ import jonl.jutils.func.Callback2D;
 public class TComboBox extends TWidget implements ComboBox {
 
     TComboBoxBar bar = new TComboBoxBar(Align.VERTICAL);
+    ArrayList<Object> data = new ArrayList<>();
     
     int currentIndex = 0;
     
@@ -31,7 +32,42 @@ public class TComboBox extends TWidget implements ComboBox {
     }
     
     @Override
-    public void add(String text) {
+    public Object data() {
+        return data.get(currentIndex);
+    }
+    
+    @Override
+    public int index() {
+        return currentIndex;
+    }
+
+    @Override
+    public void setIndex(int index) {
+        currentIndex = index;
+    }
+    
+    @Override
+    public String text(int index) {
+        return bar.get(index).text();
+    }
+    
+    @Override
+    public void setText(int index, String text) {
+        bar.get(index).setText(text);
+    }
+    
+    @Override
+    public Object data(int index) {
+        return data.get(index);
+    }
+    
+    @Override
+    public void setData(int index, Object data) {
+        this.data.set(index, data);
+    }
+    
+    @Override
+    public void add(String text, Object data) {
         TComboBoxButton button = new TComboBoxButton(text);
         //It's okay to add signals since no-one else should access to this button
         button.clicked().connect(()->{
@@ -43,6 +79,12 @@ public class TComboBox extends TWidget implements ComboBox {
             rootPanel().remove(bar);
         });
         bar.add(button);
+        this.data.add(null);
+    }
+    
+    @Override
+    public void add(String text) {
+        add(text, null);
     }
 
     @Override
@@ -50,6 +92,17 @@ public class TComboBox extends TWidget implements ComboBox {
         int index = 0;
         for (TButton button : bar.buttons()) {
             if (button.text().equals(text)) {
+                remove(index);
+            }
+            index++;
+        }
+    }
+    
+    @Override
+    public void removeData(Object data) {
+        int index = 0;
+        for (Object d : this.data) {
+            if (d.equals(data)) {
                 remove(index);
             }
             index++;
@@ -68,6 +121,11 @@ public class TComboBox extends TWidget implements ComboBox {
     public boolean contains(String text) {
         return indexOf(text) == -1;
     }
+    
+    @Override
+    public boolean containsData(Object data) {
+        return this.data.contains(data);
+    }
 
     @Override
     public int count() {
@@ -84,15 +142,10 @@ public class TComboBox extends TWidget implements ComboBox {
         }
         return -1;
     }
-
+    
     @Override
-    public int index() {
-        return currentIndex;
-    }
-
-    @Override
-    public void setIndex(int index) {
-        currentIndex = index;
+    public int indexOfData(Object data) {
+        return this.data.indexOf(data);
     }
 
     @Override

@@ -252,6 +252,10 @@ public abstract class TLayout implements Layout {
         items.remove(item);
     }
     
+    protected void removeAllNoInvalidate() {
+        items.clear();
+    }
+    
     protected void invalidateLayout() {
         TLayoutManager.invalidateLayout(this);
     }

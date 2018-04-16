@@ -2,25 +2,32 @@ package jonl.aui.tea;
 
 import java.util.ArrayList;
 
-import jonl.aui.Graphics;
-import jonl.aui.HAlign;
 import jonl.aui.Tree;
 import jonl.aui.TreeItem;
-import jonl.aui.VAlign;
-import jonl.aui.tea.event.TMouseEvent;
-import jonl.jgl.Input;
-import jonl.vmath.Mathf;
-import jonl.vmath.Vector4;
+import jonl.jutils.func.Wrapper;
+import jonl.vmath.Mathi;
 
 public class TTree extends TWidget implements Tree {
-
-    ArrayList<TreeItem> items = new ArrayList<>();
+    
+    TWidget layoutWidget;
+    ArrayList<TTreeItem> items = new ArrayList<>();
+    
+    static final int ITEM_SPACING = 24;
     
     static final int BUTTON_SIZE = 8; //TODO change this
     static final int ITEM_HEIGHT = 24; //TODO change this
     
     public TTree() {
         super();
+        
+        TFillLayout layout = new TFillLayout();
+        TScrollPanel panel = new TScrollPanel();
+        layoutWidget = new TPanel(new TreeLayout());
+        
+        panel.setWidget(layoutWidget);
+        layout.add(panel);
+        setWidgetLayout(layout);
+        
     }
     
     @Override
@@ -30,17 +37,21 @@ public class TTree extends TWidget implements Tree {
 
     @Override
     public void addItem(TreeItem item) {
-        items.add(item);
+        items.add((TTreeItem) item);
+        layoutWidget.invalidateSizeHint();
     }
 
     @Override
     public void removeItem(TreeItem item) {
         items.remove(item);
+        layoutWidget.invalidateSizeHint();
     }
 
     @Override
     public TreeItem removeItem(int i) {
-        return items.remove(i);
+        TreeItem item = items.remove(i);
+        layoutWidget.invalidateSizeHint();
+        return item;
     }
 
     @Override
@@ -53,71 +64,81 @@ public class TTree extends TWidget implements Tree {
         return items.toArray(new TreeItem[0]);
     }
     
-    @Override
-    protected void paint(TGraphics g) {
-        super.paint(g);
-        int height = height();
-        float y = height;
-        for (TreeItem item : getItems()) {
-            y = paintItem(g,item,ITEM_HEIGHT,y,ITEM_HEIGHT,ITEM_HEIGHT);
+    class TreeLayout extends TLayout {
+
+        @Override
+        public void layout() {
+            
+            int sx = margin().left;
+            int sy = margin().top;
+            
+            removeAllNoInvalidate();
+            
+            ArrayList<TTreeItem> found = new ArrayList<TTreeItem>();
+            
+            int x = sx;
+            Wrapper<Integer> y = new Wrapper<>(sy);
+            
+            for (TTreeItem item : items) {
+                placeItem(item,x,y,found);
+            }
+            
         }
+        
+        private void placeItem(TTreeItem item, int x, Wrapper<Integer> y, ArrayList<TTreeItem> found) {
+            int width = freeWidth(item.widget());
+            int height = freeHeight(item.widget());
+            
+            if (!contains(item.widget())) {
+                addNoInvalidate(item.widget());
+            }
+            
+            setPositionAndSize(item.widget(),x,y.x,width,height);
+            
+            y.x += height;
+            
+            found.add(item);
+            
+            for (TTreeItem child : item.items) {
+                placeItem(child,x+ITEM_SPACING,y,found);
+            }
+            
+        }
+
+        @Override
+        public TSizeHint calculateSizeHint() {
+            
+            int sx = margin().left;
+            int sy = margin().top;
+            
+            Wrapper<Integer> maxWidth = new Wrapper<>(sx);
+            Wrapper<Integer> currentHeight = new Wrapper<>(sy);
+            
+            for (TTreeItem item : TTree.this.items) {
+                adjustItem(item,sx,sy,maxWidth,currentHeight);
+            }
+            
+            int width = maxWidth.x + margin().right;
+            int height = currentHeight.x + margin().bottom;
+            
+            return new TSizeHint(width,height);
+        }
+        
+        private void adjustItem(TTreeItem item, int x, int y, Wrapper<Integer> maxWidth, Wrapper<Integer> currentHeight) {
+            int width = freeWidth(item.widget());
+            int height = freeHeight(item.widget());
+            
+            maxWidth.x = Mathi.max(maxWidth.x, x + width);
+            currentHeight.x += height;
+            
+            for (TTreeItem child : item.items) {
+                adjustItem(child,x+ITEM_SPACING,y,maxWidth,currentHeight);
+            }
+        }
+        
     }
     
-    private float paintItem(Graphics g, TreeItem t, float x, float y, float dx, float dy) {
-        TGraphics tg = (TGraphics)g;
-        tg.renderText(t.getText(),x,y,HAlign.LEFT,VAlign.TOP,style().font(),new Vector4(0,0,0,1));
-        if (t.getItemCount()!=0) {
-            float half = ITEM_HEIGHT / 2f;
-            Vector4 col = t.isExpanded() ? new Vector4(0,0,0.2f,1) : new Vector4(0.8f,0.8f,0.8f,1);
-            tg.renderRect(x-half-2,y-half-2,BUTTON_SIZE,BUTTON_SIZE,col);
-        }
-        x+=dx;
-        y-=dy;
-        for (TreeItem item : t.getItems()) {
-            if (t.isExpanded()) {
-                y = paintItem(g,item,x,y,dx,dy);
-            }
-        }
-        return y;
-    }
     
-    @Override
-    protected boolean handleMouseButtonClick(TMouseEvent event) {
-        if (event.button==Input.MB_LEFT) {
-            int height = height();
-            float y = height;
-            for (TreeItem item : getItems()) {
-                y = findAndAct(event.x,event.y,item,ITEM_HEIGHT,y,ITEM_HEIGHT,ITEM_HEIGHT);
-                if (y==-1) {
-                    break;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-    
-    private float findAndAct(int ex, int ey, TreeItem t, float x, float y, float dx, float dy) {
-        float half = ITEM_HEIGHT / 2f;
-        if (Mathf.isWithinBounds(ex,ey,x-half-2,y-half-2,BUTTON_SIZE,BUTTON_SIZE)) {
-            if (t.isExpanded() && t.getItemCount()!=0) {
-                t.collapse();
-            } else {
-                t.expand();
-            }
-        }
-        x+=dx;
-        y-=dy;
-        for (TreeItem item : t.getItems()) {
-            if (t.isExpanded()) {
-                y = findAndAct(ex,ey,item,x,y,dx,dy);
-                if (y==-1) {
-                    return -1;
-                }
-            }
-        }
-        return y;
-    }
     
     
     
