@@ -12,6 +12,10 @@ public class TImage {
         image = ImageUtils.load(file);
     }
     
+    public TImage(BufferedImage image) {
+        this.image = image;
+    }
+    
     BufferedImage image() {
         return image;
     }

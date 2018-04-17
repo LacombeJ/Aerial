@@ -99,10 +99,11 @@ public class TTree extends TWidget implements Tree {
             
             found.add(item);
             
-            for (TTreeItem child : item.items) {
-                placeItem(child,x+ITEM_SPACING,y,found);
+            if (item.isExpanded()) {
+                for (TTreeItem child : item.items) {
+                    placeItem(child,x+ITEM_SPACING,y,found);
+                }
             }
-            
         }
 
         @Override
@@ -131,8 +132,10 @@ public class TTree extends TWidget implements Tree {
             maxWidth.x = Mathi.max(maxWidth.x, x + width);
             currentHeight.x += height;
             
-            for (TTreeItem child : item.items) {
-                adjustItem(child,x+ITEM_SPACING,y,maxWidth,currentHeight);
+            if (item.isExpanded()) {
+                for (TTreeItem child : item.items) {
+                    adjustItem(child,x+ITEM_SPACING,y,maxWidth,currentHeight);
+                }
             }
         }
         

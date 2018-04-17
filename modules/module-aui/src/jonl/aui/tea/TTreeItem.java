@@ -18,7 +18,7 @@ public class TTreeItem implements TreeItem {
     private TreeItemWidget widget;
     
     public TTreeItem(String text) {
-        setText(text);
+        this.text = text;
         widget = new TreeItemWidget();
     }
     
@@ -43,6 +43,7 @@ public class TTreeItem implements TreeItem {
     @Override
     public void setText(String text) {
         this.text = text;
+        widget.invalidateSizeHint();
     }
     
     @Override
@@ -57,6 +58,7 @@ public class TTreeItem implements TreeItem {
             sti.parent.removeItem(sti);
         }
         items.add(sti);
+        widget.invalidateSizeHint();
     }
 
     @Override
@@ -64,6 +66,7 @@ public class TTreeItem implements TreeItem {
         if (items.remove(item)) {
             TTreeItem sti = (TTreeItem)item;
             sti.parent = null;
+            widget.invalidateSizeHint();
         }
     }
 
@@ -73,6 +76,7 @@ public class TTreeItem implements TreeItem {
         if (sti!=null) {
             sti.parent = null;
         }
+        widget.invalidateSizeHint();
         return sti;
     }
 
@@ -103,11 +107,13 @@ public class TTreeItem implements TreeItem {
     @Override
     public void expand() {
         expanded = true;
+        widget.invalidateSizeHint();
     }
 
     @Override
     public void collapse() {
         expanded = false;
+        widget.invalidateSizeHint();
     }
 
     @Override
@@ -148,13 +154,21 @@ public class TTreeItem implements TreeItem {
             layout.setSpacing(0);
             
             expandButton = new TButton();
-            expandButton.setText("+");
+            expandButton.setIcon(TIcon.CARET);
             
             itemButton = new TButton();
             itemButton.setText(text);
             
             layout.add(expandButton);
             layout.add(itemButton);
+            
+            expandButton.clicked().connect(()->{
+                if (isExpanded()) {
+                    collapse();
+                } else {
+                    expand();
+                }
+            });
             
         }
     }

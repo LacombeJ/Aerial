@@ -74,9 +74,8 @@ class TLayoutManager {
             TWidget parentWidget = widget.parent();
             if (parentWidget != null) {
                 invalidateSizeHint(parentWidget.widgetLayout());
-            } else {
-                invalidateLayout(layout);
             }
+            invalidateLayout(layout);
             
         } else {
             

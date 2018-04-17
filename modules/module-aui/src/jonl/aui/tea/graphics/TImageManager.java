@@ -9,7 +9,7 @@ import jonl.jutils.structs.Pool;
 
 public class TImageManager {
 
-GL gl;
+    GL gl;
     
     Pool<TImage,Texture> textMap;
     
