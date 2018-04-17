@@ -1,12 +1,8 @@
 package jonl.jutils.jss;
 
-import java.util.HashMap;
-
 import jonl.jutils.io.FileUtils;
 
-public class StyleSheet {
-
-    HashMap<String,Style> selectors;
+public class StyleSheet extends Style {
     
     public static StyleSheet fromFile(String file) {
         String jss = FileUtils.readFromFile(file);
@@ -18,22 +14,9 @@ public class StyleSheet {
         return parser.styleSheet();
     }
     
-    StyleSheet() {
-        selectors = new HashMap<>();
+    StyleSheet(String name) {
+        super(name);
         
-    }
-    
-    Style getOrCreateStyle(String name) {
-        Style style = selectors.get(name);
-        if (style==null) {
-            style = new Style(name);
-            selectors.put(name,style);
-        }
-        return style;
-    }
-    
-    public Style selector(String id) {
-        return selectors.get(id);
     }
     
 }

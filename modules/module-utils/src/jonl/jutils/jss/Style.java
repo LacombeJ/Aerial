@@ -1,6 +1,7 @@
 package jonl.jutils.jss;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Style {
 
@@ -12,21 +13,47 @@ public class Style {
     
     HashMap<String,String> values = new HashMap<>();
     
-    Style(String name) {
+    public Style(String name) {
         this.name = name;
     }
     
     Style getOrCreateStyle(String name) {
         Style style = children.get(name);
         if (style==null) {
-            style = new Style(name);
-            style.parent = this;
-            children.put(name,style);
+            return addDirect(new Style(name));
+            
         }
         return style;
     }
     
-    void put(String property, String value) {
+    Style addDirect(Style style) {
+        style.parent = this;
+        children.put(style.name,style);
+        return style;
+    }
+    
+    public void add(Style style) {
+        if (children.containsKey(style.name)) {
+            children.get(style.name).append(style.copy());
+        } else {
+            addDirect(style.copy());
+        }
+    }
+    
+    public void append(Style style) {
+        for (Entry<String,Style> e : style.children.entrySet()) {
+            if (children.containsKey(e.getKey())) {
+                children.get(e.getKey()).add(e.getValue().copy());
+            } else {
+                addDirect(e.getValue().copy());
+            }
+        }
+        for (Entry<String,String> e : style.values.entrySet()) {
+            put(e.getKey(),e.getValue());
+        }
+    }
+    
+    public void put(String property, String value) {
         values.put(property, value);
     }
     
@@ -47,7 +74,18 @@ public class Style {
     }
     
     public String override(String property) {
-        return null;
+        return values.get(property);
+    }
+    
+    public Style copy() {
+        Style style = new Style(name);
+        for (Entry<String,Style> e : children.entrySet()) {
+            style.addDirect(e.getValue().copy());
+        }
+        for (Entry<String,String> e : values.entrySet()) {
+            style.put(e.getKey(),e.getValue());
+        }
+        return style;
     }
     
 }

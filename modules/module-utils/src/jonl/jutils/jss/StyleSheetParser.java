@@ -33,7 +33,7 @@ class StyleSheetParser {
         contents = jss.toCharArray();
         index = 0;
         
-        ss = new StyleSheet();
+        ss = new StyleSheet("");
         
         root();
         
