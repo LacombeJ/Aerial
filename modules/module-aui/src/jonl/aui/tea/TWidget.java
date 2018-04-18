@@ -18,6 +18,8 @@ import jonl.aui.tea.spatial.TSize;
 import jonl.jutils.call.Caller;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.List;
+import jonl.jutils.jss.Style;
+import jonl.jutils.jss.StyleSheet;
 
 public abstract class TWidget implements Widget {
 
@@ -43,6 +45,8 @@ public abstract class TWidget implements Widget {
     private TWidgetInfo info = new TWidgetInfo();
     private Caller caller = new Caller();
     
+    private Style style = null;
+    
     // Variables used by event handler
     private TEventHandler event = new TEventHandler();
     
@@ -62,6 +66,20 @@ public abstract class TWidget implements Widget {
     // AUI Widget Methods
     
     // ------------------------------------------------------------------------
+    
+    @Override
+    public void setStyle(String style) {
+        this.style = StyleSheet.fromString(style);
+    }
+    
+    @Override
+    public void addStyle(String style) {
+        if (this.style==null) {
+            setStyle(style);
+        } else {
+            this.style.append(StyleSheet.fromString(style));
+        }
+    }
     
     @Override
     public int x() {
@@ -163,7 +181,15 @@ public abstract class TWidget implements Widget {
     
     // ------------------------------------------------------------------------
     
+    public Style cascade(Style parent) {
+        Style cascade = parent.copy();
+        if (style!=null) {
+            cascade.append(style);
+        }
+        return cascade;
+    }
     
+    // ------------------------------------------------------------------------
     
     // T Widget Methods
     

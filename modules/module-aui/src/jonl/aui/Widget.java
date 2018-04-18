@@ -4,6 +4,9 @@ import jonl.jutils.func.Callback;
 
 public interface Widget {
     
+    void setStyle(String style);
+    void addStyle(String style);
+    
     int x();
     int y();
     int width();

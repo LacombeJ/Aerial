@@ -27,6 +27,7 @@ class StyleSheetParser {
     
     ArrayList<String> styleTitles = new ArrayList<>();
     ArrayList<Style> styles = new ArrayList<>();
+    boolean root = false;
     
     StyleSheetParser(String jss) {
 
@@ -46,7 +47,7 @@ class StyleSheetParser {
     // ------------------------------------------------------------------------
     
     boolean hasNext() {
-        return index < contents.length - 1;
+        return index < contents.length;
     }
     
     char next() {
@@ -98,20 +99,28 @@ class StyleSheetParser {
                 continue;
             }
             if (c=='{' || c==',') {
-                styleTitles.add(collection);
+                if (collection.equals(".root") && styleTitles.isEmpty()) {
+                    root = true;
+                } else {
+                    styleTitles.add(collection);
+                }
                 collection="";
                 
-                Style selector = ss.getOrCreateStyle(styleTitles.get(0));
-                Style style = selector;
-                for (int i=1; i<styleTitles.size(); i++) {
-                    Style sub = style.getOrCreateStyle(styleTitles.get(i));
-                    style = sub;
+                if (styleTitles.size()>0) {
+                    Style selector = ss.getOrCreateStyle(styleTitles.get(0));
+                    Style style = selector;
+                    for (int i=1; i<styleTitles.size(); i++) {
+                        Style sub = style.getOrCreateStyle(styleTitles.get(i));
+                        style = sub;
+                    }
+                    styles.add(style);
+                    styleTitles.clear();
                 }
-                styles.add(style);
-                styleTitles.clear();
             }
             if (c=='{') {
                 values();
+                root = false;
+                styles.clear();
                 return;
             }
             if (c==',') {
@@ -122,7 +131,6 @@ class StyleSheetParser {
             }
             collection += c;
         }
-        styles.clear();
     }
     
     void values() {
@@ -177,6 +185,9 @@ class StyleSheetParser {
             if (c==';') {
                 for (Style style : styles) {
                     style.put(property, value);
+                }
+                if (root) {
+                    ss.put(property, value);
                 }
                 return;
             }

@@ -63,6 +63,16 @@ public class UI implements UIManager {
     }
     
     @Override
+    public void setStyle(String style) {
+        ui.setStyle(style);
+    }
+    
+    @Override
+    public void addStyle(String style) {
+        ui.addStyle(style);
+    }
+    
+    @Override
     public Window window() {
         return ui.window();
     }

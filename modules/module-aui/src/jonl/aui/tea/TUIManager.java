@@ -8,6 +8,8 @@ import jonl.aui.Margin;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.graphics.TStyleDefault;
+import jonl.jutils.jss.Style;
+import jonl.jutils.jss.StyleSheet;
 import jonl.aui.tea.graphics.TStyle;
 
 public class TUIManager implements UIManager {
@@ -23,8 +25,24 @@ public class TUIManager implements UIManager {
     
     private TStyle style = new TStyleDefault();
     
+    private StyleSheet styleSheet = StyleSheet.fromFile("default.jss");
+    
     private TUIManager() {
         
+    }
+    
+    @Override
+    public void setStyle(String style) {
+        styleSheet = StyleSheet.fromString(style);
+    }
+    
+    @Override
+    public void addStyle(String style) {
+        styleSheet.append(StyleSheet.fromString(style));
+    }
+    
+    public Style styleSheet() {
+        return styleSheet;
     }
     
     public TStyle getStyle() {

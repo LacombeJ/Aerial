@@ -2,14 +2,13 @@ package jonl.aui.tea;
 
 import jonl.jutils.func.Function0D;
 import jonl.jutils.func.List;
+import jonl.jutils.jss.Style;
 import jonl.jutils.misc.ArrayUtils;
-import jonl.jutils.misc.ImageUtils;
 import jonl.vmath.Color;
 import jonl.vmath.Matrix4;
 import jonl.vmath.Vector3;
 import jonl.vmath.Vector4;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import jonl.aui.Graphics;
@@ -56,6 +55,8 @@ public class TGraphics implements Graphics {
     Program textureProgram;
     Program gradient;
     
+    Style cascade;
+    
     public TGraphics(GL gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
         this.windowHeight = windowHeight;
@@ -85,6 +86,10 @@ public class TGraphics implements Graphics {
         this.ortho = ortho;
     }
     
+    public Style style() {
+        return cascade;
+    }
+    
     int[] currentCut;
     
     public void beginGL() {
@@ -107,6 +112,7 @@ public class TGraphics implements Graphics {
         if (currentCut==null) {
             firstCut = true;
             currentCut = box;
+            cascade = TUIManager.instance().styleSheet().copy();
         } else {
             currentCut = cutOut(currentCut,box);
         }
@@ -116,7 +122,12 @@ public class TGraphics implements Graphics {
         float oy = offsetY;
         offsetX = w.windowX();
         offsetY = w.windowY();
+        
+        cascade = w.cascade(cascade);
+        Style css = cascade.copy();
         paintWidget(w);
+        cascade = css;
+        
         offsetX = ox;
         offsetY = oy;
         if (w.hasChildren()) {
@@ -131,6 +142,7 @@ public class TGraphics implements Graphics {
         }
         if (firstCut) {
             currentCut = null;
+            cascade = null;
         }
     }
     

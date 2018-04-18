@@ -2,6 +2,10 @@ package jonl.aui;
 
 public interface UIManager {
 
+    void setStyle(String style);
+    
+    void addStyle(String style);
+    
     //UI Widgets
     
     Window window();

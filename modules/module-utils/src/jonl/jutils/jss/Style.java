@@ -73,6 +73,10 @@ public class Style {
         return value;
     }
     
+    public String get(String property) {
+        return value(property);
+    }
+    
     public String override(String property) {
         return values.get(property);
     }

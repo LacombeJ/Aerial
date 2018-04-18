@@ -5,6 +5,7 @@ import jonl.aui.Icon;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.ButtonRenderer;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
@@ -100,6 +101,7 @@ public class TButton extends TWidget implements Button {
     @Override
     protected void paint(TGraphics g) {
         style().button().paint(this,info(),g);
+        ButtonRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     
@@ -119,6 +121,7 @@ public class TButton extends TWidget implements Button {
     @Override
     protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
+            info().put("bIsMouseDown", true);
             pressed().emit(cb->cb.f());
             return true;
         }
@@ -128,6 +131,7 @@ public class TButton extends TWidget implements Button {
     @Override
     protected boolean handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
+            info().put("bIsMouseDown", false);
             released().emit(cb->cb.f());
             return true;
         }
@@ -143,6 +147,7 @@ public class TButton extends TWidget implements Button {
     @Override
     protected boolean handleMouseExit(TMouseEvent event) {
         info().put("bIsMouseWithin", false);
+        info().put("bIsMouseDown", false);
         return true;
     }
     

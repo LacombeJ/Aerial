@@ -26,6 +26,8 @@ public class Color {
     public final static Color DARK_GREEN    = Color.fromFloat(0, 0.5f, 0);
     public final static Color DARK_BLUE     = Color.fromFloat(0, 0, 0.5f);
     
+    public final static Color TRANSPARENT   = Color.fromFloat(0,0,0,0);
+    
     public final float r;
     public final float g;
     public final float b;
@@ -76,6 +78,20 @@ public class Color {
     
     public static Color fromColor(Color c, float alpha) {
         return new Color(c.r,c.g,c.b,alpha);
+    }
+    
+    public static Color fromHex(String hex) {
+        if (hex.startsWith("#")) {
+            hex = hex.substring(1);
+        }
+        int r = Integer.parseInt(hex.substring(0,2), 16);
+        int g = Integer.parseInt(hex.substring(2,4), 16);
+        int b = Integer.parseInt(hex.substring(4,6), 16);
+        int a = 255;
+        if (hex.length()>=8) {
+            a = Integer.parseInt(hex.substring(6,8), 16);
+        }
+        return fromInt(r,g,b,a);
     }
     
     // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js

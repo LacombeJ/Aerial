@@ -22,6 +22,8 @@ public class Editor extends AbstractApplication {
     
     private EditorCore core = new EditorCore(this);
     
+    private boolean loaded = false;
+    
 	public Editor() {
 		super();
 		
@@ -39,7 +41,7 @@ public class Editor extends AbstractApplication {
         core.gui.window.setLoader(()->{
             putInfo();
             manager.load();
-            
+            loaded = true;
             gl.glDisable(GL.DEPTH_TEST);
             gl.glDisable(GL.CULL_FACE);
         });
@@ -52,15 +54,17 @@ public class Editor extends AbstractApplication {
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
             
-            synchronized (Editor.class) {
-                gl.glEnable(GL.DEPTH_TEST);
-                gl.glEnable(GL.CULL_FACE);
-                int[] box = gl.glGetScissor();
-                manager.update();
-                gl.glEnable(GL.SCISSOR_TEST);
-                gl.glScissor(box);
-                gl.glDisable(GL.DEPTH_TEST);
-                gl.glDisable(GL.CULL_FACE);
+            if (loaded) {
+                synchronized (Editor.class) {
+                    gl.glEnable(GL.DEPTH_TEST);
+                    gl.glEnable(GL.CULL_FACE);
+                    int[] box = gl.glGetScissor();
+                    manager.update();
+                    gl.glEnable(GL.SCISSOR_TEST);
+                    gl.glScissor(box);
+                    gl.glDisable(GL.DEPTH_TEST);
+                    gl.glDisable(GL.CULL_FACE);
+                }
             }
             
             //Reset viewport and projection
