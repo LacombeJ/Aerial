@@ -18,6 +18,7 @@ import jonl.aui.tea.graphics.TFont;
 import jonl.aui.tea.graphics.TImage;
 import jonl.aui.tea.graphics.TImageManager;
 import jonl.aui.tea.graphics.TMesh;
+import jonl.aui.tea.graphics.TMeshBox;
 import jonl.aui.tea.graphics.TShader;
 import jonl.aui.tea.graphics.TTextManager;
 import jonl.jgl.GL;
@@ -42,6 +43,8 @@ public class TGraphics implements Graphics {
     
     Mesh line;
     
+    Mesh newBox;
+    
     Mesh box;
     Mesh circle;
     
@@ -64,6 +67,8 @@ public class TGraphics implements Graphics {
         int version = gl.glGetGLSLVersioni();
         
         line = gl.glGenMesh(TMesh.LINE.data);
+        
+        newBox = TMeshBox.createBoxMesh(gl,1,1,0.5f);
         
         box = gl.glGenMesh(TMesh.BOX.data);
         circle = gl.glGenMesh(TMesh.CIRCLE.data);
@@ -177,6 +182,11 @@ public class TGraphics implements Graphics {
         render(box,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector());
     }
     
+    public void renderRect(float x, float y, float w, float h, Color color, float radius) {
+        TMeshBox.adjust(newBox,w,h,radius);
+        render(newBox,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color.toVector());
+    }
+    
     public void renderRect(Matrix4 mat, Vector4 color) {
         Matrix4 matrix = Matrix4.identity().translate(offsetX,offsetY,0).multiply(mat);
         render(box,matrix,color);
@@ -208,6 +218,15 @@ public class TGraphics implements Graphics {
     
     public void renderGradient(float x, float y, float w, float h, Color bot, Color top) {
         renderGradient(x,y,w,h,bot,bot,top,top);
+    }
+    
+    public void renderGradient(float x, float y, float w, float h, Color bot, Color top, float radius) {
+        renderGradient(x,y,w,h,bot,bot,top,top,radius);
+    }
+    
+    public void renderGradient(float x, float y, float w, float h, Color botLeft, Color botRight, Color topLeft, Color topRight, float radius) {
+        TMeshBox.adjust(newBox,w,h,radius);
+        renderGradient(newBox,new Vector3(x+w/2+offsetX,y+h/2+offsetY,0),new Vector3(0,0,0),new Vector3(1,1,1),botLeft.toVector(),botRight.toVector(),topLeft.toVector(),topRight.toVector());
     }
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,

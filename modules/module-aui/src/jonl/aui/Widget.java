@@ -7,6 +7,9 @@ public interface Widget {
     void setStyle(String style);
     void addStyle(String style);
     
+    String name();
+    void setName(String name);
+    
     int x();
     int y();
     int width();

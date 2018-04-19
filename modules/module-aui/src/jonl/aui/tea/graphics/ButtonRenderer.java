@@ -20,9 +20,10 @@ public class ButtonRenderer {
                 style = style.style("down");
             }
         }
+        style = StyleRenderer.name(button,style,g);
         
         TBox box = new TBox(0,0,button.width(),button.height());
-        
+
         BoxRenderer.paint(style, box, g);
         ImageRenderer.paint(style, box, g);
         TextRenderer.paint(style, button.text(), box, g);

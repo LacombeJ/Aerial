@@ -48,6 +48,8 @@ public abstract class TWidget implements Widget {
     
     private Style style = null;
     
+    private String name = "";
+    
     // Variables used by event handler
     private TEventHandler event = new TEventHandler();
     
@@ -80,6 +82,16 @@ public abstract class TWidget implements Widget {
         } else {
             this.style.append(StyleSheet.fromString(style));
         }
+    }
+    
+    @Override
+    public String name() {
+        return name;
+    }
+    
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
     
     @Override

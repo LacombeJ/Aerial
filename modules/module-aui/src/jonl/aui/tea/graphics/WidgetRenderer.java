@@ -11,6 +11,7 @@ public class WidgetRenderer {
         Style jss = g.style();
         
         Style style = jss.style("Widget");
+        style = StyleRenderer.name(widget,style,g);
         
         TBox box = new TBox(0,0,widget.width(),widget.height());
         
