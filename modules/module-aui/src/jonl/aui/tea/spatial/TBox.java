@@ -4,14 +4,10 @@ import jonl.vmath.Mathf;
 
 public class TBox extends TShape {
 
-    int x;
-    int y;
-    int width;
-    int height;
-    
-    public TBox() {
-        
-    }
+    public int x;
+    public int y;
+    public int width;
+    public int height;
     
     public TBox(int x, int y, int width, int height) {
         this.x = x;

@@ -14,6 +14,7 @@ import jonl.aui.tea.event.TResizeEvent;
 import jonl.aui.tea.event.TScrollEvent;
 import jonl.aui.tea.graphics.TStyle;
 import jonl.aui.tea.graphics.TWidgetInfo;
+import jonl.aui.tea.graphics.WidgetRenderer;
 import jonl.aui.tea.spatial.TSize;
 import jonl.jutils.call.Caller;
 import jonl.jutils.func.Callback;
@@ -263,7 +264,7 @@ public abstract class TWidget implements Widget {
     }
     
     protected void paint(TGraphics g) {
-        style().widget().paint(this, info, g);
+        WidgetRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     

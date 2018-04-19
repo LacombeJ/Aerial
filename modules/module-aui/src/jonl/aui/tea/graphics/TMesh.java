@@ -20,7 +20,7 @@ public class TMesh {
     public final static TMesh BOX_OUTLINE;
     public final static TMesh CIRCLE;
     public final static TMesh CIRCLE_OUTLINE;
-    
+
     static {
         // Line
         {

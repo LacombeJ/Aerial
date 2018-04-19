@@ -1,10 +1,20 @@
 package jonl.aui;
 
+import jonl.jutils.jss.Style;
+
 public interface UIManager {
 
     void setStyle(String style);
     
+    void setStyle(Style style);
+    
     void addStyle(String style);
+    
+    void addStyle(Style style);
+    
+    Resource resource(String key);
+    
+    void resource(String key, Object data);
     
     //UI Widgets
     
@@ -73,6 +83,8 @@ public interface UIManager {
     ToolButton toolButton();
     
     ToolButton toolButton(Icon icon);
+    
+    ToolButton toolButton(Resource icon);
     
     Overlay overlay();
     

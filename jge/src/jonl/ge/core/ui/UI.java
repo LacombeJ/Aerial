@@ -18,6 +18,7 @@ import jonl.aui.Menu;
 import jonl.aui.MenuBar;
 import jonl.aui.Overlay;
 import jonl.aui.Panel;
+import jonl.aui.Resource;
 import jonl.aui.ScrollPanel;
 import jonl.aui.Slider;
 import jonl.aui.Spacer;
@@ -35,6 +36,7 @@ import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWidget;
 import jonl.aui.tea.graphics.TStyle;
 import jonl.aui.tea.graphics.TStyleDark;
+import jonl.jutils.jss.Style;
 import jonl.vmath.Color;
 
 public class UI implements UIManager {
@@ -68,8 +70,28 @@ public class UI implements UIManager {
     }
     
     @Override
+    public void setStyle(Style style) {
+        ui.setStyle(style);
+    }
+    
+    @Override
     public void addStyle(String style) {
         ui.addStyle(style);
+    }
+    
+    @Override
+    public void addStyle(Style style) {
+        ui.addStyle(style);
+    }
+    
+    @Override
+    public Resource resource(String key) {
+        return ui.resource(key);
+    }
+    
+    @Override
+    public void resource(String key, Object data) {
+        ui.resource(key,data);
     }
     
     @Override
@@ -234,6 +256,11 @@ public class UI implements UIManager {
 
     @Override
     public ToolButton toolButton(Icon icon) {
+        return ui.toolButton(icon);
+    }
+    
+    @Override
+    public ToolButton toolButton(Resource icon) {
         return ui.toolButton(icon);
     }
 

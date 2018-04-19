@@ -5,6 +5,7 @@ import jonl.aui.Font;
 import jonl.aui.Icon;
 import jonl.aui.Layout;
 import jonl.aui.Margin;
+import jonl.aui.Resource;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.graphics.TStyleDefault;
@@ -25,10 +26,13 @@ public class TUIManager implements UIManager {
     
     private TStyle style = new TStyleDefault();
     
-    private StyleSheet styleSheet = StyleSheet.fromFile("default.jss");
+    private Style styleSheet = StyleSheet.fromFile("default.jss");
+    
+    private TResourceMap map = new TResourceMap();
     
     private TUIManager() {
-        
+        resource("ui/check", TIcon.CHECK);
+        resource("ui/caret", TIcon.CARET);
     }
     
     @Override
@@ -37,8 +41,18 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public void setStyle(Style style) {
+        styleSheet = style.copy();
+    }
+    
+    @Override
     public void addStyle(String style) {
         styleSheet.append(StyleSheet.fromString(style));
+    }
+    
+    @Override
+    public void addStyle(Style style) {
+        styleSheet.append(style);
     }
     
     public Style styleSheet() {
@@ -51,6 +65,16 @@ public class TUIManager implements UIManager {
     
     public void setStyle(TStyle style) {
         this.style = style;
+    }
+    
+    @Override
+    public TResource resource(String key) {
+        return map.getResource(key);
+    }
+    
+    @Override
+    public void resource(String key, Object data) {
+        map.putResource(key,data);
     }
     
     @Override
@@ -215,6 +239,11 @@ public class TUIManager implements UIManager {
     
     @Override
     public TToolButton toolButton(Icon icon) {
+        return new TToolButton(icon);
+    }
+    
+    @Override
+    public TToolButton toolButton(Resource icon) {
         return new TToolButton(icon);
     }
     

@@ -18,9 +18,9 @@ public class Color {
     public final static Color WHITE         = Color.fromFloat(1, 1, 1);
     public final static Color BLACK         = Color.fromFloat(0, 0, 0);
     
-    public final static Color LIGHT_GRAY    = Color.fromFloat(0.25f, 0.25f, 0.25f);
+    public final static Color LIGHT_GRAY    = Color.fromFloat(0.75f, 0.75f, 0.75f);
     public final static Color GRAY          = Color.fromFloat(0.5f, 0.5f, 0.5f);
-    public final static Color DARK_GRAY     = Color.fromFloat(0.75f, 0.75f, 0.75f);
+    public final static Color DARK_GRAY     = Color.fromFloat(0.25f, 0.25f, 0.25f);
     
     public final static Color DARK_RED      = Color.fromFloat(0.5f, 0, 0);
     public final static Color DARK_GREEN    = Color.fromFloat(0, 0.5f, 0);

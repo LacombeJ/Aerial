@@ -7,9 +7,13 @@ import jonl.jutils.call.Args;
 import jonl.jutils.call.ParsedCall;
 import jonl.jutils.call.Parser;
 import jonl.vmath.Color;
+import jonl.vmath.Vector2;
 
 public class JSS {
 
+    // Every non-private method should try to catch exceptions so that no errors are thrown for faulty style sheets
+    // TODO handle displaying warnings for exception messages
+    
     private static final HashMap<String,Color> NAMED_COLORS = new HashMap<>();
     static {
         NAMED_COLORS.put("red",Color.RED);
@@ -80,18 +84,23 @@ public class JSS {
         return null;
     }
     static ColorValue color(String value) {
-        Color color = colorBasic(value);
-        if (color!=null) {
-            return new ColorValue(color);
+        try {
+            Color color = colorBasic(value);
+            if (color!=null) {
+                return new ColorValue(color);
+            }
+            if (value.startsWith("linear-gradient")) {
+                ParsedCall call = Parser.call(value);
+                Args arg = new Args(call.args);
+                Color bot = colorBasic(arg.get(0));
+                Color top = colorBasic(arg.get(1));
+                return new ColorValue(bot,top);
+            }
+            return new ColorValue(Color.BLACK);
         }
-        if (value.startsWith("linear-gradient")) {
-            ParsedCall call = Parser.call(value);
-            Args arg = new Args(call.args);
-            Color bot = colorBasic(arg.get(0));
-            Color top = colorBasic(arg.get(1));
-            return new ColorValue(bot,top);
+        catch (Exception e) {
+            return new ColorValue(Color.BLACK);
         }
-        return null;
     }
     
     private static final HashMap<String,HAlign> TEXT_ALIGN = new HashMap<>();
@@ -102,7 +111,11 @@ public class JSS {
         
     }
     public static HAlign textAlign(String value) {
-        return TEXT_ALIGN.get(value);
+        HAlign align = TEXT_ALIGN.get(value);
+        if (align!=null) {
+            return align;
+        }
+        return HAlign.CENTER;
     }
     
     private static final HashMap<String,TFont> FONT = new HashMap<>();
@@ -111,7 +124,11 @@ public class JSS {
         
     }
     public static TFont font(String value) {
-        return FONT.get(value);
+        TFont font = FONT.get(value);
+        if (font!=null) {
+            return font;
+        }
+        return TFont.CALIBRI;
     }
     
     static class ColorValue {
@@ -136,10 +153,61 @@ public class JSS {
     }
     
     public static int pixels(String value) {
-        if (value.endsWith("px")) {
-            return Integer.parseInt(value.substring(0,value.length()-2));
+        try {
+            if (value.endsWith("px")) {
+                return Integer.parseInt(value.substring(0,value.length()-2));
+            }
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
         }
-        return Integer.parseInt(value);
+    }
+    
+    public static Vector2 vec2(String value) {
+        try {
+            ParsedCall call = Parser.call(value);
+            Args args = new Args(call.args);
+            float x = args.getFloat(0);
+            float y = args.getFloat(1);
+            return new Vector2(x,y);
+        } catch (Exception e) {
+            return new Vector2();
+        }
+    }
+    
+    public static float asInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    public static float asFloat(String value) {
+        try {
+            return Float.parseFloat(value);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    public static double asDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    public static String innerString(String value) {
+        try {
+            if (value.charAt(0)=='"' && value.charAt(value.length()-1)=='"') {
+                return value.substring(1,value.length()-1);
+            }
+        } catch (Exception e) {
+            
+        }
+        return value;
     }
     
 }

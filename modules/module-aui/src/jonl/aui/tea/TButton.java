@@ -100,7 +100,6 @@ public class TButton extends TWidget implements Button {
     
     @Override
     protected void paint(TGraphics g) {
-        style().button().paint(this,info(),g);
         ButtonRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
