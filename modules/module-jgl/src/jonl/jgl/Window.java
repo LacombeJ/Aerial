@@ -1,5 +1,7 @@
 package jonl.jgl;
 
+import java.awt.image.BufferedImage;
+
 import jonl.jgl.Input.CursorState;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
@@ -145,6 +147,8 @@ public interface Window {
     public void maximize();
     public void minimize();
     public void restore();
+    
+    public void setIcon(BufferedImage image);
     
     public boolean getAttribute(int attribute);
     

@@ -1,5 +1,7 @@
 package jonl.aui;
 
+import java.awt.image.BufferedImage;
+
 public interface Window extends Widget {
 
     /** Creates the window with some of the set parameters */
@@ -27,4 +29,6 @@ public interface Window extends Widget {
     void minimize();
     void restore();
 
+    void setIcon(BufferedImage image);
+    
 }

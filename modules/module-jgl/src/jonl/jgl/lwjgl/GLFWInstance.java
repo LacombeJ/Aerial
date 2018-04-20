@@ -1,5 +1,6 @@
 package jonl.jgl.lwjgl;
 
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +8,9 @@ import java.util.HashMap;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import jonl.jgl.Window;
@@ -84,6 +87,9 @@ class GLFWInstance {
     private static final RequestQueue<SetCursorRequest,SetCursorResponse>
         SET_CURSOR_REQUEST          = new RequestQueue<>( (request) -> _setCursor(request) );
     
+    private static final RequestQueue<SetIconRequest,SetIconResponse>
+        SET_ICON_REQUEST          = new RequestQueue<>( (request) -> _setIcon(request) );
+    
     private static final RequestQueue<GetMouseButtonRequest,GetMouseButtonResponse>
         GET_MOUSE_BUTTON_REQUEST        = new RequestQueue<>( (request) -> _getMouseButton(request) );
     
@@ -110,6 +116,7 @@ class GLFWInstance {
             SET_INPUT_MODE_REQUEST,
             GET_CURSOR_POS_REQUEST,
             SET_CURSOR_REQUEST,
+            SET_ICON_REQUEST,
             GET_MOUSE_BUTTON_REQUEST,
             GET_KEY_REQUEST,
             SET_WINDOW_VISIBLE_REQUEST,
@@ -160,6 +167,9 @@ class GLFWInstance {
     }
     static SetCursorResponse setCursor(SetCursorRequest request) {
         return SET_CURSOR_REQUEST.request(request);
+    }
+    static SetIconResponse setIcon(SetIconRequest request) {
+        return SET_ICON_REQUEST.request(request);
     }
     static GetMouseButtonResponse getMouseButton(GetMouseButtonRequest request) {
         return GET_MOUSE_BUTTON_REQUEST.request(request);
@@ -721,7 +731,7 @@ class GLFWInstance {
     }
     
     /* ********************************************************************************* */
-    /* ******************************** Get Cursor Pos ********************************* */
+    /* ******************************** Set Cursor Pos ********************************* */
     /* ********************************************************************************* */
     static class SetCursorRequest extends Request {
         final long id;
@@ -739,6 +749,42 @@ class GLFWInstance {
     private static SetCursorResponse _setCursor(SetCursorRequest request) {
         GLFW.glfwSetCursor(request.id,request.cursorId);
         return new SetCursorResponse();
+    }
+    
+    /* ********************************************************************************* */
+    /* *********************************** Set Icon ************************************ */
+    /* ********************************************************************************* */
+    static class SetIconRequest extends Request {
+        final long id;
+        final int width;
+        final int height;
+        final byte[] pixels;
+        SetIconRequest(long id, int width, int height, byte[] pixels) {
+            this.id = id;
+            this.width = width;
+            this.height = height;
+            this.pixels = pixels;
+        }
+    }
+    static class SetIconResponse extends Response {
+        SetIconResponse() {
+            
+        }
+    }
+    private static SetIconResponse _setIcon(SetIconRequest request) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            ByteBuffer buffer = stack.malloc(48*48*4);
+            buffer.put(request.pixels);
+            buffer.flip();
+            
+            GLFWImage.Buffer imageBuffer = GLFWImage.create(1);
+            imageBuffer.width(request.width);
+            imageBuffer.height(request.height);
+            imageBuffer.pixels(buffer);
+            
+            GLFW.glfwSetWindowIcon(request.id, imageBuffer);
+        }
+        return new SetIconResponse();
     }
     
     /* ********************************************************************************* */

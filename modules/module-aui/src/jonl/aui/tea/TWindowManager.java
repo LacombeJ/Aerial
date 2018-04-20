@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 import jonl.aui.HAlign;
@@ -29,6 +30,8 @@ class TWindowManager {
     private GLFWWindow glWindow;
     private GL gl;
     private Input input;
+    
+    private BufferedImage icon;
     
     private String title = "Window";
     private boolean visible;
@@ -145,6 +148,11 @@ class TWindowManager {
                 int prefWidth = Math.max(minWidth, sizeHint.width);
                 int prefHeight = Math.max(minHeight, sizeHint.height);
                 glWindow.setSizeLimits(prefWidth, prefHeight, -1, -1);
+                
+                if (icon!=null) {
+                    glWindow.setIcon(icon);
+                }
+                
             }
             gl = glWindow.getGraphicsLibrary();
             input = new TInput(glWindow.getInput(),()->window.height);
@@ -314,6 +322,16 @@ class TWindowManager {
         }
     }
     
+    void setIcon(BufferedImage icon) {
+        synchronized (lock) {
+            if (glWindow!=null) {
+                windowEventQueue.addLast(new TWindowEvent.SetIcon(icon));
+            } else {
+                this.icon = icon;
+            }
+        }
+    }
+    
     jonl.jgl.Window window() {
         return glWindow;
     }
@@ -452,6 +470,13 @@ class TWindowManager {
             boolean decorated;
             SetDecorated(boolean decorated) {
                 this.decorated = decorated;
+            }
+        }
+        
+        static class SetIcon extends TWindowEvent {
+            BufferedImage icon;
+            SetIcon(BufferedImage icon) {
+                this.icon = icon;
             }
         }
         

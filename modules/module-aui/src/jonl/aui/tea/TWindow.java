@@ -1,5 +1,7 @@
 package jonl.aui.tea;
 
+import java.awt.image.BufferedImage;
+
 import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.Widget;
@@ -158,6 +160,11 @@ public class TWindow extends TWidget implements Window {
     @Override
     public void restore() {
         windowManager.window().restore();
+    }
+    
+    @Override
+    public void setIcon(BufferedImage image) {
+        windowManager.setIcon(image);
     }
     
 }

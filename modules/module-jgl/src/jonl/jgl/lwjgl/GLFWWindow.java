@@ -1,5 +1,6 @@
 package jonl.jgl.lwjgl;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
@@ -16,6 +17,7 @@ import jonl.jgl.lwjgl.GLFWInstance.GetWindowAttribResponse;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.GetWindowFrameSizeResponse;
 import jonl.jgl.lwjgl.GLFWInstance.SetCursorRequest;
+import jonl.jgl.lwjgl.GLFWInstance.SetIconRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetInputModeRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowPosRequest;
 import jonl.jgl.lwjgl.GLFWInstance.SetWindowSizeLimitsRequest;
@@ -332,6 +334,24 @@ public final class GLFWWindow implements Window {
     public void restore() {
         WindowRequest request = new WindowRequest(id, WindowRequestType.RESTORE);
         GLFWInstance.window(request);
+    }
+    
+    @Override
+    public void setIcon(BufferedImage image) {
+        byte[] pixels = new byte[image.getHeight()*image.getWidth()*4];
+        int c = 0;
+        for (int j=0; j<image.getHeight(); j++) {
+            for (int i=0; i<image.getWidth(); i++) {
+                int rgba = image.getRGB(i,j);
+                pixels[c*4+0] = (byte) ((rgba >> 16) & 255);
+                pixels[c*4+1] = (byte) ((rgba >> 8) & 255);
+                pixels[c*4+2] = (byte) ((rgba) & 255);
+                pixels[c*4+3] = (byte) ((rgba >> 24)&255);
+                c++;
+            }
+        }
+        SetIconRequest request = new SetIconRequest(id, image.getWidth(), image.getHeight(), pixels);
+        GLFWInstance.setIcon(request);
     }
 
     @Override
