@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Align;
 import jonl.aui.Menu;
 import jonl.aui.MenuBar;
+import jonl.aui.tea.graphics.WidgetRenderer;
 
 public class TMenuBar extends TButtonBar implements MenuBar {
     
@@ -22,6 +23,12 @@ public class TMenuBar extends TButtonBar implements MenuBar {
     @Override
     public void addSeparator() {
         super.addSeparator();
+    }
+    
+    @Override
+    protected void paint(TGraphics g) {
+        WidgetRenderer.paint(this,"Menu",g,info());
+        paint().emit(cb->cb.f(g));
     }
     
 }

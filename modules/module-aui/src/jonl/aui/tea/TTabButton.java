@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Margin;
+import jonl.aui.tea.graphics.ButtonRenderer;
 import jonl.vmath.Mathi;
 
 public class TTabButton extends TRadioButton {
@@ -35,8 +36,7 @@ public class TTabButton extends TRadioButton {
     
     @Override
     protected void paint(TGraphics g) {
-        style().tabButton().paint(this,info(),g);
-        
+        ButtonRenderer.paint(this,"TabPanel.Button",g,info());
         paint().emit(cb->cb.f(g));
     }
     

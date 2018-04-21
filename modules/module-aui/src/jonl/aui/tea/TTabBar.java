@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Button;
+import jonl.aui.tea.graphics.WidgetRenderer;
 import jonl.vmath.Color;
 
 public class TTabBar extends TButtonBar {
@@ -42,6 +43,12 @@ public class TTabBar extends TButtonBar {
             super.remove(newTabButton);
             hasNewTabButton = false;
         }
+    }
+    
+    @Override
+    protected void paint(TGraphics g) {
+        WidgetRenderer.paint(this,"TabPanel.Bar",g,info());
+        paint().emit(cb->cb.f(g));
     }
     
 

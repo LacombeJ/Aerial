@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import jonl.aui.Align;
 import jonl.aui.ComboBox;
 import jonl.aui.Signal;
+import jonl.aui.SizePolicy;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback2D;
@@ -20,7 +21,7 @@ public class TComboBox extends TWidget implements ComboBox {
     
     public TComboBox() {
         super();
-        
+        this.setSizePolicy(new SizePolicy(SizePolicy.MINIMUM, SizePolicy.FIXED));
     }
     
     @Override

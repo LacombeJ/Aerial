@@ -1,6 +1,7 @@
 package jonl.aui.tea;
 
 import jonl.aui.CheckBox;
+import jonl.aui.tea.graphics.CheckBoxRenderer;
 
 public class TCheckBox extends TButton implements CheckBox {
 
@@ -21,7 +22,7 @@ public class TCheckBox extends TButton implements CheckBox {
     
     @Override
     protected void paint(TGraphics g) {
-        style().checkBox().paint(this,info(),g);
+        CheckBoxRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     

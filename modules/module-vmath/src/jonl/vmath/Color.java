@@ -48,6 +48,11 @@ public class Color {
         return new Vector4(r,g,b,a);
     }
     
+    @Override
+    public String toString() {
+        return "Color("+r+","+g+","+b+","+a+")";
+    }
+    
     public static Color fromInt(int r, int g, int b, int a) {
         float R = r / 255f;
         float G = g / 255f;

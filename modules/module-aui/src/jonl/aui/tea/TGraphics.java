@@ -57,6 +57,7 @@ public class TGraphics implements Graphics {
     Program solid;
     Program textureProgram;
     Program gradient;
+    Program boxProgram;
     
     Style cascade;
     
@@ -82,6 +83,7 @@ public class TGraphics implements Graphics {
         solid = loadProgramFromSource(TShader.solidVSSource(version),TShader.solidFSSource(version));
         textureProgram = loadProgramFromSource(TShader.textureVSSource(version),TShader.textureFSSource(version));
         gradient = loadProgramFromSource(TShader.gradientVSSource(version),TShader.gradientFSSource(version));
+        boxProgram = loadProgramFromSource(TShader.boxVertex(version),TShader.boxFragment(version));
         
         textManager = new TTextManager(gl);
         imageManager = new TImageManager(gl);
@@ -172,6 +174,30 @@ public class TGraphics implements Graphics {
     
     public void renderCircleOutline(float x, float y, float w, float h, Vector4 color) {
         render(circleOutline,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),color,GL.LINE_STRIP);
+    }
+    
+    public void renderBox(float x, float y, float w, float h, float border, float radius,
+            Color color00, Color color01, Color color10, Color color11,
+            Color borderColor00, Color borderColor01, Color borderColor10, Color borderColor11) {
+        renderBox(x+w/2+offsetX,y+h/2+offsetY,w,h,border,radius,
+                color00.toVector(),color01.toVector(),color10.toVector(),color11.toVector(),
+                borderColor00.toVector(),borderColor01.toVector(),borderColor10.toVector(),borderColor11.toVector());
+    }
+    
+    public void renderBox(float x, float y, float w, float h, float border, float radius, Color colorBot, Color colorTop, Color borderColorBot, Color borderColorTop) {
+        renderBox(x,y,w,h,border,radius,colorBot,colorBot,colorTop,colorTop,borderColorBot,borderColorBot,borderColorTop,borderColorTop);
+    }
+    
+    public void renderBox(float x, float y, float w, float h, float border, float radius, Color color, Color borderColor) {
+        renderBox(x,y,w,h,border,radius,color,color,borderColor,borderColor);
+    }
+    
+    public void renderBox(float x, float y, float w, float h, Color colorBot, Color colorTop) {
+        renderBox(x,y,w,h,0,0,colorBot,colorBot,colorTop,colorTop);
+    }
+    
+    public void renderBox(float x, float y, float w, float h, Color color) {
+        renderBox(x,y,w,h,color,Color.TRANSPARENT);
     }
     
     public void renderRect(float x, float y, float w, float h, Vector4 color) {
@@ -290,6 +316,42 @@ public class TGraphics implements Graphics {
     
     private void renderGradient(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 botLeft, Vector4 botRight, Vector4 topLeft, Vector4 topRight) {
         renderGradient(mesh,trans,rot,scale,botLeft,botRight,topLeft,topRight,GL.TRIANGLES);
+    }
+    
+    private void renderBox(float x, float y, float width, float height, float border, float radius,
+            Vector4 c00,
+            Vector4 c01,
+            Vector4 c10,
+            Vector4 c11,
+            Vector4 bc00,
+            Vector4 bc01,
+            Vector4 bc10,
+            Vector4 bc11) {
+        Matrix4 mat = Matrix4.identity();
+        mat.translate(x,y,0);
+        mat.scale(width,height,1);
+        
+        Matrix4 B = Matrix4.identity();
+        B.translate(width/2,height/2,0);
+        B.scale(width,height,1);
+        
+        gl.glUseProgram(boxProgram);
+        boxProgram.setUniformMat4("MVP",ortho.get().multiply(mat).toArray());
+        boxProgram.setUniformMat4("B",B.toArray());
+        boxProgram.setUniform("width",width);
+        boxProgram.setUniform("height",height);
+        boxProgram.setUniform("border",border);
+        boxProgram.setUniform("radius",radius);
+        boxProgram.setUniform("c00",c00.x,c00.y,c00.z,c00.w); //bottom-left
+        boxProgram.setUniform("c01",c01.x,c01.y,c01.z,c01.w); //bottom-right
+        boxProgram.setUniform("c10",c10.x,c10.y,c10.z,c10.w); //top-left
+        boxProgram.setUniform("c11",c11.x,c11.y,c11.z,c11.w); //top-right
+        boxProgram.setUniform("bc00",bc00.x,bc00.y,bc00.z,bc00.w); //border bottom-left
+        boxProgram.setUniform("bc01",bc01.x,bc01.y,bc01.z,bc01.w); //border bottom-right
+        boxProgram.setUniform("bc10",bc10.x,bc10.y,bc10.z,bc10.w); //border top-left
+        boxProgram.setUniform("bc11",bc11.x,bc11.y,bc11.z,bc11.w); //border top-right
+        gl.glRender(box, GL.TRIANGLES);
+        gl.glUseProgram(null);
     }
     
     private void render(Mesh mesh, Vector3 trans, Vector3 rot, Vector3 scale, Vector4 color, GL.Mode mode) {

@@ -3,14 +3,59 @@ package jonl.aui.tea.graphics;
 import java.util.HashMap;
 
 import jonl.aui.HAlign;
+import jonl.aui.tea.TGraphics;
+import jonl.aui.tea.TWidget;
 import jonl.jutils.call.Args;
 import jonl.jutils.call.ParsedCall;
 import jonl.jutils.call.Parser;
+import jonl.jutils.jss.Style;
 import jonl.vmath.Color;
 import jonl.vmath.Vector2;
 
 public class JSS {
 
+    
+    static Style style(Style style, String sub) {
+        Style subStyle = style.style(sub);
+        if (subStyle!=null) {
+            return subStyle;
+        }
+        return style;
+    }
+    
+    static Style name(TWidget widget, Style style, TGraphics g) {
+        String name = widget.name();
+        if (!name.equals("")) {
+            String id = "#"+name;
+            Style idStyle = g.style().style(id);
+            if (idStyle!=null) {
+                Style append = style.copy();
+                append.append(idStyle);
+                return append;
+            }
+        }
+        return style;
+    }
+    
+    static void rect(TGraphics g, float x, float y, float width, float height, float border, float radius,
+            ColorValue color, ColorValue borderColor) {
+        
+        Color cBot = color.color;
+        Color cTop = color.color;
+        Color bBot = borderColor.color;
+        Color bTop = borderColor.color;
+        if (color.type==ColorValue.LINEAR_GRADIENT) {
+            cTop = color.top;
+        }
+        if (borderColor.type==ColorValue.LINEAR_GRADIENT) {
+            cTop = color.top;
+        }
+        
+        g.renderBox(x,y,width,height,border,radius,cBot,cTop,bBot,bTop);
+    }
+    
+    
+    
     // Every non-private method should try to catch exceptions so that no errors are thrown for faulty style sheets
     // TODO handle displaying warnings for exception messages
     
@@ -47,34 +92,28 @@ public class JSS {
         if (value.startsWith("#")) {
             return Color.fromHex(value);
         }
-        if (value.startsWith("rgb")) {
-            ParsedCall call = Parser.call(value);
-            Args arg = new Args(call.args);
+        ParsedCall call = Parser.call(value);
+        Args arg = new Args(call.args);
+        if (call.label.equals("rgb")) {
             int r = arg.getInt(0);
             int g = arg.getInt(1);
             int b = arg.getInt(2);
             return Color.fromInt(r,g,b);
         }
-        if (value.startsWith("rgba")) {
-            ParsedCall call = Parser.call(value);
-            Args arg = new Args(call.args);
+        if (call.label.equals("rgba")) {
             int r = arg.getInt(0);
             int g = arg.getInt(1);
             int b = arg.getInt(2);
             int a = arg.getInt(3);
             return Color.fromInt(r,g,b,a);
         }
-        if (value.startsWith("rgbf")) {
-            ParsedCall call = Parser.call(value);
-            Args arg = new Args(call.args);
+        if (call.label.equals("rgbf")) {
             float r = arg.getFloat(0);
             float g = arg.getFloat(1);
             float b = arg.getFloat(2);
             return Color.fromFloat(r,g,b);
         }
-        if (value.startsWith("rgbaf")) {
-            ParsedCall call = Parser.call(value);
-            Args arg = new Args(call.args);
+        if (call.label.equals("rgbaf")) {
             float r = arg.getFloat(0);
             float g = arg.getFloat(1);
             float b = arg.getFloat(2);
@@ -175,7 +214,7 @@ public class JSS {
         }
     }
     
-    public static float asInt(String value) {
+    public static int asInt(String value) {
         try {
             return Integer.parseInt(value);
         } catch (Exception e) {

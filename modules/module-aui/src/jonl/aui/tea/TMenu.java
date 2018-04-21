@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Align;
 import jonl.aui.Menu;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.ButtonRenderer;
 import jonl.jgl.Input;
 
 public class TMenu extends TButton implements Menu  {
@@ -33,7 +34,7 @@ public class TMenu extends TButton implements Menu  {
     
     @Override
     protected void paint(TGraphics g) {
-        style().menuButton().paint(this,info(),g);
+        ButtonRenderer.paint(this,"Menu.Button",g,info());
         paint().emit(cb->cb.f(g));
     }
     

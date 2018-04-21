@@ -6,6 +6,7 @@ import jonl.aui.HAlign;
 import jonl.aui.VAlign;
 import jonl.aui.Widget;
 import jonl.aui.Window;
+import jonl.aui.tea.graphics.WidgetRenderer;
 import jonl.jgl.Closer;
 import jonl.jgl.GL;
 import jonl.jgl.Input;
@@ -41,6 +42,12 @@ public class TWindow extends TWidget implements Window {
     @Override
     protected TRootPanel _root_panel() {
         return root;
+    }
+    
+    @Override
+    protected void paint(TGraphics g) {
+        WidgetRenderer.paint(this,"Window",g,info());
+        paint().emit(cb->cb.f(g));
     }
     
     @Override

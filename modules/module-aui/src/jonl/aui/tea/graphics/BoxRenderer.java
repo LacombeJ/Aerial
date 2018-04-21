@@ -14,12 +14,7 @@ public class BoxRenderer {
         float border = JSS.asFloat(style.get("border"));
         float radius = JSS.asFloat(style.get("radius"));
         
-        if (border!=0) {
-            //TODO create border mesh with a cut out in middle
-            StyleRenderer.rect(g,0,0,box.width,box.height,borderColor,radius);
-        }
-        StyleRenderer.rect(g,border,border,box.width-2*border,box.height-2*border,background,radius);
-        
+        JSS.rect(g,box.x,box.y,box.width,box.height,border,radius,background,borderColor);
     }
     
 }

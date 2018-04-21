@@ -26,7 +26,7 @@ public class TextRenderer {
             TX = box.width - 0;
         }
         
-        g.renderText(text,offset.x+TX,y,textAlign,VAlign.MIDDLE,font,color.color);
+        g.renderText(text,offset.x+TX,offset.y+y,textAlign,VAlign.MIDDLE,font,color.color);
         
     }
     
