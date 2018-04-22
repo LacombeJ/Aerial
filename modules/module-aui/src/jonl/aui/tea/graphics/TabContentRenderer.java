@@ -8,9 +8,7 @@ import jonl.jutils.jss.Style;
 public class TabContentRenderer {
 
     public static void paint(TTabContent widget, TGraphics g, TWidgetInfo info) {
-        Style jss = g.style();
-        
-        Style style = jss.style("TabPanel.Content");
+        Style style = JSS.style(g.style(),"TabPanel.Content");
         style = JSS.name(widget,style,g);
         
         TBox box = new TBox(0,0,widget.width(),widget.height());

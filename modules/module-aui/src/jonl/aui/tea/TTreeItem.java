@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import jonl.aui.Align;
 import jonl.aui.TreeItem;
+import jonl.aui.tea.graphics.ButtonRenderer;
 
 public class TTreeItem implements TreeItem {
 
@@ -153,10 +154,10 @@ public class TTreeItem implements TreeItem {
             layout.setMargin(0,0,0,0);
             layout.setSpacing(0);
             
-            expandButton = new TButton();
+            expandButton = new TreeDropButton();
             expandButton.setIcon(TIcon.CARET);
             
-            itemButton = new TButton();
+            itemButton = new TreeItemButton();
             itemButton.setText(text);
             
             layout.add(expandButton);
@@ -171,6 +172,23 @@ public class TTreeItem implements TreeItem {
             });
             
         }
+        
+        class TreeItemButton extends TButton {
+            @Override
+            protected void paint(TGraphics g) {
+                ButtonRenderer.paint(this,"Tree.Item",g,info());
+                paint().emit(cb->cb.f(g));
+            }
+        }
+        
+        class TreeDropButton extends TButton {
+            @Override
+            protected void paint(TGraphics g) {
+                ButtonRenderer.paint(this,"Tree.Drop",g,info());
+                paint().emit(cb->cb.f(g));
+            }
+        }
+        
     }
 
 }

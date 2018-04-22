@@ -130,8 +130,8 @@ public class TGraphics implements Graphics {
         offsetX = w.windowX();
         offsetY = w.windowY();
         
-        cascade = w.cascade(cascade);
         Style css = cascade.copy();
+        cascade = w.cascade(cascade);
         paintWidget(w);
         cascade = css;
         
@@ -272,6 +272,11 @@ public class TGraphics implements Graphics {
         renderTexture(texture,x,y,texture.getWidth(),texture.getHeight(),color.toVector());
     }
     
+    public void renderImage(TImage image, float x, float y, float rot, Color color) {
+        Texture texture = imageManager.getOrCreateTexture(image);
+        renderTexture(texture,x,y,texture.getWidth(),texture.getHeight(),rot,color.toVector());
+    }
+    
     public void renderImage(TImage image, float x, float y) {
         renderImage(image,x,y,Color.WHITE);
     }
@@ -293,7 +298,11 @@ public class TGraphics implements Graphics {
     }
     
     public void renderTexture(Texture texture, float x, float y, float w, float h, Vector4 color) {
-        render(box,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,0),new Vector3(w,h,1),texture,color);
+        renderTexture(texture,x,y,w,h,0,color);
+    }
+    
+    public void renderTexture(Texture texture, float x, float y, float w, float h, float rot, Vector4 color) {
+        render(box,new Vector3(x+offsetX,y+offsetY,0),new Vector3(0,0,rot),new Vector3(w,h,1),texture,color);
     }
     
     // Top-left orientation

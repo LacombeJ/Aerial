@@ -26,7 +26,7 @@ public class TUIManager implements UIManager {
     
     private TStyle style = new TStyleDefault();
     
-    private Style styleSheet = StyleSheet.fromFile("default.jss");
+    private Style styleSheet = defaultStyle();
     
     private TResourceMap map = new TResourceMap();
     
@@ -291,6 +291,17 @@ public class TUIManager implements UIManager {
     @Override
     public TArrayLayout arrayLayout() {
         return new TArrayLayout();
+    }
+    
+    private Style defaultStyle() {
+        Style style = new Style("default");
+        
+        style.put("background", "white");
+        style.put("color", "black");
+        style.put("font", "calibri");
+        
+        return style;
+        
     }
     
 }

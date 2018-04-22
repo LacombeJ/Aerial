@@ -64,6 +64,12 @@ public class TScrollContent extends TWidget {
                 y = Mathi.clamp(y, 0, Integer.MAX_VALUE);
                 
                 setPositionAndSize(scrollContent.widget(), -x, -y, contentWidth, contentHeight);
+                
+                // Called because when content widget's size policy changes, layout manager
+                // doesn't handle invalidating the scroll panel's layouts because this widget returns
+                // the same size hint (ignoring the changed size hint of the content widget).
+                // So we force a layout invalidation.
+                scrollPanel.invalidateLayout();
             }
         }
 
