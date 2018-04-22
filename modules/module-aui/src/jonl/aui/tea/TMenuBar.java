@@ -27,7 +27,7 @@ public class TMenuBar extends TButtonBar implements MenuBar {
     
     @Override
     protected void paint(TGraphics g) {
-        WidgetRenderer.paint(this,"Menu",g,info());
+        WidgetRenderer.paint(this,"Menu.Bar",g,info());
         paint().emit(cb->cb.f(g));
     }
     

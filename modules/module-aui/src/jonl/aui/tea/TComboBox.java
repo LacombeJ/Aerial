@@ -7,6 +7,9 @@ import jonl.aui.ComboBox;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.ButtonRenderer;
+import jonl.aui.tea.graphics.ComboBoxRenderer;
+import jonl.aui.tea.graphics.WidgetRenderer;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback2D;
 
@@ -161,7 +164,7 @@ public class TComboBox extends TWidget implements ComboBox {
     
     @Override
     protected void paint(TGraphics g) {
-        style().comboBox().paint(this,info(),g);
+        ComboBoxRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     
@@ -193,7 +196,13 @@ public class TComboBox extends TWidget implements ComboBox {
         
         public TComboBoxBar(Align align) {
             super(align);
-            
+            widgetLayout().setMargin(2,2,2,2);
+        }
+        
+        @Override
+        protected void paint(TGraphics g) {
+            WidgetRenderer.paint(this,"ComboBox.Bar",g,info());
+            paint().emit(cb->cb.f(g));
         }
         
     }
@@ -205,6 +214,12 @@ public class TComboBox extends TWidget implements ComboBox {
         
         TComboBoxButton(String text) {
             super(text);
+        }
+        
+        @Override
+        protected void paint(TGraphics g) {
+            ButtonRenderer.paint(this,"ComboBox.Button",g,info());
+            paint().emit(cb->cb.f(g));
         }
         
     }

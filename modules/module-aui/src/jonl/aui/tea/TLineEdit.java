@@ -1,14 +1,11 @@
 package jonl.aui.tea;
 
-import jonl.aui.HAlign;
 import jonl.aui.LineEdit;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
-import jonl.aui.VAlign;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.LineEditRenderer;
 import jonl.jutils.func.Callback;
-import jonl.vmath.Color;
-import jonl.vmath.Vector4;
 
 public class TLineEdit extends TWidget implements LineEdit {
 
@@ -52,40 +49,8 @@ public class TLineEdit extends TWidget implements LineEdit {
         return hint;
     }
     
-    @Override
     protected void paint(TGraphics g) {
-        
-        float fIntensityValue = info().get("fIntensityValue", 0f);
-        
-        float fMaxValue = info().get("fMaxValue", 30);
-        Color cNormal = info().get("cNormal", Color.BLACK);
-        Color cHover = info().get("cHover", Color.fromInt(0, 0, 255));
-        
-        if (info().get("bIsMouseWithin", false)) {
-            if (fIntensityValue<fMaxValue) {
-                fIntensityValue++;
-                
-            }
-        } else {
-            if (fIntensityValue>0) {
-                fIntensityValue--;
-            }
-        }
-        
-        info().put("fIntensityValue", fIntensityValue);
-        
-        float v = fIntensityValue / fMaxValue;
-        Vector4 primary = cNormal.toVector();
-        Vector4 secondary = cHover.toVector();
-        Vector4 color = primary.lerp(secondary, v);
-        
-        float x = border/2;
-        float y = height/2;
-        
-        g.renderRect(0, 0, width, height, Color.WHITE);
-        g.renderRectOutline(0, 0, width, height, color, 2f);
-        g.renderText(text(),x,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),Color.BLACK);
-        
+        LineEditRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     

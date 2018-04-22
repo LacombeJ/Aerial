@@ -2,6 +2,7 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.ButtonRenderer;
 import jonl.jgl.Input;
 import jonl.vmath.Mathi;
 
@@ -47,6 +48,12 @@ public class  TSliderButton extends TButton {
         hint.width = sliderWidth;
         hint.height = sliderHeight;
         return hint;
+    }
+    
+    @Override
+    protected void paint(TGraphics g) {
+        ButtonRenderer.paint(this,"Slider.Button",g,info());
+        paint().emit(cb->cb.f(g));
     }
     
     @Override

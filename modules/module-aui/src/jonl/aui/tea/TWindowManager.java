@@ -119,8 +119,11 @@ class TWindowManager {
                 int minHeight = window.minHeight();
                 TSizeHint sizeHint = window.sizeHint();
                 
-                window.width = Math.max(minWidth, window.width);
-                window.height = Math.max(minHeight, window.height);
+                int prefWidth = Math.max(minWidth, sizeHint.width);
+                int prefHeight = Math.max(minHeight, sizeHint.height);
+                
+                window.width = Mathi.max(minWidth, window.width, prefWidth);
+                window.height = Mathi.max(minHeight, window.height, prefHeight);
                 
                 if (usePolicyWidth) {
                     window.width = Mathi.max(sizeHint.width, window.width, 1);
@@ -131,6 +134,8 @@ class TWindowManager {
                 
                 glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,Window.WINDOW,false);
                 
+                // Using Integer.MAX_VALUE for glfw max size limits doesn't work. Using GLFW_DONT_CARE=-1 instead
+                glWindow.setSizeLimits(prefWidth, prefHeight, -1, -1);
                 
                 TPoint aligned = getPositionAlignment(halign, valign);
                 if (isXAligned) {
@@ -140,14 +145,12 @@ class TWindowManager {
                     window.y = aligned.y;
                 }
                 
+                window.x = Mathi.max(0, window.x);
+                window.y = Mathi.max(0, window.y);
+                
                 // We include insets here because the position of the gl window doesn't include the GLFW window frame isnets
                 Insets insets = glWindow.getInsets();
                 glWindow.setPosition(insets.left+window.x,insets.top+window.y);
-                
-                // Using Integer.MAX_VALUE for glfw max size limits doesn't work. Using GLFW_DONT_CARE=-1 instead
-                int prefWidth = Math.max(minWidth, sizeHint.width);
-                int prefHeight = Math.max(minHeight, sizeHint.height);
-                glWindow.setSizeLimits(prefWidth, prefHeight, -1, -1);
                 
                 if (icon!=null) {
                     glWindow.setIcon(icon);

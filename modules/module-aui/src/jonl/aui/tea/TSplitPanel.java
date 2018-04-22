@@ -5,10 +5,10 @@ import jonl.aui.Signal;
 import jonl.aui.SplitPanel;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.SplitPanelRenderer;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.vmath.Mathd;
-import jonl.vmath.Vector4;
 
 public class TSplitPanel extends TWidget implements SplitPanel {
     
@@ -127,17 +127,8 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     
     @Override
     protected void paint(TGraphics g) {
-        switch (align()) {
-        case HORIZONTAL:
-            int minX = widgetOne().width();
-            g.renderRect(minX,0,widgetLayout().spacing(),height(),new Vector4(0.1f,0.1f,0.3f,1));
-            break;
-        case VERTICAL:
-            int minY = widgetOne().height();
-            g.renderRect(0,minY,width(),widgetLayout().spacing(),new Vector4(0.1f,0.1f,0.3f,1));
-            break;
-        }
-        
+        info().put("iSpacing",widgetLayout().spacing());
+        SplitPanelRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     

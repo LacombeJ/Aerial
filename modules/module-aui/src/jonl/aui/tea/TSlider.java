@@ -4,6 +4,7 @@ import jonl.aui.Align;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.Slider;
+import jonl.aui.tea.graphics.SliderRenderer;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 import jonl.vmath.Mathi;
@@ -47,9 +48,14 @@ public class TSlider extends TWidget implements Slider {
         this(align, new TSliderButton(20,20), new TSliderLayout(),min,max);
     }
     
+    public TSlider(Align align, TSliderButton button) {
+        this(align, button, new TSliderLayout(),0,100);
+    }
+    
     public TSlider(Align align) {
         this(align, new TSliderButton(20,20), new TSliderLayout(),0,100);
     }
+    
     
     public TSlider() {
         this(Align.HORIZONTAL);
@@ -125,16 +131,7 @@ public class TSlider extends TWidget implements Slider {
     
     @Override
     protected void paint(TGraphics g) {
-        
-        float trackerDim = 4f;
-        float halfTracker = trackerDim * 0.5f;
-        
-        if (align==Align.HORIZONTAL) {
-            g.renderRect(0, height()/2 - halfTracker, width(), trackerDim, style().dark());
-        } else {
-            g.renderRect(width()/2 - halfTracker, 0, trackerDim, height(), style().dark());
-        }
-        
+        SliderRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
 

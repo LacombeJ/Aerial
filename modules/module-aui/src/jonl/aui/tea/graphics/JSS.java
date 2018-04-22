@@ -10,6 +10,7 @@ import jonl.jutils.call.ParsedCall;
 import jonl.jutils.call.Parser;
 import jonl.jutils.jss.Style;
 import jonl.vmath.Color;
+import jonl.vmath.Mathd;
 import jonl.vmath.Vector2;
 
 public class JSS {
@@ -48,7 +49,7 @@ public class JSS {
             cTop = color.top;
         }
         if (borderColor.type==ColorValue.LINEAR_GRADIENT) {
-            cTop = color.top;
+            bTop = borderColor.top;
         }
         
         g.renderBox(x,y,width,height,border,radius,cBot,cTop,bBot,bTop);
@@ -197,6 +198,18 @@ public class JSS {
                 return Integer.parseInt(value.substring(0,value.length()-2));
             }
             return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    public static double percent(String value) {
+        try {
+            if (value.endsWith("%")) {
+                double d =  Double.parseDouble(value.substring(0,value.length()-1));
+                return Mathd.clamp(d, 0, 100) / 100.0;
+            }
+            return Mathd.clamp(Double.parseDouble(value), 0, 1);
         } catch (Exception e) {
             return 0;
         }

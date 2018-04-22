@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Dial;
 import jonl.aui.Signal;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.DialRenderer;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
@@ -88,16 +89,15 @@ public class TDial extends TWidget implements Dial {
         return style().dial().getSizeHint(this,info());
     }
     
-    @Override
     protected void paint(TGraphics g) {
-        info().put("bInAdjustState", inAdjustState);
-        style().dial().paint(this, info(), g);
+        DialRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     
     @Override
     protected boolean handleMouseButtonPress(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
+            info().put("bIsMouseDown", true);
             inAdjustState = true;
             ox = event.x;
             oy = event.y;
@@ -111,6 +111,7 @@ public class TDial extends TWidget implements Dial {
     @Override
     protected boolean handleMouseButtonRelease(TMouseEvent event) {
         if (event.button==Input.MB_LEFT) {
+            info().put("bIsMouseDown", false);
             inAdjustState = false;
             released().emit(cb->cb.f());
             return true;
@@ -142,6 +143,19 @@ public class TDial extends TWidget implements Dial {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    protected boolean handleMouseEnter(TMouseEvent event) {
+        info().put("bIsMouseWithin", true);
+        return true;
+    }
+    
+    @Override
+    protected boolean handleMouseExit(TMouseEvent event) {
+        info().put("bIsMouseWithin", false);
+        info().put("bIsMouseDown", false);
+        return true;
     }
 
 }

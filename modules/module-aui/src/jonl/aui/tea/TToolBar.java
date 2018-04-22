@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Align;
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
+import jonl.aui.tea.graphics.WidgetRenderer;
 
 public class TToolBar extends TButtonBar implements ToolBar {
     
@@ -28,9 +29,9 @@ public class TToolBar extends TButtonBar implements ToolBar {
     }
 
     @Override
-    public void paint(TGraphics g) {
-        style().toolBar().paint(this, info(), g);
-        paint().emit((cb)->cb.f(g));
+    protected void paint(TGraphics g) {
+        WidgetRenderer.paint(this,"ToolBar",g,info());
+        paint().emit(cb->cb.f(g));
     }
 
 }

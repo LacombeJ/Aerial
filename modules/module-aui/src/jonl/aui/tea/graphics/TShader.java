@@ -158,8 +158,8 @@ public class TShader {
         
         sb.append("    float r = min(radius,min(width/2,height/2));");
         
-        sb.append("    float a = -1;");
-        sb.append("    float b = -1;");
+        sb.append("    float a = -1;"); //radius distance
+        sb.append("    float b = -1;"); //border distance
         
         sb.append("    if (distance(box,vec2(0,0)) < r) {");
         sb.append("        a = distance(box,vec2(r,r));");
@@ -198,7 +198,7 @@ public class TShader {
         sb.append("    float x = box.x / width;");
         sb.append("    float y = box.y / height;");
         
-        sb.append("    if (b>0 && b<border) {");
+        sb.append("    if ((a>r && border>0) || (b>0 && b<border)) {");
         sb.append("        withinBorder = 1;");
         sb.append("    };");
         

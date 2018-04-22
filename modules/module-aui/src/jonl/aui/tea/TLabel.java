@@ -1,9 +1,8 @@
 package jonl.aui.tea;
 
-import jonl.aui.HAlign;
 import jonl.aui.Label;
 import jonl.aui.SizePolicy;
-import jonl.aui.VAlign;
+import jonl.aui.tea.graphics.LabelRenderer;
 
 public class TLabel extends TWidget implements Label {
 
@@ -41,12 +40,8 @@ public class TLabel extends TWidget implements Label {
         return hint;
     }
     
-    @Override
     protected void paint(TGraphics g) {
-        float x = border/2;
-        float y = height/2;
-        g.renderText(text(),x,y,HAlign.LEFT,VAlign.MIDDLE,style().font(),style().textColor());
-        
+        LabelRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     

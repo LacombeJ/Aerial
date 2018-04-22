@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Icon;
 import jonl.aui.Resource;
 import jonl.aui.ToolButton;
+import jonl.aui.tea.graphics.ButtonRenderer;
 
 public class TToolButton extends TButton implements ToolButton {
     
@@ -26,7 +27,7 @@ public class TToolButton extends TButton implements ToolButton {
     
     @Override
     protected void paint(TGraphics g) {
-        style().toolButton().paint(this,info(),g);
+        ButtonRenderer.paint(this,"ToolButton",g,info());
         paint().emit(cb->cb.f(g));
     }
     

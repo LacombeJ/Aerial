@@ -38,7 +38,7 @@ public class ButtonRenderer {
         TBox box = new TBox(0,0,button.width(),button.height());
 
         BoxRenderer.paint(style, box, g);
-        ImageRenderer.paint(style, box, g);
+        ImageRenderer.paint(style, button.icon(), box, g);
         TextRenderer.paint(style, button.text(), box, g);
     }
     
