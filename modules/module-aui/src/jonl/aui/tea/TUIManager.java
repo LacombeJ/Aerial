@@ -294,14 +294,9 @@ public class TUIManager implements UIManager {
     }
     
     private Style defaultStyle() {
-        Style style = new Style("default");
-        
-        style.put("background", "white");
-        style.put("color", "black");
-        style.put("font", "calibri");
-        
-        return style;
-        
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Style jss = StyleSheet.fromFile(classLoader.getResource("default.jss").getFile());
+        return jss;
     }
     
 }

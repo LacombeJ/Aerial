@@ -4,3 +4,12 @@ dependencies {
     compile project(':modules:module-utils')
     compile project(':modules:module-vmath')
 }
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "res"
+        }
+    }
+}
+
