@@ -67,6 +67,10 @@ public class TUIManager implements UIManager {
         this.style = style;
     }
     
+    public void refreshStyle() {
+        styleSheet = defaultStyle();
+    }
+    
     @Override
     public TResource resource(String key) {
         return map.getResource(key);

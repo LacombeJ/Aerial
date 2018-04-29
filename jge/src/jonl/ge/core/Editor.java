@@ -13,10 +13,10 @@ import jonl.vmath.Vector4;
 
 public class Editor extends AbstractApplication {
 
-	final jonl.jgl.Window glWindow;
-    final GL gl;
-    final EditorInput input;
-    final Window window;
+    private jonl.jgl.Window glWindow;
+    private GL gl;
+    private EditorInput input;
+    private Window window;
     
     private SceneManager manager = new SceneManager();
     
@@ -27,8 +27,44 @@ public class Editor extends AbstractApplication {
 	public Editor() {
 		super();
 		
-        core.gui.create();
+	}
+	
+	void putInfo() {
+        info.put("NAME",            "Editor");
+        info.put("VERSION",         "1.0");
+        info.put("GL_VERSION",      gl.glGetVersion());
+        info.put("GLSL_VERSION",    gl.glGetGLSLVersion());
+    }
+    
+    void initialize() {
         
+        core.scene.create();
+        
+        addScene(core.scene.scene);
+        addScene(core.scene.overlayScene);
+        
+    }
+    
+    void setViewport(Camera camera) {
+        Widget view = core.gui.editorViewer;
+        double width = getWidth();
+        double height = getHeight();
+        double yDiff = view.windowY() - view.y();
+        double px = view.windowX();
+        double py = view.windowY() - yDiff; //Using yDiff because of TWidget orientation of top-left
+        double pw = view.width();
+        double ph = view.height();
+        float left = (float) (px / width);
+        float right = (float) ((px+pw) / width);
+        float bottom = (float) (py / height);
+        float top = (float) ((py+ph) / height);
+        camera.setViewport(left,bottom,right,top);
+    }
+	
+	@Override
+	public void start() {
+	    core.gui.create();
+
         glWindow = core.gui.window.window();
         gl = glWindow.getGraphicsLibrary();
         input = new EditorInput(core.gui.editorViewer, core.gui.window.input());
@@ -74,52 +110,13 @@ public class Editor extends AbstractApplication {
         });
         
         core.gui.window.setCloser(()->{
-        	manager.close();
+            manager.close();
         });
-	}
-	
-	void putInfo() {
-        info.put("NAME",            "Editor");
-        info.put("VERSION",         "1.0");
-        info.put("GL_VERSION",      gl.glGetVersion());
-        info.put("GLSL_VERSION",    gl.glGetGLSLVersion());
-    }
-    
-    void initialize() {
-        
-        core.scene.create();
-        
-        addScene(core.scene.scene);
-        addScene(core.scene.overlayScene);
-        
-    }
-    
-    void setViewport(Camera camera) {
-        Widget view = core.gui.editorViewer;
-        double width = getWidth();
-        double height = getHeight();
-        double yDiff = view.windowY() - view.y();
-        double px = view.windowX();
-        double py = view.windowY() - yDiff; //Using yDiff because of TWidget orientation of top-left
-        double pw = view.width();
-        double ph = view.height();
-        float left = (float) (px / width);
-        float right = (float) ((px+pw) / width);
-        float bottom = (float) (py / height);
-        float top = (float) ((py+ph) / height);
-        camera.setViewport(left,bottom,right,top);
-    }
-	
-	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		glWindow.close();
 	}
 
 	@Override

@@ -10,7 +10,7 @@ Widget {
 }
 
 Window {
-    background: linear-gradient(rgb(8,8,12), rgb(30,36,40));
+    background: rgb(27, 32, 36);
 }
 
 Button {
@@ -68,11 +68,13 @@ ComboBox {
     image-offset: (-6,0);
     text-align: left;
     text-offset: (4,0);
+    border-color: darkgray;
+    border: 1;
 }
 
 ComboBox:hover {
     background: linear-gradient(rgb(64,64,64), rgb(130,130,130));
-    
+    border-color: gray;
 }
 
 ComboBox.Bar {
