@@ -8,6 +8,10 @@ version = '0.0.1'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+repositories {
+    mavenCentral()
+}
+
 boolean isModule(entry) {
     //TODO find a better way to find a module
     //Look at .classpath for eclipse entry kind

@@ -1,5 +1,7 @@
 package jonl.jutils.misc;
 
+import java.io.File;
+
 public class SystemUtils {
 
     private static final String OSNAME = System.getProperty("os.name").toLowerCase();
@@ -27,6 +29,29 @@ public class SystemUtils {
     
     public static boolean isMac() {
         return OSNAME.indexOf("mac") >= 0;
+    }
+    
+    public static String userHome() {
+        return System.getProperty("user.home");
+    }
+    
+    public static String currentDir() {
+        return System.getProperty("user.dir");
+    }
+    
+    public static String appDataLocation() {
+        if (isWindows()) {
+            return userHome() + File.separatorChar + "AppData" + File.separatorChar + "Local";
+        } else if (isLinux()) {
+            throw new Error("App data location not implemented for Linux");
+        } else if (isMac()) {
+            throw new Error("App data location not implemented for Mac");
+        }
+        else throw new Error("App data location not implemented for unknown OS");
+    }
+    
+    public static String appDataLocation(String app) {
+        return appDataLocation() + File.separatorChar + app;
     }
     
 }

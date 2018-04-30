@@ -31,7 +31,7 @@ public class SubApp extends AbstractApplication {
 	}
 	
 	void putInfo() {
-        info.put("NAME",            "Editor");
+        info.put("NAME",            "Application");
         info.put("VERSION",         "1.0");
         info.put("GL_VERSION",      gl.glGetVersion());
         info.put("GLSL_VERSION",    gl.glGetGLSLVersion());

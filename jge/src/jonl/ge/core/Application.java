@@ -117,7 +117,7 @@ public class Application extends AbstractApplication {
 	}
 
 	void putInfo() {
-        info.put("NAME",            "Editor");
+        info.put("NAME",            "Application");
         info.put("VERSION",         "1.0");
         info.put("GL_VERSION",      glWindow.getGraphicsLibrary().glGetVersion());
         info.put("GLSL_VERSION",    glWindow.getGraphicsLibrary().glGetGLSLVersion());
