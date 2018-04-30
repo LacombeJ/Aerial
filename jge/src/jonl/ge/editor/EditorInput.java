@@ -1,4 +1,4 @@
-package jonl.ge.core.editor;
+package jonl.ge.editor;
 
 import jonl.aui.Widget;
 import jonl.aui.tea.TInput;

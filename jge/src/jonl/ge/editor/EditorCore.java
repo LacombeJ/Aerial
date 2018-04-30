@@ -1,4 +1,4 @@
-package jonl.ge.core.editor;
+package jonl.ge.editor;
 
 import jonl.ge.core.Editor;
 

@@ -1,4 +1,4 @@
-package jonl.ge.core.editor;
+package jonl.ge.editor;
 
 import jonl.aui.Align;
 import jonl.aui.ArrayLayout;

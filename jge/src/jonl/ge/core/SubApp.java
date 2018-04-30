@@ -2,31 +2,32 @@ package jonl.ge.core;
 
 import jonl.aui.Widget;
 import jonl.aui.tea.TGraphics;
+import jonl.aui.tea.TWindow;
 import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.ge.core.app.ApplicationWindow;
-import jonl.ge.editor.EditorCore;
-import jonl.ge.editor.EditorInput;
 import jonl.jgl.GL;
 import jonl.vmath.Matrix4;
-import jonl.vmath.Vector4;
 
-public class Editor extends AbstractApplication {
+public class SubApp extends AbstractApplication {
 
-    private jonl.jgl.Window glWindow;
     private GL gl;
-    private EditorInput input;
+    private SubAppInput input;
+    
     private Window window;
+    private jonl.aui.tea.TWindow uiWindow;
+    private jonl.jgl.Window glWindow;
     
     private SceneManager manager = new SceneManager();
     
-    private EditorCore core = new EditorCore(this);
-    
     private boolean loaded = false;
     
-	public Editor() {
+    private Widget widget;
+    
+	public SubApp(jonl.aui.Window window, Widget widget) {
 		super();
-		
+		uiWindow = (TWindow) window;
+		this.widget = widget;
 	}
 	
 	void putInfo() {
@@ -35,46 +36,27 @@ public class Editor extends AbstractApplication {
         info.put("GL_VERSION",      gl.glGetVersion());
         info.put("GLSL_VERSION",    gl.glGetGLSLVersion());
     }
-    
-    void initialize() {
+	
+	/**
+	 * Gives the GL bottom-left position of the widget relative to the window
+	 */
+    void position() {
+        int x = widget.windowX();
+        int y = uiWindow.height() - widget.height() - widget.windowY();
         
-        core.scene.create();
-        
-        addScene(core.scene.scene);
-        addScene(core.scene.overlayScene);
-        
-    }
-    
-    void setViewport(Camera camera) {
-        Widget view = core.gui.editorViewer;
-        double width = getWidth();
-        double height = getHeight();
-        double yDiff = view.windowY() - view.y();
-        double px = view.windowX();
-        double py = view.windowY() - yDiff; //Using yDiff because of TWidget orientation of top-left
-        double pw = view.width();
-        double ph = view.height();
-        float left = (float) (px / width);
-        float right = (float) ((px+pw) / width);
-        float bottom = (float) (py / height);
-        float top = (float) ((py+ph) / height);
-        camera.setViewport(left,bottom,right,top);
+        manager.renderer().offset(x, y);
     }
 	
 	@Override
 	public void start() {
-	    core.gui.create();
-
-        glWindow = core.gui.window.window();
+	    
+        glWindow = uiWindow.window();
         gl = glWindow.getGraphicsLibrary();
-        input = new EditorInput(core.gui.editorViewer, core.gui.window.input());
+        input = new SubAppInput(widget, uiWindow.input());
         window = new ApplicationWindow(this);
         manager.create(delegate, service, glWindow.getGraphicsLibrary());
         
-        
-        initialize();
-        
-        core.gui.window.setLoader(()->{
+        uiWindow.setLoader(()->{
             putInfo();
             manager.load();
             loaded = true;
@@ -82,16 +64,16 @@ public class Editor extends AbstractApplication {
             gl.glDisable(GL.CULL_FACE);
         });
         
-        core.gui.editorViewer.paint().connect((g)->{
+        widget.paint().connect((g)->{
             TGraphics tg = (TGraphics)g;
             
-            setViewport(core.scene.camera);
-            setViewport(core.scene.overlayCamera);
+            position();
+            
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
             
             if (loaded) {
-                synchronized (Editor.class) {
+                synchronized (SubApp.class) {
                     gl.glEnable(GL.DEPTH_TEST);
                     gl.glEnable(GL.CULL_FACE);
                     int[] box = gl.glGetScissor();
@@ -109,9 +91,7 @@ public class Editor extends AbstractApplication {
             gl.glViewport(0,0,glWindow.getWidth(),glWindow.getHeight());
         });
         
-        core.gui.window.setCloser(()->{
-            manager.close();
-        });
+        //manager.close();
 	}
 
 	@Override
@@ -153,28 +133,27 @@ public class Editor extends AbstractApplication {
 
 	@Override
 	public String getTitle() {
-		return core.gui.window.title();
+		return widget.name();
 	}
 
 	@Override
 	public void setTitle(String title) {
-	    core.gui.window.setTitle(title);
+	    widget.setName(title);
 	}
 
 	@Override
 	public int getWidth() {
-		return core.gui.editorViewer.width();
+		return widget.width();
 	}
 
 	@Override
 	public int getHeight() {
-		return core.gui.editorViewer.height();
+		return widget.height();
 	}
 
 	@Override
 	public void setSize(int width, int height) {
-	    core.gui.window.setWidth(width);
-	    core.gui.window.setHeight(height);
+	    widget.setMinSize(width,height);
 	}
 
 	@Override
@@ -196,17 +175,6 @@ public class Editor extends AbstractApplication {
 	@Override
 	public void setFullscreen(boolean fullscreen) {
 		//Cannot fullscreen TODO
-	}
-	
-	// ------------------------------------------------------------------------
-	
-	public void setBackground(Vector4 color) {
-	    core.scene.background = color.get();
-	    core.scene.camera.setClearColor(core.scene.background);
-    }
-	
-	public Vector4 getBackground() {
-	    return core.scene.background.get();
 	}
 
 }

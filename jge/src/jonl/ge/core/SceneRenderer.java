@@ -22,6 +22,9 @@ class SceneRenderer {
 	private GL gl;
 	private GLRenderer glr;
 	
+	private int globalX = 0;
+	private int globalY = 0;
+	
 	public SceneRenderer(SceneManager manager, Service service, GL gl) {
 		this.manager = manager;
 		this.gl = gl;
@@ -175,7 +178,12 @@ class SceneRenderer {
         
         detachCamera(camera);
     }
-        
+    
+    public void offset(int x, int y) {
+        globalX = x;
+        globalY = y;
+    }
+    
     /**
      * Sets up the gl viewport, clear color, scissor, and view matrix for the camera
      * @return the view matrix of the camera
@@ -209,7 +217,15 @@ class SceneRenderer {
             height = top - bottom;
         }
         
-        gl.glViewport(left,bottom,width,height);
+        left += globalX;
+        bottom += globalY;
+        
+        gl.glViewport(
+                left,
+                bottom,
+                width,
+                height);
+        
         Vector4 c = camera.clearColor;
         gl.glClearColor(c.x, c.y, c.z, c.w); //rgba
         if (camera.scissorMode != Camera.NONE) {

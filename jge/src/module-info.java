@@ -6,7 +6,10 @@ module jonl.ge {
 	exports jonl.ge.core.light;
 	exports jonl.ge.core.material;
 	exports jonl.ge.core.render;
+	exports jonl.ge.core.shaders;
 	exports jonl.ge.core.ui;
+	
+	exports jonl.ge.editor;
 	
 	exports jonl.ge.mod.axis;
 	exports jonl.ge.mod.fx;
@@ -14,8 +17,6 @@ module jonl.ge {
 	exports jonl.ge.mod.physics;
 	exports jonl.ge.mod.ray;
 	exports jonl.ge.mod.text;
-	
-	exports jonl.ge.core.shaders;
 	
 	exports jonl.ge.utils;
 	
