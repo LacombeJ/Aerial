@@ -1,8 +1,14 @@
 package jonl.ge.editor;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+
+import com.google.gson.Gson;
+
 import jonl.jutils.io.FileUtils;
+import jonl.jutils.jss.Style;
+import jonl.jutils.jss.StyleSheet;
 import jonl.jutils.misc.SystemUtils;
 
 public class Editor {
@@ -38,14 +44,12 @@ public class Editor {
         String configPath = appdataPath + File.separatorChar + "config.json";
         File configFile = new File(configPath);
         if (!configFile.exists()) {
-            URL configResourceURL = this.getClass().getResource("/editor/config.json");
-            if (configResourceURL != null) {
-                File configResourceFile = new File(configResourceURL.getFile());
-                FileUtils.copy(configResourceFile, configFile);
-            }
+            InputStream in = getClass().getResourceAsStream("/editor/config.json");
+            String configContent = FileUtils.readFromStream(in);
+            FileUtils.writeToFile(configPath, configContent);
         }
         
-        
+        Gson gson = new Gson();
         
     }
     

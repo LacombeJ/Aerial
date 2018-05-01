@@ -1,5 +1,7 @@
 package jonl.aui.tea;
 
+import java.io.InputStream;
+
 import jonl.aui.Align;
 import jonl.aui.Font;
 import jonl.aui.Icon;
@@ -9,6 +11,7 @@ import jonl.aui.Resource;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.graphics.TStyleDefault;
+import jonl.jutils.io.FileUtils;
 import jonl.jutils.jss.Style;
 import jonl.jutils.jss.StyleSheet;
 import jonl.aui.tea.graphics.TStyle;
@@ -298,8 +301,8 @@ public class TUIManager implements UIManager {
     }
     
     private Style defaultStyle() {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        Style jss = StyleSheet.fromFile(classLoader.getResource("default.jss").getFile());
+        InputStream in = getClass().getResourceAsStream("/default.jss");
+        Style jss = StyleSheet.fromString(FileUtils.readFromStream(in));
         return jss;
     }
     
