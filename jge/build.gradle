@@ -7,9 +7,6 @@ import org.gradle.plugins.ide.eclipse.model.internal.FileReferenceFactory
 apply plugin: 'eclipse'
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.3'
-
     compile project(':modules:module-jgl')
     compile project(':modules:module-aui')
     compile project(':modules:module-utils')

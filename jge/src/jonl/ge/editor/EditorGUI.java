@@ -1,6 +1,7 @@
 package jonl.ge.editor;
 
 import jonl.aui.Align;
+import jonl.aui.FileDialog;
 import jonl.aui.HAlign;
 import jonl.aui.Menu;
 import jonl.aui.MenuBar;
@@ -13,6 +14,10 @@ import jonl.aui.VAlign;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
 import jonl.aui.tea.graphics.TStyleDark;
+import jonl.jutils.data.Dir;
+import jonl.jutils.data.Json;
+import jonl.jutils.io.Console;
+import jonl.vmath.Matrix4;
 
 public class EditorGUI {
 
@@ -93,7 +98,18 @@ public class EditorGUI {
     
     private void createStartupPanel() {
         startupScroll = ui.scrollPanel();
+        
         startupPanel = new EditorStartup(ui);
+        startupPanel.newProject.clicked().connect(()->{
+            FileDialog fd = ui.fileDialog();
+            fd.setMode(FileDialog.DIRECTORIES_ONLY);
+            if (fd.showSaveDialog()==FileDialog.APPROVE) {
+                String path = fd.selected();
+                Console.log(path);
+            }
+            
+        });
+        
         
         startupScroll.setWidget(startupPanel);
     }

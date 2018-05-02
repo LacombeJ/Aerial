@@ -1,4 +1,4 @@
-package jonl.ge.utils;
+package jonl.jutils.data;
 
 import com.google.gson.Gson;
 
@@ -10,13 +10,13 @@ public class Cereal {
         return serializedObject;
     }
     
-    public static <T> T deserialize(String s, Class<T> c){
+    public static <T> T deserialize(String s, Class<T> c) {
         Gson gson = new Gson();
         T object = gson.fromJson(s, c);
         return object;
     }
 
-    public static <T> T copy(Object o, Class<T> c){
+    public static <T> T copy(Object o, Class<T> c) {
         String s = serialize(o);
         T object = deserialize(s,c);
         return object;

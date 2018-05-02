@@ -26,7 +26,6 @@ module jonl.ge {
 	
 	requires jbullet;
 	requires vecmath;
-	requires gson;
 	
 	requires transitive jonl.jgl;
 	requires transitive jonl.aui;

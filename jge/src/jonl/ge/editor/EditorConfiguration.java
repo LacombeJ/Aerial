@@ -1,6 +1,6 @@
 package jonl.ge.editor;
 
-import jonl.ge.utils.Cereal;
+import jonl.jutils.data.Cereal;
 
 public class EditorConfiguration {
 

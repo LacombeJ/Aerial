@@ -1,16 +1,10 @@
 package jonl.ge.editor;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import jonl.ge.editor.EditorConfiguration.EC10;
+import jonl.jutils.data.Json;
 import jonl.jutils.io.Console;
-import jonl.jutils.io.FileUtils;
 
 public class Editor {
 
@@ -37,26 +31,20 @@ public class Editor {
     }
     
     void init() {
-        String configPath = "config.json";
-        File configFile = new File(configPath);
-        if (!configFile.exists()) {
-            InputStream in = getClass().getResourceAsStream("/editor/config.json");
-            String configContent = FileUtils.readFromStream(in);
-            FileUtils.writeToFile(configPath, configContent);
+        Json json = new Json("config.json");
+        if (!json.exists()) {
+            EC10 config = defaultConfig();
+            json.save(config);
         }
         
-        String configContent = FileUtils.readFromFile(configFile.getPath());
+        BasicConfig bc = json.load(BasicConfig.class);
         
-        JsonObject element = new JsonParser().parse(configContent).getAsJsonObject();
-        String name = element.get("name").getAsString();
-        String version = element.get("version").getAsString();
-       
-        if (name.equals("editor")) {
+        if (bc.name.equals("editor")) {
             EC10 config = null;
             
             //Current version
-            if (version.equals("1.0")) {
-                config = new Gson().fromJson(configContent, EC10.class);
+            if (bc.version.equals("1.0")) {
+                config = json.load(EC10.class);
             } else {
                 Console.log("Version not supported.");
             }
@@ -69,6 +57,18 @@ public class Editor {
     void initUi() {
         gui = new EditorGUI(this);
         gui.create();
+    }
+    
+    private static class BasicConfig {
+        String name;
+        String version;
+    }
+    
+    private EC10 defaultConfig() {
+        EC10 config = new EC10();
+        config.name = "editor";
+        config.version = "1.0";
+        return config;
     }
     
 }
