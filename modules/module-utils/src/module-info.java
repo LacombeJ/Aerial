@@ -15,4 +15,6 @@ module jonl.utils {
 	requires java.base;
 	requires transitive java.desktop;
     
+	requires wildcard;
+	
 }

@@ -16,6 +16,8 @@ public interface UIManager {
     
     void resource(String key, Object data);
     
+    FileDialog fileDialog();
+    
     //UI Widgets
     
     Window window();

@@ -2,6 +2,8 @@ package jonl.ge.editor;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,9 +18,17 @@ public class Editor {
     String version;
     
     EditorGUI gui;
+    
+    ArrayList<EditorPlugin> plugins;
 
     public Editor() {
+        plugins = new ArrayList<>();
         
+        
+    }
+    
+    public void add(EditorPlugin plugin) {
+        plugins.add(plugin);
     }
     
     public void start() {

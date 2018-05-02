@@ -85,6 +85,11 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public TFileDialog fileDialog() {
+        return new TFileDialog();
+    }
+    
+    @Override
     public TWindow window() {
         return new TWindow();
     }

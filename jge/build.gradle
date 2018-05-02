@@ -18,7 +18,7 @@ dependencies {
 
 // ----------------------------------------------------------------------------
 
-// jbullet dependencies //
+// Jar dependencies //
 
 String[] libs = [
     'jbullet',

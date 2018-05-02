@@ -10,6 +10,9 @@ public class EditorStartup extends TPanel {
 
     private UIManager ui;
     
+    Button newProject;
+    Button openProject;
+    
     public EditorStartup(UIManager ui) {
         this.ui = ui;
         
@@ -24,9 +27,19 @@ public class EditorStartup extends TPanel {
     
     void initWidgets() {
         
-        Button button = ui.button("Test button");
-        widgetLayout().add(button);
+        newProject = button("New Project");
+        openProject = button("Open Project");
         
+        widgetLayout().add(newProject);
+        widgetLayout().add(openProject);
+        
+    }
+    
+    Button button(String text) {
+        Button button = ui.button(text);
+        button.setMinSize(0,200);
+        button.setMaxSize(200,200);
+        return button;
     }
     
 }

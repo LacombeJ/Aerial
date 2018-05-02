@@ -6,6 +6,7 @@ import jonl.aui.Button;
 import jonl.aui.CheckBox;
 import jonl.aui.ComboBox;
 import jonl.aui.Dial;
+import jonl.aui.FileDialog;
 import jonl.aui.Font;
 import jonl.aui.Frame;
 import jonl.aui.Icon;
@@ -93,6 +94,11 @@ public class UI implements UIManager {
     @Override
     public void resource(String key, Object data) {
         ui.resource(key,data);
+    }
+    
+    @Override
+    public FileDialog fileDialog() {
+        return ui.fileDialog();
     }
     
     @Override
