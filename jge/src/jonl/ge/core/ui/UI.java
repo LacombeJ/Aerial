@@ -23,6 +23,7 @@ import jonl.aui.ScrollPanel;
 import jonl.aui.Slider;
 import jonl.aui.Spacer;
 import jonl.aui.SplitPanel;
+import jonl.aui.SwitchWidget;
 import jonl.aui.TabPanel;
 import jonl.aui.TitlePanel;
 import jonl.aui.ToolBar;
@@ -212,6 +213,11 @@ public class UI implements UIManager {
     @Override
     public ScrollPanel scrollPanel() {
         return ui.scrollPanel();
+    }
+    
+    @Override
+    public SwitchWidget switchWidget() {
+        return ui.switchWidget();
     }
 
     @Override

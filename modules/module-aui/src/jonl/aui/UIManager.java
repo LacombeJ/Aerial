@@ -66,6 +66,8 @@ public interface UIManager {
     
     ScrollPanel scrollPanel();
     
+    SwitchWidget switchWidget();
+    
     TabPanel tabPanel();
     
     Tree tree();

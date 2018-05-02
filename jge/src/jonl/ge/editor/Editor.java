@@ -57,9 +57,8 @@ public class Editor {
     }
     
     void initUi() {
-        
-        
-        
+        gui = new EditorGUI(this);
+        gui.create();
     }
     
 }

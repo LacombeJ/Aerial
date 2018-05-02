@@ -1,36 +1,7 @@
 package jonl.ge.editor;
 
-import java.util.ArrayList;
-
-import jonl.ge.core.Camera;
-import jonl.ge.core.Editor;
-import jonl.ge.core.GameObject;
-import jonl.ge.core.Geometry;
-import jonl.ge.core.Input;
-import jonl.ge.core.Material;
-import jonl.ge.core.Mesh;
-import jonl.ge.core.Mesh.Mode;
-import jonl.ge.core.Property;
-import jonl.ge.core.Scene;
-import jonl.ge.core.geometry.BoxGeometry;
-import jonl.ge.core.geometry.GeometryBuilder;
-import jonl.ge.core.geometry.SphereGeometry;
-import jonl.ge.core.material.GeneratedMaterial;
-import jonl.ge.core.material.SolidMaterial;
-import jonl.ge.mod.axis.TranslationAxis;
-import jonl.ge.mod.misc.CameraControl;
-import jonl.ge.mod.misc.PerspectiveUpdate;
-import jonl.ge.mod.ray.RayComponent;
-import jonl.ge.mod.ray.RayComponentHit;
-import jonl.ge.mod.ray.RayComponents;
-import jonl.ge.mod.ray.ScreenRayTracer;
-import jonl.vmath.Color;
-import jonl.vmath.Vector2;
-import jonl.vmath.Vector3;
-import jonl.vmath.Vector4;
-
 public class EditorScene {
-
+    /*
     EditorCore core;
     Editor editor;
     
@@ -261,6 +232,6 @@ public class EditorScene {
         }
         
     }
-    
+    */
     
 }

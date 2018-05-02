@@ -1,48 +1,33 @@
 package jonl.ge.editor;
 
 import jonl.aui.Align;
-import jonl.aui.ArrayLayout;
 import jonl.aui.HAlign;
-import jonl.aui.LineEdit;
 import jonl.aui.Menu;
 import jonl.aui.MenuBar;
 import jonl.aui.Panel;
 import jonl.aui.ScrollPanel;
-import jonl.aui.Slider;
-import jonl.aui.Spacer;
-import jonl.aui.SplitPanel;
-import jonl.aui.TabPanel;
+import jonl.aui.SwitchWidget;
 import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
 import jonl.aui.tea.graphics.TStyleDark;
-import jonl.ge.core.Editor;
-import jonl.jutils.func.Callback;
-import jonl.vmath.Color;
 
 public class EditorGUI {
 
-    EditorCore core;
 	public Editor editor;
-    
 	public TUIManager ui;
     
     public TWindow window;
     public Panel main;
         public MenuBar menuBar;
         public ToolBar toolBar;
-        public SplitPanel mainSplitPanel;
-            public TabPanel contentPanel;
-                public Panel hierarchyPanel;
-            public SplitPanel sideSplitPanel;
-                public TabPanel viewPanel;
-                    public Panel editorViewer;
-                public ScrollPanel propertiesPanel;
+        public SwitchWidget switchWidget;
+        public ScrollPanel startupScroll;
+        public EditorStartup startupPanel;
     
-    public EditorGUI(EditorCore core, Editor editor) {
-        this.core = core;
+    public EditorGUI(Editor editor) {
         this.editor = editor;
     }
     
@@ -70,8 +55,8 @@ public class EditorGUI {
         createToolBar();
         main.add(toolBar);
         
-        createMainSplitPanel();
-        main.add(mainSplitPanel);
+        createSwitchWidget();
+        main.add(switchWidget);
         
         window.setWidget(main);
         
@@ -79,7 +64,6 @@ public class EditorGUI {
         window.maximize();
         
         window.setVisible(true);
-        
         
     }
     
@@ -101,6 +85,20 @@ public class EditorGUI {
         toolBar.add(saveAll);
     }
     
+    private void createSwitchWidget() {
+        switchWidget = ui.switchWidget();
+        createStartupPanel();
+        switchWidget.add(startupScroll);
+    }
+    
+    private void createStartupPanel() {
+        startupScroll = ui.scrollPanel();
+        startupPanel = new EditorStartup(ui);
+        
+        startupScroll.setWidget(startupPanel);
+    }
+    
+    /*
     private void createMainSplitPanel() {
         createContentPanel();
         createSideSplitPanel();
@@ -253,5 +251,6 @@ public class EditorGUI {
         
         return panel;
     }
+    */
     
 }

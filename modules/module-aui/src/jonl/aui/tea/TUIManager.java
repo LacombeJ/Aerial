@@ -205,6 +205,11 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public TSwitchWidget switchWidget() {
+        return new TSwitchWidget();
+    }
+    
+    @Override
     public TTabPanel tabPanel() {
         return new TTabPanel();
     }

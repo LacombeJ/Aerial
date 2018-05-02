@@ -34,6 +34,8 @@ public class TFillLayout extends TLayout {
     
     @Override
     public TSizeHint calculateSizeHint() {
+        if (isEmpty()) return new TSizeHint();
+        
         TLayoutItem item = getItem(0);
         
         int width = freeAllocate(getWidthPreference(item));
