@@ -2,53 +2,32 @@ package jonl.ge.editor;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import jonl.ge.editor.EditorConfiguration.EC10;
 import jonl.jutils.io.Console;
 import jonl.jutils.io.FileUtils;
-import jonl.jutils.jss.Style;
-import jonl.jutils.jss.StyleSheet;
-import jonl.jutils.misc.SystemUtils;
 
 public class Editor {
 
     String name;
     String version;
+    
+    EditorGUI gui;
 
     public Editor() {
-        
-        
         
     }
     
     public void start() {
-        
         init();
-        
+        initUi();
     }
     
     void init() {
-        
-        //TODO create module-node
-        
-        String appdataPath = SystemUtils.appDataLocation("JGEditor");
-        
-        File appdataFile = new File(appdataPath);
-        
-        if (!appdataFile.exists()) {
-            boolean mkdir = appdataFile.mkdir();
-            if (!mkdir) {
-                throw new Error("Failed to create app data directory.");
-            }
-        }
-        
-        String configPath = appdataPath + File.separatorChar + "config.json";
+        String configPath = "config.json";
         File configFile = new File(configPath);
         if (!configFile.exists()) {
             InputStream in = getClass().getResourceAsStream("/editor/config.json");
@@ -63,7 +42,6 @@ public class Editor {
         String version = element.get("version").getAsString();
        
         if (name.equals("editor")) {
-            
             EC10 config = null;
             
             //Current version
@@ -75,8 +53,12 @@ public class Editor {
             
             this.name = config.name;
             this.version = config.version;
-            
         }
+    }
+    
+    void initUi() {
+        
+        
         
     }
     

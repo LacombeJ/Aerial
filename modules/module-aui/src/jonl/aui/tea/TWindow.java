@@ -141,12 +141,12 @@ public class TWindow extends TWidget implements Window {
         return windowManager.input();
     }
     
-    public void setLoader(Loader loader) {
-        windowManager.setLoader(loader);
+    public void addLoader(Loader loader) {
+        windowManager.addLoader(loader);
     }
     
-    public void setCloser(Closer closer) {
-        windowManager.setCloser(closer);
+    public void addCloser(Closer closer) {
+        windowManager.addCloser(closer);
     }
     
     @Override

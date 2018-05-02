@@ -22,8 +22,11 @@ class SceneRenderer {
 	private GL gl;
 	private GLRenderer glr;
 	
+	private boolean subsection = false;
 	private int globalX = 0;
 	private int globalY = 0;
+	private int globalWidth = Integer.MAX_VALUE;
+	private int globalHeight = Integer.MAX_VALUE;
 	
 	public SceneRenderer(SceneManager manager, Service service, GL gl) {
 		this.manager = manager;
@@ -179,9 +182,18 @@ class SceneRenderer {
         detachCamera(camera);
     }
     
+    public void subsection(boolean enable) {
+        subsection = enable;
+    }
+    
     public void offset(int x, int y) {
         globalX = x;
         globalY = y;
+    }
+    
+    public void dimension(int width, int height) {
+        globalWidth = width;
+        globalHeight = height;
     }
     
     /**
@@ -217,25 +229,40 @@ class SceneRenderer {
             height = top - bottom;
         }
         
-        left += globalX;
-        bottom += globalY;
+        int ox = 0;
+        int oy = 0;
+        
+        int[] globalCut = new int[] {globalX,globalY,globalWidth,globalHeight};
+        if (subsection) {
+            ox = globalX;
+            oy = globalY;
+        }
         
         gl.glViewport(
-                left,
-                bottom,
+                left+ox,
+                bottom+oy,
                 width,
                 height);
         
         Vector4 c = camera.clearColor;
         gl.glClearColor(c.x, c.y, c.z, c.w); //rgba
-        if (camera.scissorMode != Camera.NONE) {
+        
+        if (camera.scissorMode != Camera.NONE || subsection) {
             gl.glEnable(GL.SCISSOR_TEST);
-            if (camera.scissorMode == Camera.VIEWPORT) {
-                gl.glScissor(left,bottom,width,height);
+            
+            if (camera.scissorMode == Camera.NONE) {
+                gl.glScissor(globalCut);
+            } else if (camera.scissorMode == Camera.VIEWPORT) {
+                int[] s = {left+ox,bottom+oy,width,height};
+                if (subsection) s = cutOut(globalCut,s);
+                gl.glScissor(s);
             } else {
-                gl.glScissor(camera.scissorLeft, camera.scissorBottom, camera.scissorRight, camera.scissorTop);
+                int[] s = {camera.scissorLeft+ox, camera.scissorBottom+oy, camera.scissorRight, camera.scissorTop};
+                if (subsection) s = cutOut(globalCut,s);
+                gl.glScissor(s);
             }
-            if (camera.shouldClearColor)
+            
+            if (camera.scissorMode != Camera.NONE && camera.shouldClearColor)
             {
                 gl.glClear(GL.COLOR_BUFFER_BIT,GL.DEPTH_BUFFER_BIT);
             }
@@ -316,6 +343,27 @@ class SceneRenderer {
         
         gl.glBindFramebuffer(null);
         
+    }
+    
+    /**
+     * Returns scissorBox clipped within paper bounds. Integer arrays for arguments
+     * and return are [x,y,width,height] values.
+     */
+    private int[] cutOut(int[] paper, int[] scissorBox) {
+        int x = Math.max(paper[0],scissorBox[0]);
+        int y = Math.max(paper[1],scissorBox[1]);
+        
+        int paperX1 = paper[0] + paper[2];
+        int boxX1 = scissorBox[0] + scissorBox[2];
+        int x1 = Math.min(paperX1,boxX1);
+        int width = x1 - x;
+        
+        int paperY1 = paper[1] + paper[3];
+        int boxY1 = scissorBox[1] + scissorBox[3];
+        int y1 = Math.min(paperY1,boxY1);
+        int height = y1 - y;
+        
+        return new int[]{x,y,width,height};
     }
     
 	

@@ -23,9 +23,9 @@ class GLRenderer {
 	
 	private int version = 430;
 
-    private HashMap<Geometry,jonl.jgl.Mesh>    		meshMap     	= new HashMap<>();
-    private HashMap<Texture,jonl.jgl.Texture>     	textureMap  	= new HashMap<>();
-    private HashMap<FrameBuffer,jonl.jgl.FrameBuffer>   bufferMap   	= new HashMap<>();
+    private HashMap<Geometry,jonl.jgl.Mesh>             meshMap         = new HashMap<>();
+    private HashMap<Texture,jonl.jgl.Texture>           textureMap      = new HashMap<>();
+    private HashMap<FrameBuffer,jonl.jgl.FrameBuffer>   bufferMap       = new HashMap<>();
     
     private HashMap<String,Program> 					shaderKeyMap 	= new HashMap<>();
     

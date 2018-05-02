@@ -347,12 +347,20 @@ class TWindowManager {
         return input;
     }
     
-    void setLoader(Loader loader) {
-        this.loader = loader;
+    void addLoader(Loader loader) {
+        Loader prev = this.loader;
+        this.loader = () -> {
+            prev.load();
+            loader.load();
+        };
     }
     
-    void setCloser(Closer closer) {
-        this.closer = closer;
+    void addCloser(Closer closer) {
+        Closer prev = this.closer;
+        this.closer = () -> {
+            prev.close();
+            closer.close();
+        };
     }
     
     private void handleInput() {

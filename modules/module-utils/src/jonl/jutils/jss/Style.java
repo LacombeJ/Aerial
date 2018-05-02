@@ -43,7 +43,7 @@ public class Style {
     public void append(Style style) {
         for (Entry<String,Style> e : style.children.entrySet()) {
             if (children.containsKey(e.getKey())) {
-                children.get(e.getKey()).add(e.getValue().copy());
+                children.get(e.getKey()).append(e.getValue().copy());
             } else {
                 addDirect(e.getValue().copy());
             }

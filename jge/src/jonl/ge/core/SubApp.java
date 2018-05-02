@@ -36,17 +36,7 @@ public class SubApp extends AbstractApplication {
         info.put("GL_VERSION",      gl.glGetVersion());
         info.put("GLSL_VERSION",    gl.glGetGLSLVersion());
     }
-	
-	/**
-	 * Gives the GL bottom-left position of the widget relative to the window
-	 */
-    void position() {
-        int x = widget.windowX();
-        int y = uiWindow.height() - widget.height() - widget.windowY();
-        
-        manager.renderer().offset(x, y);
-    }
-	
+
 	@Override
 	public void start() {
 	    
@@ -55,8 +45,9 @@ public class SubApp extends AbstractApplication {
         input = new SubAppInput(widget, uiWindow.input());
         window = new ApplicationWindow(this);
         manager.create(delegate, service, glWindow.getGraphicsLibrary());
+        manager.renderer().subsection(true);
         
-        uiWindow.setLoader(()->{
+        uiWindow.addLoader(()->{
             putInfo();
             manager.load();
             loaded = true;
@@ -67,8 +58,6 @@ public class SubApp extends AbstractApplication {
         widget.paint().connect((g)->{
             TGraphics tg = (TGraphics)g;
             
-            position();
-            
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
             
@@ -77,6 +66,8 @@ public class SubApp extends AbstractApplication {
                     gl.glEnable(GL.DEPTH_TEST);
                     gl.glEnable(GL.CULL_FACE);
                     int[] box = gl.glGetScissor();
+                    manager.renderer().offset(box[0], box[1]);
+                    manager.renderer().dimension(box[2], box[3]);
                     manager.update();
                     gl.glEnable(GL.SCISSOR_TEST);
                     gl.glScissor(box);

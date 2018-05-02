@@ -74,7 +74,7 @@ public class Editor extends AbstractApplication {
         
         initialize();
         
-        core.gui.window.setLoader(()->{
+        core.gui.window.addLoader(()->{
             putInfo();
             manager.load();
             loaded = true;
@@ -109,7 +109,7 @@ public class Editor extends AbstractApplication {
             gl.glViewport(0,0,glWindow.getWidth(),glWindow.getHeight());
         });
         
-        core.gui.window.setCloser(()->{
+        core.gui.window.addCloser(()->{
             manager.close();
         });
 	}
