@@ -12,17 +12,18 @@ public class Editor {
     String version;
     
     EditorGUI gui;
+    EditorProject project;
     
-    ArrayList<EditorPlugin> plugins;
+    ArrayList<SubEditorTool> subEditorTools;
 
     public Editor() {
-        plugins = new ArrayList<>();
+        subEditorTools = new ArrayList<>();
         
         
     }
     
-    public void add(EditorPlugin plugin) {
-        plugins.add(plugin);
+    public void add(SubEditorTool sub) {
+        subEditorTools.add(sub);
     }
     
     public void start() {

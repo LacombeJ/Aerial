@@ -3,7 +3,6 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.Align;
-import jonl.aui.HAlign;
 import jonl.aui.Signal;
 import jonl.aui.TabPanel;
 import jonl.aui.Widget;
@@ -22,6 +21,8 @@ public class TTabPanel extends TWidget implements TabPanel {
     private Signal<Callback0D> newTab = new Signal<>();
     
     public TTabPanel() {
+        super();
+        
         tabBar = new TTabBar();
         tabContent = new TTabContent();
         
@@ -44,7 +45,6 @@ public class TTabPanel extends TWidget implements TabPanel {
     
     private void addWidgetContent(Widget widget) {
         tabContent.add(widget);
-        
     }
     
     private void refreshContent() {
@@ -73,8 +73,6 @@ public class TTabPanel extends TWidget implements TabPanel {
         widgets.add((TWidget) widget);
         labels.add(label);
         TTabButton button = new TTabButton(label);
-        button.info().put("halign",HAlign.LEFT);
-        button.info().put("xoffset",4f);
         button.clicked().connect(()->{
             setIndex(indexOf(widget));
         });
@@ -101,6 +99,16 @@ public class TTabPanel extends TWidget implements TabPanel {
         widgets.remove(index);
         labels.remove(index);
         tabBar.remove(tabBar.get(index));
+        refreshContent();
+    }
+    
+    @Override
+    public void removeAll() {
+        for (int i=count()-1; i>=0; i--) {
+            widgets.remove(index);
+            labels.remove(index);
+            tabBar.remove(tabBar.get(index));
+        }
         refreshContent();
     }
 

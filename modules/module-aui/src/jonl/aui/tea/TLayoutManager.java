@@ -68,7 +68,7 @@ class TLayoutManager {
         
         if (!newHint.equals(prevHint)) {
             
-            layout.validateSizeHint(newHint);
+            layout.setSizeHintValidation(newHint);
             
             TWidget widget = layout.parent;
             TWidget parentWidget = widget.parent();

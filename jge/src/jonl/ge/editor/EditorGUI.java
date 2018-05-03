@@ -5,9 +5,6 @@ import jonl.aui.FileDialog;
 import jonl.aui.HAlign;
 import jonl.aui.Menu;
 import jonl.aui.MenuBar;
-import jonl.aui.MessageDialog;
-import jonl.aui.MessageDialog.Message;
-import jonl.aui.MessageDialog.Option;
 import jonl.aui.Panel;
 import jonl.aui.ScrollPanel;
 import jonl.aui.SwitchWidget;
@@ -18,22 +15,20 @@ import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
 import jonl.aui.tea.graphics.TStyleDark;
 import jonl.jutils.data.Dir;
-import jonl.jutils.data.Json;
-import jonl.jutils.io.Console;
-import jonl.vmath.Matrix4;
 
 public class EditorGUI {
 
 	public Editor editor;
 	public TUIManager ui;
-    
+	
     public TWindow window;
     public Panel main;
         public MenuBar menuBar;
         public ToolBar toolBar;
         public SwitchWidget switchWidget;
-        public ScrollPanel startupScroll;
-        public EditorStartup startupPanel;
+            public ScrollPanel startupScroll;
+                public EditorStartup startupPanel;
+            public EditorProjectUI projectUi;
     
     public EditorGUI(Editor editor) {
         this.editor = editor;
@@ -96,22 +91,34 @@ public class EditorGUI {
     private void createSwitchWidget() {
         switchWidget = ui.switchWidget();
         createStartupPanel();
+        projectUi = new EditorProjectUI(editor,ui);
         switchWidget.add(startupScroll);
+        switchWidget.add(projectUi);
     }
     
     private void createStartupPanel() {
         startupScroll = ui.scrollPanel();
         
         startupPanel = new EditorStartup(ui);
+        
         startupPanel.newProject.clicked().connect(()->{
+            
             FileDialog fd = ui.fileDialog();
             fd.setMode(FileDialog.DIRECTORIES_ONLY);
+            
             if (fd.showSaveDialog()==FileDialog.APPROVE) {
                 String path = fd.selected();
                 
                 Dir dir = new Dir(path);
-                if (dir.isFile()) {
-                    
+                if (dir.isDirectory()) {
+                    Dir project = dir.dir("project.json");
+                    if (!project.exists()) {
+                        createProject(dir);
+                    } else {
+                        ui.messageDialog().error("Error","File \"project.json\" already exists in this directory.");
+                    }
+                } else {
+                    ui.messageDialog().error("Error","Path: \""+dir.path()+"\" is not a directory");
                 }
                 
             }
@@ -120,12 +127,29 @@ public class EditorGUI {
         
         startupPanel.openProject.clicked().connect(()->{
             
-            MessageDialog md = ui.messageDialog();
-            Console.log(md.plain("A","B"));
-            Console.log(md.information("A","B"));
-            Console.log(md.question("A","B"));
-            Console.log(md.warning("A","B"));
-            Console.log(md.error("A","B"));
+            FileDialog fd = ui.fileDialog();
+            fd.setMode(FileDialog.DIRECTORIES_ONLY);
+            
+            if (fd.showOpenDialog()==FileDialog.APPROVE) {
+                String path = fd.selected();
+                
+                Dir dir = new Dir(path);
+                if (dir.isFile()) {
+                    if (dir.name().equals("project.json")) {
+                        loadProject(dir);
+                    } else {
+                        ui.messageDialog().error("Error","Invalid project file: \""+dir.name()+"\"");
+                    }
+                } else {
+                    Dir project = dir.dir("project.json");
+                    if (!project.exists()) {
+                        ui.messageDialog().error("Error","File \"project.json\" not found.");
+                    } else {
+                        loadProject(dir);
+                    }
+                }
+                
+            }
             
             
         });
@@ -134,6 +158,24 @@ public class EditorGUI {
         startupScroll.setWidget(startupPanel);
     }
     
+    private void loadProject(Dir dir) {
+        editor.project = new EditorProject(editor, dir);
+        editor.project.load();
+        
+        projectUi.populate();
+        switchWidget.setWidget(projectUi);
+    }
+    
+    private void createProject(Dir dir) {
+        editor.project = new EditorProject(editor, dir);
+        editor.project.save();
+        
+        projectUi.populate();
+        switchWidget.setWidget(projectUi);
+    }
+    
+    
+
 
     /*
     private void createMainSplitPanel() {

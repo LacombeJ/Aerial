@@ -5,17 +5,27 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import jonl.jutils.data.Dir;
+import jonl.jutils.io.Console;
 
 public class EditorProject {
 
+    Editor editor;
     Dir dir;
     
     Project project = new Project();
+    
     Scenes scenes = new Scenes();
     HashMap<String,Scene> sceneMap = new HashMap<>();
     
-    public EditorProject(String path) {
-        dir = new Dir(path);
+    
+    
+    public EditorProject(Editor editor, Dir dir) {
+        this.editor = editor;
+        this.dir = dir;
+    }
+    
+    public EditorProject(Editor editor, String path) {
+        this(editor, new Dir(path));
     }
     
     public void load() {
@@ -34,7 +44,6 @@ public class EditorProject {
             }
         }
         
-        
     }
     
     public void save() {
@@ -52,8 +61,6 @@ public class EditorProject {
         for (Entry<String,Scene> sceneEntry : sceneMap.entrySet()) {
             scenesDir.json(sceneEntry.getKey()).save(sceneEntry.getValue());
         }
-        
-        
         
     }
     

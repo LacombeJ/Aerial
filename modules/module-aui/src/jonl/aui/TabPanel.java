@@ -12,6 +12,8 @@ public interface TabPanel extends Widget {
     
     void remove(int index);
     
+    void removeAll();
+    
     int count();
     
     int indexOf(Widget widget);

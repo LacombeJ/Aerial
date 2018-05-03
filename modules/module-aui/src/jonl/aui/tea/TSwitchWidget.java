@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import jonl.aui.LayoutItem;
 import jonl.aui.SwitchWidget;
 import jonl.aui.Widget;
+import jonl.jutils.io.Console;
 import jonl.vmath.Mathi;
 
 public class TSwitchWidget extends TWidget implements SwitchWidget {
@@ -123,7 +124,7 @@ public class TSwitchWidget extends TWidget implements SwitchWidget {
                 int height = freeAllocate(getHeightPreference(widget));
                 
                 width += margin().width();
-                width += margin().height();
+                height += margin().height();
                 
                 maxWidth = Mathi.max(maxWidth, width);
                 maxHeight = Mathi.max(maxHeight,height);

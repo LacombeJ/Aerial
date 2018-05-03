@@ -48,7 +48,7 @@ public class TWindowLayout extends TLayout {
             int height = freeAllocate(getHeightPreference(item));
             
             width += margin().width();
-            width += margin().height();
+            height += margin().height();
             
             maxWidth = Mathi.max(maxWidth, width);
             maxHeight = Mathi.max(maxHeight,height);
@@ -59,8 +59,8 @@ public class TWindowLayout extends TLayout {
     }
     
     @Override
-    void validateSizeHint(TSizeHint hint) {
-        super.validateSizeHint(hint);
+    void setSizeHintValidation(TSizeHint hint) {
+        super.setSizeHintValidation(hint);
         
         TWindow window = (TWindow) parent;
         if (window.window()!=null) {

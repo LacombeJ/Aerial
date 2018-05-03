@@ -40,7 +40,7 @@ public abstract class TLayout implements Layout {
         return sizeHint;
     }
     
-    void validateSizeHint(TSizeHint hint) {
+    void setSizeHintValidation(TSizeHint hint) {
         sizeHint = hint;
     }
     

@@ -42,7 +42,7 @@ public class TFillLayout extends TLayout {
         int height = freeAllocate(getHeightPreference(item));
         
         width += margin().width();
-        width += margin().height();
+        height += margin().height();
         
         return new TSizeHint(width, height);
     }
