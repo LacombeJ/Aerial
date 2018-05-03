@@ -8,8 +8,6 @@ import java.io.File;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileFilter;
 
 import jonl.aui.FileDialog;
@@ -17,17 +15,6 @@ import jonl.jutils.io.Pattern;
 
 public class TFileDialog implements FileDialog {
 
-    static {
-        // Because we are using JFileDialog, we will set the LAF to the system
-        // If this class removes awt dependency, remove this
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-    }
-    
     private FileChooser fileChooser;
     
     TFileDialog() {
@@ -99,6 +86,8 @@ public class TFileDialog implements FileDialog {
         @Override
         protected JDialog createDialog(Component parent) throws HeadlessException {
             JDialog dialog = super.createDialog(parent);
+            
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             
             dialog.addWindowListener(new WindowAdapter() {
                 public void windowOpened(WindowEvent e) {

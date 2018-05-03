@@ -224,6 +224,7 @@ class TWindowManager {
             });
             glWindow.setCloser(()->{
                 closer.close();
+                
             });
             glWindow.start();
         });

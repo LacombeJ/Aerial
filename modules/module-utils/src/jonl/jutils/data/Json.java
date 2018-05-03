@@ -44,6 +44,10 @@ public class Json {
         return file.exists();
     }
     
+    public String name() {
+        return file.getName();
+    }
+    
     public String path() {
         return file.getPath();
     }

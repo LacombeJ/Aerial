@@ -5,6 +5,9 @@ import jonl.aui.FileDialog;
 import jonl.aui.HAlign;
 import jonl.aui.Menu;
 import jonl.aui.MenuBar;
+import jonl.aui.MessageDialog;
+import jonl.aui.MessageDialog.Message;
+import jonl.aui.MessageDialog.Option;
 import jonl.aui.Panel;
 import jonl.aui.ScrollPanel;
 import jonl.aui.SwitchWidget;
@@ -105,8 +108,25 @@ public class EditorGUI {
             fd.setMode(FileDialog.DIRECTORIES_ONLY);
             if (fd.showSaveDialog()==FileDialog.APPROVE) {
                 String path = fd.selected();
-                Console.log(path);
+                
+                Dir dir = new Dir(path);
+                if (dir.isFile()) {
+                    
+                }
+                
             }
+            
+        });
+        
+        startupPanel.openProject.clicked().connect(()->{
+            
+            MessageDialog md = ui.messageDialog();
+            Console.log(md.plain("A","B"));
+            Console.log(md.information("A","B"));
+            Console.log(md.question("A","B"));
+            Console.log(md.warning("A","B"));
+            Console.log(md.error("A","B"));
+            
             
         });
         
@@ -114,6 +134,7 @@ public class EditorGUI {
         startupScroll.setWidget(startupPanel);
     }
     
+
     /*
     private void createMainSplitPanel() {
         createContentPanel();

@@ -18,6 +18,8 @@ public interface UIManager {
     
     FileDialog fileDialog();
     
+    MessageDialog messageDialog();
+    
     //UI Widgets
     
     Window window();

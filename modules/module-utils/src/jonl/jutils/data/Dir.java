@@ -24,6 +24,18 @@ public class Dir {
         return file.exists();
     }
     
+    public boolean isDirectory() {
+        return file.isDirectory();
+    }
+    
+    public boolean isFile() {
+        return file.isFile();
+    }
+    
+    public String name() {
+        return file.getName();
+    }
+    
     public String path() {
         return file.getPath();
     }

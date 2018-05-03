@@ -17,6 +17,7 @@ import jonl.aui.ListLayout;
 import jonl.aui.Margin;
 import jonl.aui.Menu;
 import jonl.aui.MenuBar;
+import jonl.aui.MessageDialog;
 import jonl.aui.Overlay;
 import jonl.aui.Panel;
 import jonl.aui.Resource;
@@ -99,6 +100,11 @@ public class UI implements UIManager {
     @Override
     public FileDialog fileDialog() {
         return ui.fileDialog();
+    }
+    
+    @Override
+    public MessageDialog messageDialog() {
+        return ui.messageDialog();
     }
     
     @Override

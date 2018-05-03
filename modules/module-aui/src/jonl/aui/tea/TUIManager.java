@@ -2,6 +2,8 @@ package jonl.aui.tea;
 
 import java.io.InputStream;
 
+import javax.swing.UnsupportedLookAndFeelException;
+
 import jonl.aui.Align;
 import jonl.aui.Font;
 import jonl.aui.Icon;
@@ -25,6 +27,17 @@ public class TUIManager implements UIManager {
             ui = new TUIManager();
         }
         return ui;
+    }
+    
+    static {
+        // Because we are using JDialogs, we will set the LAF to the system
+        // If ui no longer has awt dependency, remove this
+        try {
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
     }
     
     private TStyle style = new TStyleDefault();
@@ -87,6 +100,11 @@ public class TUIManager implements UIManager {
     @Override
     public TFileDialog fileDialog() {
         return new TFileDialog();
+    }
+    
+    @Override
+    public TMessageDialog messageDialog() {
+        return new TMessageDialog();
     }
     
     @Override
