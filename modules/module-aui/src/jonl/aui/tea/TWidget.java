@@ -428,7 +428,6 @@ public abstract class TWidget implements Widget {
      */
     protected void invalidateLayout() {
         if (manager() != null && layout != null) {
-            //manager().layout().invalidateLayout(layout);
             layout.invalidateLayout();
         }
     }
@@ -438,7 +437,6 @@ public abstract class TWidget implements Widget {
      */
     protected void invalidateSizeHint() {
         if (manager() != null && parentLayout != null) {
-            //manager().layout().invalidateSizeHint(parentLayout);
             parentLayout.invalidateSizeHint();
         }
     }

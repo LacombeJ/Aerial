@@ -36,15 +36,11 @@ public class EditorProjectUI extends TPanel {
     }
     
     void populate() {
-        
-        //EditorProject project = editor.project;
-        
+
         NewTabWidget newTab = new NewTabWidget(ui);
         
-        //tabPanel.add(newTab, "New Tab");
-        
-        tabPanel.add(ui.panel(),"Test??");
-        
+        tabPanel.add(newTab, "New Tab");
+
     }
     
 }

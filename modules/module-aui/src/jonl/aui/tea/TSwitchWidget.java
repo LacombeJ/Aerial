@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import jonl.aui.LayoutItem;
 import jonl.aui.SwitchWidget;
 import jonl.aui.Widget;
-import jonl.jutils.io.Console;
 import jonl.vmath.Mathi;
 
 public class TSwitchWidget extends TWidget implements SwitchWidget {

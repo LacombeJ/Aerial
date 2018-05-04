@@ -63,7 +63,7 @@ public class TWindowLayout extends TLayout {
         super.setSizeHintValidation(hint);
         
         TWindow window = (TWindow) parent;
-        if (window.window()!=null) {
+        if (window!=null && window.window()!=null) {
             int minWidth = window.minWidth();
             int minHeight = window.minHeight();
             

@@ -8,6 +8,8 @@ public class TScrollLayout extends TLayout implements Layout {
     public void layout() {
         TScrollPanel scrollPanel = (TScrollPanel)parent;
         
+        if (scrollPanel.content.widget()==null) return;
+        
         int width = parent.width;
         int height = parent.height;
         

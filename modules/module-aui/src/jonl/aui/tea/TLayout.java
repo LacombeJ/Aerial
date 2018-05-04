@@ -103,6 +103,7 @@ public abstract class TLayout implements Layout {
             if (item instanceof TWidgetItem) {
                 TWidget widget = ((TWidgetItem) item).asWidget();
                 widget.parentLayout = this;
+                dirtySizeHint();
             }
             if (parent != null) {
                 parent.invalidateLayout();
@@ -126,19 +127,28 @@ public abstract class TLayout implements Layout {
     @Override
     public void remove(LayoutItem item) {
         items.remove(item);
-        invalidateLayout();
+        dirtySizeHint();
+        if (parent != null) {
+            parent.invalidateLayout();
+        }
     }
     
     @Override
     public void remove(int index) {
         items.remove(index);
-        invalidateLayout();
+        dirtySizeHint();
+        if (parent != null) {
+            parent.invalidateLayout();
+        }
     }
     
     @Override
     public void removeAll() {
         items.clear();
-        invalidateLayout();
+        dirtySizeHint();
+        if (parent != null) {
+            parent.invalidateLayout();
+        }
     }
     
     @Override
@@ -221,6 +231,13 @@ public abstract class TLayout implements Layout {
     }
     
     // ------------------------------------------------------------------------
+    
+    /**
+     * Set size hint to null so that the hint is recalculated
+     */
+    protected void dirtySizeHint() {
+        sizeHint = null;
+    }
     
     protected void addNoInvalidate(LayoutItem item) {
         if (items.add((TLayoutItem) item)) {
