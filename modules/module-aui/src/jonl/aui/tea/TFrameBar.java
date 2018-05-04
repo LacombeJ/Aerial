@@ -1,13 +1,12 @@
 package jonl.aui.tea;
 
 import jonl.aui.Align;
-import jonl.aui.HAlign;
 import jonl.aui.Margin;
-import jonl.aui.VAlign;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.ButtonRenderer;
+import jonl.aui.tea.graphics.FrameBarRenderer;
 import jonl.jgl.Input;
 import jonl.jgl.Window;
-import jonl.vmath.Color;
 import jonl.vmath.Mathi;
 
 public class TFrameBar extends TWidget {
@@ -32,21 +31,15 @@ public class TFrameBar extends TWidget {
         
         layout.add(new TSpacer());
         
-        TButton minimize = new TButton("--");
-        minimize.setMinSize(buttonWidth, buttonHeight);
-        minimize.setMaxSize(buttonWidth, buttonHeight);
-        minimize.info().put("cButton", frame.color);
-        minimize.info().put("fMaxValue", 4f);
+        TFrameButton minimize = new TFrameButton("Frame.Minimize.Button");
+        minimize.setSizeConstraint(buttonWidth, buttonHeight);
         minimize.clicked().connect(()->{
             frame.window().minimize();
         });
         layout.add(minimize);
         
-        TButton maximize = new TButton("[]]");
-        maximize.setMinSize(buttonWidth, buttonHeight);
-        maximize.setMaxSize(buttonWidth, buttonHeight);
-        maximize.info().put("cButton", frame.color);
-        maximize.info().put("fMaxValue", 4f);
+        TFrameButton maximize = new TFrameButton("Frame.Maximize.Button");
+        maximize.setSizeConstraint(buttonWidth, buttonHeight);
         maximize.clicked().connect(()->{
             if (frame.window().getAttribute(Window.MAXIMIZED)) {
                 frame.insets = new Margin(frame.defaultInsets);
@@ -59,12 +52,8 @@ public class TFrameBar extends TWidget {
         });
         layout.add(maximize);
         
-        TButton close = new TButton("X");
-        close.setMinSize(buttonWidth, buttonHeight);
-        close.setMaxSize(buttonWidth, buttonHeight);
-        close.info().put("cButton", frame.color);
-        close.info().put("cHover", Color.RED);
-        close.info().put("fMaxValue", 4f);
+        TFrameButton close = new TFrameButton("Frame.Close.Button");
+        close.setSizeConstraint(buttonWidth, buttonHeight);
         close.clicked().connect(()->{
             frame.window().close();
         });
@@ -73,10 +62,13 @@ public class TFrameBar extends TWidget {
         setWidgetLayout(layout);
     }
     
+    public TFrame frame() {
+        return frame;
+    }
+    
     @Override
     public void paint(TGraphics g) {
-        g.renderRect(0,0,width(),height(),frame.color);
-        g.renderText(frame.title(), width()/2f, height()/2f, HAlign.CENTER, VAlign.MIDDLE, style().font(), Color.WHITE);
+        FrameBarRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
     
@@ -154,6 +146,18 @@ public class TFrameBar extends TWidget {
             return true;
         }
         return false;
+    }
+    
+    static class TFrameButton extends TButton {
+        private String type;
+        TFrameButton(String type) {
+            this.type = type;
+        }
+        @Override
+        protected void paint(TGraphics g) {
+            ButtonRenderer.paint(this,type,g,info());
+            paint().emit(cb->cb.f(g));
+        }
     }
     
 }

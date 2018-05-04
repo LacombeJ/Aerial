@@ -31,4 +31,9 @@ public class Margin {
         return bottom + top;
     }
     
+    @Override
+    public String toString() {
+        return "Margin("+left+","+right+","+top+","+bottom+")";
+    }
+    
 }

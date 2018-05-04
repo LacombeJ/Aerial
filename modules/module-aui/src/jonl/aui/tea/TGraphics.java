@@ -29,6 +29,7 @@ import jonl.jgl.Texture;
 
 public class TGraphics implements Graphics {
 
+    TUIManager ui;
     GL gl;
     
     Function0D<Integer> windowHeight;
@@ -64,6 +65,7 @@ public class TGraphics implements Graphics {
     public TGraphics(GL gl, Function0D<Integer> windowHeight) {
         this.gl = gl;
         this.windowHeight = windowHeight;
+        ui = TUIManager.instance();
         
         int version = gl.glGetGLSLVersioni();
         
@@ -282,19 +284,20 @@ public class TGraphics implements Graphics {
     }
     
     public void renderCheck(float x, float y, Color color) {
-        renderImage(TIcon.CHECK,x,y,color);
+        
+        renderImage(ui.resource("ui/check").icon(),x,y,color);
     }
     
     public void renderCheck(float x, float y) {
-        renderImage(TIcon.CHECK,x,y);
+        renderImage(ui.resource("ui/check").icon(),x,y);
     }
     
     public void renderCaret(float x, float y, Color color) {
-        renderImage(TIcon.CARET,x,y);
+        renderImage(ui.resource("ui/caret").icon(),x,y);
     }
     
     public void renderCaret(float x, float y) {
-        renderImage(TIcon.CARET,x,y);
+        renderImage(ui.resource("ui/caret").icon(),x,y);
     }
     
     public void renderTexture(Texture texture, float x, float y, float w, float h, Vector4 color) {

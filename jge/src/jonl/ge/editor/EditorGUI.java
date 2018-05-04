@@ -13,7 +13,6 @@ import jonl.aui.ToolButton;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TUIManager;
 import jonl.aui.tea.TWindow;
-import jonl.aui.tea.graphics.TStyleDark;
 import jonl.jutils.data.Dir;
 
 public class EditorGUI {
@@ -37,7 +36,6 @@ public class EditorGUI {
     public void create() {
         
         ui = TUIManager.instance();
-        ui.setStyle(new TStyleDark());
         
         // Window
         window = (TWindow) ui.window();

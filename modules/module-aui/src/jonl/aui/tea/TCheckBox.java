@@ -17,7 +17,7 @@ public class TCheckBox extends TButton implements CheckBox {
     
     @Override
     protected TSizeHint sizeHint() {
-        return style().checkBox().getSizeHint(this,info());
+        return TSizeReasoning.checkBox(this);
     }
     
     @Override

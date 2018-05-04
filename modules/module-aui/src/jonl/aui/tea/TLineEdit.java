@@ -11,8 +11,6 @@ public class TLineEdit extends TWidget implements LineEdit {
 
     private String text = "";
     
-    private int border = 4;
-    
     private Signal<Callback<String>> changed = new Signal<>();
     
     public TLineEdit() {
@@ -43,10 +41,7 @@ public class TLineEdit extends TWidget implements LineEdit {
     
     @Override
     protected TSizeHint sizeHint() {
-        TSizeHint hint = new TSizeHint();
-        hint.width = style().font().getWidth(text) + border;
-        hint.height = style().font().getHeight() + border;
-        return hint;
+        return TSizeReasoning.lineEdit(this);
     }
     
     protected void paint(TGraphics g) {

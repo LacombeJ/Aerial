@@ -159,7 +159,7 @@ public class TComboBox extends TWidget implements ComboBox {
     
     @Override
     protected TSizeHint sizeHint() {
-        return style().comboBox().getSizeHint(this,info());
+        return TSizeReasoning.comboBox(this);
     }
     
     @Override

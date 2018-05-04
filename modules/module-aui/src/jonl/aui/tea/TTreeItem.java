@@ -155,7 +155,7 @@ public class TTreeItem implements TreeItem {
             layout.setSpacing(0);
             
             expandButton = new TreeDropButton();
-            expandButton.setIcon(TIcon.CARET);
+            expandButton.setSizeConstraint(14,14);
             
             itemButton = new TreeItemButton();
             itemButton.setText(text);

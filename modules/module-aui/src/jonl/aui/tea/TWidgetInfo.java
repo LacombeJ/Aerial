@@ -1,4 +1,4 @@
-package jonl.aui.tea.graphics;
+package jonl.aui.tea;
 
 import jonl.jutils.structs.AttributeMap;
 import jonl.vmath.Color;

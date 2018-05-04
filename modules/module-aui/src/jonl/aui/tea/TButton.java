@@ -95,7 +95,7 @@ public class TButton extends TWidget implements Button {
     
     @Override
     protected TSizeHint sizeHint() {
-        return style().button().getSizeHint(this,info());
+        return TSizeReasoning.button(this);
     }
     
     @Override

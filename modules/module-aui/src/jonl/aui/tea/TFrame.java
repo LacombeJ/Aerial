@@ -3,8 +3,7 @@ package jonl.aui.tea;
 import jonl.aui.Frame;
 import jonl.aui.Margin;
 import jonl.aui.Widget;
-import jonl.aui.tea.call.TArgTypes;
-import jonl.vmath.Color;
+import jonl.aui.tea.graphics.FrameRenderer;
 
 public class TFrame extends TWindow implements Frame {
     
@@ -12,8 +11,6 @@ public class TFrame extends TWindow implements Frame {
     
     Margin defaultInsets;
     Margin insets;
-    
-    Color color = Color.fromFloat(0.5f, 0.45f, 0.45f);
     
     TFrame() {
         super(new TFrameLayout());
@@ -25,12 +22,6 @@ public class TFrame extends TWindow implements Frame {
         
         frameBar = new TFrameBar(this);
         layout.add(frameBar);
-        
-        caller().implement("SET_COLOR", (args) -> {
-            color = TArgTypes.color(args);
-            return true;
-        });
-        
     }
     
     TFrameBar frameBar() {
@@ -62,8 +53,8 @@ public class TFrame extends TWindow implements Frame {
     }
     
     @Override
-    public void paint(TGraphics g) {
-        g.renderRect(0,0,width(),height(),color);
+    protected void paint(TGraphics g) {
+        FrameRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
     }
 

@@ -2,6 +2,7 @@ package jonl.aui.tea.graphics;
 
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TLabel;
+import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 

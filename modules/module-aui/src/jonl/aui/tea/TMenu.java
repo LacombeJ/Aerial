@@ -29,11 +29,6 @@ public class TMenu extends TButton implements Menu  {
     }
     
     @Override
-    protected TSizeHint sizeHint() {
-        return style().menuButton().getSizeHint(this,info());
-    }
-    
-    @Override
     protected void paint(TGraphics g) {
         ButtonRenderer.paint(this,"Menu.Button",g,info());
         paint().emit(cb->cb.f(g));

@@ -26,6 +26,8 @@ public class EditorProjectUI extends TPanel {
         setLayout(layout);
         
         tabPanel = ui.tabPanel();
+        tabPanel.setAddable(true);
+        tabPanel.setCloseable(true);
         
         layout.add(tabPanel);
         

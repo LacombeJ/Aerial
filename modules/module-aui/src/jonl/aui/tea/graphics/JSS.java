@@ -80,6 +80,10 @@ public class JSS {
         NAMED_COLORS.put("gray",Color.GRAY);
         NAMED_COLORS.put("darkgray",Color.DARK_GRAY);
         
+        NAMED_COLORS.put("lightgrey",Color.LIGHT_GRAY);
+        NAMED_COLORS.put("grey",Color.GRAY);
+        NAMED_COLORS.put("darkgrey",Color.DARK_GRAY);
+        
         NAMED_COLORS.put("darkred",Color.DARK_RED);
         NAMED_COLORS.put("darkgreen",Color.DARK_GREEN);
         NAMED_COLORS.put("darkblue",Color.DARK_BLUE);
@@ -248,6 +252,14 @@ public class JSS {
             return Double.parseDouble(value);
         } catch (Exception e) {
             return 0;
+        }
+    }
+    
+    public static boolean asBoolean(String value) {
+        try {
+            return Boolean.parseBoolean(value);
+        } catch (Exception e) {
+            return false;
         }
     }
     

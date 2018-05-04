@@ -8,8 +8,6 @@ public class TLabel extends TWidget implements Label {
 
     private String text = "";
     
-    private int border = 4;
-    
     public TLabel() {
         super();
         setSizePolicy(new SizePolicy(SizePolicy.MINIMUM, SizePolicy.FIXED));
@@ -34,10 +32,7 @@ public class TLabel extends TWidget implements Label {
     
     @Override
     protected TSizeHint sizeHint() {
-        TSizeHint hint = new TSizeHint();
-        hint.width = style().font().getWidth(text) + border;
-        hint.height = style().font().getHeight() + border;
-        return hint;
+        return TSizeReasoning.label(this);
     }
     
     protected void paint(TGraphics g) {

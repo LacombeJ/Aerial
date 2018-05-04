@@ -78,6 +78,12 @@ public class TSpacer extends TLayoutItem implements Spacer {
     }
     
     @Override
+    public void setSizeConstraint(int width, int height) {
+        setMinSize(width,height);
+        setMaxSize(width,height);
+    }
+    
+    @Override
     public void setSizePolicy(SizePolicy policy) {
         sizePolicy = policy;
     }

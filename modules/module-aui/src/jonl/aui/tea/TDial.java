@@ -86,7 +86,7 @@ public class TDial extends TWidget implements Dial {
     
     @Override
     protected TSizeHint sizeHint() {
-        return style().dial().getSizeHint(this,info());
+        return TSizeReasoning.dial(this);
     }
     
     protected void paint(TGraphics g) {

@@ -3,6 +3,8 @@ package jonl.jutils.misc;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.imageio.ImageIO;
 
 import jonl.jutils.structs.FloatArray;
@@ -16,9 +18,22 @@ public class ImageUtils {
 
     public final static int BYTES_PER_PIXEL = 4; //RGBA
     
-    public static BufferedImage load(String file) {
+    public static BufferedImage load(File file) {
         try {
-            return ImageIO.read(new File(file));
+            return ImageIO.read(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static BufferedImage load(String file) {
+        return load(new File(file));
+    }
+    
+    public static BufferedImage load(InputStream in) {
+        try {
+            return ImageIO.read(in);
         } catch (IOException e) {
             e.printStackTrace();
         }

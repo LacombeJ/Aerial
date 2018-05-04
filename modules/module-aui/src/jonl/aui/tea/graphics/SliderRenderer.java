@@ -3,6 +3,7 @@ package jonl.aui.tea.graphics;
 import jonl.aui.Align;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TSlider;
+import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 

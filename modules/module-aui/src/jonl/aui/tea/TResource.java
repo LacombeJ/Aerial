@@ -22,4 +22,8 @@ public class TResource implements Resource {
         return data;
     }
     
+    public TIcon icon() {
+        return (TIcon) data;
+    }
+    
 }

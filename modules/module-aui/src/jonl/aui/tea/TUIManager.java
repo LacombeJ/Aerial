@@ -12,11 +12,10 @@ import jonl.aui.Margin;
 import jonl.aui.Resource;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
-import jonl.aui.tea.graphics.TStyleDefault;
 import jonl.jutils.io.FileUtils;
 import jonl.jutils.jss.Style;
 import jonl.jutils.jss.StyleSheet;
-import jonl.aui.tea.graphics.TStyle;
+import jonl.jutils.misc.ImageUtils;
 
 public class TUIManager implements UIManager {
     
@@ -40,15 +39,12 @@ public class TUIManager implements UIManager {
         }
     }
     
-    private TStyle style = new TStyleDefault();
-    
     private Style styleSheet = defaultStyle();
     
     private TResourceMap map = new TResourceMap();
     
     private TUIManager() {
-        resource("ui/check", TIcon.CHECK);
-        resource("ui/caret", TIcon.CARET);
+        loadResources();
     }
     
     @Override
@@ -73,14 +69,6 @@ public class TUIManager implements UIManager {
     
     public Style styleSheet() {
         return styleSheet;
-    }
-    
-    public TStyle getStyle() {
-        return style;
-    }
-    
-    public void setStyle(TStyle style) {
-        this.style = style;
     }
     
     public void refreshStyle() {
@@ -332,6 +320,24 @@ public class TUIManager implements UIManager {
         InputStream in = getClass().getResourceAsStream("/default.jss");
         Style jss = StyleSheet.fromString(FileUtils.readFromStream(in));
         return jss;
+    }
+    
+    private void resourceIcon(String loc, String resource) {
+        InputStream in = getClass().getResourceAsStream(loc);
+        if (in != null) {
+            resource(resource, new TIcon(ImageUtils.load(in)));
+        } else {
+            System.err.println("Failed to find icon resource: "+loc);
+        }
+    }
+    
+    private void loadResources() {
+        resourceIcon("/check.png",      "ui/check");
+        resourceIcon("/caret.png",      "ui/caret");
+        resourceIcon("/add.png",        "ui/add");
+        resourceIcon("/subtract.png",   "ui/subtract");
+        resourceIcon("/remove.png",     "ui/remove");
+        resourceIcon("/maximize.png",   "ui/maximize");
     }
     
 }

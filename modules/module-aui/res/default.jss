@@ -120,6 +120,48 @@ Dial:hover:down {
     knob-border-color: linear-gradient(rgb(128,128,128), rgb(164,164,164));
 }
 
+Frame {
+    window-override: true;
+    background: linear-gradient(rgb(79,123,145), rgb(102,109,130));
+    color: white;
+}
+
+Frame.Minimize.Button {
+    background: transparent;
+    image: "ui/subtract";
+}
+
+Frame.Maximize.Button {
+    background: transparent;
+    image: "ui/maximize";
+}
+
+Frame.Close.Button {
+    background: transparent;
+    image: "ui/remove";
+}
+
+Frame.Minimize.Button:hover {
+    background: rgba(164,164,164,128);
+}
+Frame.Minimize.Button:hover:down {
+    background: rgba(96,96,96,128);
+}
+
+Frame.Maximize.Button:hover {
+    background: rgba(164,164,164,128);
+}
+Frame.Maximize.Button:hover:down {
+    background: rgba(96,96,96,128);
+}
+
+Frame.Close.Button:hover {
+    background: rgba(255,0,0,128);
+}
+Frame.Close.Button:hover:down {
+    background: rgba(196,0,0,128);
+}
+
 Label {
     background: transparent;
     color: white;
@@ -252,6 +294,11 @@ TabPanel.Content {
     border: 2;
 }
 
+TitlePanel {
+    background: transparent;
+    color: white;
+}
+
 ToolBar {
     background: rgba(0,0,0,64);
     border-color: linear-gradient(rgb(64,64,64), rgb(130,130,130));
@@ -292,6 +339,9 @@ Tree.Item:hover {
 
 Tree.Drop {
     background: transparent;
+    image: "ui/caret";
+    image-color: white;
+    image-align: center;
 }
 
 Tree.Drop:hover {

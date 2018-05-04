@@ -12,8 +12,6 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
 import jonl.aui.tea.event.TResizeEvent;
 import jonl.aui.tea.event.TScrollEvent;
-import jonl.aui.tea.graphics.TStyle;
-import jonl.aui.tea.graphics.TWidgetInfo;
 import jonl.aui.tea.graphics.WidgetRenderer;
 import jonl.aui.tea.spatial.TSize;
 import jonl.jutils.call.Caller;
@@ -40,9 +38,7 @@ public abstract class TWidget implements Widget {
     private boolean enabled = true;
     
     private final Signal<Callback<Graphics>> paint = new Signal<>();
-    
-    private TUIManager ui = null;
-    
+
     private TWidgetInfo info = new TWidgetInfo();
     private Caller caller = new Caller();
     
@@ -54,8 +50,6 @@ public abstract class TWidget implements Widget {
     private TEventHandler event = new TEventHandler();
     
     public TWidget() {
-        ui = TUIManager.instance();
-        
         info.put("this", this);
         
         caller().implement("SET_INFO", (args) -> {
@@ -141,6 +135,18 @@ public abstract class TWidget implements Widget {
     }
     
     @Override
+    public void setMaxSize(int width, int height) {
+        max.width = width;
+        max.height = height;
+    }
+    
+    @Override
+    public void setSizeConstraint(int width, int height) {
+        setMinSize(width,height);
+        setMaxSize(width,height);
+    }
+    
+    @Override
     public SizePolicy sizePolicy() {
         return sizePolicy;
     }
@@ -148,12 +154,6 @@ public abstract class TWidget implements Widget {
     @Override
     public void setSizePolicy(SizePolicy policy) {
         sizePolicy = policy;
-    }
-
-    @Override
-    public void setMaxSize(int width, int height) {
-        max.width = width;
-        max.height = height;
     }
 
     @Override
@@ -223,10 +223,6 @@ public abstract class TWidget implements Widget {
     
     protected TRootPanel rootPanel() {
         return root()._root_panel();
-    }
-    
-    protected TStyle style() {
-        return ui.getStyle();
     }
     
     protected TLayout widgetLayout() {
