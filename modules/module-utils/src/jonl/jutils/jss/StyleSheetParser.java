@@ -2,6 +2,8 @@ package jonl.jutils.jss;
 
 import java.util.ArrayList;
 
+import jonl.jutils.io.Console;
+
 class StyleSheetParser {
     
     static final char[] KEY_CHAR = {
@@ -24,6 +26,9 @@ class StyleSheetParser {
     int index;
     String property = "";
     String value = "";
+    
+    String atProperty = "";
+    String atValue = "";
     
     ArrayList<String> styleTitles = new ArrayList<>();
     ArrayList<Style> styles = new ArrayList<>();
@@ -85,9 +90,42 @@ class StyleSheetParser {
             if (isMember(c,KEY_CHAR)) {
                 error("Syntax Error.");
             }
+            if (isMultiLineComment()) {
+                continue;
+            }
             back();
             styles();
         }
+    }
+    
+    boolean isMultiLineComment() {
+        back();
+        while (hasNext()) {
+            char c = next();
+            if (c=='/') {
+                char a = next();
+                if (a=='*') {
+                    while (hasNext()) {
+                        char o = next();
+                        if (o=='*') {
+                            char e = next();
+                            if (e=='/') {
+                                return true;
+                            } else {
+                                back();
+                            }
+                        }
+                    }
+                    return true;
+                } else {
+                    back();
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     
     void styles() {
@@ -157,9 +195,49 @@ class StyleSheetParser {
                 back();
                 return;
             }
+            if (c=='@') {
+                atProperty();
+                atValue();
+                continue;
+            }
             back();
             property();
             value();
+        }
+    }
+    
+    void atProperty() {
+        atProperty = "";
+        while (hasNext()) {
+            char c = next();
+            if (c==' ') {
+                return;
+            }
+            atProperty += c;
+        }
+    }
+    
+    void atValue() {
+        atValue = "";
+        boolean found = false;
+        while (hasNext()) {
+            char c = next();
+            if (!found && isMember(c,ROOT_IGNORES)) {
+                continue;
+            }
+            if (c==';') {
+                if (atProperty.equals("extend")) {
+                    for (Style style : styles) {
+                        Style extend = ss.style(atValue);
+                        if (extend!=null) {
+                            style.append(extend);
+                        }
+                    }
+                }
+                return;
+            }
+            found = true;
+            atValue += c;
         }
     }
     

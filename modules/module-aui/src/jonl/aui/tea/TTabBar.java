@@ -2,21 +2,18 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.Button;
+import jonl.aui.tea.graphics.ButtonRenderer;
 import jonl.aui.tea.graphics.WidgetRenderer;
-import jonl.vmath.Color;
 
 public class TTabBar extends TButtonBar {
 
-    TTabButton newTabButton = null;
+    TNewTabButton newTabButton = null;
     boolean hasNewTabButton = false;
     
     public TTabBar() {
         super(Align.HORIZONTAL);
-        newTabButton = new TTabButton("+");
+        newTabButton = new TNewTabButton();
         newTabButton.setMaxSize(30,Integer.MAX_VALUE);
-        newTabButton.info().put("cButton",Color.fromFloat(0.1f,0.2f,0.2f));
-        newTabButton.info().put("cHover",Color.fromFloat(0.1f,0.15f,0.15f));
-        newTabButton.info().put("cToggle",Color.fromFloat(0.1f,0.15f,0.15f));
         newTabButton.setCheckable(false);
     }
     
@@ -49,6 +46,17 @@ public class TTabBar extends TButtonBar {
     protected void paint(TGraphics g) {
         WidgetRenderer.paint(this,"TabPanel.Bar",g,info());
         paint().emit(cb->cb.f(g));
+    }
+    
+    static class TNewTabButton extends TTabButton {
+        public TNewTabButton() {
+            super("");
+        }
+        @Override
+        protected void paint(TGraphics g) {
+            ButtonRenderer.paint(this,"TabPanel.New.Button",g,info());
+            paint().emit(cb->cb.f(g));
+        }
     }
     
 

@@ -294,6 +294,24 @@ TabPanel.Content {
     border: 2;
 }
 
+TabPanel.New.Button {
+    @extend TabPanel.Button;
+    image: "ui/add";
+    image-color: green;
+    border: 2;
+    border-color: darkgray;
+}
+
+TabPanel.Close.Button {
+    background: transparent;
+    image: "ui/remove";
+    image-color: white;
+}
+
+TabPanel.Close.Button:hover {
+    image-color: red;
+}
+
 TitlePanel {
     background: transparent;
     color: white;
