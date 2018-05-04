@@ -297,7 +297,7 @@ TabPanel.Content {
 TabPanel.New.Button {
     @extend TabPanel.Button;
     image: "ui/add";
-    image-color: green;
+    image-color: gray;
     border: 2;
     border-color: darkgray;
 }

@@ -20,6 +20,10 @@ public class Dir {
         return new Dir(path(name));
     }
     
+    public Dir parent() {
+        return new Dir(file.getParent());
+    }
+    
     public boolean exists() {
         return file.exists();
     }

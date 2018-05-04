@@ -28,22 +28,24 @@ public class EditorProject {
         this(editor, new Dir(path));
     }
     
-    public void load() {
-        
-        // Load project
-        project = dir.json("project.json").load(Project.class);
-        
-        // Load scenes
-        Dir scenesDir = dir.dir("scenes");
-        if (scenesDir.exists()) {
-            scenes = scenesDir.json("scenes.json").load(Scenes.class);
+    public boolean load() {
+        if (dir.exists("project.json")) {
+            // Load project
+            project = dir.json("project.json").load(Project.class);
             
-            for (String scenePath : scenes.scenePaths) {
-                Scene scene = scenesDir.json(scenePath).load(Scene.class);
-                sceneMap.put(scenePath,scene);
+            // Load scenes
+            Dir scenesDir = dir.dir("scenes");
+            if (scenesDir.exists()) {
+                scenes = scenesDir.json("scenes.json").load(Scenes.class);
+                
+                for (String scenePath : scenes.scenePaths) {
+                    Scene scene = scenesDir.json(scenePath).load(Scene.class);
+                    sceneMap.put(scenePath,scene);
+                }
             }
+            return true;
         }
-        
+        return false;
     }
     
     public void save() {

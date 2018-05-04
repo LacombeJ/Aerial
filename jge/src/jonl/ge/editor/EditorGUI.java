@@ -12,7 +12,6 @@ import jonl.aui.ToolBar;
 import jonl.aui.ToolButton;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TUIManager;
-import jonl.aui.tea.TWindow;
 import jonl.jutils.data.Dir;
 
 public class EditorGUI {
@@ -20,7 +19,7 @@ public class EditorGUI {
 	public Editor editor;
 	public TUIManager ui;
 	
-    public TWindow window;
+    public jonl.aui.Window window;
     public Panel main;
         public MenuBar menuBar;
         public ToolBar toolBar;
@@ -38,7 +37,7 @@ public class EditorGUI {
         ui = TUIManager.instance();
         
         // Window
-        window = (TWindow) ui.window();
+        window = ui.window();
         window.setTitle("Engine");
         window.setWidth(1024);
         window.setHeight(576);
@@ -126,7 +125,8 @@ public class EditorGUI {
         startupPanel.openProject.clicked().connect(()->{
             
             FileDialog fd = ui.fileDialog();
-            fd.setMode(FileDialog.DIRECTORIES_ONLY);
+            fd.setMode(FileDialog.FILES_AND_DIRECTORIES);
+            fd.setFilter("Project", "*.json");
             
             if (fd.showOpenDialog()==FileDialog.APPROVE) {
                 String path = fd.selected();
@@ -134,7 +134,7 @@ public class EditorGUI {
                 Dir dir = new Dir(path);
                 if (dir.isFile()) {
                     if (dir.name().equals("project.json")) {
-                        loadProject(dir);
+                        loadProject(dir.parent());
                     } else {
                         ui.messageDialog().error("Error","Invalid project file: \""+dir.name()+"\"");
                     }
@@ -157,11 +157,13 @@ public class EditorGUI {
     }
     
     private void loadProject(Dir dir) {
-        editor.project = new EditorProject(editor, dir);
-        editor.project.load();
-        
-        projectUi.populate();
-        switchWidget.setWidget(projectUi);
+        EditorProject proj = new EditorProject(editor, dir);
+        if (proj.load()) {
+            editor.project = proj;
+            
+            projectUi.populate();
+            switchWidget.setWidget(projectUi);
+        }
     }
     
     private void createProject(Dir dir) {

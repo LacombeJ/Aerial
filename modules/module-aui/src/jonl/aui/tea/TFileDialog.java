@@ -5,13 +5,11 @@ import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import jonl.aui.FileDialog;
-import jonl.jutils.io.Pattern;
 
 public class TFileDialog implements FileDialog {
 
@@ -113,36 +111,104 @@ public class TFileDialog implements FileDialog {
         
     }
     
+    /**
+     * Modified this class to match wildcard Pattern after seeing:
+     * 
+     * Exception in thread "Basic L&F File Loading Thread" Exception in thread "Basic L&F File Loading Thread" java.lang.NoClassDefFoundError: jonl/jutils/io/Pattern
+     * 
+     */
     static class ExtFilter extends FileFilter {
 
         String description;
         String[] patterns;
         
+        //Used instead of creating a class because of error described above
+        String[] values;
+        boolean[] ignoreCases;
+        
         public ExtFilter(String description, String[] patterns) {
+            super();
             this.description = description;
             this.patterns = patterns;
+            
+            values = new String[patterns.length];
+            ignoreCases = new boolean[patterns.length];
+            
+            for (int i=0; i<patterns.length; i++) {
+                String pattern = patterns[i];
+                boolean ignoreCase = true;
+                
+                pattern = pattern.replace('\\', '/');
+                pattern = pattern.replaceAll("\\*\\*[^/]", "**/*");
+                pattern = pattern.replaceAll("[^/]\\*\\*", "*/**");
+                if (ignoreCase) pattern = pattern.toLowerCase();
+                
+                values[i] = pattern.split("/")[0];
+                ignoreCases[i] = ignoreCase;
+            }
         }
         
         @Override
         public boolean accept(File f) {
-            for (String pattern : patterns) {
+            for (int i=0; i<patterns.length; i++) {
                 if (f.isDirectory()) {
                     return true;
                 }
-                Pattern p = new Pattern(pattern, true);
-                if (p.matches(f.getName())) {
+                String pattern = patterns[i];
+                String value = values[i];
+                boolean ignoreCase = ignoreCases[i];
+                if (matches(f.getName(),pattern,value,ignoreCase)) {
                     return true;
                 }
             }
             return false;
+        }
+        
+        private boolean matches(String fileName, String pattern, String value, boolean ignoreCase) {
+            if (value.equals("**")) return true;
+
+            if (ignoreCase) fileName = fileName.toLowerCase();
+
+            // Shortcut if no wildcards.
+            if (value.indexOf('*') == -1 && value.indexOf('?') == -1) return fileName.equals(value);
+
+            int i = 0, j = 0;
+            while (i < fileName.length() && j < value.length() && value.charAt(j) != '*') {
+                if (value.charAt(j) != fileName.charAt(i) && value.charAt(j) != '?') return false;
+                i++;
+                j++;
+            }
+
+            // If reached end of pattern without finding a * wildcard, the match has to fail if not same length.
+            if (j == value.length()) return fileName.length() == value.length();
+
+            int cp = 0;
+            int mp = 0;
+            while (i < fileName.length()) {
+                if (j < value.length() && value.charAt(j) == '*') {
+                    if (j++ >= value.length()) return true;
+                    mp = j;
+                    cp = i + 1;
+                } else if (j < value.length() && (value.charAt(j) == fileName.charAt(i) || value.charAt(j) == '?')) {
+                    j++;
+                    i++;
+                } else {
+                    j = mp;
+                    i = cp++;
+                }
+            }
+
+            // Handle trailing asterisks.
+            while (j < value.length() && value.charAt(j) == '*')
+                j++;
+
+            return j >= value.length();
         }
 
         @Override
         public String getDescription() {
             return description;
         }
-        
-        
         
     }
 
