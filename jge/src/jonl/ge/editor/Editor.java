@@ -3,13 +3,15 @@ package jonl.ge.editor;
 import java.util.ArrayList;
 
 import jonl.ge.editor.EditorConfiguration.EC10;
+import jonl.jutils.data.Cereal;
+import jonl.jutils.data.Dir;
 import jonl.jutils.data.Json;
 import jonl.jutils.io.Console;
 
 public class Editor {
 
-    String name;
-    String version;
+    Dir dir = Dir.current();
+    EC10 config = new EC10();
     
     EditorGUI gui;
     EditorProject project;
@@ -18,7 +20,6 @@ public class Editor {
 
     public Editor() {
         subEditorTools = new ArrayList<>();
-        
         
     }
     
@@ -32,27 +33,31 @@ public class Editor {
     }
     
     void init() {
-        Json json = new Json("config.json");
+        Json json = dir.json("config.json");
         if (!json.exists()) {
-            EC10 config = defaultConfig();
-            json.save(config);
+            EC10 def = new EC10();
+            json.save(def);
         }
         
         BasicConfig bc = json.load(BasicConfig.class);
         
         if (bc.name.equals("editor")) {
-            EC10 config = null;
+            EC10 loaded = null;
             
             //Current version
             if (bc.version.equals("1.0")) {
-                config = json.load(EC10.class);
+                loaded = json.load(EC10.class);
             } else {
                 Console.log("Version not supported.");
             }
             
-            this.name = config.name;
-            this.version = config.version;
+            config = Cereal.copy(loaded);
         }
+    }
+    
+    void save() {
+        Json json = dir.json("config.json");
+        json.save(config);
     }
     
     void initUi() {
@@ -63,13 +68,6 @@ public class Editor {
     private static class BasicConfig {
         String name;
         String version;
-    }
-    
-    private EC10 defaultConfig() {
-        EC10 config = new EC10();
-        config.name = "editor";
-        config.version = "1.0";
-        return config;
     }
     
 }

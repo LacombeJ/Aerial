@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import jonl.jutils.data.Dir;
-import jonl.jutils.io.Console;
 
 public class EditorProject {
 

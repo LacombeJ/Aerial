@@ -18,9 +18,9 @@ public class EditorConfiguration {
     }
 
     static class EC10 extends EC {
-        String name;
-        String version;
-        Object date;
+        String name = "editor";
+        String version = "1.0";
+        String lastProj = "";
         
         EC update() {
             return Cereal.copy(this);

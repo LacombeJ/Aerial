@@ -11,6 +11,7 @@ public class TMenu extends TButton implements Menu  {
 
     //TODO do not extend button
     
+    TSubMenuBar parentBar;
     TSubMenuBar bar = new TSubMenuBar(Align.VERTICAL);
     
     public TMenu(String text) {
@@ -21,6 +22,7 @@ public class TMenu extends TButton implements Menu  {
     @Override
     public void add(Menu menu) {
         bar.add(menu);
+        ((TMenu)menu).parentBar = bar;
     }
 
     @Override
@@ -40,6 +42,8 @@ public class TMenu extends TButton implements Menu  {
             clicked().emit(cb->cb.f());
             if (bar.count()!=0) {
                 rootPanel().add(bar,0,height(),this);
+            } else if (parentBar!=null) {
+                rootPanel().remove(parentBar);
             }
             if (checkable()) {
                 checked = !checked;

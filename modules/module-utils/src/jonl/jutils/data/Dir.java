@@ -48,6 +48,14 @@ public class Dir {
         return path() + separator() + name;
     }
     
+    public String absolute() {
+        return file.getAbsolutePath();
+    }
+    
+    public String absolute(String name) {
+        return absolute() + separator() + name;
+    }
+    
     public boolean exists(String name) {
         File abs = new File(name);
         if (abs.isAbsolute()) {
@@ -79,15 +87,15 @@ public class Dir {
         return File.separatorChar;
     }
     
-    public Dir current() {
+    public static Dir current() {
         return new Dir(SystemUtils.currentDir());
     }
     
-    public Dir home() {
+    public static Dir home() {
         return new Dir(SystemUtils.userHome());
     }
     
-    public Dir appData() {
+    public static Dir appData() {
         return new Dir(SystemUtils.appDataLocation());
     }
     

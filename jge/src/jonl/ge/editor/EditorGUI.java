@@ -58,6 +58,8 @@ public class EditorGUI {
         createSwitchWidget();
         main.add(switchWidget);
         
+        load();
+        
         window.setWidget(main);
         
         window.create();
@@ -69,7 +71,40 @@ public class EditorGUI {
     
     private void createMenuBar() {
         menuBar = ui.menuBar();
-        Menu file = ui.menu("File");
+        Menu file = ui.menu("File"); {
+            
+            Menu newMenu = ui.menu("New");
+            
+            Menu openMenu = ui.menu("Open");
+            
+            Menu saveMenu = ui.menu("Save");
+            
+            Menu closeProjectMenu = ui.menu("Close Project");
+            closeProjectMenu.clicked().connect(()->{
+                editor.config.lastProj = "";
+                editor.save();
+                
+                switchWidget.remove(projectUi);
+                
+                projectUi = new EditorProjectUI(editor,ui);
+                switchWidget.add(projectUi);
+                switchWidget.setWidget(startupScroll);
+            });
+            
+            Menu exitMenu = ui.menu("Exit");
+            exitMenu.clicked().connect(()->{
+                System.exit(0);
+            });
+            
+            file.add(newMenu);
+            file.add(openMenu);
+            file.addSeparator();
+            file.add(saveMenu);
+            file.addSeparator();
+            file.add(closeProjectMenu);
+            file.add(exitMenu);
+        }
+        
         Menu edit = ui.menu("Edit");
         menuBar.add(file);
         menuBar.add(edit);
@@ -149,11 +184,18 @@ public class EditorGUI {
                 
             }
             
-            
         });
         
-        
         startupScroll.setWidget(startupPanel);
+    }
+    
+    private void load() {
+        String path = editor.config.lastProj;
+        if (!path.equals("")) {
+            loadProject(new Dir(path));
+        } else {
+            switchWidget.setWidget(startupScroll);
+        }
     }
     
     private void loadProject(Dir dir) {
@@ -163,6 +205,11 @@ public class EditorGUI {
             
             projectUi.populate();
             switchWidget.setWidget(projectUi);
+            
+            editor.config.lastProj = dir.path();
+            editor.save();
+        } else {
+            //TODO
         }
     }
     

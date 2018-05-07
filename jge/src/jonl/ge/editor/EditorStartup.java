@@ -2,6 +2,7 @@ package jonl.ge.editor;
 
 import jonl.aui.Align;
 import jonl.aui.Button;
+import jonl.aui.ComboBox;
 import jonl.aui.ListLayout;
 import jonl.aui.UIManager;
 import jonl.aui.tea.TPanel;
@@ -30,8 +31,14 @@ public class EditorStartup extends TPanel {
         newProject = button("New Project");
         openProject = button("Open Project");
         
+        ComboBox combo = ui.comboBox();
+        combo.add("Alpha");
+        combo.add("Beta");
+        combo.add("Gamma");
+        
         widgetLayout().add(newProject);
         widgetLayout().add(openProject);
+        widgetLayout().add(combo);
         
     }
     

@@ -7,8 +7,8 @@ import jonl.aui.tea.TPanel;
 
 public class EditorProjectUI extends TPanel {
 
-    private Editor editor;
-    private UIManager ui;
+    Editor editor;
+    UIManager ui;
     
     TabPanel tabPanel;
     
