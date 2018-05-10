@@ -36,6 +36,9 @@ public class ApplicationInput implements Input {
     public boolean isKeyReleased(int key) {
         return input.isKeyReleased(key);
     }
+    public boolean isKeyRepeated(int key) {
+        return input.isKeyRepeated(key);
+    }
     
     /////////////////////////////////////////////////////////
     //////////////////       Mouse        ///////////////////

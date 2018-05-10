@@ -10,4 +10,6 @@ public interface LineEdit extends Widget {
     
     Signal<Callback<String>> changed();
     
+    Signal<Callback<String>> finished();
+    
 }

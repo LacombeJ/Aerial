@@ -176,7 +176,6 @@ LineEdit {
     border-color: gray;
     radius: 4;
     text-align: left;
-    text-offset: (2,0);
 }
 
 LineEdit:hover {

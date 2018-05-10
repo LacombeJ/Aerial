@@ -9,24 +9,17 @@ public class TKeyEvent extends TEvent {
     
     public final int key;
     public final int modifier;
+    public final char character;
+    public boolean charValid;
 
     // TODO make keys not dependent on Input class
-    
-    /**
-     * 
-     * @param type
-     * @param button
-     * @param x
-     * @param y
-     * @param globalX
-     * @param globalY
-     * @param dx
-     * @param dy
-     */
-    public TKeyEvent(TEventType type, int key, int modifier) {
+
+    public TKeyEvent(TEventType type, int key, int modifier, char character, boolean charValid) {
         super(type);
         this.key = key;
         this.modifier = modifier;
+        this.character = character;
+        this.charValid = charValid;
     }
     
 }

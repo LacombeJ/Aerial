@@ -20,16 +20,24 @@ public enum TEventType {
     
     Scroll,
     
-    // Keybaord Events
+    // Keyboard Events
     
     KeyPress,
     
     KeyRelease,
+    
+    KeyRepeat,
     
     // Widget Events
     
     Move,
     
     Resize,
+    
+    // Focus Events
+    
+    FocusGained,
+    
+    FocusLost,
     
 }

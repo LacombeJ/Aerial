@@ -4,8 +4,6 @@ import jonl.ge.core.Input.CursorState;
 import jonl.ge.core.app.AbstractApplication;
 import jonl.ge.core.app.ApplicationInput;
 import jonl.ge.core.app.ApplicationWindow;
-import jonl.ge.core.ui.ApplicationUI;
-import jonl.ge.core.ui.UI;
 import jonl.jgl.AudioDevice;
 import jonl.jgl.AL;
 import jonl.jgl.lwjgl.ALDevice;
@@ -33,9 +31,6 @@ public class Application extends AbstractApplication {
     private SceneManager manager = new SceneManager();
 	
     private boolean esc = true;
-    
-    private UI ui = new UI();
-    private ApplicationUI appUi;
     
 	public Application() {
 		super();
@@ -76,15 +71,10 @@ public class Application extends AbstractApplication {
         window = new ApplicationWindow(this);
         manager.create(delegate, service, glWindow.getGraphicsLibrary());
         
-        appUi = new ApplicationUI();
-        
         glWindow.setLoader(()->{
             putInfo();
             manager.load();
             manager.update();
-            
-            appUi.setWidget(ui.getWidget());
-            appUi.load(glWindow);
         });
         
         glWindow.setRunner(()->{
@@ -93,7 +83,6 @@ public class Application extends AbstractApplication {
                 //when synchronization is not used between two windows
                 synchronized (Application.class) {
                     manager.update();
-                    appUi.update();
                     if (esc && input.isKeyPressed(Input.K_ESCAPE)) {
                         close();
                     }
@@ -122,10 +111,6 @@ public class Application extends AbstractApplication {
         info.put("GL_VERSION",      glWindow.getGraphicsLibrary().glGetVersion());
         info.put("GLSL_VERSION",    glWindow.getGraphicsLibrary().glGetGLSLVersion());
     }
-	
-	public UI ui() {
-	    return ui;
-	}
 	
 	@Override
 	public void close() {

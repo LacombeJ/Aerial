@@ -7,6 +7,7 @@ import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TEvent;
+import jonl.aui.tea.event.TFocusEvent;
 import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
@@ -241,7 +242,7 @@ public abstract class TWidget implements Widget {
         return sizeHint;
     }
 
-    protected boolean hasFocus() {
+    public boolean hasFocus() {
         return manager().event().hasKeyFocus(this);
     }
     
@@ -251,6 +252,10 @@ public abstract class TWidget implements Widget {
     
     protected void releaseKeyFocus() {
         manager().event().releaseKeyFocus(this);
+    }
+    
+    protected void setKeyFocusSupport(boolean enable) {
+        event.keyFocusSupport = enable;
     }
     
     protected void setMouseFocusSupport(boolean enable) {
@@ -298,9 +303,13 @@ public abstract class TWidget implements Widget {
     
     protected boolean handleKeyPress(TKeyEvent event) { return false; }
     protected boolean handleKeyRelease(TKeyEvent event) { return false; }
+    protected boolean handleKeyRepeat(TKeyEvent event) { return false; }
     
     protected boolean handleMove(TMoveEvent event) { return false; }
     protected boolean handleResize(TResizeEvent event) { return false; }
+    
+    protected boolean handleFocusGained(TFocusEvent event) { return false; }
+    protected boolean handleFocusLost(TFocusEvent event) { return false; }
     
     // ------------------------------------------------------------------------
     
@@ -349,6 +358,9 @@ public abstract class TWidget implements Widget {
             case Scroll:                    return false;
             case KeyPress:                  return false;
             case KeyRelease:                return false;
+            case KeyRepeat:                 return false;
+            case FocusGained:               return false;
+            case FocusLost:                 return false;
             
             default:                        break;
             
@@ -367,9 +379,13 @@ public abstract class TWidget implements Widget {
         case Scroll:                    return handleScroll((TScrollEvent)event);
         case KeyPress:                  return handleKeyPress((TKeyEvent)event);
         case KeyRelease:                return handleKeyRelease((TKeyEvent)event);
+        case KeyRepeat:                 return handleKeyRepeat((TKeyEvent)event);
         
         case Move:                      return handleMove((TMoveEvent)event);
         case Resize:                    return handleResize((TResizeEvent)event);
+        
+        case FocusGained:               return handleFocusGained((TFocusEvent)event);
+        case FocusLost:                 return handleFocusLost((TFocusEvent)event);
         
         }
         

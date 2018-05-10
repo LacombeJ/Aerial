@@ -264,7 +264,7 @@ public class TGraphics implements Graphics {
     
     public void renderText(String string, float x, float y, HAlign halign, VAlign valign,
             TFont font, Color color) {
-        if (string!="") {
+        if (!string.equals("")) {
             textManager.render(string, x+offsetX, y+offsetY, halign, valign, font, color, ortho, fontRect, fontProgram);
         }
     }

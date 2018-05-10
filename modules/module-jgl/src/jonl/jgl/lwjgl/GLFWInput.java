@@ -1,5 +1,7 @@
 package jonl.jgl.lwjgl;
 
+import java.util.ArrayDeque;
+
 import org.lwjgl.glfw.GLFW;
 
 import jonl.jgl.AbstractInput;
@@ -27,13 +29,18 @@ class GLFWInput extends AbstractInput {
     private static final int[] BUTTON_ARRAY = new int[MB_COUNT];
     private static final int[] KEY_ARRAY = new int[K_COUNT];
     
-    private final boolean[] buttonDown       = new boolean[MB_COUNT];
-    private final boolean[] buttonPressed    = new boolean[MB_COUNT];
-    private final boolean[] buttonReleased   = new boolean[MB_COUNT];
+    private final boolean[] buttonDown          = new boolean[MB_COUNT];
+    private final boolean[] buttonPressed       = new boolean[MB_COUNT];
+    private final boolean[] buttonReleased      = new boolean[MB_COUNT];
     
-    private final boolean[] keyDown       = new boolean[K_COUNT];
-    private final boolean[] keyPressed    = new boolean[K_COUNT];
-    private final boolean[] keyReleased   = new boolean[K_COUNT];
+    private final boolean[] keyDown             = new boolean[K_COUNT];
+    private final boolean[] keyPressed          = new boolean[K_COUNT];
+    private final boolean[] keyReleased         = new boolean[K_COUNT];
+    private final boolean[] keyRepeated         = new boolean[K_COUNT];
+    
+    // Using a queue because set key callback happens on a different thread
+    private Object keySync = new Object();
+    private final ArrayDeque<Integer> keyRepeatQueue = new ArrayDeque<>();
     
     private float x;
     private float y;
@@ -67,8 +74,17 @@ class GLFWInput extends AbstractInput {
             
         });
         
+        // GLFW_REPEAT only works with key callback
+        GLFW.glfwSetKeyCallback(windowID, (windowid,key,scancode,action,mods)->{
+            synchronized(keySync) {
+                if (action==GLFW.GLFW_REPEAT) {
+                    keyRepeatQueue.addLast(KEY_MAP.getKey(key));
+                }
+            }
+        });
+        
     }
-    
+
     void setOverride(boolean o) {
         override = o;
     }
@@ -137,8 +153,16 @@ class GLFWInput extends AbstractInput {
         GetKeyRequest request = new GetKeyRequest(windowID, KEY_ARRAY);
         GetKeyResponse response = GLFWInstance.getKey(request);
         for (int i=0; i<K_COUNT; i++) {
+            
             int action = response.actions[i];
             updateGLFWAction(i,action,keyPressed,keyReleased,keyDown);
+        }
+        synchronized(keySync) {
+            Integer poll = keyRepeatQueue.pollFirst();
+            int key = (poll==null) ? K_NONE : poll;
+            for (int i=0; i<K_COUNT; i++) {
+                keyRepeated[i] = i==key;
+            }
         }
     }
     
@@ -200,6 +224,11 @@ class GLFWInput extends AbstractInput {
     @Override
     public boolean isKeyReleased(int key) {
         return keyReleased[key];
+    }
+    
+    @Override
+    public boolean isKeyRepeated(int key) {
+        return keyRepeated[key];
     }
     
     static {

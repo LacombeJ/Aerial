@@ -5,15 +5,11 @@ import jonl.vmath.Mathi;
 
 public class TSizeReasoning {
 
-    private static final TFont FONT = TFont.CALIBRI;
-    
-    private static final int BORDER = 4;
-    
-    private static final int CHECKBOX_DIM = 12;
-    
-    private static final int DIAL_SIZE = 64;
-    
-    private static final int TAB_EXTRA = 16;
+    public static final TFont FONT = TFont.CALIBRI;
+    public static final int BORDER = 4;
+    public static final int CHECKBOX_DIM = 12;
+    public static final int DIAL_SIZE = 64;
+    public static final int TAB_EXTRA = 16;
     
     public static TSizeHint button(TButton button) {
         TSizeHint hint = new TSizeHint();

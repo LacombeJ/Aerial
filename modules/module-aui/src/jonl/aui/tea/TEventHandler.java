@@ -8,5 +8,6 @@ public class TEventHandler {
     Time timeSinceLastClick = new Time();
     boolean mouseFocusSupport = false;
     boolean mouseMotionBounds = false;
+    boolean keyFocusSupport = false;
     
 }

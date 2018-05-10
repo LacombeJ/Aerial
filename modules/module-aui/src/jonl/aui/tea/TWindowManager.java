@@ -29,7 +29,7 @@ class TWindowManager {
     
     private GLFWWindow glWindow;
     private GL gl;
-    private Input input;
+    private TInput input;
     
     private BufferedImage icon;
     
@@ -404,21 +404,33 @@ class TWindowManager {
         
         // Key events
         for (int i=Input.K_0; i<Input.K_COUNT; i++) {
+            
             int mod = TKeyEvent.NO_MOD;
-            if (input.isKeyDown(Input.K_LSHIFT) || input.isKeyDown(Input.K_RSHIFT)) {
+            boolean shift = input.isKeyDown(Input.K_LSHIFT) || input.isKeyDown(Input.K_RSHIFT);
+            boolean control = input.isKeyDown(Input.K_LCONTROL) || input.isKeyDown(Input.K_RCONTROL);
+            boolean alt = input.isKeyDown(Input.K_LALT) || input.isKeyDown(Input.K_RALT);
+            
+            if (shift) {
                 mod |= TKeyEvent.SHIFT_MOD;
             }
-            if (input.isKeyDown(Input.K_LCONTROL) || input.isKeyDown(Input.K_RCONTROL)) {
+            if (control) {
                 mod |= TKeyEvent.CTRL_MOD;
             }
-            if (input.isKeyDown(Input.K_LALT) || input.isKeyDown(Input.K_RALT)) {
+            if (alt) {
                 mod |= TKeyEvent.ALT_MOD;
             }
+            
+            char c = input.getChar(i, shift);
+            boolean valid = (c!=0 && !control && !alt);
+            
             if (input.isKeyPressed(i)) {
-                window.manager().event().fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod));
+                window.manager().event().fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod, c, valid));
             }
             if (input.isKeyReleased(i)) {
-                window.manager().event().fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod));
+                window.manager().event().fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod, c, valid));
+            }
+            if (input.isKeyRepeated(i)) {
+                window.manager().event().fireKeyRepeat(window, new TKeyEvent(TEventType.KeyRepeat, i, mod, c, valid));
             }
         }
     }

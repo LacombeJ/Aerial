@@ -147,6 +147,7 @@ public interface Input {
     public boolean isKeyDown(int key);
     public boolean isKeyPressed(int key);
     public boolean isKeyReleased(int key);
+    public boolean isKeyRepeated(int key);
     
     /////////////////////////////////////////////////////////
     //////////////////       Mouse        ///////////////////

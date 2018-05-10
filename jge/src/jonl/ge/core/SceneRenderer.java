@@ -232,6 +232,7 @@ class SceneRenderer {
         int ox = 0;
         int oy = 0;
         
+        // Global cut is set for apps that render scene in a subsection of the window
         int[] globalCut = new int[] {globalX,globalY,globalWidth,globalHeight};
         if (subsection) {
             ox = globalX;
@@ -247,6 +248,7 @@ class SceneRenderer {
         Vector4 c = camera.clearColor;
         gl.glClearColor(c.x, c.y, c.z, c.w); //rgba
         
+        //TODO simplify this code
         if (camera.scissorMode != Camera.NONE || subsection) {
             gl.glEnable(GL.SCISSOR_TEST);
             

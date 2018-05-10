@@ -48,6 +48,11 @@ public class EditorInput implements Input {
     public boolean isKeyReleased(int key) {
         return input.isKeyReleased(key);
     }
+    
+    @Override
+    public boolean isKeyRepeated(int key) {
+        return input.isKeyRepeated(key);
+    }
 
     @Override
     public float getX() {

@@ -2,24 +2,36 @@ package jonl.aui.tea;
 
 import jonl.aui.Align;
 import jonl.aui.ScrollPanel;
+import jonl.aui.Signal;
 import jonl.aui.Widget;
+import jonl.aui.tea.event.TScrollEvent;
+import jonl.jutils.func.Callback;
 import jonl.vmath.Mathd;
 
 public class TScrollPanel extends TWidget implements ScrollPanel {
 
-    TScrollContent content; 
+    TScrollPanelArea content; 
     TScrollBar horBar;
     TScrollBar verBar;
     
     public TScrollPanel() {
         super();
-        content = new TScrollContent();
+        content = new TScrollPanelArea();
         horBar = new TScrollBar(Align.HORIZONTAL);
         verBar = new TScrollBar(Align.VERTICAL);
         setWidgetLayout(new TScrollLayout());
         widgetLayout().add(content);
         widgetLayout().add(horBar);
         widgetLayout().add(verBar);
+        
+        content.layoutCb = (size) -> {
+            int diffX = size.width - content.width;
+            int diffY = size.height - content.height;
+            int x = (int) ((horBar.value()/100f) * diffX);
+            int y = (int) ((verBar.value()/100f) * diffY);
+            content.setScrollX(x);
+            content.setScrollY(y);
+        };
         
         content.scrolled().connect((sy)->{
             verBar.setValue(verBar.value() - sy*10);
@@ -44,12 +56,12 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
     
     @Override
     public TWidget widget() {
-        return content.widget();
+        return content.scrollWidget();
     }
 
     @Override
     public void setWidget(Widget widget) {
-        content.setWidget(widget);
+        content.setScrollWidget(widget);
         invalidateLayout();
     }
     
@@ -78,6 +90,89 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
             verBar.setBarSize(verHeight);
             
         }
+    }
+    
+    static class TScrollPanelArea extends TScrollArea {
+        private Signal<Callback<Integer>> scrolled = new Signal<>();
+        public Signal<Callback<Integer>> scrolled() { return scrolled; }
+        @Override
+        protected boolean handleScroll(TScrollEvent scroll) {
+            scrolled.emit((cb)->cb.f(scroll.sy));
+            return true;
+        }
+    }
+    
+    static class TScrollLayout extends TLayout {
+        
+        @Override
+        public void layout() {
+            TScrollPanel scrollPanel = (TScrollPanel)parent;
+            
+            if (scrollPanel.content.scrollWidget()==null) return;
+            
+            int width = parent.width;
+            int height = parent.height;
+            
+            int contentWidgetWidth = freeWidth(scrollPanel.content.scrollWidget());
+            int contentWidgetHeight = freeHeight(scrollPanel.content.scrollWidget());
+            
+            int horHeight = freeHeight(scrollPanel.horBar);
+            int verWidth = freeWidth(scrollPanel.verBar);
+            
+            boolean hasHorBar = false;
+            boolean hasVerBar = false;
+            
+            if (contentWidgetWidth > width) {
+                hasHorBar = true;
+            }
+            
+            if (contentWidgetHeight > height) {
+                hasVerBar = true;
+            }
+            
+            if (!hasHorBar) {
+                horHeight = 0;
+            }
+            
+            if (!hasVerBar) {
+                verWidth = 0;
+            }
+            
+            if (hasHorBar && !contains(scrollPanel.horBar)) {
+                addNoInvalidate(scrollPanel.horBar);
+            } else if (!hasHorBar && contains(scrollPanel.horBar)) {
+                removeNoInvalidate(scrollPanel.horBar);
+            }
+            
+            if (hasVerBar && !contains(scrollPanel.verBar)) {
+                addNoInvalidate(scrollPanel.verBar);
+            } else if (!hasVerBar && contains(scrollPanel.verBar)) {
+                removeNoInvalidate(scrollPanel.verBar);
+            }
+                
+            if (hasHorBar) {
+                setPositionAndSize(scrollPanel.horBar, 0, height - horHeight, width - verWidth, horHeight );
+            }
+            
+            if (hasVerBar) {
+                setPositionAndSize(scrollPanel.verBar, width - verWidth, 0, verWidth, height - horHeight);
+            }
+            
+            setPositionAndSize(scrollPanel.content, 0, 0, width - verWidth, height - horHeight);
+            
+            scrollPanel.updateScrollPanel();
+        }
+
+        @Override
+        public TSizeHint calculateSizeHint() {
+            TScrollPanel scrollPanel = (TScrollPanel)parent;
+            
+            int horHeight = freeHeight(scrollPanel.horBar);
+            int verWidth = freeWidth(scrollPanel.verBar);
+            
+            return new TSizeHint(verWidth, horHeight);
+        }
+        
     }
 
 }

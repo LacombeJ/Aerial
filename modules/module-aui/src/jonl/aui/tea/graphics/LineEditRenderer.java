@@ -8,20 +8,36 @@ import jonl.jutils.jss.Style;
 
 public class LineEditRenderer {
 
-    public static void paint(TLineEdit comboBox, TGraphics g, TWidgetInfo info) {
+    public static void paint(TLineEdit lineEdit, TGraphics g, TWidgetInfo info) {
         boolean hover = info.get("bIsMouseWithin", false);
         
         Style style = JSS.style(g.style(), "LineEdit");
         if (hover) {
             style = JSS.style(style,"hover");
         }
-        style = JSS.name(comboBox,style,g);
+        style = JSS.name(lineEdit,style,g);
         
-        TBox box = new TBox(0,0,comboBox.width(),comboBox.height());
+        TBox box = new TBox(0,0,lineEdit.width(),lineEdit.height());
 
         BoxRenderer.paint(style, box, g);
         ImageRenderer.paint(style, box, g);
-        TextRenderer.paint(style, comboBox.text(), box, g);
+    }
+    
+    public static void paint(TLineEdit.TextArea area, TGraphics g, TWidgetInfo info) {
+        boolean hover = info.get("bIsMouseWithin", false);
+        
+        Style style = JSS.style(g.style(), "LineEdit");
+        if (hover) {
+            style = JSS.style(style,"hover");
+        }
+        style = JSS.name(area,style,g);
+        
+        TBox box = new TBox(0,0,area.width(),area.height());
+        
+        TextRenderer.paint(style, area.edit().text(), box, g);
+        if (area.hasFocus()) {
+            CaretRenderer.paint(style, area.caretX(), 0, area.caretHeight(), g, info);
+        }
     }
     
 }

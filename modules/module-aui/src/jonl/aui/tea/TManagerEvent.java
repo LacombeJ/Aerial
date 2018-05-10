@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import jonl.aui.tea.event.TEvent;
 import jonl.aui.tea.event.TEventType;
+import jonl.aui.tea.event.TFocusEvent;
 import jonl.aui.tea.event.TKeyEvent;
 import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.event.TMoveEvent;
@@ -74,12 +75,32 @@ public class TManagerEvent {
     }
     
     boolean grabKeyFocus(TWidget widget) {
-        keyboardFocusWidget = widget;
+        internalBindKeyFocus(widget);
         return true;
     }
     
     void releaseKeyFocus(TWidget widget) {
-        keyboardFocusWidget = null;
+        internalFreeKeyFocus(widget);
+    }
+    
+    private void internalBindKeyFocus(TWidget widget) {
+        if (widget!=keyboardFocusWidget) {
+            keyboardFocusWidget = widget;
+            sendEvent(widget, new TFocusEvent(TEventType.FocusGained));
+        }
+    }
+    
+    private void internalFreeKeyFocus(TWidget widget) {
+        if (widget != null && widget == keyboardFocusWidget) {
+            sendEvent(widget, new TFocusEvent(TEventType.FocusLost));
+            keyboardFocusWidget = null;
+        } else {
+            TWidget focusWidget = keyboardFocusWidget;
+            if (keyboardFocusWidget != null) {
+                keyboardFocusWidget = null;
+                sendEvent(focusWidget, new TFocusEvent(TEventType.FocusLost));
+            }
+        }
     }
     
     private void internalBindFocus(TWidget widget, TMouseEvent event) {
@@ -188,7 +209,18 @@ public class TManagerEvent {
         }
         return sendEvent(widget, e);
     }
+    private TWidget foundWidget = null;
     public boolean fireMouseButtonPressed(TWidget widget, TMouseEvent e) {
+        foundWidget = null;
+        boolean fired = fireMouseButtonPressedInternal(widget,e);
+        if (foundWidget==null) {
+            internalFreeKeyFocus(null);
+        } else if (foundWidget != keyboardFocusWidget) {
+            internalBindKeyFocus(foundWidget);
+        }
+        return fired;
+    }
+    private boolean fireMouseButtonPressedInternal(TWidget widget, TMouseEvent e) {
         if (checkMouseFocusWidget(widget,e,false)) {
             return false;
         }
@@ -198,7 +230,10 @@ public class TManagerEvent {
             int x = e.x - child.x;
             int y = e.y - child.y;
             if (within(child,x,y)) {
-                if (fireMouseButtonPressed(child,event(e, x, y))) {
+                if (fireMouseButtonPressedInternal(child,event(e, x, y))) {
+                    if (foundWidget == null) {
+                        foundWidget = child;
+                    }
                     return true;
                 }
             }
@@ -321,17 +356,18 @@ public class TManagerEvent {
      * @return
      */
     public boolean fireKeyPressed(TWidget widget, TKeyEvent e) {
-        if (keyboardFocusWidget!=null) {
-            return sendEvent(keyboardFocusWidget, e);
-        }
-        return sendEvent(widget, e);
+        TWidget w = (keyboardFocusWidget==null) ? widget : keyboardFocusWidget;
+        return sendEvent(w, e);
     }
     
     public boolean fireKeyReleased(TWidget widget, TKeyEvent e) {
-        if (keyboardFocusWidget!=null) {
-            return sendEvent(keyboardFocusWidget, e);
-        }
-        return sendEvent(widget, e);
+        TWidget w = (keyboardFocusWidget==null) ? widget : keyboardFocusWidget;
+        return sendEvent(w, e);
+    }
+    
+    public boolean fireKeyRepeat(TWidget widget, TKeyEvent e) {
+        TWidget w = (keyboardFocusWidget==null) ? widget : keyboardFocusWidget;
+        return sendEvent(w, e);
     }
     
     public void firePositionChanged(TWidget w, TMoveEvent e) {
