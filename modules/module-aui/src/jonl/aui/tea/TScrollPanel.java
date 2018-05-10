@@ -14,9 +14,9 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
     TScrollBar horBar;
     TScrollBar verBar;
     
-    public TScrollPanel() {
+    public TScrollPanel(boolean lockWidth, boolean lockHeight) {
         super();
-        content = new TScrollPanelArea();
+        content = new TScrollPanelArea(lockWidth,lockHeight);
         horBar = new TScrollBar(Align.HORIZONTAL);
         verBar = new TScrollBar(Align.VERTICAL);
         setWidgetLayout(new TScrollLayout());
@@ -52,6 +52,10 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
         verBar.moved().connect((value)->{
             content.invalidateLayout();
         });
+    }
+    
+    public TScrollPanel() {
+        this(false,false);
     }
     
     @Override
@@ -95,6 +99,9 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
     static class TScrollPanelArea extends TScrollArea {
         private Signal<Callback<Integer>> scrolled = new Signal<>();
         public Signal<Callback<Integer>> scrolled() { return scrolled; }
+        public TScrollPanelArea(boolean lockWidth, boolean lockHeight) {
+            super(lockWidth,lockHeight);
+        }
         @Override
         protected boolean handleScroll(TScrollEvent scroll) {
             scrolled.emit((cb)->cb.f(scroll.sy));
@@ -167,10 +174,15 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
         public TSizeHint calculateSizeHint() {
             TScrollPanel scrollPanel = (TScrollPanel)parent;
             
-            int horHeight = freeHeight(scrollPanel.horBar);
-            int verWidth = freeWidth(scrollPanel.verBar);
+            int width = freeWidth(scrollPanel.verBar);
+            int height = freeHeight(scrollPanel.horBar);
             
-            return new TSizeHint(verWidth, horHeight);
+            if (scrollPanel.content!=null) {
+                width += freeWidth(scrollPanel.content);
+                height += freeHeight(scrollPanel.content);
+            }
+            
+            return new TSizeHint(width, height);
         }
         
     }

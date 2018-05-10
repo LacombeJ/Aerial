@@ -2,13 +2,13 @@ package jonl.jutils.misc;
 
 import java.util.HashMap;
 
-import jonl.jutils.structs.ObjectSet;
+import jonl.jutils.structs.ReferenceSet;
 
 public class Tools {
 
     private static HashMap<String,Integer> uniqueIncrement = new HashMap<>();
     
-    private static ObjectSet<Object> uniqueObjects = new ObjectSet<>();
+    private static ReferenceSet<Object> uniqueObjects = new ReferenceSet<>();
     
     public static int increment(String key) {
         if (!uniqueIncrement.containsKey(key)) {

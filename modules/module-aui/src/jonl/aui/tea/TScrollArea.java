@@ -67,11 +67,11 @@ public class TScrollArea extends TWidget {
                 int contentHeight = Math.max(prefHeight, scrollHeight);
                 
                 if (scrollContent.lockWidth) {
-                    contentWidth = prefWidth;
+                    contentWidth = scrollWidth;
                 }
                 
                 if (scrollContent.lockHeight) {
-                    contentHeight = prefHeight;
+                    contentHeight = scrollHeight;
                 }
                 
                 int x = scrollContent.scrollX;

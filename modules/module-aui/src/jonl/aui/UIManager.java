@@ -42,6 +42,12 @@ public interface UIManager {
     
     LineEdit lineEdit(String text);
     
+    List list();
+    
+    List list(Align align);
+    
+    List list(Align align, int scrollType);
+    
     ComboBox comboBox();
     
     Dial dial();

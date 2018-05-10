@@ -19,6 +19,8 @@ public class TLineEdit extends TWidget implements LineEdit {
     
     private Signal<Callback<String>> finished = new Signal<>();
     
+    private TextArea textArea;
+    
     public TLineEdit() {
         super();
         setSizePolicy(new SizePolicy(SizePolicy.EXPANDING, SizePolicy.FIXED));
@@ -26,7 +28,7 @@ public class TLineEdit extends TWidget implements LineEdit {
         TFillLayout layout = new TFillLayout();
         layout.setMargin(2,2,0,0);
         TScrollArea area = new TScrollArea(false,true);
-        TextArea textArea = new TextArea(this);
+        textArea = new TextArea(this);
         
         area.setScrollWidget(textArea);
         
@@ -50,6 +52,11 @@ public class TLineEdit extends TWidget implements LineEdit {
         this.text = text;
         changed().emit((cb)->cb.f(text));
         invalidateSizeHint();
+    }
+    
+    @Override
+    protected TSizeHint sizeHint() {
+        return textArea.sizeHint();
     }
     
     @Override

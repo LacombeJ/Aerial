@@ -8,7 +8,8 @@ public class TFont {
     public final static int BOLD = 1;
     public final static int ITALIC = 2;
     
-    public final static TFont CALIBRI = new TFont("Calibri",TFont.PLAIN,15,false);
+    public final static TFont CALIBRI       = new TFont("Calibri",TFont.PLAIN,15,false);
+    public final static TFont CALIBRI_48    = new TFont("Calibri",TFont.PLAIN,48,false);
     
     final String font;
     final int type;

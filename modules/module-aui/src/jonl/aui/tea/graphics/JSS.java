@@ -165,6 +165,7 @@ public class JSS {
     private static final HashMap<String,TFont> FONT = new HashMap<>();
     static {
         FONT.put("calibri",TFont.CALIBRI);
+        FONT.put("calibri_48",TFont.CALIBRI_48);
         
     }
     public static TFont font(String value) {

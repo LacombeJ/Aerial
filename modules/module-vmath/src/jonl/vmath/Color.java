@@ -99,6 +99,14 @@ public class Color {
         return fromInt(r,g,b,a);
     }
     
+    public static int[] toInt(Color c) {
+        int R = (int) (c.r * 255);
+        int G = (int) (c.g * 255);
+        int B = (int) (c.b * 255);
+        int A = (int) (c.a * 255);
+        return new int[] {R,G,B,A};
+    }
+    
     // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
     public static Color hsl2rgb(float h, float s, float l) {
         

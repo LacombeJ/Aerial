@@ -146,6 +146,21 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public TList list() {
+        return new TList();
+    }
+    
+    @Override
+    public TList list(Align align) {
+        return new TList(align);
+    }
+    
+    @Override
+    public TList list(Align align, int scrollType) {
+        return new TList(align, scrollType);
+    }
+    
+    @Override
     public TComboBox comboBox() {
         return new TComboBox();
     }

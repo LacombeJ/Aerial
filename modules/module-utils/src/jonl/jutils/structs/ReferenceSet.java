@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import jonl.jutils.func.List;
+
 //TODO use hashing and function to define what type of set
 
-public class ObjectSet<X> implements Set<X> {
+public class ReferenceSet<X> implements Set<X> {
 
     //TODO change backed structure
     ArrayList<X> list = new ArrayList<X>();
@@ -29,7 +31,11 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean contains(Object o) {
-        return list.contains(o);
+        Iterator<X> it = iterator();
+        while (it.hasNext())
+            if (it.next()==o)
+                return true;
+        return false;
     }
 
     @Override
@@ -58,12 +64,22 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean remove(Object o) {
-        return list.remove(o);
+        int index = List.index(list, x -> x==o);
+        if (index!=-1) {
+            list.remove(index);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-       return list.containsAll(c);
+        for (Object x : c) {
+            if (!contains(x)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -83,7 +99,12 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return list.removeAll(c);
+        boolean changed = false;
+        for (Object x : c) {
+            boolean removed = remove(x);
+            if (removed) changed = true;
+        }
+        return changed;
     }
 
     @Override

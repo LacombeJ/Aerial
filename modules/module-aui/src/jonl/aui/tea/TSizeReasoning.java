@@ -11,15 +11,19 @@ public class TSizeReasoning {
     public static final int DIAL_SIZE = 64;
     public static final int TAB_EXTRA = 16;
     
-    public static TSizeHint button(TButton button) {
+    public static TSizeHint button(TButton button, TFont font) {
         TSizeHint hint = new TSizeHint();
         if (button.icon()!=null) {
             hint.width = Math.max(hint.width, button.icon().width()) + BORDER;
             hint.height = Math.max(hint.height, button.icon().height()) + BORDER;
         }
-        hint.width = Math.max(hint.width, (int) FONT.getWidth(button.text()) + 2*BORDER);
-        hint.height = Math.max(hint.height, (int) FONT.getHeight() + BORDER);
+        hint.width = Math.max(hint.width, (int) font.getWidth(button.text()) + 2*BORDER);
+        hint.height = Math.max(hint.height, (int) font.getHeight() + BORDER);
         return hint;
+    }
+    
+    public static TSizeHint button(TButton button) {
+        return button(button, FONT);
     }
     
     public static TSizeHint checkBox(TCheckBox checkbox) {
@@ -44,11 +48,15 @@ public class TSizeReasoning {
         return new TSizeHint(DIAL_SIZE, DIAL_SIZE);
     }
     
-    public static TSizeHint label(TLabel label) {
+    public static TSizeHint label(TLabel label, TFont font) {
         TSizeHint hint = new TSizeHint();
-        hint.width = FONT.getWidth(label.text()) + BORDER;
-        hint.height = FONT.getHeight() + BORDER;
+        hint.width = font.getWidth(label.text()) + BORDER;
+        hint.height = font.getHeight() + BORDER;
         return hint;
+    }
+    
+    public static TSizeHint label(TLabel label) {
+        return label(label, FONT);
     }
     
     public static TSizeHint lineEdit(TLineEdit lineEdit) {

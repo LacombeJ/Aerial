@@ -10,6 +10,8 @@ public class TListLayout extends TLayout implements ListLayout {
     
     private Align align;
     
+    private boolean stack = false;
+    
     public TListLayout(Align align) {
         this.align = align;
     }
@@ -34,6 +36,14 @@ public class TListLayout extends TLayout implements ListLayout {
         this.align = align;
         //TODO should we invalidateLayout / sizeHint here?
         layout();
+    }
+    
+    public boolean stack() {
+        return stack;
+    }
+    
+    public void setStack(boolean enable) {
+        stack = enable;
     }
     
     public void layout() {
@@ -65,7 +75,7 @@ public class TListLayout extends TLayout implements ListLayout {
                 sizes = allocate(prefs, height, extraDimension);
             }
             
-            int extraSpacing = extraDimension.x / (numChildren+1);
+            int extraSpacing = stack ? 0 : extraDimension.x / (numChildren+1);
             // ----------------------------------------------
             
             int start = 0;

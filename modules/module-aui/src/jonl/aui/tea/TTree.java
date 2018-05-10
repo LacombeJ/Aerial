@@ -14,9 +14,6 @@ public class TTree extends TWidget implements Tree {
     
     static final int ITEM_SPACING = 24;
     
-    static final int BUTTON_SIZE = 8; //TODO change this
-    static final int ITEM_HEIGHT = 24; //TODO change this
-    
     public TTree() {
         super();
         

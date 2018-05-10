@@ -1,6 +1,7 @@
 package jonl.ge.editor;
 
 import jonl.jutils.data.Cereal;
+import jonl.jutils.structs.ObjectSet;
 
 public class EditorConfiguration {
 
@@ -20,7 +21,9 @@ public class EditorConfiguration {
     static class EC10 extends EC {
         String name = "editor";
         String version = "1.0";
+        String lastDir = "";
         String lastProj = "";
+        ObjectSet<String> pastProjects = new ObjectSet<>();
         
         EC update() {
             return Cereal.copy(this);
