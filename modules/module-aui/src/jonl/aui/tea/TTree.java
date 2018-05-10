@@ -25,7 +25,7 @@ public class TTree extends TWidget implements Tree {
         layoutWidget = new TPanel(new TreeLayout());
         
         panel.setWidget(layoutWidget);
-        layout.add(layoutWidget);
+        layout.add(panel);
         setWidgetLayout(layout);
         
     }
