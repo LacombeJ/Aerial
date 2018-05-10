@@ -72,8 +72,8 @@ public class TSizeReasoning {
             hint.width = Math.max(hint.width, button.icon().width()) + BORDER;
             hint.height = Math.max(hint.height, button.icon().height()) + BORDER;
         }
-        hint.width = Mathi.max(button.width(), hint.width, (int) FONT.getWidth(button.text()) + 4*BORDER + TAB_EXTRA); //For possible close button
-        hint.height = Mathi.max(button.height(), hint.height, (int) FONT.getHeight() + BORDER);
+        hint.width = Mathi.max(hint.width, (int) FONT.getWidth(button.text()) + 4*BORDER + TAB_EXTRA); //For possible close button
+        hint.height = Mathi.max(hint.height, (int) FONT.getHeight() + BORDER);
         return hint;
     }
     

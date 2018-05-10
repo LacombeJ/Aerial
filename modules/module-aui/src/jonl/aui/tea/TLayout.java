@@ -103,8 +103,8 @@ public abstract class TLayout implements Layout {
             if (item instanceof TWidgetItem) {
                 TWidget widget = ((TWidgetItem) item).asWidget();
                 widget.parentLayout = this;
-                dirtySizeHint();
             }
+            dirtySizeHint();
             if (parent != null) {
                 parent.invalidateLayout();
             }

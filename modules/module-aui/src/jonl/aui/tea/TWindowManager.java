@@ -217,7 +217,10 @@ class TWindowManager {
                                 //GLFW does not support toggling window resizing after creation
                             } else if (we instanceof TWindowEvent.SetDecorated) {
                                // GLFW does not support toggling window decoration after creation
-                            }
+                            } else if (we instanceof TWindowEvent.SetSizeLimits) {
+                                TWindowEvent.SetSizeLimits sl = (TWindowEvent.SetSizeLimits) we;
+                                glWindow.setSizeLimits(sl.minWidth,sl.minHeight,sl.maxWidth,sl.maxheight);
+                             }
                         }
                     }
                 }
@@ -332,6 +335,14 @@ class TWindowManager {
                 windowEventQueue.addLast(new TWindowEvent.SetIcon(icon));
             } else {
                 this.icon = icon;
+            }
+        }
+    }
+    
+    void setSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+        synchronized (lock) {
+            if (glWindow!=null) {
+                windowEventQueue.addLast(new TWindowEvent.SetSizeLimits(minWidth,minHeight,maxWidth,maxHeight));
             }
         }
     }
@@ -501,6 +512,16 @@ class TWindowManager {
             BufferedImage icon;
             SetIcon(BufferedImage icon) {
                 this.icon = icon;
+            }
+        }
+        
+        static class SetSizeLimits extends TWindowEvent {
+            int minWidth, minHeight, maxWidth, maxheight;
+            SetSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+                this.minWidth = minWidth;
+                this.minHeight = minHeight;
+                this.maxWidth = maxWidth;
+                this.maxheight = maxHeight;
             }
         }
         

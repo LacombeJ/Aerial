@@ -28,6 +28,9 @@ public class EditorProjectUI extends TPanel {
         tabPanel = ui.tabPanel();
         tabPanel.setAddable(true);
         tabPanel.setCloseable(true);
+        tabPanel.newTab().connect(()->{
+            addNewTab();
+        });
         
         layout.add(tabPanel);
         
@@ -37,12 +40,14 @@ public class EditorProjectUI extends TPanel {
         tabPanel.removeAll();
     }
     
-    void populate() {
-
+    void addNewTab() {
         NewTabWidget newTab = new NewTabWidget(ui);
         
         tabPanel.add(newTab, "New Tab");
-
+    }
+    
+    void populate() {
+        addNewTab();
     }
     
 }

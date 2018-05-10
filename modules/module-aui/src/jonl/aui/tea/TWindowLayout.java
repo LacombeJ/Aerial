@@ -69,8 +69,8 @@ public class TWindowLayout extends TLayout {
             
             int prefWidth = Math.max(minWidth, hint.width);
             int prefHeight = Math.max(minHeight, hint.height);
-            // Using Integer.MAX_VALUE for glfw max size limits doesn't work. Using GLFW_DONT_CARE=-1 instead
-            window.window().setSizeLimits(prefWidth, prefHeight, -1, -1);
+            
+            window.windowManager.setSizeLimits(prefWidth, prefHeight, -1, -1);
         }
         
     }
