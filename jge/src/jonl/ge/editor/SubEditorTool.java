@@ -5,21 +5,23 @@ import jonl.aui.UIManager;
 import jonl.aui.Window;
 import jonl.vmath.Color;
 
-public interface SubEditorTool {
+public abstract class SubEditorTool {
     
-    String id();
+    public abstract String id();
     
-    String name();
+    public abstract String name();
     
-    String description();
+    public abstract String description();
     
-    Color color();
+    public abstract Color color();
     
-    Icon icon(UIManager ui);
+    public abstract Icon icon(UIManager ui);
     
-    SubEditor open(UIManager ui, Window window);
+    public abstract SubEditor open(UIManager ui, Window window);
     
-    SubEditor open(UIManager ui, Window window, String content);
+    public abstract SubEditor open(UIManager ui, Window window, Object store);
+    
+    public abstract Class<?> stateDefinition();
     
     static class LoadedTool {
         SubEditorTool tool;

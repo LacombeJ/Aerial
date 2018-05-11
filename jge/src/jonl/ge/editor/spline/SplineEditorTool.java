@@ -7,7 +7,7 @@ import jonl.ge.editor.SubEditorTool;
 import jonl.ge.editor.UI;
 import jonl.vmath.Color;
 
-public class SplineEditorTool implements SubEditorTool {
+public class SplineEditorTool extends SubEditorTool {
 
     @Override
     public String id() {
@@ -41,8 +41,13 @@ public class SplineEditorTool implements SubEditorTool {
     }
 
     @Override
-    public SplineEditor open(UIManager ui, Window window, String content) {
-        return new SplineEditor(ui,window,content);
+    public SplineEditor open(UIManager ui, Window window, Object store) {
+        return new SplineEditor(ui,window,store);
+    }
+
+    @Override
+    public Class<?> stateDefinition() {
+        return SplineState.class;
     }
 
 }

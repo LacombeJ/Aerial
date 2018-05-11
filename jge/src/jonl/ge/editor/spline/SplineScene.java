@@ -15,19 +15,33 @@ import jonl.vmath.Vector2;
 
 public class SplineScene {
 
+    SplineEditor editor;
     Scene scene;
     
-    SplineScene() {
+    GameObject control;
+    
+    SplineScene(SplineEditor editor) {
+        this.editor = editor;
         
         scene = new Scene();
         
-        GameObject control = control();
-
+        control = control();
+        
         GameObject sphere = sphere();
         
         scene.add(control);
         scene.add(sphere);
         
+        load();
+    }
+    
+    void load() {
+        control.transform().translation.x = editor.state.position.x;
+        control.transform().translation.y = editor.state.position.y;
+        
+        for (Vector2 pos : editor.state.spheres) {
+            createSphere(pos);
+        }
     }
     
     GameObject control() {
@@ -57,6 +71,12 @@ public class SplineScene {
         return go;
     }
     
+    void createSphere(Vector2 pos) {
+        GameObject sphere = sphere();
+        sphere.transform().translation.set(pos.x, pos.y, 0);
+        scene.add(sphere);
+    }
+    
     class Control extends Property {
 
         OrthoBox orthoBox;
@@ -78,12 +98,6 @@ public class SplineScene {
             if (input().isButtonPressed(Input.MB_RIGHT)) {
                 createSphere(orthoBox.toWorldSpace(input().getXY()));
             }
-        }
-        
-        void createSphere(Vector2 pos) {
-            GameObject sphere = sphere();
-            sphere.transform().translation.set(pos.x, pos.y, 0);
-            scene().add(sphere);
         }
         
     }

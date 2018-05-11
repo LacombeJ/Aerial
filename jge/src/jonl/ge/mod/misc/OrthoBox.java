@@ -2,7 +2,6 @@ package jonl.ge.mod.misc;
 
 import jonl.ge.core.Camera;
 import jonl.ge.core.Property;
-import jonl.jutils.io.Console;
 import jonl.vmath.Vector2;
 
 public class OrthoBox extends Property {

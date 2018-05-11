@@ -5,7 +5,7 @@ import jonl.aui.UIManager;
 import jonl.aui.Window;
 import jonl.vmath.Color;
 
-public class SceneEditorTool implements SubEditorTool {
+public class SceneEditorTool extends SubEditorTool {
 
     @Override
     public String id() {
@@ -38,8 +38,13 @@ public class SceneEditorTool implements SubEditorTool {
     }
 
     @Override
-    public SubEditor open(UIManager ui, Window window, String content) {
-        return new SceneEditor(ui,window,content);
+    public SubEditor open(UIManager ui, Window window, Object state) {
+        return new SceneEditor(ui,window,state);
+    }
+
+    @Override
+    public Class<?> stateDefinition() {
+        return SceneState.class;
     }
 
 }

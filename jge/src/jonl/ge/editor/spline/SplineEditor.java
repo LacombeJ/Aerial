@@ -9,17 +9,24 @@ import jonl.aui.Widget;
 import jonl.aui.Window;
 import jonl.ge.core.SubApp;
 import jonl.ge.editor.SubEditor;
+import jonl.jutils.data.Cereal;
 
-public class SplineEditor implements SubEditor {
+public class SplineEditor extends SubEditor {
 
     UIManager ui;
     
     String name;
     Panel mainPanel;
     
-    public SplineEditor(UIManager ui, Window window, String content) {
+    SplineState state;
+    SplineState stateCopy;
+    
+    public SplineEditor(UIManager ui, Window window, Object store) {
         this.ui = ui;
         this.name = "Spline";
+        
+        state = (store==null) ? new SplineState() : (SplineState) store;
+        setStore();
         
         ListLayout layout = ui.listLayout(Align.VERTICAL);
         layout.setMargin(0,0,0,0);
@@ -37,7 +44,7 @@ public class SplineEditor implements SubEditor {
         
         mainPanel.add(split);
         
-        SplineScene scene = new SplineScene();
+        SplineScene scene = new SplineScene(this);
         
         SubApp app = new SubApp(window,appPanel);
         app.addScene(scene.scene);
@@ -54,6 +61,19 @@ public class SplineEditor implements SubEditor {
         return mainPanel;
     }
     
-    
+    @Override
+    public boolean shouldStore() {
+        return true;
+    }
+
+    @Override
+    public synchronized void setStore() {
+        stateCopy = Cereal.copy(state);
+    }
+
+    @Override
+    public synchronized Object getStore() {
+        return stateCopy;
+    }
 
 }
