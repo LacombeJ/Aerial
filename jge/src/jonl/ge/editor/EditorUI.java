@@ -3,13 +3,13 @@ package jonl.ge.editor;
 import java.io.InputStream;
 
 import jonl.aui.FileDialog;
-import jonl.aui.tea.TIcon;
+import jonl.aui.Icon;
 import jonl.aui.tea.TUIManager;
+import jonl.ge.editor.SubEditorTool.LoadedTool;
 import jonl.jutils.data.Dir;
 import jonl.jutils.io.FileUtils;
 import jonl.jutils.jss.Style;
 import jonl.jutils.jss.StyleSheet;
-import jonl.jutils.misc.ImageUtils;
 
 public class EditorUI {
 
@@ -22,6 +22,7 @@ public class EditorUI {
     
     public EditorUI(Editor editor) {
         this.editor = editor;
+        ui = TUIManager.instance();
     }
     
     Style editorStyle() {
@@ -31,30 +32,43 @@ public class EditorUI {
     }
     
     void resourceIcon(String loc, String resource) {
-        InputStream in = getClass().getResourceAsStream(loc);
-        if (in != null) {
-            ui.resource(resource, new TIcon(ImageUtils.load(in)));
-        } else {
-            System.err.println("Failed to find icon resource: "+loc);
+        UI.resourceIcon(ui,this.getClass(),loc,resource);
+    }
+    
+    void loadTools() {
+        for (SubEditorTool tool : editor.subEditorTools) {
+            LoadedTool loaded = new LoadedTool();
+            loaded.id = tool.id();
+            loaded.name = tool.name();
+            loaded.description = tool.description();
+            loaded.color = tool.color();
+            Icon icon = tool.icon(ui);
+            if (icon==null) {
+                loaded.iconResource = "/editor/editor_icon";
+            } else {
+                ui.resource(loaded.id,icon);
+                loaded.iconResource = loaded.id;
+            }
+            editor.loadedTools.put(tool,loaded);
         }
     }
     
     public void create() {
-        
-        ui = TUIManager.instance();
         form = new EditorUIForm();
         
         Style style = editorStyle();
         ui.addStyle(style);
         
-        resourceIcon("/editor/new_icon.png",  "editor/new");
-        resourceIcon("/editor/load_icon.png", "editor/load");
-        resourceIcon("/editor/open_icon.png", "editor/open");
+        resourceIcon("/editor/new_icon.png",            "editor/new");
+        resourceIcon("/editor/load_icon.png",           "editor/load");
+        resourceIcon("/editor/open_icon.png",           "editor/open");
         
         resourceIcon("/editor/new_toolbutton.png",      "editor/new_tb");
         resourceIcon("/editor/open_toolbutton.png",     "editor/open_tb");
         resourceIcon("/editor/close_toolbutton.png",    "editor/close_tb");
         resourceIcon("/editor/save_toolbutton.png",     "editor/save_tb");
+        
+        resourceIcon("/editor/editor_icon.png",         "/editor/editor_icon");
         
         form.create(ui);
         

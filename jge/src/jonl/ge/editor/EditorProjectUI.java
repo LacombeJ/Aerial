@@ -3,6 +3,7 @@ package jonl.ge.editor;
 import jonl.aui.Layout;
 import jonl.aui.TabPanel;
 import jonl.aui.UIManager;
+import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
 
 public class EditorProjectUI extends TPanel {
@@ -31,6 +32,14 @@ public class EditorProjectUI extends TPanel {
         tabPanel.newTab().connect(()->{
             addNewTab();
         });
+        tabPanel.closed().connect((w)->{
+            if (tabPanel.count()==0) {
+                String data = (String)w.data();
+                if (data == null || !data.equals("new_tab")) {
+                    addNewTab();
+                }
+            }
+        });
         
         layout.add(tabPanel);
         
@@ -41,9 +50,23 @@ public class EditorProjectUI extends TPanel {
     }
     
     void addNewTab() {
-        NewTabWidget newTab = new NewTabWidget(ui);
-        
+        NewTabWidget newTab = new NewTabWidget(editor, ui);
+        newTab.setData("new_tab");
+        newTab.selected.connect((w,l)->{
+            addEditorTab(w,l);
+        });
         tabPanel.add(newTab, "New Tab");
+        tabPanel.setWidget(newTab);
+    }
+    
+    void addEditorTab(Widget widget, String label) {
+        tabPanel.add(widget,label);
+        Widget prevWidget = tabPanel.get(tabPanel.index());
+        tabPanel.setWidget(widget);
+        String data = (String)prevWidget.data();
+        if (data != null && data.equals("new_tab")) {
+            tabPanel.remove(prevWidget);
+        }
     }
     
     void populate() {

@@ -10,6 +10,9 @@ public interface Widget {
     String name();
     void setName(String name);
     
+    Object data();
+    void setData(Object data);
+    
     int x();
     int y();
     int width();

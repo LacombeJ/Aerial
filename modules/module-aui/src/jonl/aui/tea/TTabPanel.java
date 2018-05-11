@@ -6,6 +6,7 @@ import jonl.aui.Align;
 import jonl.aui.Signal;
 import jonl.aui.TabPanel;
 import jonl.aui.Widget;
+import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 
 public class TTabPanel extends TWidget implements TabPanel {
@@ -18,6 +19,7 @@ public class TTabPanel extends TWidget implements TabPanel {
     private ArrayList<TWidget> widgets;
     
     private boolean closeable = false;
+    private Signal<Callback<Widget>> closed = new Signal<>();
     private Signal<Callback0D> newTab = new Signal<>();
     
     public TTabPanel() {
@@ -48,6 +50,12 @@ public class TTabPanel extends TWidget implements TabPanel {
     }
     
     private void refreshContent() {
+        if (index>=count()) {
+            index = count()-1;
+        }
+        if (index<0) {
+            index = 0;
+        }
         if (index < count()) {
             tabBar.get(index).setChecked(true);
             TWidget nextWidget = widgets.get(index);
@@ -59,6 +67,10 @@ public class TTabPanel extends TWidget implements TabPanel {
                 }
             } else {
                 addWidgetContent(nextWidget);
+            }
+        } else {
+            if (tabContent.count()>0) {
+                tabContent.remove(0);
             }
         }
     }
@@ -96,18 +108,20 @@ public class TTabPanel extends TWidget implements TabPanel {
 
     @Override
     public void remove(int index) {
-        widgets.remove(index);
+        TWidget widget = widgets.remove(index);
         labels.remove(index);
         tabBar.remove(tabBar.get(index));
         refreshContent();
+        closed().emit((cb)->cb.f(widget));
     }
     
     @Override
     public void removeAll() {
         for (int i=count()-1; i>=0; i--) {
-            widgets.remove(index);
+            TWidget widget = widgets.remove(index);
             labels.remove(index);
             tabBar.remove(tabBar.get(index));
+            closed().emit((cb)->cb.f(widget));
         }
         refreshContent();
     }
@@ -150,6 +164,11 @@ public class TTabPanel extends TWidget implements TabPanel {
         } else {
             tabBar.removeNewTabButton();
         }
+    }
+    
+    @Override
+    public Signal<Callback<Widget>> closed() {
+        return closed;
     }
     
     @Override

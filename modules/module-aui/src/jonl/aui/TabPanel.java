@@ -1,5 +1,6 @@
 package jonl.aui;
 
+import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
 
 public interface TabPanel extends Widget {
@@ -27,6 +28,8 @@ public interface TabPanel extends Widget {
     void setCloseable(boolean enabled);
     
     void setAddable(boolean enable);
+    
+    Signal<Callback<Widget>> closed();
     
     Signal<Callback0D> newTab();
     

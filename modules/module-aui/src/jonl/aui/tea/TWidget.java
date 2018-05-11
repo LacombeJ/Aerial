@@ -40,6 +40,7 @@ public abstract class TWidget implements Widget {
     
     private final Signal<Callback<Graphics>> paint = new Signal<>();
 
+    private Object data = null;
     private TWidgetInfo info = new TWidgetInfo();
     private Caller caller = new Caller();
     
@@ -87,6 +88,16 @@ public abstract class TWidget implements Widget {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+    
+    @Override
+    public Object data() {
+        return data;
+    }
+    
+    @Override
+    public void setData(Object data) {
+        this.data = data;
     }
     
     @Override

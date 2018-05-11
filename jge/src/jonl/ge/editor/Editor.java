@@ -1,8 +1,11 @@
 package jonl.ge.editor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jonl.ge.editor.EditorConfiguration.EC10;
+import jonl.ge.editor.SubEditorTool.LoadedTool;
+import jonl.ge.editor.spline.SplineEditorTool;
 import jonl.jutils.data.Cereal;
 import jonl.jutils.data.Dir;
 import jonl.jutils.data.Json;
@@ -17,10 +20,14 @@ public class Editor {
     EditorProject project;
     
     ArrayList<SubEditorTool> subEditorTools;
+    HashMap<SubEditorTool,LoadedTool> loadedTools;
 
     public Editor() {
         subEditorTools = new ArrayList<>();
+        loadedTools = new HashMap<>();
         
+        add(new SceneEditorTool());
+        add(new SplineEditorTool());
     }
     
     public void add(SubEditorTool sub) {
@@ -62,6 +69,7 @@ public class Editor {
     
     void initUi() {
         gui = new EditorUI(this);
+        gui.loadTools();
         gui.create();
     }
     

@@ -1,19 +1,27 @@
 package jonl.ge.editor;
 
-import jonl.aui.Align;
+import jonl.aui.ArrayLayout;
 import jonl.aui.Button;
-import jonl.aui.Dial;
-import jonl.aui.Layout;
+import jonl.aui.Label;
+import jonl.aui.List;
+import jonl.aui.Signal;
 import jonl.aui.UIManager;
+import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
+import jonl.ge.editor.SubEditorTool.LoadedTool;
+import jonl.jutils.func.Callback2D;
 
 public class NewTabWidget extends TPanel {
 
+    private Editor editor;
     private UIManager ui;
     
-    public NewTabWidget(UIManager ui) {
+    Signal<Callback2D<Widget,String>> selected = new Signal<>();
+    
+    public NewTabWidget(Editor editor, UIManager ui) {
         super();
         
+        this.editor = editor;
         this.ui = ui;
         
         init();
@@ -21,17 +29,39 @@ public class NewTabWidget extends TPanel {
     
     void init() {
         
-        Layout layout = ui.listLayout(Align.VERTICAL);
+        ArrayLayout layout = ui.arrayLayout();
+        
         setLayout(layout);
         
-        Button newProject = button("Button A");
-        Button openProject = button("Button B");
-        Dial dial = ui.dial();
+        Label label = new UI.ProjectLabel("Project Menu");
+        label.setMinSize(300,0);
         
-        layout.add(newProject);
-        layout.add(openProject);
-        layout.add(dial);
+        List list = ui.list();
+        list.setName("ProjectList");
+        list.setMargin(1,1,1,1);
         
+        for (SubEditorTool set : editor.subEditorTools) {
+            LoadedTool tool = editor.loadedTools.get(set);
+            
+            UI.ProjectButton button = new UI.ProjectButton(tool.name,tool.description);
+            button.addStyle(UI.buttonStyle(tool.color,tool.iconResource));
+            
+            button.clicked().connect(()->{
+                
+                SubEditor editor = set.open(ui);
+                selected.emit((cb)->cb.f(editor.widget(),editor.name()));
+                
+            });
+            
+            list.add(button);
+            
+        }
+
+        list.setMinSize(200,200);
+        
+        layout.add(label,0,0);
+        layout.add(list,1,1);
+
     }
     
     Button button(String text) {
