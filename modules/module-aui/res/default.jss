@@ -23,6 +23,12 @@ Button {
     radius: 6;
 }
 
+Button:disabled {
+    background: gray;
+    color: darkgray;
+    border-color: darkgray;
+}
+
 Button:hover {
     background: linear-gradient(rgb(64,64,64), rgb(130,130,130));
     border-color: gray;
@@ -329,14 +335,17 @@ ToolButton {
     border: 1;
 }
 
+ToolButton:disabled {
+    background: rgb(48,48,48);
+    image-color: rgb(96,96,96);
+}
+
 ToolButton:hover {
     background: linear-gradient(rgb(64,64,64), rgb(130,130,130));
-    image-color: rgb(196,196,196);
 }
 
 ToolButton:hover:down {
     background: linear-gradient(rgb(48,48,48), rgb(70,70,70));
-    image-color: rgb(164,164,164);
 }
 
 Tree.Item {

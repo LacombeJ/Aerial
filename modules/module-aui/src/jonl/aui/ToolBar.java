@@ -6,6 +6,8 @@ public interface ToolBar extends Widget {
     
     void add(ToolButton button);
     
+    void addSeparator();
+    
     void remove(ToolButton button);
     
     void removeAll();

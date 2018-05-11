@@ -12,9 +12,12 @@ public class ButtonRenderer {
         boolean hover = info.get("bIsMouseWithin", false);
         boolean down = info.get("bIsMouseDown", false);
         boolean checked = button.checked();
+        boolean disabled = !button.enabled();
         
         Style style = JSS.style(g.style(), selector);
-        if (checked) {
+        if (disabled) {
+            style = JSS.style(style,"disabled");
+        } else if (checked) {
             style = JSS.style(style,"checked");
             if (hover) {
                 style = JSS.style(style,"hover");

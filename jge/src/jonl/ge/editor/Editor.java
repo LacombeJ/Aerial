@@ -13,7 +13,7 @@ public class Editor {
     Dir dir = Dir.current();
     EC10 config = new EC10();
     
-    EditorGUI gui;
+    EditorUI gui;
     EditorProject project;
     
     ArrayList<SubEditorTool> subEditorTools;
@@ -61,7 +61,7 @@ public class Editor {
     }
     
     void initUi() {
-        gui = new EditorGUI(this);
+        gui = new EditorUI(this);
         gui.create();
     }
     
