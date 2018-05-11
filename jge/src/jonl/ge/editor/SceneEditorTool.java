@@ -2,6 +2,7 @@ package jonl.ge.editor;
 
 import jonl.aui.Icon;
 import jonl.aui.UIManager;
+import jonl.aui.Window;
 import jonl.vmath.Color;
 
 public class SceneEditorTool implements SubEditorTool {
@@ -32,13 +33,13 @@ public class SceneEditorTool implements SubEditorTool {
     }
     
     @Override
-    public SubEditor open(UIManager ui) {
-        return new SceneEditor(ui,null);
+    public SubEditor open(UIManager ui, Window window) {
+        return new SceneEditor(ui,window,null);
     }
 
     @Override
-    public SubEditor open(UIManager ui, String content) {
-        return new SceneEditor(ui,content);
+    public SubEditor open(UIManager ui, Window window, String content) {
+        return new SceneEditor(ui,window,content);
     }
 
 }

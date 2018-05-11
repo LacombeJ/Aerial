@@ -2,6 +2,7 @@ package jonl.ge.editor.spline;
 
 import jonl.aui.Icon;
 import jonl.aui.UIManager;
+import jonl.aui.Window;
 import jonl.ge.editor.SubEditorTool;
 import jonl.ge.editor.UI;
 import jonl.vmath.Color;
@@ -35,13 +36,13 @@ public class SplineEditorTool implements SubEditorTool {
     
 
     @Override
-    public SplineEditor open(UIManager ui) {
-        return new SplineEditor(ui,null);
+    public SplineEditor open(UIManager ui, Window window) {
+        return new SplineEditor(ui,window,null);
     }
 
     @Override
-    public SplineEditor open(UIManager ui, String content) {
-        return new SplineEditor(ui,content);
+    public SplineEditor open(UIManager ui, Window window, String content) {
+        return new SplineEditor(ui,window,content);
     }
 
 }

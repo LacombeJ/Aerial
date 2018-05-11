@@ -2,6 +2,7 @@ package jonl.ge.editor;
 
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
+import jonl.aui.Window;
 
 public class SceneEditor implements SubEditor {
 
@@ -10,7 +11,7 @@ public class SceneEditor implements SubEditor {
     String name;
     Widget widget;
     
-    public SceneEditor(UIManager ui, String content) {
+    public SceneEditor(UIManager ui, Window window, String content) {
         this.ui = ui;
         this.name = "Scene";
         

@@ -63,6 +63,9 @@ class TWindowManager {
     
     private ArrayDeque<TWindowEvent> windowEventQueue = new ArrayDeque<>();
     
+    private ArrayDeque<Loader> loaders = new ArrayDeque<>();
+    private ArrayDeque<Closer> closers = new ArrayDeque<>();
+    
     TWindowManager(TWindow window) {
         this.window = window;
         
@@ -193,6 +196,12 @@ class TWindowManager {
             });
             glWindow.setRunner(()->{
                 while (glWindow.isRunning()) {
+                    
+                    while (!loaders.isEmpty()) {
+                        Loader loader = loaders.pollFirst();
+                        loader.load();
+                    }
+                    
                     refresh();
                     
                     handleInput();
@@ -227,6 +236,10 @@ class TWindowManager {
             });
             glWindow.setCloser(()->{
                 closer.close();
+                while (!closers.isEmpty()) {
+                    Closer closer = closers.pollFirst();
+                    closer.close();
+                }
                 
             });
             glWindow.start();
@@ -360,19 +373,31 @@ class TWindowManager {
     }
     
     void addLoader(Loader loader) {
-        Loader prev = this.loader;
-        this.loader = () -> {
-            prev.load();
-            loader.load();
-        };
+        synchronized (lock) {
+            if (glWindow==null) {
+                Loader prev = this.loader;
+                this.loader = () -> {
+                    prev.load();
+                    loader.load();
+                };
+            } else {
+                loaders.add(loader);
+            }
+        }
     }
     
     void addCloser(Closer closer) {
-        Closer prev = this.closer;
-        this.closer = () -> {
-            prev.close();
-            closer.close();
-        };
+        synchronized (lock) {
+            if (glWindow==null) {
+                Closer prev = this.closer;
+                this.closer = () -> {
+                    prev.close();
+                    closer.close();
+                };
+            } else {
+                closers.add(closer);
+            }
+        }
     }
     
     private void handleInput() {

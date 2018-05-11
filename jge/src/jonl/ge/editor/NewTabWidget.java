@@ -48,8 +48,8 @@ public class NewTabWidget extends TPanel {
             
             button.clicked().connect(()->{
                 
-                SubEditor editor = set.open(ui);
-                selected.emit((cb)->cb.f(editor.widget(),editor.name()));
+                SubEditor se = set.open(ui,editor.gui.form.window);
+                selected.emit((cb)->cb.f(se.widget(),se.name()));
                 
             });
             
