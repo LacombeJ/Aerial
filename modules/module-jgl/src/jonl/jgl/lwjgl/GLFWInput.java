@@ -49,10 +49,9 @@ class GLFWInput extends AbstractInput {
     private float scrollX;
     private float scrollY;
     
-    //Accumulating because scroll callback access happens on a different thread
+    //Using a queue because set scroll callback happens on a different thread
     private Object scrollSync = new Object();
-    private float saccumx;
-    private float saccumy;
+    private final ArrayDeque<ScrollEvent> scrollQueue = new ArrayDeque<>();
     /**
      * Used to get correct dx and dy values following start of window or
      * following change in cursor state (grabbed to normal and vice-versa)
@@ -68,16 +67,15 @@ class GLFWInput extends AbstractInput {
         
         GLFW.glfwSetScrollCallback(windowID,(windowid,xoffset,yoffset)->{
             synchronized(scrollSync) {
-                saccumx += (float) xoffset;
-                saccumy += (float) yoffset;
+                scrollQueue.push(new ScrollEvent(xoffset,yoffset));
             }
             
         });
         
         // GLFW_REPEAT only works with key callback
         GLFW.glfwSetKeyCallback(windowID, (windowid,key,scancode,action,mods)->{
-            synchronized(keySync) {
-                if (action==GLFW.GLFW_REPEAT) {
+            if (action==GLFW.GLFW_REPEAT) {
+                synchronized(keySync) {
                     keyRepeatQueue.addLast(KEY_MAP.getKey(key));
                 }
             }
@@ -110,10 +108,13 @@ class GLFWInput extends AbstractInput {
         }
         
         synchronized(scrollSync) {
-            scrollX = saccumx;
-            scrollY = saccumy;
-            saccumx = 0;
-            saccumy = 0;
+            scrollX = 0;
+            scrollY = 0;
+            ScrollEvent poll = scrollQueue.pollFirst();
+            if (poll!=null) {
+                scrollX = (float) poll.x;
+                scrollY = (float) poll.y;
+            }
         }
         
         x = nx;
@@ -229,6 +230,14 @@ class GLFWInput extends AbstractInput {
     @Override
     public boolean isKeyRepeated(int key) {
         return keyRepeated[key];
+    }
+    
+    private static class ScrollEvent {
+        double x, y;
+        ScrollEvent(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
     }
     
     static {
