@@ -13,6 +13,9 @@ import jonl.jutils.io.Console;
 
 public class Editor {
 
+    //TODO decouple classes for clarity and define and provide an interface to expose functionality
+    //between editor hierarchy instead of making all variable package-private
+    
     Dir dir = Dir.current();
     EC10 config = new EC10();
     

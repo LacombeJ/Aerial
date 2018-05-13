@@ -16,7 +16,7 @@ public class EditorProject {
     Scenes scenes = new Scenes();
     HashMap<String,Scene> sceneMap = new HashMap<>();
     
-    
+    ArrayList<SubEditor> subEditors = new ArrayList<>();
     
     public EditorProject(Editor editor, Dir dir) {
         this.editor = editor;
@@ -31,6 +31,12 @@ public class EditorProject {
         if (dir.exists("project.json")) {
             // Load project
             project = dir.json("project.json").load(Project.class);
+            
+            // Load .edit
+            Dir editDir = dir.dir(".edit");
+            if (!editDir.exists()) {
+                createEditDir();
+            }
             
             // Load scenes
             Dir scenesDir = dir.dir("scenes");
@@ -52,17 +58,27 @@ public class EditorProject {
         // Save project
         dir.json("project.json").save(project);
         
-        // Save scenes
-        Dir scenesDir = dir.dir("scenes");
-        if (!scenesDir.exists()) {
-            scenesDir.mkdir();
+        // Save edit directory
+        Dir editDir = dir.dir(".edit");
+        if (!editDir.exists()) {
+            createEditDir();
         }
+        
+        // Save scenes
+        Dir scenesDir = dir.child("scenes");
+        
         scenesDir.json("scenes.json").save(scenes);
         
         for (Entry<String,Scene> sceneEntry : sceneMap.entrySet()) {
             scenesDir.json(sceneEntry.getKey()).save(sceneEntry.getValue());
         }
         
+    }
+    
+    private void createEditDir() {
+        Dir edit = dir.child(".edit");
+        
+        edit.child("store");
     }
     
     static class Project {

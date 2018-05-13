@@ -4,6 +4,12 @@ import java.io.File;
 
 import jonl.jutils.misc.SystemUtils;
 
+/**
+ * File wrapper class
+ * 
+ * @author Jonathan
+ *
+ */
 public class Dir {
 
     File file = null;
@@ -22,6 +28,15 @@ public class Dir {
     
     public Dir parent() {
         return new Dir(file.getParent());
+    }
+    
+    /** @return child directory and creates it if it does not exist */
+    public Dir child(String name) {
+        Dir dir = dir(name);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        return dir;
     }
     
     public boolean exists() {
@@ -56,6 +71,7 @@ public class Dir {
         return absolute() + separator() + name;
     }
     
+    /** @return true if this directory exists absolutely or relatively */
     public boolean exists(String name) {
         File abs = new File(name);
         if (abs.isAbsolute()) {

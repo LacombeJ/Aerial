@@ -36,12 +36,33 @@ public class SplineScene {
     }
     
     void load() {
-        control.transform().translation.x = editor.state.position.x;
-        control.transform().translation.y = editor.state.position.y;
-        
-        for (Vector2 pos : editor.state.spheres) {
-            createSphere(pos);
+        synchronized (editor) {
+            control.transform().translation.x = editor.state.position.x;
+            control.transform().translation.y = editor.state.position.y;
+            
+            for (Vector2 pos : editor.state.spheres) {
+                createSphere(pos);
+            }
         }
+    }
+    
+    void save() {
+        synchronized (editor) {
+            editor.state.position.x = control.transform().translation.x;
+            editor.state.position.y = control.transform().translation.y;
+        }
+    }
+    
+    void saveSphere(Vector2 sphere) {
+        synchronized (editor) {
+            editor.state.spheres.add(sphere);
+        }
+    }
+    
+    void createSphere(Vector2 pos) {
+        GameObject sphere = sphere();
+        sphere.transform().translation.set(pos.x, pos.y, 0);
+        scene.add(sphere);
     }
     
     GameObject control() {
@@ -71,11 +92,7 @@ public class SplineScene {
         return go;
     }
     
-    void createSphere(Vector2 pos) {
-        GameObject sphere = sphere();
-        sphere.transform().translation.set(pos.x, pos.y, 0);
-        scene.add(sphere);
-    }
+
     
     class Control extends Property {
 
@@ -96,8 +113,11 @@ public class SplineScene {
             }
             orthoBox.zoom(input().getScrollY());
             if (input().isButtonPressed(Input.MB_RIGHT)) {
-                createSphere(orthoBox.toWorldSpace(input().getXY()));
+                Vector2 pos = orthoBox.toWorldSpace(input().getXY());
+                createSphere(pos);
+                saveSphere(pos);
             }
+            save();
         }
         
     }
