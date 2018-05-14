@@ -18,12 +18,13 @@ public class GLFWConstructor {
     private boolean fullscreen = false;
     private boolean resizable = false;
     private boolean decorated = true;
+    private boolean floating = false;
     private int multiSamples = 4;
     private int resolutionType = Window.WINDOW;
     private boolean vsyncEnabled = true;
     
     public GLFWWindow construct() {
-        return new GLFWWindow(title,width,height,visible,fullscreen,resizable,decorated,multiSamples,resolutionType,vsyncEnabled);
+        return new GLFWWindow(title,width,height,visible,fullscreen,resizable,decorated,floating,multiSamples,resolutionType,vsyncEnabled);
     }
     
     public GLFWConstructor setTitle(String title) {
@@ -52,6 +53,10 @@ public class GLFWConstructor {
     }
     public GLFWConstructor setDecorated(boolean decorated) {
         this.decorated = decorated;
+        return this;
+    }
+    public GLFWConstructor setFloating(boolean floating) {
+        this.floating = floating;
         return this;
     }
     public GLFWConstructor setMultiSamples(int multiSamples) {

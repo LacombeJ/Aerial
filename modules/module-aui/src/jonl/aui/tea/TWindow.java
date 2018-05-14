@@ -129,6 +129,11 @@ public class TWindow extends TWidget implements Window {
         windowManager.setDecorated(decorated);
     }
     
+    @Override
+    public void setFloating(boolean floating) {
+        windowManager.setFloating(floating);
+    }
+    
     public jonl.jgl.Window window() {
         return windowManager.window();
     }

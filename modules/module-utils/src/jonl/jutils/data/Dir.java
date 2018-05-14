@@ -39,6 +39,18 @@ public class Dir {
         return dir;
     }
     
+    public Dir[] list() {
+        String[] files = file.list();
+        if (files==null) {
+            return new Dir[0];
+        }
+        Dir[] list = new Dir[files.length];
+        for (int i=0; i<files.length; i++) {
+            list[i] = new Dir(files[i]);
+        }
+        return list;
+    }
+    
     public boolean exists() {
         return file.exists();
     }

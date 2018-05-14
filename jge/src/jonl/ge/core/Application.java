@@ -57,6 +57,7 @@ public class Application extends AbstractApplication {
 	        fullscreen,
 	        resizable,
 	        true,
+	        false,
 	        samples,
 	        jonl.jgl.Window.MONITOR,
 	        true);

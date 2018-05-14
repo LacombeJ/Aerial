@@ -37,6 +37,7 @@ class TWindowManager {
     private boolean visible;
     private boolean resizable;
     private boolean decorated = true;
+    private boolean floating = false;
     
     private boolean usePolicyWidth = true;
     private boolean usePolicyHeight = true;
@@ -135,7 +136,7 @@ class TWindowManager {
                     window.height = Mathi.max(sizeHint.height, window.height, 1);
                 }
                 
-                glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,4,Window.WINDOW,false);
+                glWindow = new GLFWWindow(title,window.width,window.height,visible,false,resizable,decorated,floating,4,Window.WINDOW,false);
                 
                 // Using Integer.MAX_VALUE for glfw max size limits doesn't work. Using GLFW_DONT_CARE=-1 instead
                 glWindow.setSizeLimits(prefWidth, prefHeight, -1, -1);
@@ -342,6 +343,10 @@ class TWindowManager {
                 this.decorated = decorated;
             }
         }
+    }
+    
+    void setFloating(boolean floating) {
+        this.floating = floating;
     }
     
     void setIcon(BufferedImage icon) {

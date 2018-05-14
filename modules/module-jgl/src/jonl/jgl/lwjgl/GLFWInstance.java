@@ -328,13 +328,13 @@ class GLFWInstance {
         final GLFWWindow window;
         final String title;
         final int width, height;
-        final boolean fullscreen, resizable, decorated;
+        final boolean fullscreen, resizable, decorated, floating;
         final int multiSample;
         final int resolutionType;
         final Callback2D<Integer,Integer> windowPosCallback;
         final Callback2D<Integer,Integer> windowSizeCallback;
         CreateWindowRequest(GLFWWindow window, String title, int width, int height,
-                boolean fullscreen, boolean resizable, boolean decorated, int multiSample, int resolutionType,
+                boolean fullscreen, boolean resizable, boolean decorated, boolean floating, int multiSample, int resolutionType,
                 Callback2D<Integer,Integer> windowPosCallback, Callback2D<Integer,Integer> windowSizeCallback) {
             this.window = window;
             this.title = title;
@@ -343,6 +343,7 @@ class GLFWInstance {
             this.fullscreen = fullscreen;
             this.resizable = resizable;
             this.decorated = decorated;
+            this.floating = floating;
             this.multiSample = multiSample;
             this.resolutionType = resolutionType;
             this.windowPosCallback = windowPosCallback;
@@ -353,11 +354,11 @@ class GLFWInstance {
         final long id;
         final String title;
         final int x, y, width, height, screenWidth, screenHeight;
-        final boolean resizable, decorated, fullscreen;
+        final boolean resizable, decorated, fullscreen, floating;
         final GLFWInput input;
         final LWJGL gl;
         CreateWindowResponse(long id, String title, int x, int y, int width, int height,
-                boolean resizable, boolean decorated, boolean fullscreen,
+                boolean resizable, boolean decorated, boolean fullscreen, boolean floating,
                 int screenWidth, int screenHeight, GLFWInput input, LWJGL gl) {
             this.id = id;
             this.title = title;
@@ -368,6 +369,7 @@ class GLFWInstance {
             this.resizable = resizable;
             this.decorated = decorated;
             this.fullscreen = fullscreen;
+            this.floating = floating;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             this.input = input;
@@ -379,7 +381,7 @@ class GLFWInstance {
         final long id;
         final String title;
         final int x, y, width, height, screenWidth, screenHeight;
-        final boolean resizable, decorated, fullscreen;
+        final boolean resizable, decorated, fullscreen, floating;
         final GLFWInput input;
         final LWJGL gl;
         
@@ -400,9 +402,12 @@ class GLFWInstance {
                     GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
             GLFW.glfwWindowHint(GLFW.GLFW_DECORATED,(decorated=request.decorated) ?
                     GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+            GLFW.glfwWindowHint(GLFW.GLFW_FLOATING,(floating=request.floating) ?
+                    GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
         } else {
             resizable = false;
             decorated = false;
+            floating = false;
             if (request.resolutionType == Window.MONITOR) {
                 windowWidth = screenWidth;
                 windowHeight = screenHeight;
@@ -434,7 +439,7 @@ class GLFWInstance {
         gl = GLFWInstance.gl;
         
         CreateWindowResponse response = new CreateWindowResponse(id, title, x, y, width, height,
-                resizable, decorated, fullscreen,
+                resizable, decorated, fullscreen, floating,
                 screenWidth, screenHeight, input, gl);
         
         CREATED_WINDOWS.add(id);
