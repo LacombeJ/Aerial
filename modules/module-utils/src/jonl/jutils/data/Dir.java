@@ -12,7 +12,7 @@ import jonl.jutils.misc.SystemUtils;
  */
 public class Dir {
 
-    File file = null;
+    private final File file;
     
     public Dir(File file) {
         this.file = file;
@@ -91,6 +91,10 @@ public class Dir {
             return d;
         }
         return null;
+    }
+    
+    public boolean delete() {
+        return file.delete();
     }
     
     public Json json(String name) {

@@ -8,17 +8,16 @@ import jonl.aui.Signal;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
-import jonl.ge.editor.SubEditorTool.LoadedTool;
 import jonl.jutils.func.Callback2D;
 
-public class NewTabWidget extends TPanel {
+public class ToolMenuWidget extends TPanel {
 
     private Editor editor;
     private UIManager ui;
     
     Signal<Callback2D<Widget,String>> selected = new Signal<>();
     
-    public NewTabWidget(Editor editor, UIManager ui) {
+    public ToolMenuWidget(Editor editor, UIManager ui) {
         super();
         
         this.editor = editor;
@@ -33,22 +32,28 @@ public class NewTabWidget extends TPanel {
         
         setLayout(layout);
         
-        Label label = new UI.ProjectLabel("Project Menu");
+        Label label = new UI.ProjectLabel("Tool Menu");
         label.setMinSize(300,0);
         
         List list = ui.list();
         list.setName("ProjectList");
         list.setMargin(1,1,1,1);
         
-        for (SubEditorTool set : editor.subEditorTools) {
-            LoadedTool tool = editor.loadedTools.get(set);
+        for (SubEditorTool tool : editor.subEditorTools) {
             
-            UI.ProjectButton button = new UI.ProjectButton(tool.name,tool.description);
-            button.addStyle(UI.buttonStyle(tool.color,tool.iconResource));
+            String iconResource = editor.pivot.iconTraits.get(tool).iconResource;
+            
+            UI.ProjectButton button = new UI.ProjectButton(tool.name(),tool.description());
+            button.addStyle(UI.buttonStyle(tool.color(),iconResource));
             
             button.clicked().connect(()->{
                 
-                SubEditor se = set.open(ui,editor.gui.form.window);
+                SubEditor se = tool.open();
+                
+                editor.project.openTool(tool,se);
+                
+                editor.pivot.loadEditor(tool,se);
+                
                 selected.emit((cb)->cb.f(se.widget(),se.name()));
                 
             });

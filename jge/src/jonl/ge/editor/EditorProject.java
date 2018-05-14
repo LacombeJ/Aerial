@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import jonl.jutils.data.Dir;
+import jonl.jutils.data.Json;
 
 public class EditorProject {
 
@@ -13,11 +14,11 @@ public class EditorProject {
     
     Project project = new Project();
     
+    Store store = new Store();
+    
     Scenes scenes = new Scenes();
     HashMap<String,Scene> sceneMap = new HashMap<>();
-    
-    ArrayList<SubEditor> subEditors = new ArrayList<>();
-    
+
     public EditorProject(Editor editor, Dir dir) {
         this.editor = editor;
         this.dir = dir;
@@ -27,7 +28,7 @@ public class EditorProject {
         this(editor, new Dir(path));
     }
     
-    public boolean load() {
+    boolean load() {
         if (dir.exists("project.json")) {
             // Load project
             project = dir.json("project.json").load(Project.class);
@@ -36,6 +37,12 @@ public class EditorProject {
             Dir editDir = dir.dir(".edit");
             if (!editDir.exists()) {
                 createEditDir();
+            }
+            Dir storeDir = editDir.dir("store");
+            if (storeDir.exists("store.json")) {
+                store = storeDir.json("store.json").load(Store.class);
+            } else {
+                storeDir.json("store.json").save(store);
             }
             
             // Load scenes
@@ -53,7 +60,7 @@ public class EditorProject {
         return false;
     }
     
-    public void save() {
+    void save() {
         
         // Save project
         dir.json("project.json").save(project);
@@ -63,6 +70,8 @@ public class EditorProject {
         if (!editDir.exists()) {
             createEditDir();
         }
+        
+        editDir.dir("store").json("store.json").save(store);
         
         // Save scenes
         Dir scenesDir = dir.child("scenes");
@@ -81,9 +90,24 @@ public class EditorProject {
         edit.child("store");
     }
     
+    void openTool(SubEditorTool subEditorTool, SubEditor subEditor) {
+        OpenTool open = new OpenTool();
+        open.id = subEditorTool.id();
+        open.storePath = dir.dir(".edit").dir("store").dir("tool"+store.openTools.size()+".json").path();
+        editor.pivot.addStorePath(subEditorTool, subEditor, open.storePath);
+        store.openTools.add(open);
+        save();
+    }
+    
+    
+    
     static class Project {
         String name = "project";
         String path = "";
+    }
+    
+    static class Store {
+        ArrayList<OpenTool> openTools = new ArrayList<>();
     }
     
     static class Scenes {
@@ -93,6 +117,11 @@ public class EditorProject {
     static class Scene {
         String name = "scene";
         String path = "";
+    }
+    
+    static class OpenTool {
+        String id;
+        String storePath;
     }
     
 }

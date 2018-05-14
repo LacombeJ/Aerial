@@ -34,6 +34,11 @@ public class TSwitchWidget extends TWidget implements SwitchWidget {
     }
     
     @Override
+    public TWidget current() {
+        return widgets.get(index);
+    }
+    
+    @Override
     public TWidget get(int index) {
         return widgets.get(index);
     }

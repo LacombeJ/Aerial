@@ -3,13 +3,12 @@ package jonl.ge.editor;
 import java.io.InputStream;
 
 import jonl.aui.FileDialog;
-import jonl.aui.Icon;
 import jonl.aui.tea.TUIManager;
-import jonl.ge.editor.SubEditorTool.LoadedTool;
 import jonl.jutils.data.Dir;
 import jonl.jutils.io.FileUtils;
 import jonl.jutils.jss.Style;
 import jonl.jutils.jss.StyleSheet;
+import jonl.jutils.parallel.Processor;
 
 public class EditorUI {
 
@@ -35,21 +34,13 @@ public class EditorUI {
         UI.resourceIcon(ui,this.getClass(),loc,resource);
     }
     
-    void loadTools() {
+    private void loadTools() {
+        editor.pivot = new Pivot(editor, ui, form.window);
+        
         for (SubEditorTool tool : editor.subEditorTools) {
-            LoadedTool loaded = new LoadedTool();
-            loaded.id = tool.id();
-            loaded.name = tool.name();
-            loaded.description = tool.description();
-            loaded.color = tool.color();
-            Icon icon = tool.icon(ui);
-            if (icon==null) {
-                loaded.iconResource = "/editor/editor_icon";
-            } else {
-                ui.resource(loaded.id,icon);
-                loaded.iconResource = loaded.id;
-            }
-            editor.loadedTools.put(tool,loaded);
+            
+            editor.pivot.loadTool(tool);
+            
         }
     }
     
@@ -72,10 +63,18 @@ public class EditorUI {
         
         form.create(ui);
         
+        loadTools();
+        
         init();
         connect();
         
         form.window.create();
+        
+        String path = editor.config.lastProj;
+        if (!path.equals("")) {
+            loadProject(new Dir(path));
+        }
+        
         form.window.maximize();
         form.window.setVisible(true);
         
@@ -90,12 +89,6 @@ public class EditorUI {
         form.switchWidget.add(projectUi);
         
         toStartupPage();
-        
-        String path = editor.config.lastProj;
-        if (!path.equals("")) {
-            loadProject(new Dir(path));
-        }
-        
     }
     
     private void connect() {

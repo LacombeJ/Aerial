@@ -1,35 +1,27 @@
 package jonl.ge.editor;
 
 import jonl.aui.Icon;
-import jonl.aui.UIManager;
-import jonl.aui.Window;
 import jonl.vmath.Color;
 
-public abstract class SubEditorTool {
+public interface SubEditorTool {
+
+    /**
+     * Called once by the editor when creating loading tools before other interface methods
+     */
+    void init(Pivot pivot);
     
-    public abstract String id();
+    String id();
     
-    public abstract String name();
+    String name();
     
-    public abstract String description();
+    String description();
     
-    public abstract Color color();
+    Color color();
     
-    public abstract Icon icon(UIManager ui);
+    Icon icon();
     
-    public abstract SubEditor open(UIManager ui, Window window);
+    SubEditor open();
     
-    public abstract SubEditor open(UIManager ui, Window window, Object store);
-    
-    public abstract Class<?> stateDefinition();
-    
-    static class LoadedTool {
-        SubEditorTool tool;
-        String id;
-        String name;
-        String description;
-        Color color;
-        String iconResource;
-    }
+    SubEditor open(Object store);
     
 }

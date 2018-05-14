@@ -50,12 +50,14 @@ public class SplineScene {
         synchronized (editor) {
             editor.state.position.x = control.transform().translation.x;
             editor.state.position.y = control.transform().translation.y;
+            editor.tool.store.setStore(editor);
         }
     }
     
     void saveSphere(Vector2 sphere) {
         synchronized (editor) {
             editor.state.spheres.add(sphere);
+            editor.tool.store.setStore(editor);
         }
     }
     

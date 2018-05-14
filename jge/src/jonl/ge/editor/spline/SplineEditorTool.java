@@ -1,53 +1,45 @@
 package jonl.ge.editor.spline;
 
 import jonl.aui.Icon;
-import jonl.aui.UIManager;
-import jonl.aui.Window;
-import jonl.ge.editor.SubEditorTool;
+import jonl.ge.editor.AbstractSubEditorTool;
 import jonl.ge.editor.UI;
 import jonl.vmath.Color;
 
-public class SplineEditorTool extends SubEditorTool {
+public class SplineEditorTool extends AbstractSubEditorTool {
 
-    @Override
-    public String id() {
-        return "spline-editor";
+    Icon icon;
+    
+    SplineStoreTrait store;
+    
+    public SplineEditorTool() {
+        super(
+            "spline-editor",
+            "Spline Editor",
+            "Create and edit splines and curves",
+            Color.GRAY);
+        
+        store = new SplineStoreTrait();
     }
     
     @Override
-    public String name() {
-        return "Spline Editor";
-    }
-
-    @Override
-    public String description() {
-        return "Create and edit splines and curves";
-    }
-
-    @Override
-    public Color color() {
-        return Color.GRAY;
+    public void init() {
+        icon = UI.icon(pivot().ui(),this.getClass(),"/editor/spline_icon.png");
+        
+        pivot().setStoreTrait(this, store);
     }
     
     @Override
-    public Icon icon(UIManager ui) {
-        return UI.icon(ui,this.getClass(),"/editor/spline_icon.png");
-    }
-    
-
-    @Override
-    public SplineEditor open(UIManager ui, Window window) {
-        return new SplineEditor(ui,window,null);
+    public Icon icon() {
+        return icon;
     }
 
     @Override
-    public SplineEditor open(UIManager ui, Window window, Object store) {
-        return new SplineEditor(ui,window,store);
+    public SplineEditor open() {
+        return new SplineEditor(this,null);
     }
 
     @Override
-    public Class<?> stateDefinition() {
-        return SplineState.class;
+    public SplineEditor open(Object store) {
+        return new SplineEditor(this,store);
     }
-
 }

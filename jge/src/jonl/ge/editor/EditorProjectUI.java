@@ -5,6 +5,9 @@ import jonl.aui.TabPanel;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
+import jonl.ge.editor.EditorProject.OpenTool;
+import jonl.jutils.data.Json;
+import jonl.jutils.io.Console;
 
 public class EditorProjectUI extends TPanel {
 
@@ -50,7 +53,7 @@ public class EditorProjectUI extends TPanel {
     }
     
     void addNewTab() {
-        NewTabWidget newTab = new NewTabWidget(editor, ui);
+        ToolMenuWidget newTab = new ToolMenuWidget(editor, ui);
         newTab.setData("new_tab");
         newTab.selected.connect((w,l)->{
             addEditorTab(w,l);
@@ -70,7 +73,24 @@ public class EditorProjectUI extends TPanel {
     }
     
     void populate() {
-        addNewTab();
+        Console.log(editor.project.store.openTools.size());
+        if (editor.project.store.openTools.size()==0) {
+            addNewTab();
+        } else {
+            for (OpenTool openTool : editor.project.store.openTools) {
+                SubEditorTool tool = editor.tool(openTool.id);
+                if (tool!=null) {
+                    StoreTrait storeTrait = editor.pivot.storeTraits.get(tool);
+                    if (storeTrait != null) {
+                        Object store = new Json(openTool.storePath).load(storeTrait.getStoreDefinition());
+                        SubEditor se = tool.open(store);
+                        editor.pivot.addStorePath(tool,se,openTool.storePath);
+                        editor.pivot.loadEditor(tool,se);
+                        addEditorTab(se.widget(),se.name());
+                    }
+                }
+            }
+        }
     }
     
 }

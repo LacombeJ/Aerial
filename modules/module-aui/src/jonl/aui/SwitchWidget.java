@@ -2,6 +2,8 @@ package jonl.aui;
 
 public interface SwitchWidget extends Widget {
 
+    Widget current();
+    
     Widget get(int index);
     
     void add(Widget widget);

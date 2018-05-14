@@ -1,50 +1,30 @@
 package jonl.ge.editor;
 
-import jonl.aui.Icon;
-import jonl.aui.UIManager;
-import jonl.aui.Window;
 import jonl.vmath.Color;
 
-public class SceneEditorTool extends SubEditorTool {
+public class SceneEditorTool extends AbstractSubEditorTool {
 
-    @Override
-    public String id() {
-        return "scene-editor";
-    }
-
-    @Override
-    public String name() {
-        return "Scene Editor";
-    }
-
-    @Override
-    public String description() {
-        return "Create 3d scenes";
-    }
-
-    @Override
-    public Color color() {
-        return Color.DARK_GRAY;
+    public SceneEditorTool() {
+        super(
+            "scene-editor",
+            "Scene Editor",
+            "Create 3d scenes",
+            Color.DARK_GRAY);
     }
     
     @Override
-    public Icon icon(UIManager ui) {
-        return null;
+    public void init() {
+        
     }
     
     @Override
-    public SubEditor open(UIManager ui, Window window) {
-        return new SceneEditor(ui,window,null);
+    public SceneEditor open() {
+        return new SceneEditor(pivot().ui(),pivot().window(),null);
     }
 
     @Override
-    public SubEditor open(UIManager ui, Window window, Object state) {
-        return new SceneEditor(ui,window,state);
+    public SceneEditor open(Object store) {
+        return new SceneEditor(pivot().ui(),pivot().window(),store);
     }
-
-    @Override
-    public Class<?> stateDefinition() {
-        return SceneState.class;
-    }
-
+    
 }
