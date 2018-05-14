@@ -7,7 +7,6 @@ import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
 import jonl.ge.editor.EditorProject.OpenTool;
 import jonl.jutils.data.Json;
-import jonl.jutils.io.Console;
 
 public class EditorProjectUI extends TPanel {
 
@@ -36,6 +35,23 @@ public class EditorProjectUI extends TPanel {
             addNewTab();
         });
         tabPanel.closed().connect((w)->{
+            boolean remove = true;
+            if (w.info().containsKey("_tab_")) {
+                Tab tab = w.info().getAsType("_tab_",Tab.class);
+                StoreTrait storeTrait = editor.pivot.storeTraits.get(tab.tool);
+                if (!storeTrait.onClose()) {
+                    remove = false;
+                } else {
+                    if (remove) {
+                        editor.project.removeTool(tab.tool,tab.editor);
+                    }
+                }
+                return remove;
+            }
+            
+            return true;
+        });
+        tabPanel.removed().connect((w)->{
             if (tabPanel.count()==0) {
                 String data = (String)w.data();
                 if (data == null || !data.equals("new_tab")) {
@@ -55,17 +71,18 @@ public class EditorProjectUI extends TPanel {
     void addNewTab() {
         ToolMenuWidget newTab = new ToolMenuWidget(editor, ui);
         newTab.setData("new_tab");
-        newTab.selected.connect((w,l)->{
-            addEditorTab(w,l);
+        newTab.selected.connect((tab)->{
+            addEditorTab(tab);
         });
         tabPanel.add(newTab, "New Tab");
         tabPanel.setWidget(newTab);
     }
     
-    void addEditorTab(Widget widget, String label) {
-        tabPanel.add(widget,label);
+    void addEditorTab(Tab tab) {
+        tab.widget.info().put("_tab_",tab);
+        tabPanel.add(tab.widget,tab.name);
         Widget prevWidget = tabPanel.get(tabPanel.index());
-        tabPanel.setWidget(widget);
+        tabPanel.setWidget(tab.widget);
         String data = (String)prevWidget.data();
         if (data != null && data.equals("new_tab")) {
             tabPanel.remove(prevWidget);
@@ -73,7 +90,6 @@ public class EditorProjectUI extends TPanel {
     }
     
     void populate() {
-        Console.log(editor.project.store.openTools.size());
         if (editor.project.store.openTools.size()==0) {
             addNewTab();
         } else {
@@ -86,10 +102,24 @@ public class EditorProjectUI extends TPanel {
                         SubEditor se = tool.open(store);
                         editor.pivot.addStorePath(tool,se,openTool.storePath);
                         editor.pivot.loadEditor(tool,se);
-                        addEditorTab(se.widget(),se.name());
+                        Tab tab = new Tab(se.widget(),se.name(),tool,se);
+                        addEditorTab(tab);
                     }
                 }
             }
+        }
+    }
+    
+    static class Tab {
+        Widget widget;
+        String name;
+        SubEditorTool tool;
+        SubEditor editor;
+        Tab(Widget widget, String name, SubEditorTool tool, SubEditor editor) {
+            this.widget = widget;
+            this.name = name;
+            this.tool = tool;
+            this.editor = editor;
         }
     }
     

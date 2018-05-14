@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import jonl.jutils.data.Dir;
-import jonl.jutils.data.Json;
 
 public class EditorProject {
 
@@ -99,7 +98,19 @@ public class EditorProject {
         save();
     }
     
-    
+    void removeTool(SubEditorTool subEditorTool, SubEditor subEditor) {
+        StoreTrait trait = editor.pivot.storeTraits.get(subEditorTool);
+        if (trait!=null) {
+            String storePath = trait.storePaths.get(subEditor);
+            for (int i=0; i<store.openTools.size(); i++) {
+                if (store.openTools.get(i).storePath.equals(storePath)) {
+                    store.openTools.remove(i);
+                    break;
+                }
+            }
+            save();
+        }
+    }
     
     static class Project {
         String name = "project";

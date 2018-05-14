@@ -1,9 +1,9 @@
-package jonl.aui.tea;
+package jonl.aui;
 
 import jonl.jutils.structs.AttributeMap;
 import jonl.vmath.Color;
 
-public class TWidgetInfo extends AttributeMap {
+public class Info extends AttributeMap {
 
     public Color getColor(String key) {
         return (Color) get(key);

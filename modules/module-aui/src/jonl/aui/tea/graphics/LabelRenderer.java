@@ -1,14 +1,14 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TLabel;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class LabelRenderer {
 
-    public static void paint(TLabel label, TGraphics g, TWidgetInfo info) {
+    public static void paint(TLabel label, TGraphics g, Info info) {
         Style style = JSS.style(g.style(), "Label");
         style = JSS.name(label,style,g);
         

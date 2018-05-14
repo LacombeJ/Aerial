@@ -1,14 +1,14 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TWidget;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class WidgetRenderer {
 
-    public static void paint(TWidget widget, String selector, TGraphics g, TWidgetInfo info) {
+    public static void paint(TWidget widget, String selector, TGraphics g, Info info) {
         Style style = JSS.style(g.style(), selector);
         style = JSS.name(widget,style,g);
         
@@ -18,7 +18,7 @@ public class WidgetRenderer {
         ImageRenderer.paint(style, box, g);
     }
     
-    public static void paint(TWidget widget, TGraphics g, TWidgetInfo info) {
+    public static void paint(TWidget widget, TGraphics g, Info info) {
         paint(widget,"Widget",g,info);
     }
     

@@ -6,9 +6,7 @@ import jonl.aui.Icon;
 import jonl.aui.Timer;
 import jonl.aui.UIManager;
 import jonl.aui.Window;
-import jonl.jutils.data.Dir;
 import jonl.jutils.data.Json;
-import jonl.jutils.io.Console;
 
 /**
  * Core functionality exposed to sub editors
@@ -63,19 +61,21 @@ public class Pivot {
         
     }
     
-    void loadEditor(SubEditorTool tool, SubEditor editor) {
-        
+    void loadEditor(SubEditorTool tool, SubEditor subEditor) {
         StoreTrait storeTrait = (StoreTrait) storeTraits.get(tool);
         if (storeTrait != null) {
-            Timer timer = ui.timer(editor.widget(), storeTrait.storeFrequency());
+            Timer timer = ui.timer(subEditor.widget(), storeTrait.storeFrequency());
             timer.tick().connect(()->{
-                Object store = storeTrait.getStore(editor);
-                String path = storeTrait.storePaths.get(editor);
-                Json json = new Json(path);
-                json.save(store);
+                store(storeTrait,subEditor);
             });
         }
-        
+    }
+    
+    void store(StoreTrait storeTrait, SubEditor subEditor) {
+        Object store = storeTrait.getStore(subEditor);
+        String path = storeTrait.storePaths.get(subEditor);
+        Json json = new Json(path);
+        json.save(store);
     }
     
     void addStorePath(SubEditorTool tool, SubEditor editor, String path) {

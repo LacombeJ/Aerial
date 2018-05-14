@@ -8,6 +8,7 @@ import jonl.aui.TabPanel;
 import jonl.aui.Widget;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
+import jonl.jutils.func.Function;
 
 public class TTabPanel extends TWidget implements TabPanel {
 
@@ -19,7 +20,8 @@ public class TTabPanel extends TWidget implements TabPanel {
     private ArrayList<TWidget> widgets;
     
     private boolean closeable = false;
-    private Signal<Callback<Widget>> closed = new Signal<>();
+    private Signal<Function<Widget,Boolean>> closed = new Signal<>();
+    private Signal<Callback<Widget>> removed = new Signal<>();
     private Signal<Callback0D> newTab = new Signal<>();
     
     public TTabPanel() {
@@ -92,7 +94,15 @@ public class TTabPanel extends TWidget implements TabPanel {
             button.setCloseButton(true);
         }
         button.closeButton.clicked().connect(()->{
-            remove(widget);
+            boolean remove = true;
+            for (Function<Widget,Boolean> f : closed().slots()) {
+                if (!f.f(widget)) {
+                    remove = false;
+                }
+            }
+            if (remove) {
+                remove(widget);
+            }
         });
         tabBar.add(button);
         refreshContent();
@@ -112,7 +122,7 @@ public class TTabPanel extends TWidget implements TabPanel {
         labels.remove(index);
         tabBar.remove(tabBar.get(index));
         refreshContent();
-        closed().emit((cb)->cb.f(widget));
+        removed().emit((cb)->cb.f(widget));
     }
     
     @Override
@@ -121,7 +131,7 @@ public class TTabPanel extends TWidget implements TabPanel {
             TWidget widget = widgets.remove(index);
             labels.remove(index);
             tabBar.remove(tabBar.get(index));
-            closed().emit((cb)->cb.f(widget));
+            removed().emit((cb)->cb.f(widget));
         }
         refreshContent();
     }
@@ -167,8 +177,13 @@ public class TTabPanel extends TWidget implements TabPanel {
     }
     
     @Override
-    public Signal<Callback<Widget>> closed() {
+    public Signal<Function<Widget,Boolean>> closed() {
         return closed;
+    }
+    
+    @Override
+    public Signal<Callback<Widget>> removed() {
+        return removed;
     }
     
     @Override

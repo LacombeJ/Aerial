@@ -1,13 +1,13 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.graphics.JSS.ColorValue;
 import jonl.jutils.jss.Style;
 
 public class CaretRenderer {
 
-    public static void paint(Style style, int caretX, int caretY, int caretHeight, TGraphics g, TWidgetInfo info) {
+    public static void paint(Style style, int caretX, int caretY, int caretHeight, TGraphics g, Info info) {
         ColorValue color = JSS.color(style.get("color"));
         
         int blinkInterval = info.get("iBlinkInterval",30);

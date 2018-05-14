@@ -1,15 +1,15 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.Align;
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TSplitPanel;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class SplitPanelRenderer {
 
-    public static void paint(TSplitPanel splitPanel, TGraphics g, TWidgetInfo info) {
+    public static void paint(TSplitPanel splitPanel, TGraphics g, Info info) {
         Style style = JSS.style(g.style(), "SplitPanel");
         style = JSS.name(splitPanel,style,g);
         

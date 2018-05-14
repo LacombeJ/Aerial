@@ -1,17 +1,17 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.HAlign;
+import jonl.aui.Info;
 import jonl.aui.VAlign;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TTitlePanel;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.graphics.JSS.ColorValue;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class TitlePanelRenderer {
 
-    public static void paint(TTitlePanel panel, TGraphics g, TWidgetInfo info) {
+    public static void paint(TTitlePanel panel, TGraphics g, Info info) {
         Style style = JSS.style(g.style(), "TitlePanel");
         style = JSS.name(panel,style,g);
         

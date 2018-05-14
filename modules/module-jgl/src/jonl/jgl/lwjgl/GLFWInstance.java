@@ -10,7 +10,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import jonl.jgl.Window;
@@ -772,18 +771,21 @@ class GLFWInstance {
         }
     }
     private static SetIconResponse _setIcon(SetIconRequest request) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            ByteBuffer buffer = stack.malloc(48*48*4);
-            buffer.put(request.pixels);
-            buffer.flip();
             
-            GLFWImage.Buffer imageBuffer = GLFWImage.create(1);
-            imageBuffer.width(request.width);
-            imageBuffer.height(request.height);
-            imageBuffer.pixels(buffer);
+        ByteBuffer buffer = MemoryUtil.memCalloc(request.width*request.height*4);
+        
+        buffer.put(request.pixels);
+        buffer.flip();
+        
+        GLFWImage.Buffer imageBuffer = GLFWImage.create(1);
+        imageBuffer.width(request.width);
+        imageBuffer.height(request.height);
+        imageBuffer.pixels(buffer);
+        
+        GLFW.glfwSetWindowIcon(request.id, imageBuffer);
+        
+        MemoryUtil.memFree(buffer);
             
-            GLFW.glfwSetWindowIcon(request.id, imageBuffer);
-        }
         return new SetIconResponse();
     }
     

@@ -15,6 +15,12 @@ public abstract class StoreTrait {
     public abstract Object getStore(SubEditor editor);
     
     /**
+     * Called when editor is being closed
+     * @return true if should close, false if otherwise
+     */
+    public abstract boolean onClose();
+    
+    /**
      * @return How often state should get stored in milliseconds
      */
     public long storeFrequency() {

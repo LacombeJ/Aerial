@@ -2,6 +2,7 @@ package jonl.aui;
 
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback0D;
+import jonl.jutils.func.Function;
 
 public interface TabPanel extends Widget {
 
@@ -29,7 +30,9 @@ public interface TabPanel extends Widget {
     
     void setAddable(boolean enable);
     
-    Signal<Callback<Widget>> closed();
+    Signal<Function<Widget,Boolean>> closed();
+    
+    Signal<Callback<Widget>> removed();
     
     Signal<Callback0D> newTab();
     

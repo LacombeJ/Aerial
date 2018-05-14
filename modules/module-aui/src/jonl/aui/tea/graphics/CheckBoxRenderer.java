@@ -1,16 +1,16 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.HAlign;
+import jonl.aui.Info;
 import jonl.aui.tea.TCheckBox;
 import jonl.aui.tea.TGraphics;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 import jonl.vmath.Vector2;
 
 public class CheckBoxRenderer {
 
-    public static void paint(TCheckBox checkBox, TGraphics g, TWidgetInfo info) {
+    public static void paint(TCheckBox checkBox, TGraphics g, Info info) {
         Style style = ButtonRenderer.style(checkBox, "CheckBox", g, info);
         
         int size = JSS.asInt(style.get("box-size"));

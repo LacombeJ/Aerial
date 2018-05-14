@@ -11,6 +11,7 @@ import jonl.aui.ToolButton;
 import jonl.aui.UIManager;
 import jonl.aui.VAlign;
 import jonl.aui.Window;
+import jonl.jutils.misc.ImageUtils;
 
 public class EditorUIForm {
 
@@ -43,6 +44,7 @@ public class EditorUIForm {
         window.setHeight(576);
         window.setPosition(HAlign.CENTER,VAlign.MIDDLE);
         window.setResizable(true);
+        window.setIcon(ImageUtils.load(getClass().getResourceAsStream("/editor/aerial.png")));
         
         // Main panel
         main = ui.panel(ui.listLayout(Align.VERTICAL));

@@ -3,6 +3,7 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.Graphics;
+import jonl.aui.Info;
 import jonl.aui.Signal;
 import jonl.aui.SizePolicy;
 import jonl.aui.Widget;
@@ -41,7 +42,7 @@ public abstract class TWidget implements Widget {
     private final Signal<Callback<Graphics>> paint = new Signal<>();
 
     private Object data = null;
-    private TWidgetInfo info = new TWidgetInfo();
+    private Info info = new Info();
     private Caller caller = new Caller();
     
     private Style style = null;
@@ -90,6 +91,11 @@ public abstract class TWidget implements Widget {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+    
+    @Override
+    public Info info() {
+        return info;
     }
     
     @Override
@@ -292,10 +298,6 @@ public abstract class TWidget implements Widget {
     protected void paint(TGraphics g) {
         WidgetRenderer.paint(this,g,info());
         paint().emit(cb->cb.f(g));
-    }
-    
-    protected TWidgetInfo info() {
-        return info;
     }
     
     protected Caller caller() {

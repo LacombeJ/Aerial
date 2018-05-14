@@ -6,16 +6,16 @@ import jonl.aui.Label;
 import jonl.aui.List;
 import jonl.aui.Signal;
 import jonl.aui.UIManager;
-import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
-import jonl.jutils.func.Callback2D;
+import jonl.ge.editor.EditorProjectUI.Tab;
+import jonl.jutils.func.Callback;
 
 public class ToolMenuWidget extends TPanel {
 
     private Editor editor;
     private UIManager ui;
     
-    Signal<Callback2D<Widget,String>> selected = new Signal<>();
+    Signal<Callback<Tab>> selected = new Signal<>();
     
     public ToolMenuWidget(Editor editor, UIManager ui) {
         super();
@@ -54,7 +54,8 @@ public class ToolMenuWidget extends TPanel {
                 
                 editor.pivot.loadEditor(tool,se);
                 
-                selected.emit((cb)->cb.f(se.widget(),se.name()));
+                Tab tab = new Tab(se.widget(),se.name(),tool,se);
+                selected.emit((cb)->cb.f(tab));
                 
             });
             

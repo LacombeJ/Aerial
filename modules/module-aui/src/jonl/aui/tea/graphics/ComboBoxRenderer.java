@@ -1,14 +1,14 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TComboBox;
 import jonl.aui.tea.TGraphics;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class ComboBoxRenderer {
 
-    public static void paint(TComboBox comboBox, TGraphics g, TWidgetInfo info) {
+    public static void paint(TComboBox comboBox, TGraphics g, Info info) {
         boolean hover = info.get("bIsMouseWithin", false);
         
         Style style = JSS.style(g.style(), "ComboBox");

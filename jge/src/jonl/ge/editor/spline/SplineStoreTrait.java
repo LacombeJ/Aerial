@@ -24,5 +24,10 @@ public class SplineStoreTrait extends StoreTrait {
     synchronized void setStore(SplineEditor editor) {
         editor.stateCopy = Cereal.copy(editor.state);
     }
+
+    @Override
+    public boolean onClose() {
+        return true;
+    }
     
 }

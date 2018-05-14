@@ -1,14 +1,14 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TFrameBar;
 import jonl.aui.tea.TGraphics;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class FrameBarRenderer {
 
-    public static void paint(TFrameBar panel, TGraphics g, TWidgetInfo info) {
+    public static void paint(TFrameBar panel, TGraphics g, Info info) {
         Style style = JSS.style(g.style(), "Frame");
         style = JSS.name(panel,style,g);
         

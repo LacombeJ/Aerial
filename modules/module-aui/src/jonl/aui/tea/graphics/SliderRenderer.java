@@ -1,15 +1,15 @@
 package jonl.aui.tea.graphics;
 
 import jonl.aui.Align;
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TSlider;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class SliderRenderer {
 
-    public static void paint(TSlider slider, TGraphics g, TWidgetInfo info) {
+    public static void paint(TSlider slider, TGraphics g, Info info) {
         Style style = JSS.style(g.style(), "Slider");
         style = JSS.name(slider,style,g);
         

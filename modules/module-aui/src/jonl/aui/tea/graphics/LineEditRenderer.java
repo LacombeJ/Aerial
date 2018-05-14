@@ -1,14 +1,14 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TLineEdit;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class LineEditRenderer {
 
-    public static void paint(TLineEdit lineEdit, TGraphics g, TWidgetInfo info) {
+    public static void paint(TLineEdit lineEdit, TGraphics g, Info info) {
         boolean hover = info.get("bIsMouseWithin", false);
         
         Style style = JSS.style(g.style(), "LineEdit");
@@ -23,7 +23,7 @@ public class LineEditRenderer {
         ImageRenderer.paint(style, box, g);
     }
     
-    public static void paint(TLineEdit.TextArea area, TGraphics g, TWidgetInfo info) {
+    public static void paint(TLineEdit.TextArea area, TGraphics g, Info info) {
         boolean hover = info.get("bIsMouseWithin", false);
         
         Style style = JSS.style(g.style(), "LineEdit");

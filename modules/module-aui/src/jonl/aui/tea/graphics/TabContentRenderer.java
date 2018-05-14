@@ -1,14 +1,14 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TTabContent;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 
 public class TabContentRenderer {
 
-    public static void paint(TTabContent widget, TGraphics g, TWidgetInfo info) {
+    public static void paint(TTabContent widget, TGraphics g, Info info) {
         Style style = JSS.style(g.style(),"TabPanel.Content");
         style = JSS.name(widget,style,g);
         

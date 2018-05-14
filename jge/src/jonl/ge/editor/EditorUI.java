@@ -8,7 +8,6 @@ import jonl.jutils.data.Dir;
 import jonl.jutils.io.FileUtils;
 import jonl.jutils.jss.Style;
 import jonl.jutils.jss.StyleSheet;
-import jonl.jutils.parallel.Processor;
 
 public class EditorUI {
 
@@ -50,6 +49,8 @@ public class EditorUI {
         Style style = editorStyle();
         ui.addStyle(style);
         
+        resourceIcon("/editor/aerial.png",              "editor/aerial");
+        
         resourceIcon("/editor/new_icon.png",            "editor/new");
         resourceIcon("/editor/load_icon.png",           "editor/load");
         resourceIcon("/editor/open_icon.png",           "editor/open");
@@ -60,6 +61,7 @@ public class EditorUI {
         resourceIcon("/editor/save_toolbutton.png",     "editor/save_tb");
         
         resourceIcon("/editor/editor_icon.png",         "/editor/editor_icon");
+        resourceIcon("/editor/settings_icon.png",       "/editor/settings_icon");
         
         form.create(ui);
         

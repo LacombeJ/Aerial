@@ -1,8 +1,8 @@
 package jonl.aui.tea.graphics;
 
+import jonl.aui.Info;
 import jonl.aui.tea.TDial;
 import jonl.aui.tea.TGraphics;
-import jonl.aui.tea.TWidgetInfo;
 import jonl.aui.tea.spatial.TBox;
 import jonl.jutils.jss.Style;
 import jonl.vmath.Mathf;
@@ -10,7 +10,7 @@ import jonl.vmath.Mathi;
 
 public class DialRenderer {
     
-    public static void paint(TDial dial, TGraphics g, TWidgetInfo info) {
+    public static void paint(TDial dial, TGraphics g, Info info) {
         boolean hover = info.get("bIsMouseWithin", false);
         boolean down = info.get("bIsMouseDown", false);
         
