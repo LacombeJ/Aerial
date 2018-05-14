@@ -102,6 +102,12 @@ public interface UIManager {
     
     // UI Elements
     
+    Timer timer(long interval);
+    
+    Timer timer(Widget widget, long interval);
+    
+    Timer timer(Widget widget, long interval, boolean singleShot);
+    
     Icon icon(String file);
     
     Font font(String font, int size);

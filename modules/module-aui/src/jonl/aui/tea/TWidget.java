@@ -51,6 +51,8 @@ public abstract class TWidget implements Widget {
     // Variables used by event handler
     private TEventHandler event = new TEventHandler();
     
+    private ArrayList<TTimer> timers = new ArrayList<>();
+    
     public TWidget() {
         info.put("this", this);
         
@@ -426,6 +428,10 @@ public abstract class TWidget implements Widget {
             return List.map(layout.widgets(), c -> (TWidget)c);
         }
         return new ArrayList<>();
+    }
+    
+    ArrayList<TTimer> timers() {
+        return timers;
     }
     
     // ------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 package jonl.aui.tea;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -10,6 +11,7 @@ import jonl.aui.Icon;
 import jonl.aui.Layout;
 import jonl.aui.Margin;
 import jonl.aui.Resource;
+import jonl.aui.Timer;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.jutils.io.FileUtils;
@@ -45,6 +47,12 @@ public class TUIManager implements UIManager {
     
     private TUIManager() {
         loadResources();
+    }
+    
+    private ArrayList<TTimer> timers = new ArrayList<>();
+    
+    ArrayList<TTimer> timers() {
+        return timers;
     }
     
     @Override
@@ -288,6 +296,21 @@ public class TUIManager implements UIManager {
     @Override
     public TOverlay overlay() {
         return new TOverlay();
+    }
+    
+    @Override
+    public Timer timer(long interval) {
+        return new TTimer(interval);
+    }
+    
+    @Override
+    public Timer timer(Widget widget, long interval) {
+        return new TTimer((TWidget)widget,interval);
+    }
+    
+    @Override
+    public Timer timer(Widget widget, long interval, boolean singleShot) {
+        return new TTimer((TWidget)widget,interval,singleShot);
     }
     
     @Override

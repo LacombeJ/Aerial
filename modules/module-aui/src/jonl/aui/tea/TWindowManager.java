@@ -258,6 +258,8 @@ class TWindowManager {
         //size changed is not called on creation.
         window.invalidateLayout();
         
+        window.manager().update().update(window);
+        
         graphics.paint(window);
     }
     
