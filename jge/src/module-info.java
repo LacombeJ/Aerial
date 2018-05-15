@@ -8,9 +8,6 @@ module jonl.ge {
 	exports jonl.ge.core.render;
 	exports jonl.ge.core.shaders;
 	
-	exports jonl.ge.editor;
-	exports jonl.ge.editor.spline;
-	
 	exports jonl.ge.mod.axis;
 	exports jonl.ge.mod.fx;
 	exports jonl.ge.mod.misc;

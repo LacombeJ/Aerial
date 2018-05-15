@@ -3,6 +3,7 @@
 
 include ":jge"
 
+include ":modules:module-aerial"
 include ":modules:module-jgl"
 include ":modules:module-aui"
 include ":modules:module-utils"

@@ -56,6 +56,7 @@ subprojects {
 
 dependencies {
     compile project(':jge')
+    compile project(':modules:module-aerial')
     compile project(':modules:module-jgl')
     compile project(':modules:module-aui')
     compile project(':modules:module-utils')
