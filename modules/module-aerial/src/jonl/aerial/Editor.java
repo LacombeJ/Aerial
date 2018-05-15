@@ -27,6 +27,7 @@ public class Editor {
     public Editor() {
         subEditorTools = new ArrayList<>();
         
+        add(new ConfigurationEditorTool());
         add(new SceneEditorTool());
         add(new SplineEditorTool());
     }

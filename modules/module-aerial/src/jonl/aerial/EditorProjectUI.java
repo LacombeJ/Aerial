@@ -1,8 +1,11 @@
 package jonl.aerial;
 
 import jonl.aerial.EditorProject.OpenTool;
+import jonl.aui.Align;
 import jonl.aui.Layout;
+import jonl.aui.SplitPanel;
 import jonl.aui.TabPanel;
+import jonl.aui.Tree;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.tea.TPanel;
@@ -13,7 +16,12 @@ public class EditorProjectUI extends TPanel {
     Editor editor;
     UIManager ui;
     
-    TabPanel tabPanel;
+    ProjectExplorer explorer;
+    
+    SplitPanel splitPanel;
+        TabPanel leftPanel;
+            Tree tree;
+        TabPanel tabPanel;
     
     public EditorProjectUI(Editor editor, UIManager ui) {
         this.editor = editor;
@@ -28,6 +36,15 @@ public class EditorProjectUI extends TPanel {
         layout.setMargin(0,0,0,0);
         setLayout(layout);
         
+        
+        
+        explorer = new ProjectExplorer(editor,ui);
+        tree = explorer.tree();
+        
+        leftPanel = ui.tabPanel();
+        leftPanel.add(tree,"Project Explorer");
+        
+        
         tabPanel = ui.tabPanel();
         tabPanel.setAddable(true);
         tabPanel.setCloseable(true);
@@ -39,11 +56,13 @@ public class EditorProjectUI extends TPanel {
             if (w.info().containsKey("_tab_")) {
                 Tab tab = w.info().getAsType("_tab_",Tab.class);
                 StoreTrait storeTrait = editor.pivot.storeTraits.get(tab.tool);
-                if (!storeTrait.onClose()) {
-                    remove = false;
-                } else {
-                    if (remove) {
-                        editor.project.removeTool(tab.tool,tab.editor);
+                if (storeTrait!=null) {
+                    if (!storeTrait.onClose()) {
+                        remove = false;
+                    } else {
+                        if (remove) {
+                            editor.project.removeTool(tab.tool,tab.editor);
+                        }
                     }
                 }
                 return remove;
@@ -60,7 +79,9 @@ public class EditorProjectUI extends TPanel {
             }
         });
         
-        layout.add(tabPanel);
+        splitPanel = ui.splitPanel(leftPanel,tabPanel,Align.HORIZONTAL,0.1);
+        
+        layout.add(splitPanel);
         
     }
     
@@ -90,6 +111,7 @@ public class EditorProjectUI extends TPanel {
     }
     
     void populate() {
+        explorer.populate();
         if (editor.project.store.openTools.size()==0) {
             addNewTab();
         } else {

@@ -80,7 +80,9 @@ public class Pivot {
     
     void addStorePath(SubEditorTool tool, SubEditor editor, String path) {
         StoreTrait storeTrait = (StoreTrait) storeTraits.get(tool);
-        storeTrait.storePaths.put(editor,path);
+        if (storeTrait!=null) {
+            storeTrait.storePaths.put(editor,path);
+        }
     }
     
 }

@@ -50,8 +50,6 @@ public class ToolMenuWidget extends TPanel {
                 
                 SubEditor se = tool.open();
                 
-                editor.project.openTool(tool,se);
-                
                 editor.pivot.loadEditor(tool,se);
                 
                 Tab tab = new Tab(se.widget(),se.name(),tool,se);

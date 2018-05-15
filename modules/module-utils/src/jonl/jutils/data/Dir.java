@@ -40,7 +40,7 @@ public class Dir {
     }
     
     public Dir[] list() {
-        String[] files = file.list();
+        File[] files = file.listFiles();
         if (files==null) {
             return new Dir[0];
         }
@@ -111,6 +111,11 @@ public class Dir {
     
     public Json json(String name) {
         return new Json(path(name));
+    }
+    
+    @Override
+    public String toString() {
+        return path();
     }
     
     // ------------------------------------------------------------------------
