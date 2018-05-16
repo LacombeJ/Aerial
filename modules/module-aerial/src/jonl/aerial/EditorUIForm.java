@@ -27,6 +27,10 @@ public class EditorUIForm {
                 public Menu closeProjectMenu;
                 public Menu exitMenu;
             public Menu editMenu;
+            public Menu styleMenu;
+                public Menu lightMenu;
+                public Menu darkMenu;
+                public Menu aerialMenu;
         public ToolBar toolBar;
             public ToolButton newToolButton;
             public ToolButton openToolButton;
@@ -84,8 +88,20 @@ public class EditorUIForm {
         }
         
         editMenu = ui.menu("Edit");
+        
+        styleMenu = ui.menu("Style"); {
+            lightMenu = ui.menu("Set style to light theme");
+            darkMenu = ui.menu("Set style to dark theme");
+            aerialMenu = ui.menu("Set style to aerial theme");
+            
+            styleMenu.add(lightMenu);
+            styleMenu.add(darkMenu);
+            styleMenu.add(aerialMenu);
+        }
+        
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
+        menuBar.add(styleMenu);
     }
     
     private void createToolBar() {

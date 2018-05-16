@@ -11,8 +11,5 @@ module jonl.aerial {
     
     requires java.desktop;
     
-    requires transitive jonl.aui;
     requires transitive jonl.ge;
-    requires transitive jonl.utils;
-    requires transitive jonl.vmath;
 }

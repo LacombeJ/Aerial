@@ -23,10 +23,40 @@ public class EditorUI {
         ui = TUIManager.instance();
     }
     
-    Style editorStyle() {
+    Style editorStyle(boolean light) {
         InputStream in = getClass().getResourceAsStream("/editor/editor.jss");
         Style jss = StyleSheet.fromString(FileUtils.readFromStream(in));
+        if (light) {
+            jss.style("#ProjectList").put("border-color","black");
+        } else {
+            jss.style("#ProjectList").put("border-color","white");
+        }
         return jss;
+    }
+    
+    void setStyle(String type) {
+        if (type.equals("dark")) {
+            ui.setDarkStyle();
+            Style style = editorStyle(false);
+            ui.addStyle(style);
+        } else if (type.equals("aerial")) {
+            ui.setDarkStyle();
+            Style style = editorStyle(false);
+            ui.addStyle(style);
+            
+            Style jss = new Style("jss");
+            Style window = new Style("Window");
+            window.put("background","linear-gradient(rgb(79,123,145), rgb(102,109,130));");
+            jss.add(window);
+            ui.addStyle(jss);
+        } else {
+            type = "light";
+            ui.setLightStyle();
+            Style style = editorStyle(true);
+            ui.addStyle(style);
+        }
+        editor.config.style = type;
+        editor.save();
     }
     
     void resourceIcon(String loc, String resource) {
@@ -46,8 +76,7 @@ public class EditorUI {
     public void create() {
         form = new EditorUIForm();
         
-        Style style = editorStyle();
-        ui.addStyle(style);
+        setStyle(editor.config.style);
         
         resourceIcon("/editor/aerial.png",              "editor/aerial");
         
@@ -113,6 +142,18 @@ public class EditorUI {
         
         form.closeToolButton.clicked().connect(()->{
             closeProject();
+        });
+        
+        form.lightMenu.clicked().connect(()->{
+            setStyle("light");
+        });
+        
+        form.darkMenu.clicked().connect(()->{
+            setStyle("dark");
+        });
+        
+        form.aerialMenu.clicked().connect(()->{
+            setStyle("aerial");
         });
         
         // --------------------------------------------------------------------

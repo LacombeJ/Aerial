@@ -24,6 +24,7 @@ public class EditorConfiguration {
         String lastDir = "";
         String lastProj = "";
         ObjectSet<String> pastProjects = new ObjectSet<>();
+        String style = "";
         
         EC update() {
             return Cereal.copy(this);
