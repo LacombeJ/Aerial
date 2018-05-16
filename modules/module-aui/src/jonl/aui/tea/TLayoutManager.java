@@ -108,7 +108,7 @@ class TLayoutManager {
         w.y = y;
         if (prevX!=x || prevY!=y) {
             invalidateWidgetLayout(w);
-            w.manager().event().firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            //w.manager().event().firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }
     
@@ -119,7 +119,7 @@ class TLayoutManager {
         w.height = height;
         if (prevWidth!=width || prevHeight!=height) {
             invalidateWidgetLayout(w);
-            w.manager().event().fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
+            //w.manager().event().fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
         }
     }
     
@@ -134,6 +134,8 @@ class TLayoutManager {
         w.height = height;
         if (prevX!=x || prevY!=y || prevWidth!=width || prevHeight!=height) {
             invalidateWidgetLayout(w);
+            //w.manager().event().firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
+            //w.manager().event().fireSizeChanged(w,new TResizeEvent(TEventType.Resize,width,height,prevWidth,prevHeight));
             //TEventManager.firePositionChanged(w,new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
         }
     }

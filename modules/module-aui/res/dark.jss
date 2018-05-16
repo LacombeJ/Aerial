@@ -344,12 +344,12 @@ ToolButton:hover:down {
 Tree.Item {
     background:transparent;
     color: c_text;
-    radius: 4;
 }
 Tree.Item:hover {
     background: c_select;
     text-align: center;
     text-offset: (0,0);
+    radius: 4;
 }
 Tree.Drop {
     background: transparent;

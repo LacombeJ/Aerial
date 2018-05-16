@@ -79,7 +79,7 @@ public class EditorProjectUI extends TPanel {
             }
         });
         
-        splitPanel = ui.splitPanel(leftPanel,tabPanel,Align.HORIZONTAL,0.1);
+        splitPanel = ui.splitPanel(leftPanel,tabPanel,Align.HORIZONTAL,0.2);
         
         layout.add(splitPanel);
         

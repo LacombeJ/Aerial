@@ -8,26 +8,35 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.graphics.SplitPanelRenderer;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
+import jonl.jutils.io.Console;
 import jonl.vmath.Mathd;
+import jonl.vmath.Mathi;
 
 public class TSplitPanel extends TWidget implements SplitPanel {
+    
+    private TSplitLayout layout;
     
     private TWidget widgetOne;
     private TWidget widgetTwo;
     
     private Align align = Align.HORIZONTAL;
     
-    private double ratio = 0.5f;
+    private int splitPos = 0;
     
-    Signal<Callback<Double>> changed = new Signal<>();
+    private double ratio = 0.5f;
+    private boolean ratioSet = false;
+    
+    Signal<Callback<Integer>> moved = new Signal<>();
     
     private boolean inAdjustState = false;
+    
     
     public TSplitPanel() {
         super();
         setMouseFocusSupport(true);
         //setMouseMotionBounds(true); //TODO why did we add this, try another way, interferes with other widgets
-        setWidgetLayout(new TSplitLayout());
+        layout = new TSplitLayout();
+        setWidgetLayout(layout);
     }
     
     public TSplitPanel(Align align) {
@@ -45,7 +54,7 @@ public class TSplitPanel extends TWidget implements SplitPanel {
         setWidgetOne(w1);
         setWidgetTwo(w2);
         this.align = align;
-        this.ratio = ratio;
+        setRatio(ratio);
     }
 
     @Override
@@ -104,23 +113,31 @@ public class TSplitPanel extends TWidget implements SplitPanel {
     }
 
     @Override
-    public double ratio() {
-        return ratio;
+    public int pos() {
+        return splitPos;
     }
-
+    
     @Override
-    public void setRatio(double ratio) {
-        ratio = Mathd.clamp(ratio, 0, 1);
-        if (this.ratio != ratio) {
-            this.ratio = ratio;
+    public void setPos(int pos) {
+        if (pos != splitPos) {
+            splitPos = pos;
+            moved().emit((cb)->cb.f(splitPos)); //TODO
+            invalidateSizeHint();
             invalidateLayout();
-            changed().emit((cb)->cb.f(this.ratio));
         }
     }
     
     @Override
-    public Signal<Callback<Double>> changed() {
-        return changed;
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+        ratioSet = false;
+        invalidateSizeHint();
+        invalidateLayout();
+    }
+    
+    @Override
+    public Signal<Callback<Integer>> moved() {
+        return moved;
     }
     
     // ------------------------------------------------------------------------
@@ -185,39 +202,116 @@ public class TSplitPanel extends TWidget implements SplitPanel {
             setCursor(TCursor.ARROW);
         }
         if (inAdjustState) {
-            double ratio = this.ratio;
             switch (align) {
             case HORIZONTAL:
-                int widgetOneWidth = TLayoutManager.freeWidth(widgetOne);
-                int widgetTwoWidth = TLayoutManager.freeWidth(widgetTwo);
-                int midWidth = width - widgetOneWidth - widgetTwoWidth - widgetLayout().spacing();
-                if (midWidth != 0) {
-                    int spaceHalfLeft = widgetLayout().spacing() / 2;
-                    int spaceHalfRight = widgetLayout().spacing() - spaceHalfLeft;
-                    
-                    int left = widgetOneWidth + spaceHalfLeft;
-                    int right = left + midWidth + spaceHalfRight;
-                    ratio = Mathd.alpha(event.x, left, right);
-                }
+                int w1Width = TLayoutManager.freeWidth(widgetOne);
+                int w2Width = TLayoutManager.freeWidth(widgetTwo);
+                int posH = event.x-layout.spacing()/2;
+                posH = Mathi.clamp(posH,w1Width,width-layout.spacing()-w2Width);
+                setPos(posH);
                 break;
             case VERTICAL:
-                int widgetOneHeight = TLayoutManager.freeHeight(widgetOne);
-                int widgetTwoHeight = TLayoutManager.freeHeight(widgetTwo);
-                int midHeight = height - widgetOneHeight - widgetTwoHeight - widgetLayout().spacing();
-                if (midHeight != 0) {
-                    int spaceHalfTop = widgetLayout().spacing() / 2;
-                    int spaceHalfBottom = widgetLayout().spacing() - spaceHalfTop;
-                    
-                    int top = widgetOneHeight + spaceHalfTop;
-                    int bottom = top + midHeight + spaceHalfBottom;
-                    ratio = Mathd.alpha(event.y, top, bottom);
-                }
+                int w1Height = TLayoutManager.freeHeight(widgetOne);
+                int w2Height = TLayoutManager.freeHeight(widgetTwo);
+                int posV = event.y-layout.spacing()/2;
+                posV = Mathi.clamp(posV,w1Height,height-layout.spacing()-w2Height);
+                setPos(posV);
                 break;
             }
-            setRatio(ratio);
             return true;
         }
         return false;
     }
+    
+    int splitPosFromRatio(double ratio) {
+        ratio = Mathd.clamp(ratio,0,1);
+        switch (align) {
+        case HORIZONTAL:
+            int w1Width = TLayoutManager.freeWidth(widgetOne);
+            int w2Width = TLayoutManager.freeWidth(widgetTwo);
+            
+            int midWidth = width - w1Width - w2Width - layout.spacing();
+            int midX = (int) (ratio * midWidth) + w1Width;
+            Console.log(width,w1Width,w2Width,ratio,midX);
+            return Mathi.clamp(midX,w1Width,width-layout.spacing()-w2Width);
+        case VERTICAL:
+            int w1Height = TLayoutManager.freeHeight(widgetOne);
+            int w2Height = TLayoutManager.freeHeight(widgetTwo);
+            
+            int midHeight = height - w1Height - w2Height - layout.spacing();
+            int midY = (int) (ratio * midHeight) + w1Height;
+            return Mathi.clamp(midY,w1Height,height-layout.spacing()-w2Height);
+        }
+        return 0;
+    }
+    
+    void setRatioInternal() {
+      setPos(splitPosFromRatio(ratio));
+      ratioSet = true;
+    }
+    
+    
+    
+    static class TSplitLayout extends TLayout {
+        
+        @Override
+        public void layout() {
+            TSplitPanel splitPane = (TSplitPanel) parent;
+            
+            TWidget w1 = splitPane.widgetOne();
+            TWidget w2 = splitPane.widgetTwo();
+            
+            if (w1 != null && w2 != null) {
+                int width = splitPane.width();
+                int height = splitPane.height();
+                
+                if (!splitPane.ratioSet) {
+                    splitPane.setRatioInternal();
+                }
+                
+                // Using free allocate to get the minimum/preferred widths
+                // Since the split pane can be adjustable free allocate enables us to get
+                // adjustable sizes.
+                switch (splitPane.align()) {
+                case HORIZONTAL:
+                    int midX = splitPane.pos();
+                    int width1 = midX;
+                    int width2 = width - (midX + spacing());
+                    setPositionAndSize(w1, 0, 0, width1, height);
+                    setPositionAndSize(w2, width-width2, 0, width2, height);
+                    
+                    break;
+                case VERTICAL:
+                    int midY = splitPane.pos();
+                    int height1 = midY;
+                    int height2 = height - (midY + spacing());
+                    setPositionAndSize(w1, 0, 0, width, height1);
+                    setPositionAndSize(w2, 0, height-height2, width, height2);
+                    break;
+                }
+            }
+        }
+        
+        @Override
+        public TSizeHint calculateSizeHint() {
+            TSplitPanel splitPane = (TSplitPanel) parent;
+            
+            if (splitPane.align() == Align.HORIZONTAL) {
+                int width = freeAllocate(getWidthPreferences());
+                int height = freeMaxAllocate(getHeightPreferences());
+                width += spacing();
+                return new TSizeHint(width,height);
+            } else {
+                int width = freeMaxAllocate(getWidthPreferences());
+                int height = freeAllocate(getHeightPreferences());
+                height += spacing();
+                return new TSizeHint(width,height);
+            }
+        }
+        
+        
+    }
+    
+    
 
 }

@@ -162,8 +162,12 @@ public abstract class TWidget implements Widget {
     
     @Override
     public void setSizeConstraint(int width, int height) {
-        setMinSize(width,height);
-        setMaxSize(width,height);
+        int minWidth = (width==-1) ? min.width : width;
+        int minHeight = (height==-1) ? min.height : height;
+        int maxWidth = (width==-1) ? max.width : width;
+        int maxHeight = (height==-1) ? max.height : height;
+        setMinSize(minWidth,minHeight);
+        setMaxSize(maxWidth,maxHeight);
     }
     
     @Override

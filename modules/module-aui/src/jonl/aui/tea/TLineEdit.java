@@ -56,7 +56,7 @@ public class TLineEdit extends TWidget implements LineEdit {
     
     @Override
     protected TSizeHint sizeHint() {
-        return textArea.sizeHint();
+        return TSizeReasoning.lineEditBox(this);
     }
     
     @Override

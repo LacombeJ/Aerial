@@ -59,6 +59,13 @@ public class TSizeReasoning {
         return label(label, FONT);
     }
     
+    public static TSizeHint lineEditBox(TLineEdit lineEdit) {
+        TSizeHint hint = new TSizeHint();
+        hint.width = FONT.getHeight() + BORDER;
+        hint.height = FONT.getHeight() + BORDER;
+        return hint;
+    }
+    
     public static TSizeHint lineEdit(TLineEdit lineEdit) {
         TSizeHint hint = new TSizeHint();
         hint.width = FONT.getWidth(lineEdit.text()) + BORDER;

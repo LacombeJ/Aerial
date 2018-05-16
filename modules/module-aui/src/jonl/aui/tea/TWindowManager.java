@@ -173,12 +173,10 @@ class TWindowManager {
             
             glWindow.addPositionListener((x,y,prevX,prevY)->{
                 TLayoutManager.setPosition(window, x, y);
-                //TEventManager.firePositionChanged(window, new TMoveEvent(TEventType.Move,x,y,prevX,prevY));
             });
             
             glWindow.addSizeListener((width,height,prevWidth,prevHeight)->{
                 TLayoutManager.setSize(window, width, height);
-                //TEventManager.fireSizeChanged(window, new TResizeEvent(TEventType.Resize, width,height,prevWidth,prevHeight));
                 if (graphics!=null) {
                     ortho = Matrix4.orthographic(0,width,height,0,-1,1);
                     graphics.setOrtho(ortho);

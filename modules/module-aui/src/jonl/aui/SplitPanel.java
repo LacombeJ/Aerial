@@ -18,10 +18,12 @@ public interface SplitPanel extends Widget {
     
     void setAlign(Align align);
     
-    double ratio();
+    int pos();
+    
+    void setPos(int pos);
     
     void setRatio(double ratio);
     
-    Signal<Callback<Double>> changed();
+    Signal<Callback<Integer>> moved();
     
 }
