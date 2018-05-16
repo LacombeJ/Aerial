@@ -369,7 +369,7 @@ public class TUIManager implements UIManager {
     }
     
     private Style defaultStyle() {
-        return setResourceStyle("/default.jss");
+        return lightStyle();
     }
     
     private Style lightStyle() {

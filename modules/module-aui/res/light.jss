@@ -1,4 +1,8 @@
 
+/*
+Light stylesheet
+*/
+
 // Variable Definitions
 // ----------------------------------------------------------------------------
 .define {
@@ -28,7 +32,7 @@
 // ----------------------------------------------------------------------------
 .root {
     background: back;
-    color: text;
+    color: c_text;
     font: calibri;
 }
 
@@ -38,7 +42,7 @@ _Item {
     background: c_plain;
     border-color: c_plain_border;
     border: 1;
-    color: text;
+    color: c_text;
 }
 _Item:disabled {
     background: c_primary;
@@ -129,13 +133,13 @@ ComboBox.Bar {
 }
 ComboBox.Button {
     background: c_combo;
-    color: black;
+    color: c_text;
     text-align: left;
     text-offset: (4,0);
 }
 ComboBox.Button:hover {
     background: c_hover_border;
-    color: white;
+    color: c_back;
 }
 // ----------------------------------------------------------------------------
 Dial {
@@ -149,7 +153,9 @@ Dial {
     knob-size: 20%;
     knob-distance: 70%;
 }
-Dial:disabled { @extend _Item:disabled; }
+Dial:disabled {
+    @extend _Item:disabled;
+}
 Dial:hover {
     background: c_hover;
     border-color: c_hover_border;
@@ -166,7 +172,7 @@ Dial:hover:down {
 Frame {
     window-override: true;
     background: c_primary;
-    color: text;
+    color: c_text;
 }
 Frame.Minimize.Button {
     background: transparent;
@@ -204,14 +210,14 @@ Frame.Close.Button:hover:down {
 // ----------------------------------------------------------------------------
 Label {
     background: transparent;
-    color: text;
+    color: c_text;
     text-align: left;
     text-offset: (4,0);
 }
 // ----------------------------------------------------------------------------
 LineEdit {
     background: white;
-    color: text;
+    color: c_text;
     border: 1;
     border-color: c_secondary;
     text-align: left;
@@ -226,11 +232,11 @@ Menu {
     border: 1;
 }
 Menu.Bar {
-    background: white;
+    background: c_back;
 }
 Menu.Button {
     background: transparent;
-    color: text;
+    color: c_text;
 }
 Menu.Button:hover {
     background: c_hover;
@@ -245,7 +251,7 @@ ScrollPanel.Button {
 ScrollPanel.Button:hover {
     background: c_secondary;
 }
-ScrollPanel.Button:down {
+ScrollPanel.Button:hover:down {
     background: c_tertiary;
 }
 // ----------------------------------------------------------------------------
@@ -253,9 +259,15 @@ Slider {
     width: 4;
     background: c_secondary;
 }
-Slider.Button { @extend _Item; }
-Slider.Button:hover { @extend _Item:hover; }
-Slider.Button:hover:down { @extend _Item:down; }
+Slider.Button {
+    @extend _Item;
+}
+Slider.Button:hover {
+    @extend _Item:hover;
+}
+Slider.Button:hover:down {
+    @extend _Item:down;
+}
 // ----------------------------------------------------------------------------
 SplitPanel {
     background: c_plain;
@@ -275,7 +287,8 @@ TabPanel.Button {
     text-offset: (4,0);
 }
 TabPanel.Button:checked {
-    background: white;
+    background: c_secondary;
+    color: white;
 }
 TabPanel.Button:hover {
     @extend _Item:hover;
@@ -295,7 +308,7 @@ TabPanel.New.Button {
 TabPanel.Close.Button {
     background: transparent;
     image: "ui/remove";
-    image-color: white;
+    image-color: c_primary;
 }
 TabPanel.Close.Button:hover {
     image-color: red;
@@ -303,7 +316,7 @@ TabPanel.Close.Button:hover {
 // ----------------------------------------------------------------------------
 TitlePanel {
     background: transparent;
-    color: text;
+    color: c_text;
 }
 // ----------------------------------------------------------------------------
 ToolBar {
@@ -324,7 +337,7 @@ ToolButton:hover:down {
 // ----------------------------------------------------------------------------
 Tree.Item {
     background:transparent;
-    color: text;
+    color: c_text;
 }
 Tree.Item:hover {
     background: c_select;
