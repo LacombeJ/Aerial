@@ -1,8 +1,7 @@
 package jonl.jutils.jss;
 
 import java.util.ArrayList;
-
-import jonl.jutils.io.Console;
+import java.util.HashMap;
 
 class StyleSheetParser {
     
@@ -33,6 +32,9 @@ class StyleSheetParser {
     ArrayList<String> styleTitles = new ArrayList<>();
     ArrayList<Style> styles = new ArrayList<>();
     boolean root = false;
+    boolean define = false;
+    
+    HashMap<String,String> definitions = new HashMap<>();
     
     StyleSheetParser(String jss) {
 
@@ -90,6 +92,9 @@ class StyleSheetParser {
             if (isMember(c,KEY_CHAR)) {
                 error("Syntax Error.");
             }
+            if (isSingleLineComment()) {
+                continue;
+            }
             if (isMultiLineComment()) {
                 continue;
             }
@@ -128,6 +133,31 @@ class StyleSheetParser {
         return false;
     }
     
+    boolean isSingleLineComment() {
+        back();
+        while (hasNext()) {
+            char c = next();
+            if (c=='/') {
+                char a = next();
+                if (a=='/') {
+                    while (hasNext()) {
+                        char o = next();
+                        if (o=='\n') {
+                            return true;
+                        }
+                    }
+                    return true;
+                } else {
+                    back();
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+    
     void styles() {
         while (hasNext()) {
             char c = next();
@@ -139,6 +169,8 @@ class StyleSheetParser {
             if (c=='{' || c==',') {
                 if (collection.equals(".root") && styleTitles.isEmpty()) {
                     root = true;
+                } else if (collection.equals(".define") && styleTitles.isEmpty()) {
+                    define = true;
                 } else {
                     styleTitles.add(collection);
                 }
@@ -179,6 +211,12 @@ class StyleSheetParser {
             }
             if (c=='}') {
                 return;
+            }
+            if (isSingleLineComment()) {
+                continue;
+            }
+            if (isMultiLineComment()) {
+                continue;
             }
             back();
             line();
@@ -228,7 +266,7 @@ class StyleSheetParser {
             if (c==';') {
                 if (atProperty.equals("extend")) {
                     for (Style style : styles) {
-                        Style extend = ss.style(atValue);
+                        Style extend = style(ss,atValue);
                         if (extend!=null) {
                             style.append(extend);
                         }
@@ -262,10 +300,13 @@ class StyleSheetParser {
             }
             if (c==';') {
                 for (Style style : styles) {
-                    style.put(property, value);
+                    put(style, property, value);
                 }
                 if (root) {
-                    ss.put(property, value);
+                    put(ss, property, value);
+                }
+                if (define) {
+                    definitions.put(property,value);
                 }
                 return;
             }
@@ -274,6 +315,25 @@ class StyleSheetParser {
         }
     }
     
+    void put(Style style, String property, String value) {
+        String definition = definitions.get(value);
+        if (definition!=null) {
+            style.put(property, definition);
+        } else {
+            style.put(property, value);
+        }
+    }
     
+    Style style(Style style, String name) {
+        String[] styles = name.split(":");
+        Style s = style.style(styles[0]);
+        for (int i=1; i<styles.length; i++) {
+            if (s==null) {
+                throw new Error("Null style: "+""+"from "+name);
+            }
+            s = s.style(styles[i]);
+        }
+        return s;
+    }
     
 }

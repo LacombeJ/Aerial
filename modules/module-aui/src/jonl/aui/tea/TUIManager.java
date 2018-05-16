@@ -79,8 +79,16 @@ public class TUIManager implements UIManager {
         return styleSheet;
     }
     
-    public void refreshStyle() {
+    public void setDefaultStyle() {
         styleSheet = defaultStyle();
+    }
+    
+    public void setLightStyle() {
+        styleSheet = lightStyle();
+    }
+    
+    public void setDarkStyle() {
+        styleSheet = darkStyle();
     }
     
     @Override
@@ -354,10 +362,22 @@ public class TUIManager implements UIManager {
         return new TArrayLayout();
     }
     
-    private Style defaultStyle() {
-        InputStream in = getClass().getResourceAsStream("/default.jss");
+    private Style setResourceStyle(String style) {
+        InputStream in = getClass().getResourceAsStream(style);
         Style jss = StyleSheet.fromString(FileUtils.readFromStream(in));
         return jss;
+    }
+    
+    private Style defaultStyle() {
+        return setResourceStyle("/default.jss");
+    }
+    
+    private Style lightStyle() {
+        return setResourceStyle("/light.jss");
+    }
+    
+    private Style darkStyle() {
+        return setResourceStyle("/dark.jss");
     }
     
     private void resourceIcon(String loc, String resource) {

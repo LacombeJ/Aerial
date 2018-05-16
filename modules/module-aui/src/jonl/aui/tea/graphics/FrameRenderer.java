@@ -18,7 +18,7 @@ public class FrameRenderer {
         BoxRenderer.paint(style, box, g);
         ImageRenderer.paint(style, box, g);
         
-        if (JSS.asBoolean("window-override")) {
+        if (JSS.asBoolean(style.get("window-override"))) {
             TBox inner = new TBox(
                 widget.insets().left,
                 widget.insets().top,
