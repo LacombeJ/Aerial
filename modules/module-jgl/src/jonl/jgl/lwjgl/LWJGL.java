@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
-import jonl.jgl.AbstractGraphicsLibrary;
+import jonl.jgl.AbstractGL;
 import jonl.jgl.FrameBuffer;
 import jonl.jgl.Mesh;
 import jonl.jgl.Program;
@@ -17,7 +17,7 @@ import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
 import jonl.jgl.Texture.Wrap;
 
-class LWJGL extends AbstractGraphicsLibrary {
+class LWJGL extends AbstractGL {
 
     @Override
     public void glClear(Mask... masks) {
