@@ -1,7 +1,7 @@
 package jonl.aerial.spline;
 
 import jonl.ge.core.Camera;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Input;
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Property;
@@ -18,7 +18,7 @@ public class SplineScene {
     SplineEditor editor;
     Scene scene;
     
-    GameObject control;
+    SceneObject control;
     
     SplineScene(SplineEditor editor) {
         this.editor = editor;
@@ -27,7 +27,7 @@ public class SplineScene {
         
         control = control();
         
-        GameObject sphere = sphere();
+        SceneObject sphere = sphere();
         
         scene.add(control);
         scene.add(sphere);
@@ -62,13 +62,13 @@ public class SplineScene {
     }
     
     void createSphere(Vector2 pos) {
-        GameObject sphere = sphere();
+        SceneObject sphere = sphere();
         sphere.transform().translation.set(pos.x, pos.y, 0);
         scene.add(sphere);
     }
     
-    GameObject control() {
-        GameObject go = new GameObject();
+    SceneObject control() {
+        SceneObject go = new SceneObject();
         
         Camera camera = new Camera();
         camera.setOrthographic(10,1,-1,1);
@@ -82,8 +82,8 @@ public class SplineScene {
         return go;
     }
     
-    GameObject sphere() {
-        GameObject go = new GameObject();
+    SceneObject sphere() {
+        SceneObject go = new SceneObject();
         
         SphereGeometry geometry = new SphereGeometry(0.2f);
         SolidMaterial material = new SolidMaterial(Color.BLUE.toVector());

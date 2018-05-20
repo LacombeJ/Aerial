@@ -1,24 +1,24 @@
-package jonl.ge.core;
+package jonl.aerial.ui;
 
 import jonl.aui.Widget;
 import jonl.aui.tea.TGraphics;
 import jonl.aui.tea.TWindow;
+import jonl.ge.core.BaseApp;
+import jonl.ge.core.Input;
 import jonl.ge.core.Input.CursorState;
-import jonl.ge.core.app.AbstractApplication;
+import jonl.ge.core.Window;
 import jonl.ge.core.app.ApplicationWindow;
 import jonl.jgl.GL;
 import jonl.vmath.Matrix4;
 
-public class SubApp extends AbstractApplication {
+public class SubApp extends BaseApp {
 
     private GL gl;
     private SubAppInput input;
     
-    private Window window;
+    private jonl.ge.core.Window window;
     private jonl.aui.tea.TWindow uiWindow;
     private jonl.jgl.Window glWindow;
-    
-    private SceneManager manager = new SceneManager();
     
     private boolean loaded = false;
     
@@ -44,12 +44,12 @@ public class SubApp extends AbstractApplication {
         gl = glWindow.getGraphicsLibrary();
         input = new SubAppInput(widget, uiWindow.input());
         window = new ApplicationWindow(this);
-        manager.create(delegate, service, glWindow.getGraphicsLibrary());
-        manager.renderer().subsection(true);
+        managerCreate(delegate, service, glWindow.getGraphicsLibrary());
+        managerRendererSubsection(true);
         
         uiWindow.addLoader(()->{
             putInfo();
-            manager.load();
+            managerLoad();
             loaded = true;
             gl.glDisable(GL.DEPTH_TEST);
             gl.glDisable(GL.CULL_FACE);
@@ -66,9 +66,9 @@ public class SubApp extends AbstractApplication {
                     gl.glEnable(GL.DEPTH_TEST);
                     gl.glEnable(GL.CULL_FACE);
                     int[] box = gl.glGetScissor();
-                    manager.renderer().offset(box[0], box[1]);
-                    manager.renderer().dimension(box[2], box[3]);
-                    manager.update();
+                    managerRendererOffset(box[0], box[1]);
+                    managerRendererDimension(box[2], box[3]);
+                    managerUpdate();
                     gl.glEnable(GL.SCISSOR_TEST);
                     gl.glScissor(box);
                     gl.glDisable(GL.DEPTH_TEST);
@@ -91,18 +91,6 @@ public class SubApp extends AbstractApplication {
 	}
 
 	@Override
-	public void addScene(Scene scene) {
-		scene.application = this;
-		manager.addScene(scene);
-	}
-	
-	@Override
-    public void removeScene(Scene scene) {
-        scene.application = null;
-        manager.removeScene(scene);
-    }
-
-	@Override
 	public Input input() {
 		return input;
 	}
@@ -114,12 +102,22 @@ public class SubApp extends AbstractApplication {
 
 	@Override
 	public CursorState getCursorState() {
-		return CursorState.state(glWindow.getCursorState());
+	    jonl.jgl.Input.CursorState state = glWindow.getCursorState();
+	    switch(state) {
+	    case NORMAL:   return CursorState.NORMAL;
+	    case GRABBED:  return CursorState.GRABBED;
+	    case HIDDEN:   return CursorState.HIDDEN;
+	    }
+	    return CursorState.NORMAL;
 	}
 
 	@Override
 	public void setCursorState(CursorState state) {
-		glWindow.setCursorState(state.state);
+	    switch(state) {
+        case NORMAL:    glWindow.setCursorState(jonl.jgl.Input.CursorState.NORMAL); break;
+        case GRABBED:   glWindow.setCursorState(jonl.jgl.Input.CursorState.GRABBED); break;
+        case HIDDEN:    glWindow.setCursorState(jonl.jgl.Input.CursorState.HIDDEN); break;
+	    }
 	}
 
 	@Override

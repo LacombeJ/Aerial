@@ -3,7 +3,7 @@ package jonl.ge.mod.physics;
 import java.util.ArrayList;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Delegate;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Scene;
 import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
@@ -17,7 +17,7 @@ public class PhysicsModule extends Attachment {
     Callback<Scene> sceneCreate;
     
     Callback0D preUpdate;
-    Callback2D<GameObject,Transform> update;
+    Callback2D<SceneObject,Transform> update;
     
     ArrayList<PhysicsWorld> worlds = new ArrayList<>();
     
@@ -36,8 +36,8 @@ public class PhysicsModule extends Attachment {
             List.iterate(worlds, (world) -> world.step());
         };
         
-        update = (gameObject, worldParent) -> {
-            List.iterate(worlds, (world) -> world.update(gameObject, worldParent));
+        update = (sceneObject, worldParent) -> {
+            List.iterate(worlds, (world) -> world.update(sceneObject, worldParent));
         };
     }
 

@@ -57,13 +57,13 @@ public class Delegate {
 	
 	private final ArrayList<Callback<List<Light>>> findLights = new ArrayList<>();
 	
-	private final ArrayList<Callback2D<GameObject,Camera>> gameObjectRender = new ArrayList<>();
+	private final ArrayList<Callback2D<SceneObject,Camera>> sceneObjectRenderer = new ArrayList<>();
 	
-	private final ArrayList<Callback2D<GameObject, Transform>> parentWorldTransformUpdate = new ArrayList<>();
+	private final ArrayList<Callback2D<SceneObject, Transform>> parentWorldTransformUpdate = new ArrayList<>();
 	
-	private final ArrayList<Callback3D<GameObject, Mesh, GL>> glPreRender = new ArrayList<>();
+	private final ArrayList<Callback3D<SceneObject, Mesh, GL>> glPreRender = new ArrayList<>();
 	
-	private final ArrayList<Callback3D<GameObject, Mesh, GL>> glPostRender = new ArrayList<>();
+	private final ArrayList<Callback3D<SceneObject, Mesh, GL>> glPostRender = new ArrayList<>();
 	
 	
 	/** @return Updating material programs with scene light and camera information */
@@ -72,16 +72,16 @@ public class Delegate {
 	/** @return Called in render loop after finding all standard lights in the scene */
     public ArrayList<Callback<List<Light>>> onFindLights() { return findLights; }
 	
-	/** @return Called when rendering gameObject in respect to camera */
-    public ArrayList<Callback2D<GameObject,Camera>> onGameObjectRender() { return gameObjectRender; }
+	/** @return Called when rendering sceneObject in respect to camera */
+    public ArrayList<Callback2D<SceneObject,Camera>> onSceneObjectRender() { return sceneObjectRenderer; }
     
-    /** @return Called right before world transform is calculated and passes gameObject and its PARENT's world transform */
-    public ArrayList<Callback2D<GameObject, Transform>> onParentWorldTransformUpdate() { return parentWorldTransformUpdate; }
+    /** @return Called right before world transform is calculated and passes sceneObject and its PARENT's world transform */
+    public ArrayList<Callback2D<SceneObject, Transform>> onParentWorldTransformUpdate() { return parentWorldTransformUpdate; }
     
     /** @return Called right before glRender is called */
-    public ArrayList<Callback3D<GameObject, Mesh, GL>> onGLPreRender() { return glPreRender; }
+    public ArrayList<Callback3D<SceneObject, Mesh, GL>> onGLPreRender() { return glPreRender; }
     
     /** @return Called right after glRender is called */
-    public ArrayList<Callback3D<GameObject, Mesh, GL>> onGLPostRender() { return glPostRender; }
+    public ArrayList<Callback3D<SceneObject, Mesh, GL>> onGLPostRender() { return glPostRender; }
 
 }

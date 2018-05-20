@@ -31,13 +31,13 @@ public class LightModule extends Attachment {
         
         setUniforms = (program, material, camera) -> {
             
-            Vector3 eye = service.getWorldTransform(camera.gameObject()).translation;
+            Vector3 eye = service.getWorldTransform(camera.sceneObject()).translation;
             GLUtils.setUniform(program,"eye",eye);
             
             int numLights = 0;
             for (int i=0; i<lights.size(); i++) {
                 Light light = lights.get(i);
-                Vector3 p = service.getWorldTransform(light.gameObject()).translation;
+                Vector3 p = service.getWorldTransform(light.sceneObject()).translation;
                 program.setUniformi("light["+i+"].type",light.getType());
                 GLUtils.setUniform(program,"light["+i+"].position",p);
                 program.setUniform("light["+i+"].range",light.getRange());

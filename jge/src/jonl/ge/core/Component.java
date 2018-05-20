@@ -7,126 +7,126 @@ import jonl.vmath.Matrix4;
 
 public abstract class Component {
 
-    GameObject gameObject;
+    SceneObject sceneObject;
     
-    public GameObject gameObject() {
-        return gameObject;
+    public SceneObject sceneObject() {
+        return sceneObject;
     }
     
-    public GameObject parent() {
-        return gameObject.parent();
+    public SceneObject parent() {
+        return sceneObject.parent();
     }
     
-    public GameObject getParent() {
-    	return gameObject.getParent();
+    public SceneObject getParent() {
+    	return sceneObject.getParent();
     }
     
     public Transform parentWorldTransform() {
-        return gameObject.parentWorldTransform();
+        return sceneObject.parentWorldTransform();
     }
     
     public Transform computeWorldTransform() {
-        return gameObject.computeWorldTransform();
+        return sceneObject.computeWorldTransform();
     }
     
     public Matrix4 computeWorldMatrix() {
-        return gameObject.computeWorldMatrix();
+        return sceneObject.computeWorldMatrix();
     }
     
     public Transform transform() {
-        return gameObject.transform();
+        return sceneObject.transform();
     }
     
     public Scene scene() {
-        return gameObject.scene();
+        return sceneObject.scene();
     }
     
-    public GameObject getChild(String name) {
-        return gameObject.getChild(name);
+    public SceneObject getChild(String name) {
+        return sceneObject.getChild(name);
     }
     
-    public GameObject getChildAt(int index) {
-        return gameObject.getChildAt(index);
+    public SceneObject getChildAt(int index) {
+        return sceneObject.getChildAt(index);
     }
     
-    public ArrayList<GameObject> children() {
-    	return gameObject.children();
+    public ArrayList<SceneObject> children() {
+    	return sceneObject.children();
     }
     
-    public ArrayList<GameObject> getChildren() {
-        return gameObject.getChildren();
+    public ArrayList<SceneObject> getChildren() {
+        return sceneObject.getChildren();
     }
     
     public int getChildCount() {
-        return gameObject.getChildrenCount();
+        return sceneObject.getChildrenCount();
     }
 
     public <T extends Component> T getComponent(Class<T> c) {
-        return gameObject.getComponent(c);
+        return sceneObject.getComponent(c);
     }
     
     public <T extends Component> ArrayList<T> getComponents(Class<T> c) {
-        return gameObject.getComponents(c);
+        return sceneObject.getComponents(c);
     }
     
     public <T extends Component> T getComponentOfType(Class<T> c) {
-        return gameObject.getComponentOfType(c);
+        return sceneObject.getComponentOfType(c);
     }
     
     public <T extends Component> ArrayList<T> getComponentsOfType(Class<T> c) {
-        return gameObject.getComponentsOfType(c);
+        return sceneObject.getComponentsOfType(c);
     }
     
     public Component[] getComponents() {
-        return gameObject.getComponents();
+        return sceneObject.getComponents();
     }
     
-    public GameObject findGameObject(String name) {
-        return gameObject.findGameObject(name);
+    public SceneObject findSceneObject(String name) {
+        return sceneObject.findSceneObject(name);
     }
     
-    public GameObject findGameObjectWithData(String key) {
-        return gameObject.findGameObjectWithData(key);
+    public SceneObject findSceneObjectWithData(String key) {
+        return sceneObject.findSceneObjectWithData(key);
     }
     
-    public GameObject findGameObject(Class<? extends Component> c) {
-        return gameObject.findGameObject(c);
+    public SceneObject findSceneObject(Class<? extends Component> c) {
+        return sceneObject.findSceneObject(c);
     }
     
-    public GameObject findGameObjectOfType(Class<? extends Component> c) {
-        return gameObject.findGameObjectOfType(c);
+    public SceneObject findSceneObjectOfType(Class<? extends Component> c) {
+        return sceneObject.findSceneObjectOfType(c);
     }
     
     public Input input() {
-        return gameObject.input();
+        return sceneObject.input();
     }
     
     public CursorState getCursorState() {
-        return gameObject.getCursorState();
+        return sceneObject.getCursorState();
     }
     
     public void setCursorState(CursorState state) {
-        gameObject.setCursorState(state);
+        sceneObject.setCursorState(state);
     }
     
     public Window window() {
-        return gameObject.window();
+        return sceneObject.window();
     }
     
     public String info(String key) {
-        return gameObject.info(key);
+        return sceneObject.info(key);
     }
     
     public Time time() {
-        return gameObject.time();
+        return sceneObject.time();
     }
     
     public Delegate delegate() {
-    	return gameObject.delegate();
+    	return sceneObject.delegate();
     }
     
     public Service service() {
-    	return gameObject.service();
+    	return sceneObject.service();
     }
     
 }

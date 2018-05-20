@@ -37,7 +37,7 @@ public class RenderTexture extends Component {
     }
     
     public void render() {
-    	Service service = gameObject().scene().service();
+    	Service service = sceneObject().scene().service();
     	service.renderTexture(this);
     }
     

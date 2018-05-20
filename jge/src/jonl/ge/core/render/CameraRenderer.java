@@ -15,9 +15,9 @@ public class CameraRenderer extends Component {
 
     public void render() {
         
-        Scene scene = gameObject().scene();
-        Service service = gameObject().service();
-        service.renderCameraSeparately(gameObject().getComponentOfType(Camera.class),scene);
+        Scene scene = sceneObject().scene();
+        Service service = sceneObject().service();
+        service.renderCameraSeparately(sceneObject().getComponentOfType(Camera.class),scene);
         
     }
     

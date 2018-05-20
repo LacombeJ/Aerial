@@ -3,7 +3,7 @@ package jonl.ge.mod.text;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Camera;
 import jonl.ge.core.Delegate;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Geometry;
 import jonl.ge.core.Service;
 import jonl.ge.core.Transform;
@@ -24,7 +24,7 @@ public class TextModule extends Attachment {
 
     private Service service;
     private Callback0D load;
-    private Callback2D<GameObject,Camera> renderText;
+    private Callback2D<SceneObject,Camera> renderText;
     
     private GL gl;
     private Program fontProgram;
@@ -44,14 +44,14 @@ public class TextModule extends Attachment {
     @Override
     public void add(Delegate delegate, Service service) {
         delegate.onLoad().add(load);
-        delegate.onGameObjectRender().add(renderText);
+        delegate.onSceneObjectRender().add(renderText);
         this.service = service;
     }
 
     @Override
     public void remove(Delegate delegate, Service service) {
         delegate.onLoad().remove(load);
-        delegate.onGameObjectRender().remove(renderText);
+        delegate.onSceneObjectRender().remove(renderText);
     }
     
     public void load() {
@@ -75,13 +75,13 @@ public class TextModule extends Attachment {
         ti.load(gl);
     }
     
-    public void renderText(GameObject g, Camera camera) {
+    public void renderText(SceneObject g, Camera camera) {
         
         TextMesh textMesh = g.getComponent(TextMesh.class);
         if (textMesh != null) {
             Text text = textMesh.getText();
             
-            Transform cameraWorld = service.getWorldTransform(camera.gameObject());
+            Transform cameraWorld = service.getWorldTransform(camera.sceneObject());
             Matrix4 V = Camera.computeViewMatrix(cameraWorld);
             Matrix4 P = camera.getProjection();
             Matrix4 VP = P.get().multiply(V);

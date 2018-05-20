@@ -8,13 +8,13 @@ class SceneUpdater {
 	
     private SceneManager manager;
     
-	private HashMap<GameObject,Transform> worldTransformMap = new HashMap<>();
+	private HashMap<SceneObject,Transform> worldTransformMap = new HashMap<>();
 	
 	public SceneUpdater(SceneManager manager, Service service) {
 	    
 	    this.manager = manager;
 	    
-	    service.implementGetWorldTransform( (g) -> getWorldTransform(g) );
+	    service.implementGetWorldTransform( (o) -> getWorldTransform(o) );
 	    
 	}
 	
@@ -23,8 +23,8 @@ class SceneUpdater {
 		recurseTransform(scene);
 	}
 	
-    Transform getWorldTransform(GameObject g) {
-        return worldTransformMap.get(g);
+    Transform getWorldTransform(SceneObject o) {
+        return worldTransformMap.get(o);
     }
     
     /**
@@ -34,16 +34,16 @@ class SceneUpdater {
     private void recurseTransform(Scene scene) {
         //TODO keep premultiplied transforms for static objects and objects not moving
         worldTransformMap = new HashMap<>();
-        scene.root.iterate((g) -> recurseTransform(g,new Transform()));
+        scene.root.iterate((o) -> recurseTransform(o,new Transform()));
     }
     
-    private void recurseTransform(GameObject gameObject, Transform transform) {
+    private void recurseTransform(SceneObject sceneObject, Transform transform) {
         //TODO dont compute matrix for static objects?
         //TODO keep premultiplied matrices for static objects and static children?
-        List.iterate(manager.delegate().onParentWorldTransformUpdate(), (cb) -> cb.f((GameObject) gameObject, transform) );
-        Transform mult = gameObject.transform.get().multiply(transform);
-        worldTransformMap.put(gameObject,mult);
-        gameObject.iterate((g) -> recurseTransform(g,mult));
+        List.iterate(manager.delegate().onParentWorldTransformUpdate(), (cb) -> cb.f((SceneObject) sceneObject, transform) );
+        Transform mult = sceneObject.transform.get().multiply(transform);
+        worldTransformMap.put(sceneObject,mult);
+        sceneObject.iterate((g) -> recurseTransform(g,mult));
     }
 	
 }

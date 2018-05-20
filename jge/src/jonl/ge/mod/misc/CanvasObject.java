@@ -1,7 +1,7 @@
 package jonl.ge.mod.misc;
 
 import jonl.ge.core.Camera;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Window;
 import jonl.ge.core.render.CameraCull;
 import jonl.ge.core.render.CameraCull.Target;
@@ -16,14 +16,14 @@ import jonl.ge.core.render.CameraCull.Target;
  */
 public class CanvasObject {
 
-    private GameObject root;
+    private SceneObject root;
     private Camera camera;
     
     public CanvasObject() {
         
-        root = new GameObject();
+        root = new SceneObject();
         
-        GameObject canvas = new GameObject();
+        SceneObject canvas = new SceneObject();
         
         camera = new Camera();
         camera.setOrder(10);
@@ -45,19 +45,19 @@ public class CanvasObject {
         
     }
     
-    public GameObject get() {
+    public SceneObject get() {
         return root;
     }
     
-    public void add(GameObject go) {
+    public void add(SceneObject so) {
         CameraCull cull = new CameraCull(camera, Target.ONLY);
-        go.addComponent(cull);
-        camera.addTargets(go);
+        so.addComponent(cull);
+        camera.addTargets(so);
     }
     
-    public void addChild(GameObject go) {
-        add(go);
-        root.addChild(go);
+    public void addChild(SceneObject so) {
+        add(so);
+        root.addChild(so);
     }
     
 }

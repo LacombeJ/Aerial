@@ -15,7 +15,7 @@ import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Scene;
 import jonl.ge.core.Transform;
 import jonl.jutils.func.Callback0D;
@@ -34,7 +34,7 @@ class PhysicsWorld {
     ConstraintSolver solver;
     
     Callback0D preUpdate;
-    Callback2D<GameObject,Transform> update;
+    Callback2D<SceneObject,Transform> update;
 
     PhysicsWorld(Scene scene) {
         this.scene = scene;
@@ -51,8 +51,8 @@ class PhysicsWorld {
             world.stepSimulation(1/60f);
         };
         
-        update = (gameObject, worldParent) -> {
-            update(gameObject, worldParent);
+        update = (sceneObject, worldParent) -> {
+            update(sceneObject, worldParent);
         };
     }
 
@@ -64,9 +64,9 @@ class PhysicsWorld {
         world.stepSimulation(1/60f);
     }
     
-    void update(GameObject gameObject, Transform worldParent) {
+    void update(SceneObject sceneObject, Transform worldParent) {
         
-        ArrayList<RigidBody> rigidBodies = gameObject.getComponents(RigidBody.class);
+        ArrayList<RigidBody> rigidBodies = sceneObject.getComponents(RigidBody.class);
         for (RigidBody rigidBody : rigidBodies) {
             
             Vector3 translation = null;
@@ -74,7 +74,7 @@ class PhysicsWorld {
             
             //TODO make sure these get called in right order (called before or after update()?)
             if (rigidBody.kinematic) {
-                Transform world = worldParent.get().multiply(gameObject.transform());
+                Transform world = worldParent.get().multiply(sceneObject.transform());
                 translation = world.translation;
                 rotation = world.rotation;
                 

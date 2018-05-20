@@ -1,4 +1,4 @@
-package jonl.ge.core;
+package jonl.aerial.ui;
 
 import jonl.aui.Widget;
 import jonl.aui.tea.TInput;

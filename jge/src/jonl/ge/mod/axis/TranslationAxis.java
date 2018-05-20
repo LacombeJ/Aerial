@@ -1,7 +1,7 @@
 package jonl.ge.mod.axis;
 
 import jonl.ge.core.Camera;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Geometry;
 import jonl.ge.core.Input;
 import jonl.ge.core.Mesh;
@@ -31,19 +31,19 @@ public class TranslationAxis {
     boolean hover = false;
     
     Camera camera;
-    GameObject axis;
+    SceneObject axis;
     
-    GameObject xaxis;
-    GameObject yaxis;
-    GameObject zaxis;
+    SceneObject xaxis;
+    SceneObject yaxis;
+    SceneObject zaxis;
     
-    GameObject overlay; //For debugging
+    SceneObject overlay; //For debugging
     
     public TranslationAxis(Camera camera) {
         
         this.camera = camera;
         
-        axis = new GameObject();
+        axis = new SceneObject();
         
         AxisHandler ah = new AxisHandler();
         axis.addComponent(ah);
@@ -59,16 +59,16 @@ public class TranslationAxis {
         axis.addChild(yaxis);
         axis.addChild(zaxis);
         
-        overlay = new GameObject();
+        overlay = new SceneObject();
         createOverlay();
         
     }
     
-    public GameObject get() {
+    public SceneObject get() {
         return axis;
     }
     
-    public GameObject overlay() {
+    public SceneObject overlay() {
         return overlay;
     }
     
@@ -92,10 +92,10 @@ public class TranslationAxis {
         return hover;
     }
 
-    GameObject axis(String name, Vector3 axis) {
+    SceneObject axis(String name, Vector3 axis) {
         
-        GameObject go = new GameObject();
-        go.setName(name);
+        SceneObject so = new SceneObject();
+        so.setName(name);
         
         SolidMaterial material = new SolidMaterial(new Vector4(axis,1f));
         
@@ -111,7 +111,7 @@ public class TranslationAxis {
         }
         
         // Line
-        GameObject goLine = new GameObject();
+        SceneObject soLine = new SceneObject();
         GeometryBuilder gb = new GeometryBuilder();
         gb.addVertex(new Vector3(0,0,0));
         gb.addVertex(new Vector3(0,1,0));
@@ -123,10 +123,10 @@ public class TranslationAxis {
         lineMesh.setMode(Mode.LINES);
         lineMesh.setThickness(3f);
         lineMesh.setDepthTest(false);
-        goLine.addComponent(lineMesh);
+        soLine.addComponent(lineMesh);
         
         // Arrow / Cone
-        GameObject goArrow = new GameObject();
+        SceneObject soArrow = new SceneObject();
         ConeGeometry arrow = new ConeGeometry();
         arrow.modify(scaleOp);
         arrow.modify(translateOp);
@@ -135,12 +135,12 @@ public class TranslationAxis {
         }
         Mesh arrowMesh = new Mesh(arrow,material);
         arrowMesh.setDepthTest(false);
-        goArrow.addComponent(arrowMesh);
+        soArrow.addComponent(arrowMesh);
         
-        go.addChild(goArrow);
-        go.addChild(goLine);
+        so.addChild(soArrow);
+        so.addChild(soLine);
         
-        return go;
+        return so;
     }
     
     
@@ -148,7 +148,7 @@ public class TranslationAxis {
         
         Vector3 highlight = Color.YELLOW.toVector().xyz();
         
-        GameObject dragObject = null;
+        SceneObject dragObject = null;
         Vector3 dragAxis = new Vector3(0,0,0);
         
         Vector3 translationOnClick = null;
@@ -374,8 +374,8 @@ public class TranslationAxis {
             return null;
         }
         
-        private void setColor(GameObject axis, Vector3 color) {
-            GameObject line = axis.getChildAt(0);
+        private void setColor(SceneObject axis, Vector3 color) {
+            SceneObject line = axis.getChildAt(0);
             Mesh mesh = line.getComponent(Mesh.class);
             SolidMaterial material = mesh.getMaterial().asSolidMaterial();
             material.setColor(color);
@@ -389,7 +389,7 @@ public class TranslationAxis {
     
     Point createDebugPoint(Vector2 point, boolean visible, Vector3 color) {
         
-        GameObject go = new GameObject();
+        SceneObject so = new SceneObject();
         
         GeometryBuilder gb = new GeometryBuilder();
         gb.addVertex(new Vector3(point.x,point.y,0));
@@ -404,10 +404,10 @@ public class TranslationAxis {
         
         Point pc = new Point();
         
-        go.addComponent(mesh);
-        go.addComponent(pc);
+        so.addComponent(mesh);
+        so.addComponent(pc);
         
-        overlay.addChild(go);
+        overlay.addChild(so);
         
         return pc;
     }

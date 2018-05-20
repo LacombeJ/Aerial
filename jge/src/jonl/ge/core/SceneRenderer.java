@@ -57,7 +57,7 @@ class SceneRenderer {
 		
 		ArrayList<Camera> cameras = scene.findComponentsOfType(Camera.class);
         ArrayList<Light> lights = scene.findComponents(Light.class);
-        ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
+        ArrayList<SceneObject> sceneObjects = scene.getAllSceneObjects();
         
         jonl.jutils.func.List.iterate(manager.delegate().onFindLights(), (cb) -> cb.f(lights) );
         
@@ -68,7 +68,7 @@ class SceneRenderer {
         
         for (Camera camera : cameras) {
             
-            renderCamera(camera,lights,gameObjects);
+            renderCamera(camera,lights,sceneObjects);
             
         }
 		
@@ -77,46 +77,46 @@ class SceneRenderer {
 	//TODO refactor this and code that uses this
     void renderCameraSeparately(Camera camera, Scene scene) {
         ArrayList<Light> lights = scene.findComponents(Light.class);
-        ArrayList<GameObject> gameObjects = scene.getAllGameObjects();
+        ArrayList<SceneObject> sceneObjects = scene.getAllSceneObjects();
         
-        renderCamera(camera,lights,gameObjects);
+        renderCamera(camera,lights,sceneObjects);
     }
     
     ArrayList<Light> copy(List<Light> lights) {
         return jonl.jutils.func.List.copy(lights);
     }
     
-    private void renderCamera(Camera camera, List<Light> lights, List<GameObject> gameObjects) {
+    private void renderCamera(Camera camera, List<Light> lights, List<SceneObject> sceneObjects) {
         setupCamera(camera);
         
-        Transform cameraTransform = manager.updater().getWorldTransform(camera.gameObject());
+        Transform cameraTransform = manager.updater().getWorldTransform(camera.sceneObject());
         Matrix4 V = Camera.computeViewMatrix(cameraTransform);
         Matrix4 P = camera.getProjection();
         Matrix4 VP = P.get().multiply(V);
         
-        for (GameObject g : gameObjects) {
+        for (SceneObject so : sceneObjects) {
         	
-            if (targetInvalid(camera,g)) {
+            if (targetInvalid(camera,so)) {
                 continue;
             }
             
-            jonl.jutils.func.List.iterate(manager.delegate().onGameObjectRender(), (cb) -> cb.f(g,camera) );
+            jonl.jutils.func.List.iterate(manager.delegate().onSceneObjectRender(), (cb) -> cb.f(so,camera) );
             
-            Mesh mesh = g.getComponent(Mesh.class);
+            Mesh mesh = so.getComponent(Mesh.class);
             if (mesh != null && mesh.isVisible()) {
                 
                 Material mat = mesh.getMaterial();
                 Geometry geometry = mesh.getGeometry();
                 
-                Matrix4 M = gameObjectTransform(g);
+                Matrix4 M = sceneObjectTransform(so);
                 Matrix4 MVP = VP.get().multiply(M);
                 
                 Program program = glr.getOrCreateProgram(mat);
                 
                 gl.glUseProgram(program);
                 
-                float windowWidth = g.window().width();
-                float windowHeight = g.window().height();
+                float windowWidth = so.window().width();
+                float windowHeight = so.window().height();
                 
                 //TODO meshes should be able to choose which uniforms it needs?
                 program.setUniformMat4("MVP",MVP.toArray());
@@ -155,11 +155,11 @@ class SceneRenderer {
                 gl.glLineWidth(mesh.thickness);
                 gl.glPointSize(mesh.thickness);
                 
-                jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(g,mesh,gl) );
+                jonl.jutils.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(so,mesh,gl) );
                 
                 gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));
                 
-                jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(g,mesh,gl) );
+                jonl.jutils.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(so,mesh,gl) );
                 
                 gl.glLineWidth(1);
                 gl.glPointSize(1);
@@ -280,8 +280,8 @@ class SceneRenderer {
         }
     }
     
-    /** @return true if camera should not render the given GameObject */
-    private boolean targetInvalid(Camera camera, GameObject g) {
+    /** @return true if camera should not render the given SceneObject */
+    private boolean targetInvalid(Camera camera, SceneObject g) {
         
         //Has precedence over camera targets
         CameraCull cull = g.getComponent(CameraCull.class);
@@ -304,7 +304,7 @@ class SceneRenderer {
         return false;
     }
     
-    private Matrix4 gameObjectTransform(GameObject g) {
+    private Matrix4 sceneObjectTransform(SceneObject g) {
         Transform t = manager.updater().getWorldTransform(g);
         return t.computeMatrix();
     }

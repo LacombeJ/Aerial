@@ -17,21 +17,21 @@ public class ComponentArray extends Property {
     public void add(Component c) {
         components.add(c);
         if (isAdded) {
-            gameObject().addComponent(c);
+            sceneObject().addComponent(c);
         }
     }
     
     public void remove(Component c) {
         components.remove(c);
         if (isAdded) {
-            gameObject().removeComponent(c);
+            sceneObject().removeComponent(c);
         }
     }
     
     @Override
     public void create() {
         for (Component c : components) {
-            gameObject().addComponent(c);
+            sceneObject().addComponent(c);
         }
         isAdded = true;
     }

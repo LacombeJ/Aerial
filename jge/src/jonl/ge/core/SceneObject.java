@@ -8,9 +8,9 @@ import jonl.jutils.structs.AttributeMap;
 import jonl.jutils.structs.TreeNode;
 import jonl.vmath.Matrix4;
 
-public final class GameObject extends TreeNode<GameObject> {
+public final class SceneObject extends TreeNode<SceneObject> {
     
-    String name = "GameObject";
+    String name = "SceneObject";
     
     Transform transform;
     
@@ -19,11 +19,11 @@ public final class GameObject extends TreeNode<GameObject> {
     
     private final AttributeMap dataMap = new AttributeMap();
     
-    public GameObject() {
+    public SceneObject() {
         transform = new Transform();
     }
     
-    public GameObject(String name) {
+    public SceneObject(String name) {
     	this();
         setName(name);
     }
@@ -46,21 +46,21 @@ public final class GameObject extends TreeNode<GameObject> {
     
     void setScene(Scene scene) {
         this.scene = scene;
-        for (GameObject g : this) {
+        for (SceneObject g : this) {
             g.setScene(scene);
         }
     }
     
-    public GameObject parent() {
+    public SceneObject parent() {
     	return getParent();
     }
     
-    public ArrayList<GameObject> children() {
+    public ArrayList<SceneObject> children() {
     	return getChildren();
     }
     
     public void addComponent(Component c) {
-        c.gameObject = this;
+        c.sceneObject = this;
         components.add(c);
         if (scene!=null && c instanceof Property) {
             ((Property)c).create();
@@ -69,7 +69,7 @@ public final class GameObject extends TreeNode<GameObject> {
     
     public boolean removeComponent(Component c) {
         if (components.remove(c)) {
-            c.gameObject = null;
+            c.sceneObject = null;
             return true;
         }
         return false;
@@ -98,7 +98,7 @@ public final class GameObject extends TreeNode<GameObject> {
         addComponent(p);
     }
     
-    public GameObject getChild(String name) {
+    public SceneObject getChild(String name) {
     	return getChild((g) -> g.name.equals(name));
     }
     
@@ -153,20 +153,20 @@ public final class GameObject extends TreeNode<GameObject> {
         return components.toArray(new Component[0]);
     }
     
-    public GameObject findGameObject(String name) {
-        return scene.findGameObject(name);
+    public SceneObject findSceneObject(String name) {
+        return scene.findSceneObject(name);
     }
     
-    public GameObject findGameObjectWithData(String key) {
-        return scene.findGameObjectWithData(key);
+    public SceneObject findSceneObjectWithData(String key) {
+        return scene.findSceneObjectWithData(key);
     }
     
-    public GameObject findGameObject(Class<? extends Component> c) {
-        return scene.findGameObject(c);
+    public SceneObject findSceneObject(Class<? extends Component> c) {
+        return scene.findSceneObject(c);
     }
     
-    public GameObject findGameObjectOfType(Class<? extends Component> c) {
-        return scene.findGameObjectOfType(c);
+    public SceneObject findSceneObjectOfType(Class<? extends Component> c) {
+        return scene.findSceneObjectOfType(c);
     }
     
     /** @return parent().computeWorldTransform() or Transform.identity() if there is no parent. */
@@ -224,7 +224,7 @@ public final class GameObject extends TreeNode<GameObject> {
     	return scene.service();
     }
     
-    /** @return GameObject data */
+    /** @return SceneObject data */
     public AttributeMap data() {
         return dataMap;
     }

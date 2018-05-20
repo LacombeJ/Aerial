@@ -3,7 +3,7 @@ package jonl.ge.mod.fx;
 import jonl.ge.core.Attachment;
 import jonl.ge.core.Camera;
 import jonl.ge.core.Delegate;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Mesh;
 import jonl.ge.core.Scene;
 import jonl.ge.core.Service;
@@ -22,9 +22,9 @@ public class FXModule extends Attachment {
     
     private Service service;
     private Callback<Scene> onSceneUpdate;
-    private Callback2D<GameObject,Camera> onGameObjectRender;
-    private Callback3D<GameObject,Mesh,GL> onGLPreRender;
-    private Callback3D<GameObject,Mesh,GL> onGLPostRender;
+    private Callback2D<SceneObject,Camera> onSceneObjectRender;
+    private Callback3D<SceneObject,Mesh,GL> onGLPreRender;
+    private Callback3D<SceneObject,Mesh,GL> onGLPostRender;
     
     private FXService[] fxServices = {
         new DepthSort()
@@ -34,7 +34,7 @@ public class FXModule extends Attachment {
         super("fx-module");
         
         onSceneUpdate = (s) -> onSceneUpdate(s);
-        onGameObjectRender = (g,camera) -> onGameObjectRender(g,camera);
+        onSceneObjectRender = (g,camera) -> onSceneObjectRender(g,camera);
         onGLPreRender = (g,mesh,gl) -> onGLPreRender(g,mesh,gl);
         onGLPostRender = (g,mesh,gl) -> onGLPostRender(g,mesh,gl);
     }
@@ -45,19 +45,19 @@ public class FXModule extends Attachment {
         }
     }
     
-    private void onGameObjectRender(GameObject g, Camera camera) {
+    private void onSceneObjectRender(SceneObject g, Camera camera) {
         for (FXService fx : fxServices) {
             fx.update(g, camera, service);
         }
     }
     
-    private void onGLPreRender(GameObject g, Mesh mesh, GL gl) {
+    private void onGLPreRender(SceneObject g, Mesh mesh, GL gl) {
         for (FXService fx : fxServices) {
             fx.begin(g, mesh, gl, service);
         }
     }
     
-    private void onGLPostRender(GameObject g, Mesh mesh, GL gl) {
+    private void onGLPostRender(SceneObject g, Mesh mesh, GL gl) {
         for (FXService fx : fxServices) {
             fx.end(g, mesh, gl, service);
         }
@@ -66,7 +66,7 @@ public class FXModule extends Attachment {
     @Override
     public void add(Delegate delegate, Service service) {
         delegate.onSceneUpdate().add(onSceneUpdate);
-        delegate.onGameObjectRender().add(onGameObjectRender);
+        delegate.onSceneObjectRender().add(onSceneObjectRender);
         delegate.onGLPreRender().add(onGLPreRender);
         delegate.onGLPostRender().add(onGLPostRender);
         this.service = service;
@@ -75,7 +75,7 @@ public class FXModule extends Attachment {
     @Override
     public void remove(Delegate delegate, Service service) {
         delegate.onSceneUpdate().remove(onSceneUpdate);
-        delegate.onGameObjectRender().remove(onGameObjectRender);
+        delegate.onSceneObjectRender().remove(onSceneObjectRender);
         delegate.onGLPreRender().remove(onGLPreRender);
         delegate.onGLPostRender().remove(onGLPostRender);
     }

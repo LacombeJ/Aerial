@@ -1,6 +1,6 @@
 package jonl.aerial;
 
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Input;
 import jonl.ge.core.Property;
 import jonl.ge.core.Transform;
@@ -13,8 +13,8 @@ import jonl.vmath.Vector3;
 public class EditorAssets {
 
     /* Mesh Assets */
-	public static GameObject control() {
-        GameObject control = new GameObject();
+	public static SceneObject control() {
+        SceneObject control = new SceneObject();
         control.setName("EditorControl");
         
         EditorControl ec = new EditorControl();

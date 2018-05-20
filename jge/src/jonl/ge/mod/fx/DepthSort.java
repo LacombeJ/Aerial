@@ -2,7 +2,7 @@ package jonl.ge.mod.fx;
 
 import java.util.ArrayList;
 import jonl.ge.core.Camera;
-import jonl.ge.core.GameObject;
+import jonl.ge.core.SceneObject;
 import jonl.ge.core.Geometry;
 import jonl.ge.core.Material;
 import jonl.ge.core.Mesh;
@@ -23,7 +23,7 @@ public class DepthSort extends FXService {
     }
     
     @Override
-    void update(GameObject g, Camera camera, Service service) {
+    void update(SceneObject g, Camera camera, Service service) {
         
         Mesh mesh = g.getComponent(Mesh.class);
         if (mesh != null) {
@@ -36,7 +36,7 @@ public class DepthSort extends FXService {
                 
                 jonl.jgl.Mesh glMesh = service.getOrCreateMesh(geometry);
                 
-                Transform cameraWorld = service.getWorldTransform(camera.gameObject());
+                Transform cameraWorld = service.getWorldTransform(camera.sceneObject());
                 Matrix4 V = Camera.computeViewMatrix(cameraWorld);
                 Matrix4 P = camera.getProjection();
                 Matrix4 VP = P.get().multiply(V);
@@ -81,7 +81,7 @@ public class DepthSort extends FXService {
     }
     
     @Override
-    void begin(GameObject g, Mesh mesh, GL gl, Service service) {
+    void begin(SceneObject g, Mesh mesh, GL gl, Service service) {
         Material mat = mesh.getMaterial();
         if (mat instanceof PointsMaterial) {
             PointsMaterial pm = (PointsMaterial)mat;
@@ -94,7 +94,7 @@ public class DepthSort extends FXService {
     }
 
     @Override
-    void end(GameObject g, Mesh mesh, GL gl, Service service) {
+    void end(SceneObject g, Mesh mesh, GL gl, Service service) {
         gl.glDisable(GL.PROGRAM_POINT_SIZE);
         gl.glDisable(GL.POINT_SPRITE);
     }

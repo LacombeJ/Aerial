@@ -10,13 +10,13 @@ import jonl.jutils.structs.TreeForest;
 
 public class Scene {
     
-    TreeForest<GameObject> root = null;
+    TreeForest<SceneObject> root = null;
     
     String name = "Scene";
     AbstractApplication application;
     boolean persistent = false;
     boolean created = false;
-    ArrayList<GameObject> priors = new ArrayList<>();
+    ArrayList<SceneObject> priors = new ArrayList<>();
     
     AttributeMap data = new AttributeMap();
     
@@ -37,7 +37,7 @@ public class Scene {
         return data;
     }
     
-    public void add(GameObject g) {
+    public void add(SceneObject g) {
     	g.setScene(this);
         root.addChild(g);
         if (created) {
@@ -47,7 +47,7 @@ public class Scene {
         }
     }
     
-    public void remove(GameObject g) {
+    public void remove(SceneObject g) {
         g.setScene(null);
         root.removeChild(g);
         if (!created) {
@@ -86,26 +86,26 @@ public class Scene {
         return array;
     }
     
-    public GameObject findGameObject(String name) {
+    public SceneObject findSceneObject(String name) {
     	return root.getDescendant((g) -> g.name.equals(name));
     }
     
-    public GameObject findGameObjectWithData(String key) {
+    public SceneObject findSceneObjectWithData(String key) {
     	return root.getDescendant((g) -> g.data().containsKey(key));
     }
     
-    public <T extends Component> GameObject findGameObject(Class<T> c) {
+    public <T extends Component> SceneObject findSceneObject(Class<T> c) {
     	return root.getDescendant((g) -> g.getComponent(c)!=null);
     }
     
-    public <T extends Component> GameObject findGameObjectOfType(Class<T> c) {
+    public <T extends Component> SceneObject findSceneObjectOfType(Class<T> c) {
     	return root.getDescendant((g) -> g.getComponentOfType(c)!=null);
     }
     
     /**
-     * @return all game objects in scene found recursively
+     * @return all scene objects in scene found recursively
      */
-    public ArrayList<GameObject> getAllGameObjects() {
+    public ArrayList<SceneObject> getAllSceneObjects() {
     	return root.getDescendants((g)->true);
     }
     

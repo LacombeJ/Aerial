@@ -1,6 +1,7 @@
 package jonl.aerial.spline;
 
 import jonl.aerial.SubEditor;
+import jonl.aerial.ui.SubApp;
 import jonl.aui.Align;
 import jonl.aui.ListLayout;
 import jonl.aui.Panel;
@@ -8,7 +9,6 @@ import jonl.aui.SplitPanel;
 import jonl.aui.UIManager;
 import jonl.aui.Widget;
 import jonl.aui.Window;
-import jonl.ge.core.SubApp;
 
 public class SplineEditor implements SubEditor {
 

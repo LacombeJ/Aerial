@@ -42,7 +42,7 @@ public class Camera extends Component {
     boolean shouldClearColor = true;
     
     private Target type = Target.ALL;
-    private List<GameObject> targets = new ArrayList<>();
+    private List<SceneObject> targets = new ArrayList<>();
     
     
     
@@ -190,33 +190,33 @@ public class Camera extends Component {
         this.type = type;
     }
     
-    public boolean hasTarget(GameObject obj) {
+    public boolean hasTarget(SceneObject obj) {
         return targets.contains(obj);
     }
     
-    public void addTargets(GameObject... objects) {
-        for (GameObject o : objects) {
+    public void addTargets(SceneObject... objects) {
+        for (SceneObject o : objects) {
             targets.add(o);
         }
     }
     
-    public void removeTargets(GameObject... objects) {
-        for (GameObject o : objects) {
+    public void removeTargets(SceneObject... objects) {
+        for (SceneObject o : objects) {
             targets.remove(o);
         }
     }
     
     public void removeAllTargets() {
-        targets = new ArrayList<GameObject>();
+        targets = new ArrayList<SceneObject>();
     }
     
     public Matrix4 computeViewMatrix() {
-        Transform worldTransform = gameObject().computeWorldTransform();
+        Transform worldTransform = sceneObject().computeWorldTransform();
         return Camera.computeViewMatrix(worldTransform);
     }
     
     public Matrix4 computeViewProjectionMatrix() {
-        Transform worldTransform = gameObject().computeWorldTransform();
+        Transform worldTransform = sceneObject().computeWorldTransform();
         Matrix4 V = Camera.computeViewMatrix(worldTransform);
         Matrix4 P = getProjection();
         return P.multiply(V);

@@ -8,7 +8,6 @@ import jonl.aui.tea.event.TMouseEvent;
 import jonl.aui.tea.graphics.SplitPanelRenderer;
 import jonl.jgl.Input;
 import jonl.jutils.func.Callback;
-import jonl.jutils.io.Console;
 import jonl.vmath.Mathd;
 import jonl.vmath.Mathi;
 
@@ -232,7 +231,6 @@ public class TSplitPanel extends TWidget implements SplitPanel {
             
             int midWidth = width - w1Width - w2Width - layout.spacing();
             int midX = (int) (ratio * midWidth) + w1Width;
-            Console.log(width,w1Width,w2Width,ratio,midX);
             return Mathi.clamp(midX,w1Width,width-layout.spacing()-w2Width);
         case VERTICAL:
             int w1Height = TLayoutManager.freeHeight(widgetOne);

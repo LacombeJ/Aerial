@@ -34,13 +34,13 @@ public class Service {
 		renderTexture.f(rt);
 	}
 	
-	private Function<GameObject,Transform> worldTransform = null;
-	public void implementGetWorldTransform(Function<GameObject,Transform> implementation)
+	private Function<SceneObject,Transform> worldTransform = null;
+	public void implementGetWorldTransform(Function<SceneObject,Transform> implementation)
 	{
 		worldTransform = implementation;
 	}
-	public Transform getWorldTransform(GameObject go) {
-		return worldTransform.f(go);
+	public Transform getWorldTransform(SceneObject so) {
+		return worldTransform.f(so);
 	}
 	
 	private Function0D<GL> graphicsLibrary = null;
@@ -88,12 +88,12 @@ public class Service {
         return getOrCreateProgram.f(material);
     }
     
-    private Function2D<Camera,GameObject,Boolean> targetInvalid = null;
-    public void implementTargetInvalid(Function2D<Camera,GameObject,Boolean> implementation)
+    private Function2D<Camera,SceneObject,Boolean> targetInvalid = null;
+    public void implementTargetInvalid(Function2D<Camera,SceneObject,Boolean> implementation)
     {
         targetInvalid = implementation;
     }
-    public boolean targetInvalid(Camera camera, GameObject g) {
+    public boolean targetInvalid(Camera camera, SceneObject g) {
         return targetInvalid.f(camera,g);
     }
 	

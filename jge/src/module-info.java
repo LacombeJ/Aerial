@@ -2,6 +2,7 @@
 module jonl.ge {
     
 	exports jonl.ge.core;
+	exports jonl.ge.core.app;
 	exports jonl.ge.core.geometry;
 	exports jonl.ge.core.light;
 	exports jonl.ge.core.material;
@@ -24,8 +25,7 @@ module jonl.ge {
 	requires jbullet;
 	requires vecmath;
 	
-	requires transitive jonl.jgl;
-	requires transitive jonl.aui;
+	requires jonl.jgl;
 	requires transitive jonl.utils;
 	requires transitive jonl.vmath;
 	
