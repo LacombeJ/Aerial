@@ -3,9 +3,6 @@ package jonl.aui.tea;
 import java.util.ArrayList;
 
 import jonl.aui.SizePolicy;
-import jonl.aui.tea.event.TEventType;
-import jonl.aui.tea.event.TMoveEvent;
-import jonl.aui.tea.event.TResizeEvent;
 import jonl.jutils.func.List;
 import jonl.jutils.func.Wrapper;
 import jonl.jutils.structs.ArrayList2D;

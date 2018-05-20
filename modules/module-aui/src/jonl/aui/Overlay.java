@@ -10,6 +10,8 @@ public interface Overlay extends Widget {
     
     void add(Widget widget, int x, int y, int width, int height);
     
+    void add(Widget widget, int x, int y, int width, int height, Justify justify);
+    
     void remove(Widget widget);
     
     void setPosition(int index, int x, int y);

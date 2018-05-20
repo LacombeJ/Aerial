@@ -277,6 +277,7 @@ public class TManagerEvent {
             int y = e.y - child.y;
             if (within(child,x,y)) {
                 if (fireMouseEnter(child,event(e, x, y))) {
+                    sendEvent(widget,e); //We want parents to receive events also
                     return true;
                 }
             }
@@ -297,6 +298,7 @@ public class TManagerEvent {
             int prevY = y - e.dy;
             if (within(child,prevX,prevY)) {
                 if (fireMouseExit(child,event(e, x, y))) {
+                    sendEvent(widget,e); //We want parents to receive events also
                     return true;
                 }
             }
