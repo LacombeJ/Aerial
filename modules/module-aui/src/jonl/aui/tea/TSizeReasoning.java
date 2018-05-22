@@ -8,6 +8,7 @@ public class TSizeReasoning {
     public static final TFont FONT = TFont.CALIBRI;
     public static final int BORDER = 4;
     public static final int CHECKBOX_DIM = 12;
+    public static final int RADIOBUTTON_DIM = 12;
     public static final int DIAL_SIZE = 64;
     public static final int TAB_EXTRA = 16;
     
@@ -33,6 +34,17 @@ public class TSizeReasoning {
             hint.height = Math.max(hint.height, checkbox.icon().height()) + BORDER;
         }
         hint.width = Math.max(hint.width, (int) FONT.getWidth(checkbox.text()) + 2*BORDER + CHECKBOX_DIM + BORDER);
+        hint.height = Math.max(hint.height, (int) FONT.getHeight() + BORDER);
+        return hint;
+    }
+    
+    public static TSizeHint radioButton(TRadioButton radioButton) {
+        TSizeHint hint = new TSizeHint();
+        if (radioButton.icon()!=null) {
+            hint.width = Math.max(hint.width, radioButton.icon().width()) + BORDER;
+            hint.height = Math.max(hint.height, radioButton.icon().height()) + BORDER;
+        }
+        hint.width = Math.max(hint.width, (int) FONT.getWidth(radioButton.text()) + 2*BORDER + RADIOBUTTON_DIM + BORDER);
         hint.height = Math.max(hint.height, (int) FONT.getHeight() + BORDER);
         return hint;
     }

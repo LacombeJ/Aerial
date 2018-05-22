@@ -2,11 +2,13 @@ package jonl.aui.tea;
 
 import java.util.ArrayList;
 
+import jonl.aui.RadioButton;
 import jonl.aui.Widget;
 import jonl.aui.tea.event.TMouseEvent;
+import jonl.aui.tea.graphics.RadioButtonRenderer;
 import jonl.jgl.Input;
 
-public class TRadioButton extends TButton {
+public class TRadioButton extends TButton implements RadioButton {
 
     public TRadioButton() {
         super();
@@ -20,10 +22,12 @@ public class TRadioButton extends TButton {
     
     private ArrayList<TRadioButton> siblings() {
         ArrayList<TRadioButton> siblings = new ArrayList<>();
-        for (Widget widget : parentLayout.widgets()) {
-            if (widget instanceof TRadioButton && widget!=this) {
-                TRadioButton button = ((TRadioButton)widget);
-                siblings.add(button);
+        if (parentLayout != null) {
+            for (Widget widget : parentLayout.widgets()) {
+                if (widget instanceof TRadioButton && widget!=this) {
+                    TRadioButton button = ((TRadioButton)widget);
+                    siblings.add(button);
+                }
             }
         }
         return siblings;
@@ -62,6 +66,17 @@ public class TRadioButton extends TButton {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    protected TSizeHint sizeHint() {
+        return TSizeReasoning.radioButton(this);
+    }
+    
+    @Override
+    protected void paint(TGraphics g) {
+        RadioButtonRenderer.paint(this,g,info());
+        paint().emit(cb->cb.f(g));
     }
     
     

@@ -217,6 +217,16 @@ public class TUIManager implements UIManager {
     }
     
     @Override
+    public TRadioButton radioButton() {
+        return new TRadioButton();
+    }
+
+    @Override
+    public TRadioButton radioButton(String text) {
+        return new TRadioButton(text);
+    }
+    
+    @Override
     public TTitlePanel titlePanel(String title) {
         return new TTitlePanel(title);
     }
@@ -392,6 +402,7 @@ public class TUIManager implements UIManager {
     private void loadResources() {
         resourceIcon("/check.png",      "ui/check");
         resourceIcon("/caret.png",      "ui/caret");
+        resourceIcon("/dot.png",        "ui/dot");
         resourceIcon("/add.png",        "ui/add");
         resourceIcon("/subtract.png",   "ui/subtract");
         resourceIcon("/remove.png",     "ui/remove");

@@ -30,6 +30,7 @@ class TWindowManager {
     private GLFWWindow glWindow;
     private GL gl;
     private TInput input;
+    private THandledInput handled;
     
     private BufferedImage icon;
     
@@ -163,7 +164,7 @@ class TWindowManager {
             }
             gl = glWindow.getGraphicsLibrary();
             input = new TInput(glWindow.getInput(),()->window.height);
-            
+            handled = new THandledInput(glWindow.getInput(),()->window.height);
             
             glWindow.addCursorListener((enter)->{
                 if (enter) {
@@ -377,6 +378,10 @@ class TWindowManager {
         return input;
     }
     
+    Input handledInput() {
+        return handled;
+    }
+    
     void addLoader(Loader loader) {
         synchronized (lock) {
             if (glWindow==null) {
@@ -411,14 +416,27 @@ class TWindowManager {
         int x = (int) input.getX();
         int y = (int) input.getY();
         
+        handled.x = input.getX();
+        handled.y = input.getY();
+        handled.dx = input.getDX();
+        handled.dy = input.getDY();
+        
         // Mouse button events
         for (int i=Input.MB_LEFT; i<Input.MB_COUNT; i++) {
+            boolean pressed = false;
+            boolean released = false;
             if (input.isButtonPressed(i)) {
-                window.manager().event().fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy));
+                if (window.manager().event().fireMouseButtonPressed(window, new TMouseEvent(TEventType.MouseButtonPress, i, x, y, x, y, dx, dy))) {
+                    pressed = true;
+                }
             }
             if (input.isButtonReleased(i)) {
-                window.manager().event().fireMouseButtonReleased(window, new TMouseEvent(TEventType.MouseButtonRelease, i, x, y, x, y, dx, dy));
+                if (window.manager().event().fireMouseButtonReleased(window, new TMouseEvent(TEventType.MouseButtonRelease, i, x, y, x, y, dx, dy))) {
+                    released = true;
+                }
             }
+            handled.buttonPressed[i] = pressed ? false : input.isButtonPressed(i);
+            handled.buttonReleased[i] = released ? false : input.isButtonReleased(i);
         }
         
         // Mouse motion events
@@ -440,7 +458,9 @@ class TWindowManager {
         int sx = (int) input.getScrollX();
         int sy = (int) input.getScrollY();
         if (sx!=0 || sy!=0) {
-            window.manager().event().fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
+            boolean scroll = window.manager().event().fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
+            handled.scrollX = scroll ? 0 : input.getScrollX();
+            handled.scrollY = scroll ? 0 : input.getScrollY();
         }
         
         // Key events
@@ -464,16 +484,32 @@ class TWindowManager {
             char c = input.getChar(i, shift);
             boolean valid = (c!=0 && !control && !alt);
             
+            boolean pressed = false;
+            boolean released = false;
+            boolean repeated = false;
+            
             if (input.isKeyPressed(i)) {
-                window.manager().event().fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod, c, valid));
+                if (window.manager().event().fireKeyPressed(window, new TKeyEvent(TEventType.KeyPress, i, mod, c, valid))) {
+                    pressed = true;
+                }
             }
             if (input.isKeyReleased(i)) {
-                window.manager().event().fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod, c, valid));
+                if (window.manager().event().fireKeyReleased(window, new TKeyEvent(TEventType.KeyRelease, i, mod, c, valid))) {
+                    released = true;
+                }
             }
             if (input.isKeyRepeated(i)) {
-                window.manager().event().fireKeyRepeat(window, new TKeyEvent(TEventType.KeyRepeat, i, mod, c, valid));
+                if (window.manager().event().fireKeyRepeat(window, new TKeyEvent(TEventType.KeyRepeat, i, mod, c, valid))) {
+                    repeated = true;
+                }
             }
+            
+            handled.keyPressed[i] = pressed ? false : input.isKeyPressed(i);
+            handled.keyReleased[i] = released ? false : input.isKeyReleased(i);
+            handled.keyRepeated[i] = repeated ? false : input.isKeyRepeated(i);
         }
+        
+        handled.update();
     }
     
     void setCursor(TCursor cursor) {

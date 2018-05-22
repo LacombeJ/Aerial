@@ -24,6 +24,10 @@ public class SubApp extends BaseApp {
     
     private Widget widget;
     
+    // This variable is used because SubAppInput doesn't handle input events when input is out of sub app bounds
+    // but this might ignore when the mouse is grabbed and the cursor is "out of bounds"
+    boolean grabbed = false;
+    
 	public SubApp(jonl.aui.Window window, Widget widget) {
 		super();
 		uiWindow = (TWindow) window;
@@ -42,7 +46,7 @@ public class SubApp extends BaseApp {
 	    
         glWindow = uiWindow.window();
         gl = glWindow.getGraphicsLibrary();
-        input = new SubAppInput(widget, uiWindow.input());
+        input = new SubAppInput(this, widget, uiWindow.handledInput());
         window = new ApplicationWindow(this);
         managerCreate(delegate, service, glWindow.getGraphicsLibrary());
         managerRendererSubsection(true);
@@ -60,7 +64,6 @@ public class SubApp extends BaseApp {
             
             //TODO find out why this is causing weird rendering issues
             //when synchronization is not used between two windows
-            
             if (loaded) {
                 synchronized (SubApp.class) {
                     gl.glEnable(GL.DEPTH_TEST);
@@ -114,9 +117,18 @@ public class SubApp extends BaseApp {
 	@Override
 	public void setCursorState(CursorState state) {
 	    switch(state) {
-        case NORMAL:    glWindow.setCursorState(jonl.jgl.Input.CursorState.NORMAL); break;
-        case GRABBED:   glWindow.setCursorState(jonl.jgl.Input.CursorState.GRABBED); break;
-        case HIDDEN:    glWindow.setCursorState(jonl.jgl.Input.CursorState.HIDDEN); break;
+        case NORMAL:
+            glWindow.setCursorState(jonl.jgl.Input.CursorState.NORMAL);
+            grabbed = false;
+            break;
+        case GRABBED:
+            glWindow.setCursorState(jonl.jgl.Input.CursorState.GRABBED);
+            grabbed = true;
+            break;
+        case HIDDEN:
+            glWindow.setCursorState(jonl.jgl.Input.CursorState.HIDDEN);
+            grabbed = false;
+            break;
 	    }
 	}
 

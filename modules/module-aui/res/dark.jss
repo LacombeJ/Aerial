@@ -249,6 +249,23 @@ Menu.Button:hover {
     background: c_hover;
 }
 // ----------------------------------------------------------------------------
+RadioButton {
+    @extend CheckBox;
+    radius: 9;
+}
+RadioButton:disabled {
+    @extend CheckBox:disabled;
+}
+RadioButton:hover {
+    @extend CheckBox:hover;
+}
+RadioButton:checked {
+    image: "ui/dot";
+}
+RadioButton:checked:hover {
+    @extend CheckBox:checked:hover;
+}
+// ----------------------------------------------------------------------------
 ScrollPanel.Bar {
     background: c_tertiary;
 }

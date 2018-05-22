@@ -231,7 +231,7 @@ class GLFWInput extends AbstractInput {
     public boolean isKeyRepeated(int key) {
         return keyRepeated[key];
     }
-    
+
     private static class ScrollEvent {
         double x, y;
         ScrollEvent(double x, double y) {

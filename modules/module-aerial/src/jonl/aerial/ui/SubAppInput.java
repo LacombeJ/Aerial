@@ -8,21 +8,22 @@ import jonl.vmath.Vector2;
 
 public class SubAppInput implements Input {
     
+    final SubApp app;
     final jonl.jgl.Input input;
-    
     final Widget box;
     
-    public SubAppInput(Widget box, jonl.jgl.Input input) {
+    public SubAppInput(SubApp app, Widget box, jonl.jgl.Input input) {
+        this.app = app;
         this.box = box;
         this.input = input;
     }
     
-    boolean isWithin(float x, float y) {
+    private boolean isWithin(float x, float y) {
         return (x>=0 && x<=box.width() && y>=0 && y<=box.height());
     }
     
     boolean isMouseWithin() {
-        return isWithin(getX(),getY());
+        return isWithin(getX(),getY()) || app.grabbed;
     }
     
     boolean glCheckEvent(InputEvent e) {

@@ -30,9 +30,9 @@ public interface UIManager {
     
     Button button(String text);
     
-    Button checkBox();
+    CheckBox checkBox();
     
-    Button checkBox(String text);
+    CheckBox checkBox(String text);
     
     Label label();
     
@@ -63,6 +63,10 @@ public interface UIManager {
     Panel panel();
     
     Panel panel(Layout layout);
+    
+    RadioButton radioButton();
+    
+    RadioButton radioButton(String text);
     
     TitlePanel titlePanel(String title);
     
