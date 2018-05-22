@@ -61,18 +61,22 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     }
     
     class SLLight extends SLStruct {
+        SLInt type;
     	SLVec3 position;
     	SLVec3 color;
     	SLVec3 ambient;
     	SLFloat falloff;
     	SLFloat radius;
+    	SLVec3 direction;
 		@Override
 		public void init(SLStructBuilder sb) {
+		    type = sb.slInt("type");
 			position = sb.vec3("position");
 			color = sb.vec3("color");
 			ambient = sb.vec3("ambient");
 			falloff = sb.slFloat("falloff");
 			radius = sb.slFloat("radius");
+			direction = sb.vec3("direction");
 		}
     }
     
@@ -142,21 +146,46 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         	
         	SLLight light = sl.index(array, i);
             
-            SLVec4 lightPosition = sl.vec4(light.position,1f);
-            SLVec3 lightVector = sl.sub( lightPosition.xyz() , vPosition );
-            
-            SLFloat lightDistance = sl.length(lightVector);
-            SLFloat falloff = sl.call(attenuation.attenuation, light.radius, light.falloff, lightDistance);
-            
-            SLVec3 L = sl.normalize(lightVector);
-            
-            SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong, L, V, fNormal, shininess), specularScale, falloff);
-            SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer, L, V, fNormal, roughness, albedo), falloff);
-            SLVec3 ambient = light.ambient;
-            
-            sl.set(finalColor, sl.add(finalColor, sl.add(fDiffuse.mul(sl.add(diffuse, ambient)), specular)));
-        	
-        	
+        	// Point light
+        	sl.slIf(light.type+"=="+1); {
+        	    
+        	    SLVec4 lightPosition = sl.vec4(light.position,1f);
+                SLVec3 lightVector = sl.sub( lightPosition.xyz() , vPosition );
+                
+                SLFloat lightDistance = sl.length(lightVector);
+                SLFloat falloff = sl.call(attenuation.attenuation, light.radius, light.falloff, lightDistance);
+                
+                SLVec3 L = sl.normalize(lightVector);
+                
+                SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong, L, V, fNormal, shininess), specularScale, falloff);
+                SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer, L, V, fNormal, roughness, albedo), falloff);
+                SLVec3 ambient = light.ambient;
+                
+                sl.set(finalColor, sl.add(finalColor, sl.add(fDiffuse.mul(sl.add(diffuse, ambient)), specular)));
+        	    
+        	}
+        	// Spot light
+        	sl.slElseIf(light.type+"=="+2); {
+        	    
+        	}
+        	// Directional light
+    	    sl.slElseIf(light.type+"=="+3); {
+                
+    	        // Same as point light but direction is set by light and there is no falloff
+    	        
+                SLVec3 lightVector = sl.neg(light.direction);
+                
+                SLVec3 L = sl.normalize(lightVector);
+                
+                SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong, L, V, fNormal, shininess), specularScale);
+                SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer, L, V, fNormal, roughness, albedo));
+                SLVec3 ambient = light.ambient;
+                
+                sl.set(finalColor, sl.add(finalColor, sl.add(fDiffuse.mul(sl.add(diffuse, ambient)), specular)));
+    	        
+            }
+    	    sl.slEndIf();
+    	    
         }
         sl.slEndLoop();
         

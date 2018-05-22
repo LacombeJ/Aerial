@@ -15,6 +15,7 @@ public class Light extends Component {
     Vector3 ambient = new Vector3(0,0,0);
     float falloff = 0.15f;
     float radius = 10f;
+    
     Vector3 direction = new Vector3(0,-1,0);
     
     public int getType() {

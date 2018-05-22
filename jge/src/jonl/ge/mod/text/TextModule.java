@@ -130,6 +130,10 @@ public class TextModule extends Attachment {
             
             gl.glRender(mesh, GL.TRIANGLES);
             
+            if (!textMesh.getDepthTest()) {
+                gl.glEnable(GL.DEPTH_TEST);
+            }
+            
             gl.glEnable(GL.CULL_FACE);
             
             gl.glUseProgram(null);

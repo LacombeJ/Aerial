@@ -8,11 +8,9 @@ import jonl.ge.core.Delegate;
 import jonl.ge.core.Material;
 import jonl.ge.core.Service;
 import jonl.ge.core.material.StandardMaterial;
-import jonl.ge.utils.GLUtils;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback3D;
-import jonl.jutils.io.Console;
 import jonl.vmath.Vector3;
 
 public class LightModule extends Attachment {
@@ -45,10 +43,13 @@ public class LightModule extends Attachment {
                     Vector3 p = service.getWorldTransform(light.sceneObject()).translation;
                     
                     material.setUniform("light["+i+"].position",p.get());
-                    material.setUniform("light["+i+"].color",light.getColor());
-                    material.setUniform("light["+i+"].ambient",light.getAmbient());
-                    material.setUniform("light["+i+"].falloff",light.getFalloff());
-                    material.setUniform("light["+i+"].radius",light.getRadius());
+                    
+                    material.setUniform("light["+i+"].type",light.type);
+                    material.setUniform("light["+i+"].color",light.color);
+                    material.setUniform("light["+i+"].ambient",light.ambient);
+                    material.setUniform("light["+i+"].falloff",light.falloff);
+                    material.setUniform("light["+i+"].radius",light.radius);
+                    material.setUniform("light["+i+"].direction",light.direction);
                     
                     numLights++;
                 }

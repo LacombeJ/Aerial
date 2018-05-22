@@ -512,13 +512,19 @@ public class ShaderLanguage {
         
     }
     
-    private void putIf(SLBool b)        { putString("if ("+b.getName()+") {\n"); }
-    private void putElseIf(SLBool b)    { putString("} else if ("+b.getName()+") {\n"); }
+    private void putIf(String b)        { putString("if ("+b+") {\n"); }
+    private void putElseIf(String b)    { putString("} else if ("+b+") {\n"); }
+    private void putIf(SLBool b)        { putIf(b.getName()); }
+    private void putElseIf(SLBool b)    { putElseIf(b.getName()); }
     private void putElse()              { putString("} else {\n"); }
     private void putEndBracket()       	{ putString("}\n"); }
     
     public void slIf(SLBool bool)       { putIf(bool); }
     public void slElseIf(SLBool bool)   { putElseIf(bool); }
+    
+    public void slIf(String bool)       { putIf(bool); }
+    public void slElseIf(String bool)   { putElseIf(bool); }
+    
     public void slElse()                { putElse(); }
     public void slEndIf()               { putEndBracket(); }
     
@@ -713,6 +719,9 @@ public class ShaderLanguage {
     public <T extends SLData> SLBool equals(T u, T v) {
         return (SLBool) putVariable(new SLBoolV(),u+"=="+v);
     }
+    public <T extends SLData> SLBool equals(SLInt u, int v) {
+        return (SLBool) putVariable(new SLBoolV(),u+"=="+v);
+    }
     public <T extends SLData> SLBool neq(T u, T v) {
         return (SLBool) putVariable(new SLBoolV(),u+"!="+v);
     }
@@ -792,6 +801,11 @@ public class ShaderLanguage {
     }
     
     @SuppressWarnings("unchecked")
+    public <T extends SLData> T mul(T x, SLFloat y) {
+        return (T) putVariable(getVar(x),x+"*"+y);
+    }
+    
+    @SuppressWarnings("unchecked")
     public <T extends SLData> T mul(T x, SLFloat y, SLFloat z) {
         return (T) putVariable(getVar(x),x+"*"+y+"*"+z);
     }
@@ -800,6 +814,9 @@ public class ShaderLanguage {
     public <T extends SLData> T mul(T x, SLFloat y, SLFloat z, SLFloat w) {
         return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w);
     }
+    
+    @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, float y, SLFloat z) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z); }
+    @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, SLFloat y, float z) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z); }
     
     @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, float y, SLFloat z, SLFloat w) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w); }
     @SuppressWarnings("unchecked") public <T extends SLData> T mul(T x, SLFloat y, float z, SLFloat w) { return (T) putVariable(getVar(x),x+"*"+y+"*"+z+"*"+w); }
