@@ -53,7 +53,9 @@ public class Delegate {
 	
 	// Extended
 	
-	private final ArrayList<Callback3D<Program,Material,Camera>> programUpdate = new ArrayList<>();
+	private final ArrayList<Callback3D<Program,Material,Camera>> materialUpdate = new ArrayList<>();
+	
+	private final ArrayList<Callback2D<Program,Camera>> programUpdate = new ArrayList<>();
 	
 	private final ArrayList<Callback<List<Light>>> findLights = new ArrayList<>();
 	
@@ -66,8 +68,11 @@ public class Delegate {
 	private final ArrayList<Callback3D<SceneObject, Mesh, GL>> glPostRender = new ArrayList<>();
 	
 	
-	/** @return Updating material programs with scene light and camera information */
-	public ArrayList<Callback3D<Program,Material,Camera>> onProgramUpdate() { return programUpdate; }
+	/** @return Updating programs with material and camera information */
+	public ArrayList<Callback3D<Program,Material,Camera>> onMaterialUpdate() { return materialUpdate; }
+	
+	/** @return Updating programs with camera information */
+    public ArrayList<Callback2D<Program,Camera>> onProgramUpdate() { return programUpdate; }
 
 	/** @return Called in render loop after finding all standard lights in the scene */
     public ArrayList<Callback<List<Light>>> onFindLights() { return findLights; }

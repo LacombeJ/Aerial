@@ -191,12 +191,12 @@ class GLRenderer {
     //TODO calculate smooth tangents instead of flat tangents?
     private static Tuple2<Vector3[],Vector3[]> calculateTangents(Vector3[] vertices, Vector3[] normals, Vector2[] texCoords, int[] indices) {
         
-    	if (vertices!=null && normals!=null && texCoords!=null && indices!=null) {
-    		if (texCoords.length!=0 && indices.length!=0) {
-    		    //Switched back to using floats because calculations resulted in missing tangent vectors for SphereGeometry
-    		    //TODO find out why this happens, indices don't capture all of the vertices ?
-        	    float[] tangents = new float[vertices.length*3];
-        	    float[] bitangents = new float[vertices.length*3];
+        if (vertices!=null && normals!=null && texCoords!=null && indices!=null) {
+            if (texCoords.length!=0 && indices.length!=0) {
+                //Switched back to using floats because calculations resulted in missing tangent vectors for SphereGeometry
+                //TODO find out why this happens, indices don't capture all of the vertices ?
+                float[] tangents = new float[vertices.length*3];
+                float[] bitangents = new float[vertices.length*3];
                 
                 for (int i=0; i<indices.length; i+=3) {
                     
@@ -233,35 +233,38 @@ class GLRenderer {
                     bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
                     bitangent.normalize();
                     
-                    tangents[a  ] = tangent.x;
-                    tangents[a+1] = tangent.y;
-                    tangents[a+2] = tangent.z;
-                    tangents[b  ] = tangent.x;
-                    tangents[b+1] = tangent.y;
-                    tangents[b+2] = tangent.z;
-                    tangents[c  ] = tangent.x;
-                    tangents[c+1] = tangent.y;
-                    tangents[c+2] = tangent.z;
+                    int a3 = a*3;
+                    int b3 = b*3;
+                    int c3 = c*3;
                     
-                    bitangents[a  ] = bitangent.x;
-                    bitangents[a+1] = bitangent.y;
-                    bitangents[a+2] = bitangent.z;
-                    bitangents[b  ] = bitangent.x;
-                    bitangents[b+1] = bitangent.y;
-                    bitangents[b+2] = bitangent.z;
-                    bitangents[c  ] = bitangent.x;
-                    bitangents[c+1] = bitangent.y;
-                    bitangents[c+2] = bitangent.z;
+                    tangents[a3  ] = tangent.x;
+                    tangents[a3+1] = tangent.y;
+                    tangents[a3+2] = tangent.z;
+                    tangents[b3  ] = tangent.x;
+                    tangents[b3+1] = tangent.y;
+                    tangents[b3+2] = tangent.z;
+                    tangents[c3  ] = tangent.x;
+                    tangents[c3+1] = tangent.y;
+                    tangents[c3+2] = tangent.z;
+                    
+                    bitangents[a3  ] = bitangent.x;
+                    bitangents[a3+1] = bitangent.y;
+                    bitangents[a3+2] = bitangent.z;
+                    bitangents[b3  ] = bitangent.x;
+                    bitangents[b3+1] = bitangent.y;
+                    bitangents[b3+2] = bitangent.z;
+                    bitangents[c3  ] = bitangent.x;
+                    bitangents[c3+1] = bitangent.y;
+                    bitangents[c3+2] = bitangent.z;
                 }
                 
                 return new Tuple2<>(Vector3.unpackArray(tangents),Vector3.unpackArray(bitangents));
             
-    		}
+            }
         }
-    	
-    	return null;
-    	
+        
+        return null;
+        
     }
-
-
+    
 }

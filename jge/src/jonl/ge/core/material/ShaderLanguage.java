@@ -522,10 +522,16 @@ public class ShaderLanguage {
     public void slElse()                { putElse(); }
     public void slEndIf()               { putEndBracket(); }
     
+    private SLInt slLoopInternal(Object start, Object end, Object increment) {
+        SLInt i = slInt(start+"");
+        putString(String.format("for (%s = %s; %s < %s; %s += %s) {\n", i,start, i,end, i,increment));
+        return i;
+    }
+    public SLInt slLoop(int start, SLInt end, int increment) {
+        return slLoopInternal(start,end,increment);
+    }
     public SLInt slLoop(int start, int end, int increment) {
-    	SLInt i = slInt(start);
-    	putString(String.format("for (%s = %s; %s < %s; %s += %s) {\n", i,start, i,end, i,increment));
-    	return i;
+    	return slLoopInternal(start,end,increment);
     }
     public void slEndLoop()            	{ putEndBracket(); }
     
@@ -732,6 +738,10 @@ public class ShaderLanguage {
     }
     
     public SLVec3 add(SLVec3 u, SLFloat v) {
+        return putVariable(new SLVec3V(),u+"+"+v);
+    }
+    
+    public SLVec3 add(SLVec3 u, float v) {
         return putVariable(new SLVec3V(),u+"+"+v);
     }
     

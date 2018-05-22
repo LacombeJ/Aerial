@@ -21,6 +21,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     SLVec2 vTexCoord;
     SLMat3 mTBN;
     SLVec3 eye;
+    SLInt numLights;
     SLFunc<SLVec4> textureLinear;
 	
 	public SLVec3   diffuse     = null;
@@ -89,6 +90,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         
         mTBN = sl.attributeIn(SLMat3.class, "mTBN");
         
+        numLights = sl.slIntu("numLights");
         eye = sl.vec3u("eye");
         
         textureLinear = sl.slBegin(SLVec4.class, "sampler2D", "vec2"); {
@@ -98,6 +100,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         
     }
     
+    // https://github.com/stackgl/glsl-lighting-walkthrough/blob/master/lib/shaders/phong.frag
     private void build_1() {
     	
     	ShaderLanguage sl = this;
@@ -111,15 +114,13 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     	
         SLDeclare<SLLight> Light = sl.declare(() -> new SLLight());
         
-        int NUM_LIGHTS = 2;
+        int MAX_NUM_LIGHTS = 5;
         float specularScale = 3f;
         float shininess = 20.0f;
         float roughness = 0.1f;
         float albedo = 0.95f;
         
-        SLArray<SLLight> array = sl.arrayu(Light, "light", NUM_LIGHTS);
-        
-        
+        SLArray<SLLight> array = sl.arrayu(Light, "light", MAX_NUM_LIGHTS);
         
         // Parameters
         // ================================================================================================== //
@@ -137,7 +138,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         SLVec3 V = sl.normalize(eyeVector);
         
         // Multi-light rendering
-        SLInt i = sl.slLoop(0,NUM_LIGHTS,1); {
+        SLInt i = sl.slLoop(0,numLights,1); {
         	
         	SLLight light = sl.index(array, i);
             
@@ -162,8 +163,6 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         finalColor = sl.call(glslGamma.toGammaVec3, finalColor);
         
     	gl_FragColor(sl.vec4(finalColor, 1f));
-    	//gl_FragColor(sl.vec4(fNormal, 1f));
-    	
     }
     
     /** Use this with StandardMaterial instead of regular SL sampling */

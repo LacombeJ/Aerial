@@ -131,12 +131,14 @@ class SceneRenderer {
                 float logDepthBufFC = 2.0f / (Mathf.log(camera.far() + 1.0f) / Mathf.LN2);
                 program.setUniform("_logDepthBufFC", logDepthBufFC);
                 
+                jonl.jutils.func.List.iterate(manager.delegate().onMaterialUpdate(), (cb) -> cb.f(program,mat,camera) );
+                
                 List<Uniform> uniforms = mat.uniforms();
                 for (Uniform u : uniforms) {
                     glr.setUniform(program,u.name,u.data);
                 }
                 
-                jonl.jutils.func.List.iterate(manager.delegate().onProgramUpdate(), (cb) -> cb.f(program,mat,camera) );
+                jonl.jutils.func.List.iterate(manager.delegate().onProgramUpdate(), (cb) -> cb.f(program,camera) );
                 
                 if (mesh.cullFace) {
                     gl.glEnable(GL.CULL_FACE);

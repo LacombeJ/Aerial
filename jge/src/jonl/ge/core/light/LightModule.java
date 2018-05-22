@@ -7,10 +7,12 @@ import jonl.ge.core.Camera;
 import jonl.ge.core.Delegate;
 import jonl.ge.core.Material;
 import jonl.ge.core.Service;
+import jonl.ge.core.material.StandardMaterial;
 import jonl.ge.utils.GLUtils;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback3D;
+import jonl.jutils.io.Console;
 import jonl.vmath.Vector3;
 
 public class LightModule extends Attachment {
@@ -31,22 +33,29 @@ public class LightModule extends Attachment {
         
         setUniforms = (program, material, camera) -> {
             
-            Vector3 eye = service.getWorldTransform(camera.sceneObject()).translation;
-            GLUtils.setUniform(program,"eye",eye);
+            if (material instanceof StandardMaterial) {
             
-            int numLights = 0;
-            for (int i=0; i<lights.size(); i++) {
-                Light light = lights.get(i);
-                Vector3 p = service.getWorldTransform(light.sceneObject()).translation;
-                program.setUniformi("light["+i+"].type",light.getType());
-                GLUtils.setUniform(program,"light["+i+"].position",p);
-                program.setUniform("light["+i+"].range",light.getRange());
-                GLUtils.setUniform(program,"light["+i+"].color",light.getColor());
-                program.setUniform("light["+i+"].intensity",light.getIntensity());
-                program.setUniform("light["+i+"].angle",light.getAngle());
-                numLights++;
+                Vector3 eye = service.getWorldTransform(camera.sceneObject()).translation;
+                
+                material.setUniform("eye",eye);
+                
+                int numLights = 0;
+                for (int i=0; i<lights.size(); i++) {
+                    Light light = lights.get(i);
+                    Vector3 p = service.getWorldTransform(light.sceneObject()).translation;
+                    
+                    material.setUniform("light["+i+"].position",p.get());
+                    material.setUniform("light["+i+"].color",light.getColor());
+                    material.setUniform("light["+i+"].ambient",light.getAmbient());
+                    material.setUniform("light["+i+"].falloff",light.getFalloff());
+                    material.setUniform("light["+i+"].radius",light.getRadius());
+                    
+                    numLights++;
+                }
+                material.setUniform("numLights",numLights);
+            
             }
-            program.setUniformi("numLights",numLights);
+            
         };
 
     }
@@ -55,13 +64,13 @@ public class LightModule extends Attachment {
     public void add(Delegate delegate, Service service) {
         this.service = service;
         delegate.onFindLights().add(findLights);
-        delegate.onProgramUpdate().add(setUniforms);
+        delegate.onMaterialUpdate().add(setUniforms);
     }
 
     @Override
     public void remove(Delegate delegate, Service service) {
         delegate.onFindLights().remove(findLights);
-        delegate.onProgramUpdate().remove(setUniforms);
+        delegate.onMaterialUpdate().remove(setUniforms);
     }
 
 }

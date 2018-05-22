@@ -11,14 +11,11 @@ public class Light extends Component {
     public final static int DIRECTIONAL = 3;
     
     int type = POINT;
-    
-    float range = 10;
-    
     Vector3 color = new Vector3(1,1,1);
-    
-    float intensity = 0.5f;
-    
-    float angle;
+    Vector3 ambient = new Vector3(0,0,0);
+    float falloff = 0.15f;
+    float radius = 10f;
+    Vector3 direction = new Vector3(0,-1,0);
     
     public int getType() {
         return type;
@@ -29,15 +26,6 @@ public class Light extends Component {
         this.type = type;
     }
     
-    public float getRange() {
-        return range;
-    }
-    
-    /** Sets range for point and spot lights */
-    public void setRange(float range) {
-        this.range = range;
-    }
-    
     public Vector3 getColor() {
         return color.get();
     }
@@ -46,21 +34,36 @@ public class Light extends Component {
         this.color.set(color);
     }
     
-    public float getIntensity() {
-        return intensity;
+    public Vector3 getAmbient() {
+        return ambient.get();
     }
     
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
+    public void setAmbient(Vector3 color) {
+        this.ambient.set(color);
     }
     
-    public float getAngle() {
-        return angle;
+    public float getFalloff() {
+        return falloff;
     }
     
-    /** Sets angle for spotlights */
-    public void setAngle(float angle) {
-        this.angle = angle;
+    public void setFalloff(float falloff) {
+        this.falloff = falloff;
+    }
+    
+    public float getRadius() {
+        return radius;
+    }
+    
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+    
+    public Vector3 getDirection() {
+        return direction.get();
+    }
+    
+    public void setDirection(Vector3 direction) {
+        this.direction.set(direction);
     }
     
 }
