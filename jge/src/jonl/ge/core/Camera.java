@@ -22,7 +22,7 @@ public class Camera extends Component {
     float fov = 90; //used in perspective projection
     float aspect = 16/9f; //width / height
     float near = 0.1f;
-    float far = 100f;
+    float far = 1000f;
     
     boolean orthographic = false;
     Matrix4 projection  = Matrix4.perspective(fov,aspect,near,far);
@@ -50,7 +50,7 @@ public class Camera extends Component {
      * Camera Component
      * <p>
      * Default view is projection with 90 fov, 16/9.0 aspect ratio,
-     * 0.1 near, and 100 far.
+     * 0.1 near, and 1000 far.
      */
     public Camera() {
         

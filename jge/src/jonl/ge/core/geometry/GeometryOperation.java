@@ -42,12 +42,23 @@ public interface GeometryOperation {
     
     public static GeometryOperation transform(Matrix4 transformation) {
     	return (g) -> {
+    	    
 	    	Vector3[] vertices = g.getVertexArray();
 	    	for (Vector3 v : vertices) {
 	    		Vector4 mult = transformation.multiply(new Vector4(v,1));
 	    		v.set(mult.x,mult.y,mult.z);
 	    	}
 	    	g.setVectorArray(vertices);
+	    	
+	    	//TODO verify
+	    	Matrix4 rot = transformation.getRotation().toMatrix();
+	    	Vector3[] normals = g.getNormalArray();
+            for (Vector3 v : normals) {
+                Vector4 mult = rot.multiply(new Vector4(v,1));
+                v.set(mult.x,mult.y,mult.z);
+            }
+            g.setNormalArray(normals);
+	    	
     	};
     }
     
