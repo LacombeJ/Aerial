@@ -4,6 +4,7 @@ import jonl.ge.core.render.RenderTexture;
 import jonl.jgl.GL;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback2D;
+import jonl.jutils.func.Callback3D;
 import jonl.jutils.func.Function;
 import jonl.jutils.func.Function0D;
 import jonl.jutils.func.Function2D;
@@ -95,6 +96,15 @@ public class Service {
     }
     public boolean targetInvalid(Camera camera, SceneObject g) {
         return targetInvalid.f(camera,g);
+    }
+    
+    private Callback3D<Camera,Material,FrameBuffer> renderDirect = null;
+    public void implementRenderDirect(Callback3D<Camera,Material,FrameBuffer> implementation)
+    {
+        renderDirect = implementation;
+    }
+    public void renderDirect(Camera camera, Material material, FrameBuffer buffer) {
+        renderDirect.f(camera,material,buffer);
     }
 	
 }

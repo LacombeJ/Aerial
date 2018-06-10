@@ -59,6 +59,8 @@ public class Delegate {
 	
 	private final ArrayList<Callback<List<Light>>> findLights = new ArrayList<>();
 	
+	private final ArrayList<Callback<List<SceneObject>>> findSceneObjects = new ArrayList<>();
+	
 	private final ArrayList<Callback2D<SceneObject,Camera>> sceneObjectRenderer = new ArrayList<>();
 	
 	private final ArrayList<Callback2D<SceneObject, Transform>> parentWorldTransformUpdate = new ArrayList<>();
@@ -67,6 +69,10 @@ public class Delegate {
 	
 	private final ArrayList<Callback3D<SceneObject, Mesh, GL>> glPostRender = new ArrayList<>();
 	
+	private final ArrayList<Callback<Camera>> preRenderCamera = new ArrayList<>();
+    
+    private final ArrayList<Callback<Camera>> postRenderCamera = new ArrayList<>();
+	
 	
 	/** @return Updating programs with material and camera information */
 	public ArrayList<Callback3D<Program,Material,Camera>> onMaterialUpdate() { return materialUpdate; }
@@ -74,8 +80,11 @@ public class Delegate {
 	/** @return Updating programs with camera information */
     public ArrayList<Callback2D<Program,Camera>> onProgramUpdate() { return programUpdate; }
 
-	/** @return Called in render loop after finding all standard lights in the scene */
+	/** @return Called in render loop after finding all lights in the scene */
     public ArrayList<Callback<List<Light>>> onFindLights() { return findLights; }
+    
+    /** @return Called in render loop after finding all scene objects in the scene */
+    public ArrayList<Callback<List<SceneObject>>> onFindSceneObjects() { return findSceneObjects; }
 	
 	/** @return Called when rendering sceneObject in respect to camera */
     public ArrayList<Callback2D<SceneObject,Camera>> onSceneObjectRender() { return sceneObjectRenderer; }
@@ -88,5 +97,11 @@ public class Delegate {
     
     /** @return Called right after glRender is called */
     public ArrayList<Callback3D<SceneObject, Mesh, GL>> onGLPostRender() { return glPostRender; }
+    
+    /** @return Called before camera is set up and objects are rendered */
+    public ArrayList<Callback<Camera>> onPreRenderCamera() { return preRenderCamera; }
+    
+    /** @return Called after camera is detached */
+    public ArrayList<Callback<Camera>> onPostRenderCamera() { return postRenderCamera; }
 
 }

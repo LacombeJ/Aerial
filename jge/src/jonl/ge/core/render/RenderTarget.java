@@ -7,7 +7,7 @@ import jonl.ge.core.Texture.Filter;
 import jonl.ge.core.Texture.Internal;
 import jonl.ge.core.Texture.Wrap;
 
-public class RenderTarget extends Camera {
+public class RenderTarget extends Camera implements FBCamera {
     
     //TODO add support for gBuffer frameBuffers
     
@@ -42,6 +42,7 @@ public class RenderTarget extends Camera {
     	return gBuffer;
     }
     
+    @Override
     public FrameBuffer buffer() {
     	return buffer;
     }

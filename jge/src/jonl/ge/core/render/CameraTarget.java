@@ -7,7 +7,7 @@ import jonl.ge.core.Texture.Filter;
 import jonl.ge.core.Texture.Internal;
 import jonl.ge.core.Texture.Wrap;
 
-public class CameraTarget extends Camera {
+public class CameraTarget extends Camera implements FBCamera {
     
     FrameBuffer gBuffer = null;
     
@@ -27,6 +27,7 @@ public class CameraTarget extends Camera {
         return gBuffer.getTexture(type);
     }
     
+    @Override
     public FrameBuffer buffer() {
     	return gBuffer;
     }

@@ -15,6 +15,7 @@ import jonl.ge.core.light.LightModule;
 import jonl.ge.mod.fx.FXModule;
 import jonl.ge.mod.physics.PhysicsModule;
 import jonl.ge.mod.ray.RayModule;
+import jonl.ge.mod.render.RenderModule;
 import jonl.ge.mod.text.TextModule;
 import jonl.jutils.call.Caller;
 import jonl.jutils.misc.SystemUtils;
@@ -50,6 +51,7 @@ public abstract class AbstractApplication {
         add(new FXModule());
         add(new PhysicsModule());
         add(new RayModule());
+        add(new RenderModule());
     }
     
     // -------------------------------------------------------
