@@ -121,6 +121,7 @@ class SceneRenderer {
                 //TODO meshes should be able to choose which uniforms it needs?
                 program.setUniformMat4("MVP",MVP.toArray());
                 program.setUniformMat4("MV",V.get().multiply(M).toArray());
+                program.setUniformMat4("VP",VP.toArray());
                 program.setUniformMat4("M",M.toArray());
                 program.setUniformMat4("V",V.toArray());
                 program.setUniformMat4("P",P.toArray());

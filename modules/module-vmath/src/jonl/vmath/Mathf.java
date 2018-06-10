@@ -351,6 +351,10 @@ public final class Mathf {
         return a + alpha * (b - a);
     }
     
+    public static float slerp(float alpha, float a, float b) {
+        return lerp(sin(alpha*PI_OVER_2),a,b);
+    }
+    
     public static float alpha(float value, float min, float max) {
         float n = value - min;
         float d = max - min;

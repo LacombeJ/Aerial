@@ -169,38 +169,32 @@ public class Vector2 extends Vector<Vector2> {
         return new Vector2(Mathf.random(min,max),Mathf.random(min,max));
     }
     
+    public static Vector2[] lerp(float alpha, Vector2[] a, Vector2[] b) {
+        Vector2[] lerp = new Vector2[a.length];
+        Util.lerp(alpha,a,b,lerp);
+        return lerp;
+    }
+    
+    public static Vector4[] slerp(float alpha, Vector4[] a, Vector4[] b) {
+        Vector4[] slerp = new Vector4[a.length];
+        Util.slerp(alpha,a,b,slerp);
+        return slerp;
+    }
+    
     public static float[] pack(List<Vector2> vectors) {
-        float[] values = new float[vectors.size()*2];
-        for (int i=0; i<vectors.size(); i++) {
-            values[i*2] = vectors.get(i).x;
-            values[i*2+1] = vectors.get(i).y;
-        }
-        return values;
+        return Util.pack(vectors);
     }
     
     public static float[] pack(Vector2... vectors) {
-        float[] values = new float[vectors.length*2];
-        for (int i=0; i<vectors.length; i++) {
-            values[i*2] = vectors[i].x;
-            values[i*2+1] = vectors[i].y;
-        }
-        return values;
+        return Util.pack(vectors);
     }
     
     public static ArrayList<Vector2> unpack(float[] values) {
-        ArrayList<Vector2> vectors = new ArrayList<>();
-        for (int i=0; i<values.length/2; i++) {
-            Vector2 v = new Vector2(
-                values[i*2],
-                values[i*2+1]
-            );
-            vectors.add(v);
-        }
-        return vectors;
+        return Util.unpack(values,new Vector2());
     }
     
     public static Vector2[] unpackArray(float[] values) {
-        return unpack(values).toArray(new Vector2[values.length/2]);
+        return Util.unpackArray(values,new Vector2(),new Vector2[values.length/2]);
     }
     
 }

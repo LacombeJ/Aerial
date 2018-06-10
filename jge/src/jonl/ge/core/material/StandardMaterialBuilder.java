@@ -30,7 +30,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     
     public StandardMaterialBuilder() {
 		super();
-		build_0();
+		prepare();
 	}
     
     // Build only occurs once
@@ -38,7 +38,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     	
     	//TODO find a better way to do this (multiple shaders with different build calls)
     	if (build == null) {
-    		build_1();
+    	    finish();
     	}    	
     	
         StandardMaterial mat = new StandardMaterial(0);
@@ -80,7 +80,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
 		}
     }
     
-    private void build_0() {
+    private void prepare() {
     	
     	ShaderLanguage sl = this;
 		
@@ -105,7 +105,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     }
     
     // https://github.com/stackgl/glsl-lighting-walkthrough/blob/master/lib/shaders/phong.frag
-    private void build_1() {
+    private void finish() {
     	
     	ShaderLanguage sl = this;
     	

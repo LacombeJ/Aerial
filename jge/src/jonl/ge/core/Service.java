@@ -43,13 +43,13 @@ public class Service {
 		return worldTransform.f(so);
 	}
 	
-	private Function0D<GL> graphicsLibrary = null;
+	private Function0D<GL> gl = null;
 	public void implementGetGL(Function0D<GL> implementation)
 	{
-	    graphicsLibrary = implementation;
+	    gl = implementation;
 	}
 	public GL getGL() {
-	    return graphicsLibrary.f();
+	    return gl.f();
 	}
 	
 	private Function<Geometry,jonl.jgl.Mesh> getOrCreateMesh = null;

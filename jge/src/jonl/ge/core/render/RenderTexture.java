@@ -2,21 +2,21 @@ package jonl.ge.core.render;
 
 import jonl.ge.core.Component;
 import jonl.ge.core.FrameBuffer;
+import jonl.ge.core.Material;
 import jonl.ge.core.Service;
 import jonl.ge.core.Texture;
 import jonl.ge.core.Texture.Filter;
 import jonl.ge.core.Texture.Internal;
 import jonl.ge.core.Texture.Wrap;
-import jonl.ge.core.material.ShaderMaterial;
 import jonl.jutils.func.List;
 
 public class RenderTexture extends Component {
     
-    ShaderMaterial material = null;
+    Material material = null;
     FrameBuffer[] buffers = null;
     boolean clearOnRender = true;
     
-    public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height, Internal internal, Wrap wrap, Filter filter) {
+    public RenderTexture(int numBuffers, Material material, int width, int height, Internal internal, Wrap wrap, Filter filter) {
         this.material = material;
         
         buffers = new FrameBuffer[numBuffers];
@@ -28,11 +28,11 @@ public class RenderTexture extends Component {
         
     }
     
-    public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height, Internal internal) {
+    public RenderTexture(int numBuffers, Material material, int width, int height, Internal internal) {
         this(numBuffers,material,width,height,Internal.RGB16,Wrap.CLAMP,Filter.NEAREST);
     }
     
-    public RenderTexture(int numBuffers, ShaderMaterial material, int width, int height) {
+    public RenderTexture(int numBuffers, Material material, int width, int height) {
         this(numBuffers,material,width,height,Internal.RGB16);
     }
     
@@ -41,11 +41,11 @@ public class RenderTexture extends Component {
     	service.renderTexture(this);
     }
     
-    public ShaderMaterial getMaterial() {
+    public Material getMaterial() {
         return material;
     }
     
-    public void setMaterial(ShaderMaterial material) {
+    public void setMaterial(Material material) {
         this.material = material;
     }
     

@@ -70,7 +70,7 @@ public class Application extends AbstractApplication {
         
         input = new ApplicationInput(glWindow.getInput());
         window = new ApplicationWindow(this);
-        manager.create(delegate, service, glWindow.getGraphicsLibrary());
+        manager.create(delegate, service, glWindow.getGL());
         
         glWindow.setLoader(()->{
             putInfo();
@@ -109,8 +109,8 @@ public class Application extends AbstractApplication {
 	void putInfo() {
         info.put("NAME",            "Application");
         info.put("VERSION",         "1.0");
-        info.put("GL_VERSION",      glWindow.getGraphicsLibrary().glGetVersion());
-        info.put("GLSL_VERSION",    glWindow.getGraphicsLibrary().glGetGLSLVersion());
+        info.put("GL_VERSION",      glWindow.getGL().glGetVersion());
+        info.put("GLSL_VERSION",    glWindow.getGL().glGetGLSLVersion());
     }
 	
 	@Override

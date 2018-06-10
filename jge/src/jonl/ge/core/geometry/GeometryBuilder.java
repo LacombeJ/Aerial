@@ -47,6 +47,14 @@ public class GeometryBuilder {
     public void addVertex(Vector3 v) {
         vertices.add(v);
     }
+    
+    public void addNormal(Vector3 n) {
+        normals.add(n);
+    }
+    
+    public void addTexCoord(Vector2 tc) {
+        texCoords.add(tc);
+    }
 	
     public Geometry build() {
     	Geometry geometry = new Geometry(

@@ -201,41 +201,32 @@ public class Vector3 extends Vector<Vector3> {
     public static final Vector3 up()        { return new Vector3(0,1,0); }
     public static final Vector3 right()     { return new Vector3(1,0,0); }
     
+    public static Vector3[] lerp(float alpha, Vector3[] a, Vector3[] b) {
+        Vector3[] lerp = new Vector3[a.length];
+        Util.lerp(alpha,a,b,lerp);
+        return lerp;
+    }
+    
+    public static Vector3[] slerp(float alpha, Vector3[] a, Vector3[] b) {
+        Vector3[] slerp = new Vector3[a.length];
+        Util.slerp(alpha,a,b,slerp);
+        return slerp;
+    }
+    
     public static float[] pack(List<Vector3> vectors) {
-        float[] values = new float[vectors.size()*3];
-        for (int i=0; i<vectors.size(); i++) {
-            values[i*3] = vectors.get(i).x;
-            values[i*3+1] = vectors.get(i).y;
-            values[i*3+2] = vectors.get(i).z;
-        }
-        return values;
+        return Util.pack(vectors);
     }
     
     public static float[] pack(Vector3... vectors) {
-        float[] values = new float[vectors.length*3];
-        for (int i=0; i<vectors.length; i++) {
-            values[i*3] = vectors[i].x;
-            values[i*3+1] = vectors[i].y;
-            values[i*3+2] = vectors[i].z;
-        }
-        return values;
+        return Util.pack(vectors);
     }
     
     public static ArrayList<Vector3> unpack(float[] values) {
-        ArrayList<Vector3> vectors = new ArrayList<>();
-        for (int i=0; i<values.length/3; i++) {
-            Vector3 v = new Vector3(
-                values[i*3],
-                values[i*3+1],
-                values[i*3+2]
-            );
-            vectors.add(v);
-        }
-        return vectors;
+        return Util.unpack(values,new Vector3());
     }
     
     public static Vector3[] unpackArray(float[] values) {
-        return unpack(values).toArray(new Vector3[values.length/3]);
+        return Util.unpackArray(values,new Vector3(),new Vector3[values.length/3]);
     }
     
 }

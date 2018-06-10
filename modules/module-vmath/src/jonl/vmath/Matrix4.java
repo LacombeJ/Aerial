@@ -1,6 +1,8 @@
 package jonl.vmath;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -508,6 +510,22 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
     /** @return a matrix filled with ones */
     public static Matrix4 ones() {
         return new Matrix4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+    }
+    
+    public static float[] pack(List<Matrix4> matrices) {
+        return Util.mpack(matrices);
+    }
+    
+    public static float[] pack(Matrix4... matrices) {
+        return Util.mpack(matrices);
+    }
+    
+    public static ArrayList<Matrix4> unpack(float[] values) {
+        return Util.munpack(values,new Matrix4());
+    }
+    
+    public static Matrix4[] unpackArray(float[] values) {
+        return Util.munpackArray(values,new Matrix4(),new Matrix4[values.length/16]);
     }
     
 }

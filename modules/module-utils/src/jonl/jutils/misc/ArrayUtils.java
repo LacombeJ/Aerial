@@ -258,5 +258,11 @@ public class ArrayUtils {
         return wrap;
     }
     
+    static <T> void put(T[] src, T[] dst, int index) {
+        for (int i=0; i<src.length; i++) {
+            dst[index+i] = src[i];
+        }
+    }
+    
     
 }

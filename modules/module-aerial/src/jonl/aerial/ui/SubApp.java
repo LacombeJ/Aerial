@@ -45,10 +45,10 @@ public class SubApp extends BaseApp {
 	public void start() {
 	    
         glWindow = uiWindow.window();
-        gl = glWindow.getGraphicsLibrary();
+        gl = glWindow.getGL();
         input = new SubAppInput(this, widget, uiWindow.handledInput());
         window = new ApplicationWindow(this);
-        managerCreate(delegate, service, glWindow.getGraphicsLibrary());
+        managerCreate(delegate, service, glWindow.getGL());
         managerRendererSubsection(true);
         
         uiWindow.addLoader(()->{

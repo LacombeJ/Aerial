@@ -413,7 +413,7 @@ public final class GLFWWindow implements Window {
     }
 
     @Override
-    public GL getGraphicsLibrary() {
+    public GL getGL() {
         return gl;
     }
     

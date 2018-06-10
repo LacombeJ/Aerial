@@ -160,7 +160,7 @@ public interface Window {
     public void setCursor(int cursorId);
     
     public Input getInput();
-    public GL getGraphicsLibrary();
+    public GL getGL();
     
     public void addSizeListener(Int2ChangedListener sl);
     public void removeSizeListener(Int2ChangedListener sl);

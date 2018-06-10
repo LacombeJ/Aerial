@@ -291,6 +291,10 @@ public class Mathd {
         return a + alpha * (b - a);
     }
     
+    public static double slerp(double alpha, double a, double b) {
+        return lerp(sin(alpha*PI_OVER_2),a,b);
+    }
+    
     public static double alpha(double value, double min, double max) {
         double n = value - min;
         double d = max - min;

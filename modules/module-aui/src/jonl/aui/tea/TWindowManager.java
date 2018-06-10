@@ -162,7 +162,7 @@ class TWindowManager {
                 }
                 
             }
-            gl = glWindow.getGraphicsLibrary();
+            gl = glWindow.getGL();
             input = new TInput(glWindow.getInput(),()->window.height);
             handled = new THandledInput(glWindow.getInput(),()->window.height);
             
@@ -457,11 +457,12 @@ class TWindowManager {
         // Mouse scroll wheel events
         int sx = (int) input.getScrollX();
         int sy = (int) input.getScrollY();
+        boolean scroll = false;
         if (sx!=0 || sy!=0) {
-            boolean scroll = window.manager().event().fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
-            handled.scrollX = scroll ? 0 : input.getScrollX();
-            handled.scrollY = scroll ? 0 : input.getScrollY();
+            scroll = window.manager().event().fireScroll(window, new TScrollEvent(TEventType.Scroll, sx, sy, x, y, x, y, dx, dy));
         }
+        handled.scrollX = scroll ? 0 : input.getScrollX();
+        handled.scrollY = scroll ? 0 : input.getScrollY();
         
         // Key events
         for (int i=Input.K_0; i<Input.K_COUNT; i++) {

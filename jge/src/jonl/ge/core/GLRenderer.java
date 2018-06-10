@@ -2,6 +2,7 @@ package jonl.ge.core;
 
 import java.util.HashMap;
 
+import jonl.ge.core.Geometry.Attribute;
 import jonl.ge.utils.GLUtils;
 import jonl.ge.utils.Loader;
 import jonl.ge.utils.PresetData;
@@ -51,21 +52,34 @@ class GLRenderer {
     
     jonl.jgl.Mesh getOrCreateMesh(Geometry mesh) {
         jonl.jgl.Mesh glmesh = meshMap.get(mesh);
+        // TODO find a better way to set attribute start index
+        int sindex = 1; // Attribute start index, 1 after vertices
         if (glmesh==null) {
             glmesh = gl.glGenMesh(
                 Vector3.pack(mesh.vertices), 
                 Vector3.pack(mesh.normals),
                 Vector2.pack(mesh.texCoords),
                 mesh.indices);
-            checkUpdateTangents(mesh, glmesh);
+            if (checkUpdateTangents(mesh, glmesh)) {
+                sindex = 5; // after tangent and bitangent
+            }
+            for (int i=0; i<mesh.getNumAttributes(); i++) {
+                Attribute a = mesh.attributes.get(i);
+                glmesh.setCustomAttrib(sindex+i,a.data,a.size);
+            }
             meshMap.put(mesh,glmesh);
-            
         } else if (mesh.update) {
         	if (mesh.vertices!=null && mesh.vertices.length>0) glmesh.setVertexAttrib(Vector3.pack(mesh.vertices), 3);
         	if (mesh.normals!=null && mesh.normals.length>0) glmesh.setNormalAttrib(Vector3.pack(mesh.normals), 3);
         	if (mesh.texCoords!=null && mesh.texCoords.length>0) glmesh.setTexCoordAttrib(Vector2.pack(mesh.texCoords), 2);
         	if (mesh.indices!=null && mesh.indices.length>0) glmesh.setIndices(mesh.indices);
-        	checkUpdateTangents(mesh, glmesh);
+        	if (checkUpdateTangents(mesh, glmesh)) {
+                sindex = 5; // after tangent and bitangent
+            }
+        	for (int i=0; i<mesh.getNumAttributes(); i++) {
+                Attribute a = mesh.attributes.get(i);
+                glmesh.setCustomAttrib(sindex+i,a.data,a.size);
+            }
         }
         mesh.update = false;
         return glmesh;
@@ -175,7 +189,7 @@ class GLRenderer {
     
     // -----------------------------------------------------------------------------------
     
-    static void checkUpdateTangents(Geometry mesh, jonl.jgl.Mesh glmesh) {
+    static boolean checkUpdateTangents(Geometry mesh, jonl.jgl.Mesh glmesh) {
     	if (mesh.calculateTangents) {
         	Tuple2<Vector3[],Vector3[]> calculated = calculateTangents(mesh.vertices, mesh.normals, mesh.texCoords, mesh.indices);
         	if (calculated != null) {
@@ -183,8 +197,10 @@ class GLRenderer {
                 float[] bitangents = Vector3.pack(calculated.y);
                 glmesh.setCustomAttrib(3,tangents,3);
                 glmesh.setCustomAttrib(4,bitangents,3);
+                return true;
         	}
         }
+    	return false;
     }
     
     // https://learnopengl.com/#!Advanced-Lighting/Normal-Mapping

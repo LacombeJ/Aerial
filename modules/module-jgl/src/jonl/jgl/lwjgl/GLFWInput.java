@@ -67,7 +67,7 @@ class GLFWInput extends AbstractInput {
         
         GLFW.glfwSetScrollCallback(windowID,(windowid,xoffset,yoffset)->{
             synchronized(scrollSync) {
-                scrollQueue.push(new ScrollEvent(xoffset,yoffset));
+                scrollQueue.addLast(new ScrollEvent(xoffset,yoffset));
             }
             
         });

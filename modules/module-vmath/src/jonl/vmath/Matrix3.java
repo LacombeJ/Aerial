@@ -1,5 +1,8 @@
 package jonl.vmath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Jonathan Lacombe
@@ -174,6 +177,22 @@ public class Matrix3 extends SquareMatrix<Matrix3,Vector3> {
     /** @return a matrix filled with ones */
     public static Matrix3 ones() {
         return new Matrix3(1,1,1,1,1,1,1,1,1);
+    }
+    
+    public static float[] pack(List<Matrix3> matrices) {
+        return Util.mpack(matrices);
+    }
+    
+    public static float[] pack(Matrix3... matrices) {
+        return Util.mpack(matrices);
+    }
+    
+    public static ArrayList<Matrix3> unpack(float[] values) {
+        return Util.munpack(values,new Matrix3());
+    }
+    
+    public static Matrix3[] unpackArray(float[] values) {
+        return Util.munpackArray(values,new Matrix3(),new Matrix3[values.length/9]);
     }
     
 }

@@ -1,5 +1,7 @@
 package jonl.ge.core;
 
+import java.util.ArrayList;
+
 import jonl.ge.core.geometry.GeometryOperation;
 import jonl.vmath.Vector2;
 import jonl.vmath.Vector3;
@@ -15,6 +17,8 @@ public class Geometry {
     boolean calculateTangents = true;
     Vector3[] tangents;
     Vector3[] bitangents;
+    
+    ArrayList<Attribute> attributes = new ArrayList<>();
     
     public Geometry() {
         
@@ -90,6 +94,22 @@ public class Geometry {
         return vertices.length;
     }
     
+    public float[] getAttributes(int index) {
+        return attributes.get(index).data;
+    }
+    
+    public void setAttributes(int index, float[] array, int size) {
+        attributes.set(index,new Attribute(array,size));
+    }
+    
+    public void addAttributes(float[] array, int size) {
+        attributes.add(new Attribute(array,size));
+    }
+    
+    public int getNumAttributes() {
+        return attributes.size();
+    }
+    
     public void modify(GeometryOperation op) {
     	op.modify(this);
     }
@@ -123,6 +143,15 @@ public class Geometry {
     
     public boolean shouldCalculateTangents() {
     	return calculateTangents;
+    }
+    
+    static class Attribute {
+        float[] data;
+        int size;
+        Attribute(float[] data, int size) {
+            this.data = data;
+            this.size = size;
+        }
     }
     
 }
