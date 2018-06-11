@@ -1,4 +1,4 @@
-package jonl.ge.core.light;
+package jonl.ge.mod.render;
 
 import jonl.ge.core.Component;
 import jonl.vmath.Vector3;

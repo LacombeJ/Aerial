@@ -28,7 +28,7 @@ public class GeneratedShader extends ShaderMaterial {
         add(slFrag);
     }
     
-    void add(ShaderLanguage sl) {
+    protected void add(ShaderLanguage sl) {
         sl.addUniformListAndMap(slUniformList, slUniformMap);
     }
     

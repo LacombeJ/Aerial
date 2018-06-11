@@ -6,7 +6,6 @@ import jonl.ge.core.material.GeneratedMaterial;
 import jonl.ge.core.material.GeneratedShader;
 import jonl.ge.core.material.ShaderMaterial;
 import jonl.ge.core.material.SolidMaterial;
-import jonl.ge.core.material.StandardMaterial;
 import jonl.ge.core.material.TextureMaterial;
 import jonl.jutils.misc.TypeUtils;
 
@@ -37,10 +36,6 @@ public abstract class Material {
     
     public GeneratedShader asGeneratedShader() {
     	return TypeUtils.cast(this, GeneratedShader.class);
-    }
-    
-    public StandardMaterial asStandardMaterial() {
-    	return TypeUtils.cast(this, StandardMaterial.class);
     }
     
     public ShaderMaterial asShaderMaterial() {

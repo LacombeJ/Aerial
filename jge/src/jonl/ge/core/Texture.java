@@ -8,9 +8,9 @@ public class Texture {
     
     public final int width;
     public final int height;
-    public final Internal format;
-    public final Wrap wrap;
-    public final Filter filter;
+    Internal format;
+    Wrap wrap;
+    Filter filter;
     
     public Texture(float[] data, int width, int height, Internal format, Wrap wrap, Filter filter) {
         this.data = ArrayUtils.copy(data);
@@ -37,7 +37,7 @@ public class Texture {
         this(width,height,Internal.RGBA16,Wrap.CLAMP,Filter.MIPMAP);
     }
 
-    public int getWidth() {
+    public int width() {
         return width;
     }
     public int getHeight() {

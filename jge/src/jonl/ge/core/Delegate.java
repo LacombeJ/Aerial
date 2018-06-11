@@ -3,7 +3,6 @@ package jonl.ge.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import jonl.ge.core.light.Light;
 import jonl.jgl.GL;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
@@ -57,8 +56,6 @@ public class Delegate {
 	
 	private final ArrayList<Callback2D<Program,Camera>> programUpdate = new ArrayList<>();
 	
-	private final ArrayList<Callback<List<Light>>> findLights = new ArrayList<>();
-	
 	private final ArrayList<Callback<List<SceneObject>>> findSceneObjects = new ArrayList<>();
 	
 	private final ArrayList<Callback2D<SceneObject,Camera>> sceneObjectRenderer = new ArrayList<>();
@@ -79,9 +76,6 @@ public class Delegate {
 	
 	/** @return Updating programs with camera information */
     public ArrayList<Callback2D<Program,Camera>> onProgramUpdate() { return programUpdate; }
-
-	/** @return Called in render loop after finding all lights in the scene */
-    public ArrayList<Callback<List<Light>>> onFindLights() { return findLights; }
     
     /** @return Called in render loop after finding all scene objects in the scene */
     public ArrayList<Callback<List<SceneObject>>> onFindSceneObjects() { return findSceneObjects; }

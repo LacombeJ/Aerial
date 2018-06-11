@@ -12,11 +12,11 @@ public class ShaderMaterial extends Material {
     HashMap<String,Object> uniformMap = new HashMap<>();
     
     //Shaders are deleted by MaterialProgramMapper on glProgram creation
-    String vertexShader;
-    String geometryShader;
-    String fragmentShader;
+    protected String vertexShader;
+    protected String geometryShader;
+    protected String fragmentShader;
     
-    private int id;
+    protected int id;
     private static int materialCount = 0;
     
     ShaderMaterial() {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jonl.ge.core.Material.Uniform;
-import jonl.ge.core.light.Light;
 import jonl.ge.core.render.CameraCull;
 import jonl.ge.core.render.FBCamera;
 import jonl.ge.core.render.RenderTexture;
@@ -56,10 +55,8 @@ class SceneRenderer {
 	void render(Scene scene) {
 		
 		ArrayList<Camera> cameras = scene.findComponentsOfType(Camera.class);
-        ArrayList<Light> lights = scene.findComponents(Light.class);
         ArrayList<SceneObject> sceneObjects = scene.getAllSceneObjects();
         
-        jonl.jutils.func.List.iterate(manager.delegate().onFindLights(), (cb) -> cb.f(lights) );
         jonl.jutils.func.List.iterate(manager.delegate().onFindSceneObjects(), (cb) -> cb.f(sceneObjects) );
         
         // Sort cameras from lowest to highest rendering order
@@ -69,7 +66,7 @@ class SceneRenderer {
         
         for (Camera camera : cameras) {
             
-            renderCamera(camera,lights,sceneObjects);
+            renderCamera(camera,sceneObjects);
             
         }
 		
@@ -77,13 +74,12 @@ class SceneRenderer {
 	
 	//TODO refactor this and code that uses this
     private void renderCameraSeparately(Camera camera, Scene scene) {
-        ArrayList<Light> lights = scene.findComponents(Light.class);
         ArrayList<SceneObject> sceneObjects = scene.getAllSceneObjects();
         
-        renderCamera(camera,lights,sceneObjects);
+        renderCamera(camera,sceneObjects);
     }
 
-    private void renderCamera(Camera camera, ArrayList<Light> lights, ArrayList<SceneObject> sceneObjects) {
+    private void renderCamera(Camera camera, ArrayList<SceneObject> sceneObjects) {
         jonl.jutils.func.List.iterate(manager.delegate().onPreRenderCamera(), (cb) -> cb.f(camera) );
         
         setupCamera(camera);

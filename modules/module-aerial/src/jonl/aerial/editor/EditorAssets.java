@@ -5,7 +5,7 @@ import jonl.ge.core.Input;
 import jonl.ge.core.Property;
 import jonl.ge.core.Transform;
 import jonl.ge.core.Input.CursorState;
-import jonl.ge.core.light.Light;
+import jonl.ge.mod.render.Light;
 import jonl.vmath.Mathf;
 import jonl.vmath.Quaternion;
 import jonl.vmath.Vector3;

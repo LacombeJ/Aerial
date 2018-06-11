@@ -11,7 +11,6 @@ import jonl.ge.core.Service;
 import jonl.ge.core.Time;
 import jonl.ge.core.Window;
 import jonl.ge.core.Input.CursorState;
-import jonl.ge.core.light.LightModule;
 import jonl.ge.mod.fx.FXModule;
 import jonl.ge.mod.physics.PhysicsModule;
 import jonl.ge.mod.ray.RayModule;
@@ -46,12 +45,11 @@ public abstract class AbstractApplication {
         attachments = new HashMap<>();
         caller = new Caller();
         
-        add(new LightModule());
+        add(new RenderModule());
         add(new TextModule());
         add(new FXModule());
         add(new PhysicsModule());
         add(new RayModule());
-        add(new RenderModule());
     }
     
     // -------------------------------------------------------

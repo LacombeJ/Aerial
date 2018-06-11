@@ -5,6 +5,7 @@ import jonl.ge.core.material.ShaderLanguage.SLBool;
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
 import jonl.ge.core.material.ShaderLanguage.SLFunc;
 import jonl.ge.core.material.ShaderLanguage.SLVec2;
+import jonl.ge.core.material.ShaderLanguage.SLVec4;
 import jonl.jutils.func.Tuple2;
 
 public class SLUtils {
@@ -363,7 +364,19 @@ public class SLUtils {
            
     }
     
+    /**
+     * @return unit vector(0,1) to normal vector (-1,1)
+     */
+    public static SLVec4 unitToNorm(ShaderLanguage sl, SLVec4 vec) {
+        return sl.vec4(vec+"*2 - 1");
+    }
     
+    /**
+     * @return normal vector (-1,1) to unit vector(0,1)
+     */
+    public static SLVec4 normToUnit(ShaderLanguage sl, SLVec4 vec) {
+        return sl.vec4("("+vec+"+1) / 2");
+    }
 
     
     

@@ -390,7 +390,7 @@ public class ShaderLanguage {
     	v.sl = this;
         v.type = getType(v);
         v.name = name;
-        putAttribute(String.format("layout (location = %d) %s %s %s",layoutType,index,v.type,v.name));
+        putAttribute(String.format("layout (location = %d) %s %s %s",index,layoutType,v.type,v.name));
         return (T) v;
     }
 	public <T extends SLData> T layoutIn(Class<T> returnClass, int index, String name) {
