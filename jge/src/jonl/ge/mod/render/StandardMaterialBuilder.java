@@ -49,7 +49,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         ShaderLanguage vs = SLUtils.normalVert();
         ShaderLanguage fs = this;
         
-        ShaderLanguage vsd = SLUtils.normalVert();
+        ShaderLanguage vsd = deferredVert();
         ShaderLanguage fsd = deferred();
         
         mat.vertexShader(vs.shader());
@@ -64,6 +64,13 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         return build;
     }
     
+    private ShaderLanguage deferredVert() {
+        ShaderLanguage sl = SLUtils.normalVert();
+        sl.attributeOut("vec3 vStencil");
+        sl.putStatement("vStencil = vec3(1,1,0)");
+        return sl;
+    }
+    
     private ShaderLanguage deferred() {
         ShaderLanguage sl = new ShaderLanguage();
         
@@ -72,14 +79,17 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         SLVec4 gPosition = sl.layoutOut(SLVec4.class, 0, "gPosition");
         SLVec4 gNormal = sl.layoutOut(SLVec4.class, 1, "gNormal");
         SLVec4 gTexCoord = sl.layoutOut(SLVec4.class, 2, "gTexCoord");
+        SLVec4 gStencil = sl.layoutOut(SLVec4.class, 3, "gStencil");
         
         SLVec4 vPosition = sl.attributeIn(SLVec4.class, "vPosition");
         SLVec4 vNormal = sl.attributeIn(SLVec4.class, "vNormal");
         SLVec4 vTexCoord = sl.attributeIn(SLVec4.class, "vTexCoord");
+        SLVec4 vStencil = sl.attributeIn(SLVec4.class, "vStencil");
         
         sl.set(gPosition,vPosition);
         sl.set(gNormal,vNormal);
         sl.set(gTexCoord,vTexCoord);
+        sl.set(gStencil,vStencil);
         
         return sl;
     }

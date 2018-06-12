@@ -17,6 +17,7 @@ import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback2D;
 import jonl.jutils.func.Callback3D;
 import jonl.vmath.Vector3;
+import jonl.vmath.Vector4;
 
 /**
  * Module for advanced rendering
@@ -27,6 +28,7 @@ import jonl.vmath.Vector3;
 public class RenderModule extends Attachment {
 
     Callback<Scene> onSceneUpdate;
+    Callback<Camera> preRenderCamera;
     Callback<Camera> postRenderCamera;
     Callback3D<Program, Material, Camera> setUniforms;
     Callback2D<SceneObject,Camera> onSceneObjectRender;
@@ -35,11 +37,17 @@ public class RenderModule extends Attachment {
     
     List<Light> lights;
     
+    Vector4 clearColor = new Vector4(0,0,0,1);
+    
     public RenderModule() {
         super("render-module");
         
         onSceneUpdate = (scene) -> {
             onSceneUpdate(scene);
+        };
+        
+        preRenderCamera = (camera) -> {
+            prerender(camera);
         };
         
         postRenderCamera = (camera) -> {
@@ -58,6 +66,7 @@ public class RenderModule extends Attachment {
     @Override
     public void add(Delegate delegate, Service service) {
         this.service = service;
+        delegate.onPreRenderCamera().add(preRenderCamera);
         delegate.onPostRenderCamera().add(postRenderCamera);
         delegate.onSceneUpdate().add(onSceneUpdate);
         delegate.onMaterialUpdate().add(setUniforms);
@@ -66,10 +75,20 @@ public class RenderModule extends Attachment {
 
     @Override
     public void remove(Delegate delegate, Service service) {
+        delegate.onPreRenderCamera().remove(preRenderCamera);
         delegate.onPostRenderCamera().remove(postRenderCamera);
         delegate.onSceneUpdate().remove(onSceneUpdate);
         delegate.onMaterialUpdate().remove(setUniforms);
         delegate.onSceneObjectRender().remove(onSceneObjectRender);
+    }
+    
+    private void prerender(Camera camera) {
+        if (camera instanceof DeferredCamera) {
+            DeferredCamera pc = (DeferredCamera)camera;
+            
+            clearColor = pc.getClearColor();
+            pc.setClearColor(new Vector4(0,0,0,1));
+        }
     }
     
     private void render(Camera camera) {
@@ -87,13 +106,18 @@ public class RenderModule extends Attachment {
         } else if (camera instanceof DeferredCamera) {
             DeferredCamera pc = (DeferredCamera)camera;
             
-            pc.material.setUniform("gPosition",new TextureUniform(pc.texture(),0));
-            pc.material.setUniform("gNormal",new TextureUniform(pc.normal(),1));
-            pc.material.setUniform("gTexCoord",new TextureUniform(pc.texCoord(),2));
+            pc.setClearColor(clearColor);
+            
+            if (pc.material instanceof DeferredMaterial) {
+                pc.material.setUniform("gPosition",new TextureUniform(pc.texture(),0));
+                pc.material.setUniform("gNormal",new TextureUniform(pc.normal(),1));
+                pc.material.setUniform("gTexCoord",new TextureUniform(pc.texCoord(),2));
+                pc.material.setUniform("gStencil",new TextureUniform(pc.stencil(),3));
+            }
             
             setUniforms(pc.material,pc); //Adding lights, etc
             
-            camera.service().renderDirect(pc,pc.material,null);
+            pc.service().renderDirect(pc,pc.material,null);
             
             Window window = pc.window();
             int width = window.width();

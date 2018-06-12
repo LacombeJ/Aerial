@@ -17,6 +17,7 @@ public class DeferredCamera extends Camera implements FBCamera {
     Texture texCoord = null;
     Texture diffuse = null;
     Texture specular = null;
+    Texture stencil = null;
     Material material;
     
     public DeferredCamera(int width, int height, Material material) {
@@ -32,9 +33,11 @@ public class DeferredCamera extends Camera implements FBCamera {
         texCoord = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
         diffuse = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
         specular = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
+        stencil = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
         buffer.attach(texture);
         buffer.attach(normal);
         buffer.attach(texCoord);
+        buffer.attach(stencil);
         buffer.attach(diffuse);
         buffer.attach(specular);
     }
@@ -49,6 +52,10 @@ public class DeferredCamera extends Camera implements FBCamera {
     
     public Texture texCoord() {
         return texCoord;
+    }
+    
+    public Texture stencil() {
+        return stencil;
     }
     
     @Override

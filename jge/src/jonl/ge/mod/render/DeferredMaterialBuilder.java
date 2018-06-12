@@ -3,7 +3,6 @@ package jonl.ge.mod.render;
 import jonl.ge.core.shaders.SLUtils;
 import jonl.ge.core.material.ShaderLanguage;
 import jonl.ge.core.material.StandardMaterialUtil;
-import jonl.ge.core.material.ShaderLanguage.SLVec2;
 import jonl.ge.core.shaders.SLImports.GLSLGamma;
 
 /**
@@ -23,6 +22,8 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
     SLVec3 eye;
     SLInt numLights;
     SLFunc<SLVec4> textureLinear;
+    
+    SLVec3 vStencil;
 	
 	public SLVec3   diffuse     = null;
     public SLVec3   specular    = null;
@@ -69,6 +70,7 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
     	SLTexU gPosition = sl.texture("gPosition");
     	SLTexU gNormal = sl.texture("gNormal");
     	SLTexU gTexCoord = sl.texture("gTexCoord");
+    	SLTexU gStencil = sl.texture("gStencil");
     	
     	SLVec2 texCoordOrig = sl.attributeIn(SLVec2.class, "vTexCoord");
     	SLVec2 texCoord = sl.vec2(texCoordOrig.x(), sl.sub(1,texCoordOrig.y()));
@@ -76,6 +78,7 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
     	vPosition = sl.sample(gPosition, texCoord).xyz();
         vNormal = sl.sample(gNormal, texCoord).xyz();
         vTexCoord = sl.sample(gTexCoord, texCoord).xy();
+        vStencil = sl.sample(gStencil, texCoord).xyz();
         
         vNormal = sl.normalize(vNormal);
         
@@ -99,6 +102,10 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
         SLVec3 fDiffuse = (this.diffuse==null) ? vec3(0.5f) : this.diffuse;
         SLVec3 fNormal = (this.normal==null) ? vNormal : this.normal;
         SLVec3 fSpecular = (this.specular==null) ? vec3(0.5f) : this.specular;
+        
+        slIf(equals(vStencil.x(),0f));
+        discard();
+        slEndIf();
         
         StandardMaterialUtil.fragment(this,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular);
     }

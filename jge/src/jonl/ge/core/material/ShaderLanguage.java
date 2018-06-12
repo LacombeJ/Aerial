@@ -827,6 +827,9 @@ public class ShaderLanguage {
     public <T extends SLData> SLBool equals(T u, T v) {
         return (SLBool) putVariable(new SLBoolV(),u+"=="+v);
     }
+    public <T extends SLData> SLBool equals(SLFloat u, float v) {
+        return (SLBool) putVariable(new SLBoolV(),u+"=="+v);
+    }
     public <T extends SLData> SLBool equals(SLInt u, int v) {
         return (SLBool) putVariable(new SLBoolV(),u+"=="+v);
     }
