@@ -20,6 +20,8 @@ public class DeferredCamera extends Camera implements FBCamera {
     Texture specular = null;
     Material material;
     
+    RenderPass renderPass = null;
+    
     public DeferredCamera(int width, int height, Material material) {
         resize(width,height);
         this.material = material;
@@ -62,6 +64,10 @@ public class DeferredCamera extends Camera implements FBCamera {
     @Override
     public FrameBuffer buffer() {
         return buffer;
+    }
+    
+    public void setRenderPass(RenderPass rp) {
+        renderPass = rp;
     }
 
 }

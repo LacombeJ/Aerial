@@ -1,9 +1,14 @@
-package jonl.ge.mod.misc;
+package jonl.ge.mod.render.pass;
 
 import jonl.ge.core.Camera;
-import jonl.ge.core.Component;
+import jonl.ge.core.FrameBuffer;
 import jonl.ge.core.Material;
 import jonl.ge.core.Texture;
+import jonl.ge.core.TextureUniform;
+import jonl.ge.core.Texture.Filter;
+import jonl.ge.core.Texture.Internal;
+import jonl.ge.core.Texture.Wrap;
+import jonl.ge.core.material.GeneratedShader;
 import jonl.ge.core.material.ShaderLanguage;
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
 import jonl.ge.core.material.ShaderLanguage.SLInt;
@@ -12,23 +17,18 @@ import jonl.ge.core.material.ShaderLanguage.SLTexU;
 import jonl.ge.core.material.ShaderLanguage.SLVec2;
 import jonl.ge.core.material.ShaderLanguage.SLVec3;
 import jonl.ge.core.material.ShaderLanguage.SLVec4;
-import jonl.ge.core.Texture.Filter;
-import jonl.ge.core.Texture.Internal;
-import jonl.ge.core.Texture.Wrap;
-import jonl.ge.core.TextureUniform;
 import jonl.ge.core.shaders.SLUtils;
+import jonl.ge.mod.render.ImageEffect;
 import jonl.ge.utils.GLUtils;
 import jonl.jgl.Program;
 import jonl.vmath.Mathf;
 import jonl.vmath.Vector3;
 
-/**
- * https://learnopengl.com/#!Advanced-Lighting/SSAO
- * 
- * @author Jonathan Lacombe
- *
- */
-public class SSAO extends Component {
+public class SSAO extends ImageEffect {
+
+    FrameBuffer buffer;
+    Texture ssao;
+    Material material;
     
     private final int ssaoKernelSize = 8;
     private final int ssaoNoiseSize = 4;
@@ -65,18 +65,32 @@ public class SSAO extends Component {
         }
         noiseTexture = new Texture(Vector3.pack(ssaoNoise),
                 ssaoNoiseSize,ssaoNoiseSize,Internal.RGB16,Wrap.REPEAT,Filter.NEAREST);
+        
+        create();
     }
     
-    public void update(Material mat, Texture gPosition, Texture gNormal, Texture gStencil) {
-        Camera camera = getComponentOfType(Camera.class);
-
-        mat.setUniform("gPosition",new TextureUniform(gPosition,0));
-        mat.setUniform("gNormal",new TextureUniform(gNormal,1));
-        mat.setUniform("texNoise",new TextureUniform(noiseTexture,2));
-        mat.setUniform("gStencil",new TextureUniform(gStencil,3));
+    private void create() {
+        buffer = new FrameBuffer(1024,576);
+        ssao = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
+        
+        buffer.attach(ssao);
+        
+        material = new GeneratedShader(vs(),fs());
+    }
+    
+    public Texture ssao() {
+        return ssao;
+    }
+    
+    @Override
+    public void input(Camera camera, Texture[] textures) {
+        material.setUniform("gPosition",new TextureUniform(textures[0],0));
+        material.setUniform("gNormal",new TextureUniform(textures[1],1));
+        material.setUniform("texNoise",new TextureUniform(noiseTexture,2));
+        material.setUniform("gStencil",new TextureUniform(textures[2],3));
         
         //TODO remove service getOrCreate method and modify shader material to handle arrays
-        Program program = camera.service().getOrCreateProgram(mat);
+        Program program = camera.service().getOrCreateProgram(material);
         
         camera.service().getGL().glUseProgram(program);
         
@@ -86,12 +100,22 @@ public class SSAO extends Component {
         
         camera.service().getGL().glUseProgram(null);
     }
+
+    @Override
+    public Material material() {
+        return material;
+    }
+
+    @Override
+    public FrameBuffer buffer() {
+        return buffer;
+    }
     
-    public ShaderLanguage vertex() {
+    private ShaderLanguage vs() {
         return SLUtils.basicVert();
     }
     
-    public ShaderLanguage fragment() {
+    private ShaderLanguage fs() {
         ShaderLanguage sl = new ShaderLanguage();
         
         sl.version("330");
@@ -157,5 +181,5 @@ public class SSAO extends Component {
         
         return sl;
     }
-    
+
 }

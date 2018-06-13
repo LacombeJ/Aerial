@@ -14,6 +14,7 @@ module jonl.ge {
 	exports jonl.ge.mod.physics;
 	exports jonl.ge.mod.ray;
 	exports jonl.ge.mod.render;
+	exports jonl.ge.mod.render.pass;
 	exports jonl.ge.mod.text;
 	
 	exports jonl.ge.utils;

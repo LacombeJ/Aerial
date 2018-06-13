@@ -12,6 +12,7 @@ import jonl.ge.core.SceneObject;
 import jonl.ge.core.Service;
 import jonl.ge.core.TextureUniform;
 import jonl.ge.core.Window;
+import jonl.ge.mod.render.RenderPass.Pass;
 import jonl.jgl.Program;
 import jonl.jutils.func.Callback;
 import jonl.jutils.func.Callback2D;
@@ -108,16 +109,31 @@ public class RenderModule extends Attachment {
             
             pc.setClearColor(clearColor);
             
-            if (pc.material instanceof DeferredMaterial) {
-                pc.material.setUniform("gPosition",new TextureUniform(pc.position(),0));
-                pc.material.setUniform("gNormal",new TextureUniform(pc.normal(),1));
-                pc.material.setUniform("gTexCoord",new TextureUniform(pc.texCoord(),2));
-                pc.material.setUniform("gStencil",new TextureUniform(pc.stencil(),3));
+            if (pc.renderPass==null) {
+            
+                if (pc.material instanceof DeferredMaterial) {
+                    pc.material.setUniform("gPosition",new TextureUniform(pc.position(),0));
+                    pc.material.setUniform("gNormal",new TextureUniform(pc.normal(),1));
+                    pc.material.setUniform("gTexCoord",new TextureUniform(pc.texCoord(),2));
+                    pc.material.setUniform("gStencil",new TextureUniform(pc.stencil(),3));
+                }
+                
+                setUniforms(pc.material,pc); //Adding lights, etc
+                
+                pc.service().renderDirect(pc,pc.material,null);
+                
+            } else {
+                
+                for (Pass pass : pc.renderPass.passes) {
+                    pass.x.input(pc,pass.y.f());
+                    pc.service().renderDirect(pc,pass.x.material(),pass.x.buffer());
+                }
+                if (pc.renderPass.finish!=null) {
+                    pc.renderPass.prepareFinish();
+                    pc.service().renderDirect(pc,pc.renderPass.material,null);
+                }
+                
             }
-            
-            setUniforms(pc.material,pc); //Adding lights, etc
-            
-            pc.service().renderDirect(pc,pc.material,null);
             
             Window window = pc.window();
             int width = window.width();
