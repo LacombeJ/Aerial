@@ -621,6 +621,14 @@ public class ShaderLanguage {
     }
     public void slEndLoop()            	{ putEndBracket(); }
     
+    public void slBreak() {
+        putString("break;\n");
+    }
+    
+    public void slContinue() {
+        putString("continue;\n");
+    }
+    
     // Const Variables ----------------------------------------------------------------------------------
     
     public SLBool   slBoolc  (boolean b) 	{ return putConstVariable(new SLBoolV(),  b+""); }
@@ -669,6 +677,7 @@ public class ShaderLanguage {
     public SLVec4 vec4(SLVec2 u, float z, float w)                  { return vec4p(u,z,w); }
     public SLVec4 vec4(SLVec3 u, SLFloat w)                         { return vec4p(u,w); }
     public SLVec4 vec4(SLVec2 u, SLFloat z, SLFloat w)              { return vec4p(u,z,w); }
+    public SLVec4 vec4(SLVec2 u, SLFloat z, float w)                { return vec4p(u,z,w); }
     public SLVec4 vec4(Vector4 v)                                   { return vec4p(v.x,v.y,v.z,v.w); }
     public SLVec4 vec4(float v)                                     { return vec4p(v,v,v,v); }
     public SLVec4 vec4(SLFloat v)                                   { return vec4p(v,v,v,v); }
@@ -727,7 +736,13 @@ public class ShaderLanguage {
                                                                                     m.m20,m.m21,m.m22,m.m23,
                                                                                     m.m30,m.m31,m.m32,m.m33); }
     
-    
+    private SLMat3 mat3p(Object... params) {
+        return putVariable(new SLMat3V(),funcBuild("mat3",params));
+    }
+    public SLMat3 mat3(SLVec3 x, SLVec3 y, SLVec3 z)        { return mat3p(x,y,z); }
+    public SLMat3 mat3(Matrix3 m)                           { return mat3p( m.m00,m.m01,m.m02,
+                                                                            m.m10,m.m11,m.m12,
+                                                                            m.m20,m.m21,m.m22); }
     
     /*
     public SLVec4 sample(SLTexU u) {
@@ -1012,6 +1027,15 @@ public class ShaderLanguage {
     
     public <T extends SLData> SLFloat distance(T u, T v) {
         return putVariable(new SLFloatV(),funcBuild("distance",u,v));
+    }
+    
+    public <T extends SLData> SLFloat dot(T u, T v) {
+        return putVariable(new SLFloatV(),funcBuild("dot",u,v));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends SLData> T cross(T u, T v) {
+        return (T) putVariable(getVar(u),funcBuild("cross",u,v));
     }
     
     @SuppressWarnings("unchecked")

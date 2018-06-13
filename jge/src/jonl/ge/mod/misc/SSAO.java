@@ -1,0 +1,161 @@
+package jonl.ge.mod.misc;
+
+import jonl.ge.core.Camera;
+import jonl.ge.core.Component;
+import jonl.ge.core.Material;
+import jonl.ge.core.Texture;
+import jonl.ge.core.material.ShaderLanguage;
+import jonl.ge.core.material.ShaderLanguage.SLFloat;
+import jonl.ge.core.material.ShaderLanguage.SLInt;
+import jonl.ge.core.material.ShaderLanguage.SLMat3;
+import jonl.ge.core.material.ShaderLanguage.SLTexU;
+import jonl.ge.core.material.ShaderLanguage.SLVec2;
+import jonl.ge.core.material.ShaderLanguage.SLVec3;
+import jonl.ge.core.material.ShaderLanguage.SLVec4;
+import jonl.ge.core.Texture.Filter;
+import jonl.ge.core.Texture.Internal;
+import jonl.ge.core.Texture.Wrap;
+import jonl.ge.core.TextureUniform;
+import jonl.ge.core.shaders.SLUtils;
+import jonl.ge.utils.GLUtils;
+import jonl.jgl.Program;
+import jonl.vmath.Mathf;
+import jonl.vmath.Vector3;
+
+/**
+ * https://learnopengl.com/#!Advanced-Lighting/SSAO
+ * 
+ * @author Jonathan Lacombe
+ *
+ */
+public class SSAO extends Component {
+    
+    private final int ssaoKernelSize = 8;
+    private final int ssaoNoiseSize = 4;
+    
+    private final Vector3[] ssaoKernel;
+    private final Vector3[] ssaoNoise;
+    
+    private final Texture noiseTexture;
+    
+    public SSAO() {
+        ssaoKernel = new Vector3[ssaoKernelSize*ssaoKernelSize];
+        //TODO try to multiply i * (1/64f) ? performance vs accuracy >
+        for (int i=0; i<ssaoKernel.length; i++) {
+            Vector3 sample = new Vector3(
+                Mathf.rand() * 2f - 1f,
+                Mathf.rand() * 2f - 1f,
+                Mathf.rand()
+            );
+            sample.normalize();
+            sample.scale(Mathf.rand());
+            float scale = i / (float)ssaoKernel.length;
+            scale = Mathf.lerp(scale*scale,0.1f,1f);
+            sample.scale(scale);
+            ssaoKernel[i] = sample;
+        }
+        ssaoNoise = new Vector3[ssaoNoiseSize*ssaoNoiseSize];
+        for (int i=0; i<ssaoNoise.length; i++) {
+            Vector3 noise = new Vector3(
+                Mathf.rand() * 2f - 1f,
+                Mathf.rand() * 2f - 1f,
+                0
+            );
+            ssaoNoise[i] = noise;
+        }
+        noiseTexture = new Texture(Vector3.pack(ssaoNoise),
+                ssaoNoiseSize,ssaoNoiseSize,Internal.RGB16,Wrap.REPEAT,Filter.NEAREST);
+    }
+    
+    public void update(Material mat, Texture gPosition, Texture gNormal, Texture gStencil) {
+        Camera camera = getComponentOfType(Camera.class);
+
+        mat.setUniform("gPosition",new TextureUniform(gPosition,0));
+        mat.setUniform("gNormal",new TextureUniform(gNormal,1));
+        mat.setUniform("texNoise",new TextureUniform(noiseTexture,2));
+        mat.setUniform("gStencil",new TextureUniform(gStencil,3));
+        
+        //TODO remove service getOrCreate method and modify shader material to handle arrays
+        Program program = camera.service().getOrCreateProgram(mat);
+        
+        camera.service().getGL().glUseProgram(program);
+        
+        GLUtils.setUniform(program,"samples",ssaoKernel);
+        GLUtils.setUniform(program,"P",camera.getProjection());
+        GLUtils.setUniform(program,"V",camera.computeViewMatrix());
+        
+        camera.service().getGL().glUseProgram(null);
+    }
+    
+    public ShaderLanguage vertex() {
+        return SLUtils.basicVert();
+    }
+    
+    public ShaderLanguage fragment() {
+        ShaderLanguage sl = new ShaderLanguage();
+        
+        sl.version("330");
+        
+        int kernelSize = 64;
+        float radius = 0.5f;
+        float bias = 0.025f;
+        
+        SLTexU gPosition = sl.texture("gPosition");
+        SLTexU gNormal = sl.texture("gNormal");
+        SLTexU texNoise = sl.texture("texNoise");
+        SLTexU gStencil = sl.texture("gStencil");
+        
+        SLVec2 texCoord = SLUtils.flip(sl,sl.attributeIn(SLVec2.class, "vTexCoord"));
+        
+        sl.uniform("vec3 samples[64]");
+        sl.uniform("mat4 V");
+        sl.uniform("mat4 P");
+        
+        SLVec2 noiseScale = sl.vec2c(1024f/4, 576/4);
+        
+        SLVec4 sampleFragPos = sl.sample(gPosition, texCoord);
+        SLVec3 fragPos = sl.vec3("(V * "+sampleFragPos+").xyz");
+        
+        SLVec3 sampleNormal = sl.normalize(sl.sample(gNormal, texCoord).xyz());
+        SLVec3 normal = sl.vec3("inverse(transpose(mat3(V))) * "+sampleNormal);
+        
+        SLVec3 randomVec = sl.sample(texNoise, sl.mul(texCoord,noiseScale)).xyz();
+        
+        SLVec3 tangent = sl.normalize(sl.sub(randomVec,sl.mul(normal,sl.dot(randomVec,normal))));
+        SLVec3 bitangent = sl.normalize(sl.cross(normal, tangent));
+        SLMat3 TBN = sl.mat3(tangent, bitangent, normal);
+        
+        SLFloat occlusion = sl.slFloat(0f);
+        
+        SLInt i = sl.slLoop(0,kernelSize,1); {
+            
+            SLVec3 sample = sl.vec3(TBN+" * samples["+i+"]");
+            sample = sl.add(fragPos,sl.mul(sample,radius));
+            
+            SLVec4 offset = sl.vec4(sample, 1.0f);
+            sl.putStatement(offset+"      = P * "+offset);
+            sl.putStatement(offset+".xyz /= "+offset+".w");
+            sl.putStatement(offset+".xyz  = "+offset+".xyz * 0.5 + 0.5");
+            
+            SLVec4 sampleDepthVec = sl.sample(gPosition,offset.xy());
+            SLFloat sampleDepth = sl.slFloat("(V * "+sampleDepthVec+").z");
+            
+            // Using stencil buffer to ensure edges look nice
+            SLVec4 sampleStencilVec = sl.sample(gStencil,offset.xy());
+            sl.slIf(sl.equals(sampleStencilVec.x(),0f));
+            sl.set(sampleDepth,sl.slFloat(1));
+            sl.slEndIf();
+            
+            sl.putStatement(occlusion+" += ("+sampleDepth+" >= "+sample+".z + "+bias+" ? 1.0 : 0.0)");
+            
+        }
+        sl.slEndLoop();
+        
+        sl.putStatement(occlusion+" = 1 - ("+occlusion+" / 16)");
+        
+        sl.gl_FragColor(sl.vec4(occlusion,occlusion,occlusion,1));
+        
+        return sl;
+    }
+    
+}

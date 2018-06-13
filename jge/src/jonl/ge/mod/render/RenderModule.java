@@ -109,7 +109,7 @@ public class RenderModule extends Attachment {
             pc.setClearColor(clearColor);
             
             if (pc.material instanceof DeferredMaterial) {
-                pc.material.setUniform("gPosition",new TextureUniform(pc.texture(),0));
+                pc.material.setUniform("gPosition",new TextureUniform(pc.position(),0));
                 pc.material.setUniform("gNormal",new TextureUniform(pc.normal(),1));
                 pc.material.setUniform("gTexCoord",new TextureUniform(pc.texCoord(),2));
                 pc.material.setUniform("gStencil",new TextureUniform(pc.stencil(),3));

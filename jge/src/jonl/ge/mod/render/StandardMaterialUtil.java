@@ -1,5 +1,6 @@
-package jonl.ge.core.material;
+package jonl.ge.mod.render;
 
+import jonl.ge.core.material.ShaderLanguage;
 import jonl.ge.core.material.ShaderLanguage.SLArray;
 import jonl.ge.core.material.ShaderLanguage.SLDeclare;
 import jonl.ge.core.material.ShaderLanguage.SLFloat;
@@ -15,15 +16,13 @@ import jonl.ge.core.shaders.SLImports.SpecularPhong;
 
 public class StandardMaterialUtil {
 
-    public static void fragment(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
-        
+    public static SLVec3 light(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
         // Declares
         // ================================================================================================== //
         
         DiffuseOrenNayer orenNayer = sl.include(new DiffuseOrenNayer());
         SpecularPhong phong = sl.include(new SpecularPhong());
         Attenuation attenuation = sl.include(new Attenuation());
-        GLSLGamma glslGamma = sl.include(new GLSLGamma());
         
         SLDeclare<SLLight> Light = sl.declare(() -> new SLLight());
         
@@ -90,6 +89,14 @@ public class StandardMaterialUtil {
             
         }
         sl.slEndLoop();
+        
+        return finalColor;
+    }
+    
+    public static void fragment(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
+        GLSLGamma glslGamma = sl.include(new GLSLGamma());
+        
+        SLVec3 finalColor = light(sl,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular);
         
         finalColor = sl.call(glslGamma.toGammaVec3, finalColor);
         

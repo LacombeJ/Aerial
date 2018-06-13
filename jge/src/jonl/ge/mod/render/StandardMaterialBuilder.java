@@ -2,7 +2,6 @@ package jonl.ge.mod.render;
 
 import jonl.ge.core.shaders.SLUtils;
 import jonl.ge.core.material.ShaderLanguage;
-import jonl.ge.core.material.StandardMaterialUtil;
 import jonl.ge.core.shaders.SLImports.GLSLGamma;
 
 /**
@@ -65,9 +64,32 @@ public class StandardMaterialBuilder extends ShaderLanguage {
     }
     
     private ShaderLanguage deferredVert() {
-        ShaderLanguage sl = SLUtils.normalVert();
+        ShaderLanguage sl = new ShaderLanguage();
+        
+        sl.version("330");
+        
+        sl.layoutIn(0,"vec4 vertex");
+        sl.layoutIn(1,"vec3 normal");
+        sl.layoutIn(2,"vec2 texCoord");
+        
+        sl.uniform("mat4 MVP");
+        sl.uniform("mat4 M");
+        
+        sl.attributeOut("vec3 vPosition");
+        sl.attributeOut("vec3 vNormal");
+        sl.attributeOut("vec2 vTexCoord");
+        
+        sl.putStatement("mat3 mNormal = transpose(inverse(mat3(M)))");
+        
+        sl.putStatement("vPosition = vec3(M * vertex)");
+        sl.putStatement("vNormal = normalize ( mNormal * normal )");
+        sl.putStatement("vTexCoord = texCoord");
+        
         sl.attributeOut("vec3 vStencil");
-        sl.putStatement("vStencil = vec3(1,1,0)");
+        sl.putStatement("vStencil = vec3(1,1,1)");
+        
+        sl.putStatement("gl_Position = MVP * vertex");
+        
         return sl;
     }
     
@@ -87,7 +109,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         SLVec4 vStencil = sl.attributeIn(SLVec4.class, "vStencil");
         
         sl.set(gPosition,vPosition);
-        sl.set(gNormal,vNormal);
+        sl.set(gNormal,sl.vec4(sl.normalize(vNormal.xyz()),1));
         sl.set(gTexCoord,vTexCoord);
         sl.set(gStencil,vStencil);
         

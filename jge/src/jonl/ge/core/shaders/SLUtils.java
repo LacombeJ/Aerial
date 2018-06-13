@@ -67,7 +67,6 @@ public class SLUtils {
         
         sl.putStatement("gl_Position = MVP * vertex");
         
-        
         sl.putStatement("mat3 mNormal = transpose(inverse(mat3(M)))");
         
         sl.putStatement("vPosition = vec3(M * vertex)");
@@ -377,7 +376,18 @@ public class SLUtils {
     public static SLVec4 normToUnit(ShaderLanguage sl, SLVec4 vec) {
         return sl.vec4("("+vec+"+1) / 2");
     }
+    
+    public static SLVec2 unitToNorm(ShaderLanguage sl, SLVec2 vec) {
+        return sl.vec2(vec+"*2 - 1");
+    }
+    
+    public static SLVec2 normToUnit(ShaderLanguage sl, SLVec2 vec) {
+        return sl.vec2("("+vec+"+1) / 2");
+    }
 
+    public static SLVec2 flip(ShaderLanguage sl, SLVec2 vec) {
+        return sl.vec2(vec.x(), sl.sub(1,vec.y()));
+    }
     
     
 }

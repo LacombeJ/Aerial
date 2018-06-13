@@ -81,6 +81,22 @@ public class GLUtils {
         program.setUniformMat4(name,m.toArray());
     }
     
+    public static void setUniform(Program program, String name, Vector2[] v) {
+        for (int i=0; i<v.length; i++) {
+            setUniform(program,name+"["+i+"]",v[i]);
+        }
+    }
+    public static void setUniform(Program program, String name, Vector3[] v) {
+        for (int i=0; i<v.length; i++) {
+            setUniform(program,name+"["+i+"]",v[i]);
+        }
+    }
+    public static void setUniform(Program program, String name, Vector4[] v) {
+        for (int i=0; i<v.length; i++) {
+            setUniform(program,name+"["+i+"]",v[i]);
+        }
+    }
+    
     public static jonl.jgl.Texture.Internal map(Texture.Internal internal) {
         switch (internal) {
         case R16F       : return jonl.jgl.Texture.Internal.R16F;

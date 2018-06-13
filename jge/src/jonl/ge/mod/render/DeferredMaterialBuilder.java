@@ -2,7 +2,6 @@ package jonl.ge.mod.render;
 
 import jonl.ge.core.shaders.SLUtils;
 import jonl.ge.core.material.ShaderLanguage;
-import jonl.ge.core.material.StandardMaterialUtil;
 import jonl.ge.core.shaders.SLImports.GLSLGamma;
 
 /**
@@ -24,6 +23,8 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
     SLFunc<SLVec4> textureLinear;
     
     SLVec3 vStencil;
+    
+    SLVec2 viewTexCoord;
 	
 	public SLVec3   diffuse     = null;
     public SLVec3   specular    = null;
@@ -73,12 +74,12 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
     	SLTexU gStencil = sl.texture("gStencil");
     	
     	SLVec2 texCoordOrig = sl.attributeIn(SLVec2.class, "vTexCoord");
-    	SLVec2 texCoord = sl.vec2(texCoordOrig.x(), sl.sub(1,texCoordOrig.y()));
+    	viewTexCoord = sl.vec2(texCoordOrig.x(), sl.sub(1,texCoordOrig.y()));
     	
-    	vPosition = sl.sample(gPosition, texCoord).xyz();
-        vNormal = sl.sample(gNormal, texCoord).xyz();
-        vTexCoord = sl.sample(gTexCoord, texCoord).xy();
-        vStencil = sl.sample(gStencil, texCoord).xyz();
+    	vPosition = sl.sample(gPosition, viewTexCoord).xyz();
+        vNormal = sl.sample(gNormal, viewTexCoord).xyz();
+        vTexCoord = sl.sample(gTexCoord, viewTexCoord).xy();
+        vStencil = sl.sample(gStencil, viewTexCoord).xyz();
         
         vNormal = sl.normalize(vNormal);
         
@@ -108,6 +109,10 @@ public class DeferredMaterialBuilder extends ShaderLanguage {
         slEndIf();
         
         StandardMaterialUtil.fragment(this,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular);
+    }
+    
+    public SLVec3 sampleView(SLTexU u) {
+        return this.sample(u, viewTexCoord).xyz();
     }
     
     /** Use this with StandardMaterial instead of regular SL sampling */
