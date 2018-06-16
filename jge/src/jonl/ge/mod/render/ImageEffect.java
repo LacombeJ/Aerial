@@ -13,4 +13,12 @@ public abstract class ImageEffect {
 
     public abstract FrameBuffer buffer();
     
+    public void preRender(Camera camera) {
+        
+    }
+    
+    public void postRender(Camera camera) {
+        
+    }
+    
 }

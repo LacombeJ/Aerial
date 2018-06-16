@@ -13,10 +13,11 @@ import jonl.ge.core.shaders.SLImports.Attenuation;
 import jonl.ge.core.shaders.SLImports.DiffuseOrenNayer;
 import jonl.ge.core.shaders.SLImports.GLSLGamma;
 import jonl.ge.core.shaders.SLImports.SpecularPhong;
+import jonl.jutils.func.Function;
 
 public class StandardMaterialUtil {
 
-    public static SLVec3 light(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
+    public static SLVec3 light(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular, Function<SLLight,SLVec3> ambientf) {
         // Declares
         // ================================================================================================== //
         
@@ -47,6 +48,8 @@ public class StandardMaterialUtil {
             
             SLLight light = sl.index(array, i);
             
+            SLVec3 ambient = ambientf.f(light);
+            
             // Point light
             sl.slIf(light.type+"=="+1); {
                 
@@ -60,7 +63,6 @@ public class StandardMaterialUtil {
                 
                 SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong, L, V, fNormal, shininess), specularScale, falloff);
                 SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer, L, V, fNormal, roughness, albedo), falloff);
-                SLVec3 ambient = light.ambient;
                 
                 sl.set(finalColor, sl.add(finalColor, sl.add(fDiffuse.mul(sl.add(diffuse, ambient)), specular)));
                 
@@ -80,7 +82,6 @@ public class StandardMaterialUtil {
                 
                 SLVec3 specular = sl.mul(fSpecular, sl.call(phong.phong, L, V, fNormal, shininess), specularScale);
                 SLVec3 diffuse = sl.mul(light.color, sl.call(orenNayer.orenNayer, L, V, fNormal, roughness, albedo));
-                SLVec3 ambient = light.ambient;
                 
                 sl.set(finalColor, sl.add(finalColor, sl.add(fDiffuse.mul(sl.add(diffuse, ambient)), specular)));
                 
@@ -93,25 +94,35 @@ public class StandardMaterialUtil {
         return finalColor;
     }
     
-    public static void fragment(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
+    public static SLVec3 light(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
+        Function<SLLight,SLVec3> ambientf = (light) -> light.ambient;
+        return light(sl,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular,ambientf);
+    }
+    
+    public static void fragment(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular, Function<SLLight,SLVec3> ambientf) {
         GLSLGamma glslGamma = sl.include(new GLSLGamma());
         
-        SLVec3 finalColor = light(sl,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular);
+        SLVec3 finalColor = light(sl,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular,ambientf);
         
         finalColor = sl.call(glslGamma.toGammaVec3, finalColor);
         
         sl.gl_FragColor(sl.vec4(finalColor, 1f));
     }
     
+    public static void fragment(ShaderLanguage sl, SLVec3 vPosition, SLVec3 eye, SLInt numLights, SLVec3 fDiffuse, SLVec3 fNormal, SLVec3 fSpecular) {
+        Function<SLLight,SLVec3> ambientf = (light) -> light.ambient;
+        fragment(sl,vPosition,eye,numLights,fDiffuse,fNormal,fSpecular,ambientf);
+    }
+    
     
     public static class SLLight extends SLStruct {
-        SLInt type;
-        SLVec3 position;
-        SLVec3 color;
-        SLVec3 ambient;
-        SLFloat falloff;
-        SLFloat radius;
-        SLVec3 direction;
+        public SLInt type;
+        public SLVec3 position;
+        public SLVec3 color;
+        public SLVec3 ambient;
+        public SLFloat falloff;
+        public SLFloat radius;
+        public SLVec3 direction;
         @Override
         public void init(SLStructBuilder sb) {
             type = sb.slInt("type");

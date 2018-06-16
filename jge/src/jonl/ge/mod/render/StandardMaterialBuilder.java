@@ -108,7 +108,7 @@ public class StandardMaterialBuilder extends ShaderLanguage {
         SLVec4 vTexCoord = sl.attributeIn(SLVec4.class, "vTexCoord");
         SLVec4 vStencil = sl.attributeIn(SLVec4.class, "vStencil");
         
-        sl.set(gPosition,vPosition);
+        sl.set(gPosition,sl.vec4(vPosition.xyz(),1));
         sl.set(gNormal,sl.vec4(sl.normalize(vNormal.xyz()),1));
         sl.set(gTexCoord,vTexCoord);
         sl.set(gStencil,vStencil);

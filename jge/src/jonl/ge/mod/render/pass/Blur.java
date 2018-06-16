@@ -53,7 +53,7 @@ public class Blur extends ImageEffect {
     public void input(Camera camera, Texture[] textures) {
         Window window = camera.window();
         float resolution = horizontal ? window.width() : window.height();
-        float radius = 3f;
+        float radius = 1f;
         Vector2 dir = horizontal ? new Vector2(1,0) : new Vector2(0,1);
         
         material.setUniform("texture",new TextureUniform(textures[0],0));

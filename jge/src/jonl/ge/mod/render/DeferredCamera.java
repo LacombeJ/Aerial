@@ -32,10 +32,10 @@ public class DeferredCamera extends Camera implements FBCamera {
         buffer = new FrameBuffer(width,height);
         position = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
         normal = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
-        texCoord = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
-        stencil = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
-        diffuse = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
-        specular = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
+        texCoord = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        stencil = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        diffuse = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        specular = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
         
         buffer.attach(position);
         buffer.attach(normal);

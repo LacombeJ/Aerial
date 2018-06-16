@@ -125,8 +125,10 @@ public class RenderModule extends Attachment {
             } else {
                 
                 for (Pass pass : pc.renderPass.passes) {
+                    pass.x.preRender(camera);
                     pass.x.input(pc,pass.y.f());
                     pc.service().renderDirect(pc,pass.x.material(),pass.x.buffer());
+                    pass.x.postRender(camera);
                 }
                 if (pc.renderPass.finish!=null) {
                     pc.renderPass.prepareFinish();
