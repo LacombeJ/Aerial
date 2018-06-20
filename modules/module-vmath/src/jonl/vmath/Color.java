@@ -28,6 +28,51 @@ public class Color {
     
     public final static Color TRANSPARENT   = Color.fromFloat(0,0,0,0);
     
+    // --------------------------------------------------------------------------------- //
+    // ------------------------------------ Crayola ------------------------------------ //
+    public final static Color BROWN         = Color.fromHex("#AF593E");
+    public final static Color RED_ORANGE    = Color.fromHex("#ED0A3F");
+    public final static Color SKY_BLUE      = Color.fromHex("#76D7EA");
+    public final static Color VIOLET        = Color.fromHex("#8359A3");
+    public final static Color YELLOW_GREEN  = Color.fromHex("#C5E17A");
+    public final static Color AQUA_GREEN    = Color.fromHex("#03BB85");
+    public final static Color GOLDEN_YELLOW = Color.fromHex("#FFDF00");
+    public final static Color JADE_GREEN    = Color.fromHex("#0A6B0D");
+    public final static Color LIGHT_BLUE    = Color.fromHex("8FD8D8");
+    public final static Color LIGHT_BROWN   = Color.fromHex("#A36F40");
+    public final static Color MAGENTA       = Color.fromHex("#F653A6");
+    public final static Color MAHOGANY      = Color.fromHex("#CA3435");
+    public final static Color PEACH         = Color.fromHex("#FFCBA4");
+    public final static Color TAN           = Color.fromHex("#FA9D5A");
+    public final static Color YELLOW_ORANGE = Color.fromHex("#FFAE42");
+    public final static Color BRONZE_YELLOW = Color.fromHex("#A78B00");
+    public final static Color COOL_GRAY     = Color.fromHex("#788193");
+    public final static Color DARK_BROWN    = Color.fromHex("#514E49");
+    public final static Color GREEN_BLUE    = Color.fromHex("#1164B4");
+    public final static Color LEMON_YELLOW  = Color.fromHex("#F4FA9F");
+    public final static Color LIGHT_ORANGE  = Color.fromHex("#FED8B1");
+    public final static Color MAROON        = Color.fromHex("#C32148");
+    public final static Color PINE_GREEN    = Color.fromHex("#01796F");
+    public final static Color RASBERRY      = Color.fromHex("#E90067");
+    public final static Color SALMON        = Color.fromHex("#FF91A4");
+    public final static Color SLATE         = Color.fromHex("#404E5A");
+    public final static Color TURQUOISE     = Color.fromHex("#6CDAE7");
+    public final static Color BUBBLE_GUM    = Color.fromHex("#FFC1CC");
+    public final static Color CERULEAN      = Color.fromHex("#006A93");
+    public final static Color HARVEST_GOLD  = Color.fromHex("#E2B631");
+    public final static Color LIME_GREEN    = Color.fromHex("#6EEB6E");
+    public final static Color MANGO         = Color.fromHex("#FFC800");
+    public final static Color MAUVE         = Color.fromHex("#CC99BA");
+    public final static Color NAVY_BLUE     = Color.fromHex("#00003B");
+    public final static Color ORCHID        = Color.fromHex("#BC6CAC");
+    public final static Color PALE_ROSE     = Color.fromHex("#DCCCD7");
+    public final static Color SAND          = Color.fromHex("#EBE1C2");
+    public final static Color SILVER        = Color.fromHex("#A6AAAE");
+    public final static Color TAUPE         = Color.fromHex("#B99685");
+    public final static Color TEAL          = Color.fromHex("#0086A7");
+    public final static Color COCOA         = Color.fromHex("#5E4330");
+    // --------------------------------------------------------------------------------- //
+    
     public final float r;
     public final float g;
     public final float b;

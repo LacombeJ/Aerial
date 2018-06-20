@@ -18,14 +18,14 @@ public class Pivot {
 
     private UIManager ui;
     private Window window;
-    private Editor editor;
+    //private Editor editor;
     
     HashMap<SubEditorTool,StoreTrait> storeTraits = new HashMap<>();
     
     HashMap<SubEditorTool,IconTrait> iconTraits = new HashMap<>();
     
     Pivot(Editor editor, UIManager ui, Window window) {
-        this.editor = editor;
+        //this.editor = editor;
         this.ui = ui;
         this.window = window;
     }
