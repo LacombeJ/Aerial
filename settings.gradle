@@ -8,5 +8,6 @@ include ":modules:module-jgl"
 include ":modules:module-aui"
 include ":modules:module-utils"
 include ":modules:module-vmath"
+include ":modules:module-physics2d"
 
 rootProject.name = 'javage'
