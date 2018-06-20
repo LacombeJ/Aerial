@@ -52,6 +52,7 @@ class SceneManager {
 	    List.iterate(delegate.onUpdate(), (cb) -> cb.f() );
 	    for (Scene scene : scenes) {
 	        scene.time().update();
+	        List.iterate(delegate.onScenePreUpdate(), (cb) -> cb.f(scene) );
 	        updater.update(scene);
 	        List.iterate(delegate.onSceneUpdate(), (cb) -> cb.f(scene) );
 	        renderer.render(scene);

@@ -26,6 +26,7 @@ public class Delegate {
 	
 	private final ArrayList<Callback<Scene>> scenePreCreate = new ArrayList<>();
 	private final ArrayList<Callback<Scene>> sceneCreate = new ArrayList<>();
+	private final ArrayList<Callback<Scene>> scenePreUpdate = new ArrayList<>();
 	private final ArrayList<Callback<Scene>> sceneUpdate = new ArrayList<>();
 	
 	
@@ -44,6 +45,9 @@ public class Delegate {
 	
 	/** @return Callback list for scene create call */
 	public ArrayList<Callback<Scene>> onSceneCreate() { return sceneCreate; }
+	
+	/** @return Callback list for scene update call */
+    public ArrayList<Callback<Scene>> onScenePreUpdate() { return scenePreUpdate; }
 	
 	/** @return Callback list for scene update call */
 	public ArrayList<Callback<Scene>> onSceneUpdate() { return sceneUpdate; }
