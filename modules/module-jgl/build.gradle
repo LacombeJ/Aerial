@@ -21,7 +21,8 @@ String[][] libs = [
     ['_glfw',       'lwjgl-glfw'        ,'glfw' ],
     ['_openal',     'lwjgl-openal'      ,'OpenAL' ],
     ['_opengl',     'lwjgl-opengl'      ,'lwjgl_opengl' ],
-    ['_stb',        'lwjgl-stb'         ,'lwjgl_stb' ]
+    ['_stb',        'lwjgl-stb'         ,'lwjgl_stb' ],
+    ['_assimp',     'lwjgl-assimp'      ,'lwjgl_assimp' ]
 ]
 
 FileCollection[] libFiles = new FileCollection[libs.length]
@@ -110,7 +111,8 @@ boolean setSourceDir(entries, factory) {
         'lwjgl-glfw' ,
         'lwjgl-openal',
         'lwjgl-opengl',
-        'lwjgl-stb'
+        'lwjgl-stb',
+        'lwjgl-assimp'
     ]
     for (ClasspathEntry entry : entries) {
         for (int i=0; i<sources.length; i++) {
