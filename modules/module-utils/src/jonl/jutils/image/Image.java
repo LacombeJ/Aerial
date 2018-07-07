@@ -9,7 +9,7 @@ public class Image {
     private BufferedImage image;
     
     public Image(int rows, int columns) {
-        image = ImageUtils.loadBufferedImage(rows, columns);
+        image = ImageUtils.load(rows, columns);
     }
     
     public Image(BufferedImage bi) {

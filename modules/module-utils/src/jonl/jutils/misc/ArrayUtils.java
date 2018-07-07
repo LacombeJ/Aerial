@@ -154,6 +154,16 @@ public class ArrayUtils {
         return build.toString();
     }
     
+    public static String toString(long[] list) {
+        StringBuilder build = new StringBuilder();
+        build.append("[ ");
+        for (long i : list) {
+            build.append(i+" ");
+        }
+        build.append("]");
+        return build.toString();
+    }
+    
     public static String toString(double[] list) {
         StringBuilder build = new StringBuilder();
         build.append("[ ");
@@ -246,6 +256,12 @@ public class ArrayUtils {
             wrap[i] = array[i];
         }
         return wrap;
+    }
+    
+    static <T> void put(T[] src, T[] dst, int index) {
+        for (int i=0; i<src.length; i++) {
+            dst[index+i] = src[i];
+        }
     }
     
     

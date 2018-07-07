@@ -125,4 +125,14 @@ public class BijectiveMap<K,V> implements Map<K,V> {
         return valueSet;
     }
     
+    @Override
+    public String toString() {
+        String ret = "{";
+        for (Entry<K,V> entry : entrySet) {
+            ret +="["+entry.getKey()+":"+entry.getValue()+"]";
+        }
+        ret += "}";
+        return ret;
+    }
+    
 }

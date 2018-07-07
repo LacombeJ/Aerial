@@ -2,10 +2,13 @@ package jonl.vmath;
 
 import java.util.Arrays;
 
+
+
 /**
  * The Mathf class for single-precision math <p>
  * Extension to java math class<p>
- * Some methods from libGDX
+ * Some methods from libGDX and THREE.js
+ * https://github.com/mrdoob/three.js/blob/master/src/math/Math.js
  * 
  * @author Jonathan Lacombe
  */
@@ -36,6 +39,8 @@ public final class Mathf {
     public static final float DEGREES_TO_RADIANS   = PI/180f;
     public static final float RADIANS_TO_DEGREES   = 180f/PI;
     
+    public static final float LN2 = 0.6931471805599453f;
+    
     /**
      * A constant epsilon for comparing floats
      */
@@ -44,13 +49,11 @@ public final class Mathf {
     public static final float POSITIVE_INFINITY = Float.POSITIVE_INFINITY;
     public static final float NEGATIVE_INFINITY = Float.NEGATIVE_INFINITY;
     
+    public static final float NaN = Float.NaN;
+    
     /* ******************************************************************************** */
     /* *****************************    Simple METHODS      *************************** */
     /* ******************************************************************************** */
-    
-    public static int abs(int a) {
-        return Math.abs(a);
-    }
     
     public static float abs(float a) {
         return Math.abs(a);
@@ -93,86 +96,6 @@ public final class Mathf {
     }
     
     /**
-     * Returns the greatest-common-divisor of a and b using the euclidean algorithm.
-     * @param a integer a
-     * @param b integer b
-     * @return the greatest-common-divisor of a and b
-     */
-    public static int gcd(int a, int b) {
-        a = (int) Math.abs(a);
-        b = (int) Math.abs(b);
-        if (b>a)
-            return gcd(b,a);
-        else {
-            if (b==0)
-                return a;
-            else {
-                int quotient = a/b;
-                int remainder = a-(quotient*b);
-                return (remainder!=0) ? gcd(b,remainder) : b;
-            }
-        }
-    }
-    
-    /**
-     * Returns the greatest-common-divisor of a and b using the euclidean algorithm.
-     * @param a long a
-     * @param b long b
-     * @return the greatest-common-divisor of a and b
-     */
-    public static long gcd(long a, long b) {
-        a = (long) Math.abs(a);
-        b = (long) Math.abs(b);
-        if (b>a)
-            return gcd(b,a);
-        else {
-            if (b==0)
-                return a;
-            else {
-                long quotient = a/b;
-                long remainder = a-(quotient*b);
-                return (remainder!=0) ? gcd(b,remainder) : b;
-            }
-        }
-    }
-    
-    /**
-     * Checks whether a value is even
-     * @param a value
-     * @return true if this value is even
-     */
-    public static boolean isEven(int a) {
-        return (a%2==0) ? true : false;
-    }
-    public static boolean even(int a) { return isEven(a); }
-    public static boolean isOdd(int a) { return !isEven(a); }
-    public static boolean odd(int a) { return isOdd(a); }
-    
-    /**
-     * Returns the least-common-divisor using the formula (a*b) = gcd(a,b)*lcd(a,b) where
-     * gcd is found using the euclidean algorithm.
-     * @param a integer a
-     * @param b integer b
-     * @return the least-common-divisor of a and b
-     */
-    public static int lcd(int a, int b) {
-        int gcd = gcd(a,b);
-        return a*b / gcd;
-    }
-    
-    /**
-     * Returns the least-common-divisor using the formula (a*b) = gcd(a,b)*lcd(a,b) where
-     * gcd is found using the euclidean algorithm.
-     * @param a long a
-     * @param b long b
-     * @return the least-common-divisor of a and b
-     */
-    public static long lcd(long a, long b) {
-        long gcd = gcd(a,b);
-        return a*b / gcd;
-    }
-    
-    /**
      * Returns the natural of a given value<p>
      * Uses the following equation to determine the natural log:
      * <pre>ln(a) = log(a)/log(E)
@@ -202,18 +125,6 @@ public final class Mathf {
         return (float) Math.log10(a);
     }
     
-    public static int max(int a, int b) {
-        return (a>b) ? a : b;
-    }
-    
-    public static int max(int... a) {
-        int max = a[0];
-        for (int i=1; i<a.length; i++) {
-            if (a[i]>max) max = a[i];
-        }
-        return max;
-    }
-    
     public static float max(float a, float b) {
         return (a>b) ? a : b;
     }
@@ -224,18 +135,6 @@ public final class Mathf {
             if (a[i]>max) max = a[i];
         }
         return max;
-    }
-    
-    public static int min(int a, int b) {
-        return (a<b) ? a : b;
-    }
-    
-    public static int min(int... a) {
-        int min = a[0];
-        for (int i=1; i<a.length; i++) {
-            if (a[i]<min) min = a[i];
-        }
-        return min;
     }
     
     public static float min(float a, float b) {
@@ -285,16 +184,20 @@ public final class Mathf {
     
     public static float[] random(int len, float min, float max) { return rand(len,min,max); }
     
-    public static int randInt(int a) {
-        return (int) Math.round(Math.random()*a);
-    }
-    
-    public static int randInt(int min, int max) {
-        return randInt(max-min) + min;
-    }
-    
     public static int round(float a) {
         return Math.round(a);
+    }
+    
+    /**
+     * Round to the nearest number location to a value with the increment starting from start
+     * 
+     * @param a
+     * @param start
+     * @param increment
+     * @return
+     */
+    public static float round(float a, float start, float increment) {
+        return round((a-start)/increment)*increment + start;
     }
     
     public static float sin(float rad) {
@@ -338,7 +241,9 @@ public final class Mathf {
     }
     
     
-    
+    /* ******************************************************************************** */
+    /* ***************************    Extended METHODS      *************************** */
+    /* ******************************************************************************** */
     
     
     public static float average(float... values) {
@@ -438,14 +343,47 @@ public final class Mathf {
         return max - mod_range;
     }
     
+    public static float modulo(float n, float m) {
+        return ( ( n % m ) + m ) % m;
+    }
+    
     public static float lerp(float alpha, float a, float b) {
         return a + alpha * (b - a);
+    }
+    
+    public static float slerp(float alpha, float a, float b) {
+        return lerp(sin(alpha*PI_OVER_2),a,b);
     }
     
     public static float alpha(float value, float min, float max) {
         float n = value - min;
         float d = max - min;
         return n / d;
+    }
+    
+    /**
+     * Alpha values with 0 will remain 0
+     * @param alphas list of values that add up to 1
+     * @return inverted list of values that also add up to be one such that the previous
+     * largest alpha value is now the smallest and vice-versa
+     */
+    public static float[] inverseAlphas(float[] alphas) {
+        //Using doubles for larger precision
+        double[] inverses = new double[alphas.length];
+        double sum = 0;
+        for (int i=0; i<alphas.length; i++) {
+            if (alphas[i]!=0) {
+                inverses[i] = 1.0 / alphas[i];
+                sum += inverses[i];
+            }
+        }
+        float[] ret = new float[alphas.length];
+        for (int i=0; i<alphas.length; i++) {
+            if (alphas[i]!=0) {
+                ret[i] = (float) (inverses[i] / sum);
+            }
+        }
+        return ret;
     }
     
     
@@ -568,9 +506,9 @@ public final class Mathf {
             }
         } else if (x==0) {
             if (y>0) {
-                return PI/2f;
+                return PI_OVER_2;
             } else {
-                return 3*PI/2f;
+                return THREE_PI_OVER_2;
             }
         }
         float ref = abs(atan(y/x));
@@ -582,7 +520,7 @@ public final class Mathf {
         } else if (x<0 && y<0) {
             return ref + PI;
         } else if (x>0 && y<0) {
-            return 2*PI - ref;
+            return TWO_PI - ref;
         }
         
         return 0;
@@ -600,31 +538,6 @@ public final class Mathf {
     
     public static float degBetween(float originX, float originY, float targetX, float targetY) {
         return toDegrees(radBetween(originX,originY,targetX,targetY));
-    }
-    
-    public static int ceilMultiple(int i, int mult) {
-        if (i%mult==0) return i;
-        int j = i/mult;
-        return (j+1)*mult;
-    }
-    
-    public static int floorMultiple(int i, int mult) {
-        if (i%mult==0) return i;
-        int j = i/mult;
-        return j*mult;
-    }
-    
-    public static boolean isPowerOfTwo(int i) {
-        return (i & (i-1) ) == 0;
-    }
-    
-    public static int nextPowerOfTwo(int i) {
-        if (i==0) return 2;
-        int max = 0b01000000000000000000000000000000;
-        while ((max & i)!=max) {
-            max = max >> 1;
-        }
-        return max << 1;
     }
     
     public static float[][] zeros(int w, int h) {
@@ -649,14 +562,6 @@ public final class Mathf {
         return f==0 ? false : true;
     }
     
-    public static boolean toBoolean(int i) {
-        return i==0 ? false : true;
-    }
-    
-    public static int toInt(boolean b) {
-        return b ? 1 : 0;
-    }
-    
     public static int toInt(float f) {
         return (int) f;
     }
@@ -668,6 +573,8 @@ public final class Mathf {
     public static float toFloat(int i) {
         return (float) i;
     }
+    
+    // isWithin Float
     
     public static boolean isWithin(float x, float y, float x1, float y1, float x2, float y2) {
         if (x<x1) return false;
@@ -696,6 +603,34 @@ public final class Mathf {
         return isWithin(x,y,z,bx,by,bz,bx+bwidth,by+bheight,bz+blength);
     }
     
+    // isWithin Integer
+    
+    public static boolean isWithin(int x, int y, int x1, int y1, int x2, int y2) {
+        if (x<x1) return false;
+        if (y<y1) return false;
+        if (x>x2) return false;
+        if (y>y2) return false;
+        return true;
+    }
+    
+    public static boolean isWithinBounds(int x, int y, int bx, int by, int bwidth, int bheight) {
+        return isWithin(x,y,bx,by,bx+bwidth,by+bheight);
+    }
+    
+    public static boolean isWithin(int x, int y, int z, int x1, int y1, int z1, int x2, int y2, int z2) {
+        if (x<x1) return false;
+        if (y<y1) return false;
+        if (x>x2) return false;
+        if (y>y2) return false;
+        if (z<z1) return false;
+        if (z>z2) return false;
+        return true;
+    }
+    
+    public static boolean isWithinBounds(int x, int y, int z, int bx, int by, int bz,
+            int bwidth, int bheight, int blength) {
+        return isWithin(x,y,z,bx,by,bz,bx+bwidth,by+bheight,bz+blength);
+    }
     
     
     /* ******************************************************************************** */
@@ -740,44 +675,6 @@ public final class Mathf {
         float[] ret = new float[array1.length];
         for (int i=0; i<ret.length; i++) {
             ret[i] = lerp(alpha,array1[i],array2[i]);
-        }
-        return ret;
-    }
-    
-    /* ******************************************************************************** */
-    /* ****************************    Int-ARRAY METHODS      ************************* */
-    /* ******************************************************************************** */
-    
-    public static void addBy(int[] dst, int[] add) {
-        for (int i=0; i<dst.length; i++) {
-            dst[i] += add[i];
-        }
-    }
-    
-    public static int[] sum(int[]... arrays) {
-        int[] ret = new int[arrays[0].length];
-        for (int i=0; i<arrays.length; i++) {
-            addBy(ret,arrays[i]);
-        }
-        return ret;
-    }
-    
-    public static void divBy(int[] array, int v) {
-        for (int i=0; i<array.length; i++) {
-            array[i] /= v;
-        }
-    }
-    
-    public static void mulBy(int[] array, int v) {
-        for (int i=0; i<array.length; i++) {
-            array[i] *= v;
-        }
-    }
-    
-    public static int[] mul(int v, int[] array) {
-        int[] ret = Arrays.copyOf(array, array.length);
-        for (int i=0; i<ret.length; i++) {
-            ret[i] = ret[i]*v;
         }
         return ret;
     }

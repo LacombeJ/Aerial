@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import jonl.jgl.AbstractShader;
-import jonl.jgl.GraphicsLibrary.ShaderType;
+import jonl.jgl.GL.ShaderType;
 import jonl.jutils.misc.StringUtils;
 
 

@@ -1,5 +1,7 @@
 package jonl.jgl.lwjgl;
 
+import java.nio.FloatBuffer;
+
 /*
  * Some notes about GLSL (don't know where else to put this):
  * 
@@ -35,24 +37,21 @@ package jonl.jgl.lwjgl;
  * 
  */
 
-import java.nio.FloatBuffer;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.MemoryStack;
 
-import jonl.jgl.AbstractProgram;
+import jonl.jgl.Program;
 import jonl.jgl.Shader;
 import jonl.jgl.Texture;
 
-
 /**
- * 
  * 
  * @author Jonathan Lacombe
  *
  */
-class LWJGLProgram extends AbstractProgram {
+class LWJGLProgram implements Program {
     
     //TODO
     //Remove setting attributes and uniforms to GraphicsLibrary
@@ -127,21 +126,30 @@ class LWJGLProgram extends AbstractProgram {
     
     
     @Override
-    public void setUniformMat4(String name, FloatBuffer fb) {
-        int loc = GL20.glGetUniformLocation(id,name);
-        GL20.glUniformMatrix4fv(loc,true,fb);
+    public void setUniformMat4(String name, float[] f) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer fb = stack.floats(f);
+            int loc = GL20.glGetUniformLocation(id,name);
+            GL20.glUniformMatrix4fv(loc,true,fb);
+        }
     }
     
     @Override
-    public void setUniformMat3(String name, FloatBuffer fb) {
-        int loc = GL20.glGetUniformLocation(id,name);
-        GL20.glUniformMatrix3fv(loc,true,fb);
+    public void setUniformMat3(String name, float[] f) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer fb = stack.floats(f);
+            int loc = GL20.glGetUniformLocation(id,name);
+            GL20.glUniformMatrix3fv(loc,true,fb);
+        }
     }
     
     @Override
-    public void setUniformMat2(String name, FloatBuffer fb) {
-        int loc = GL20.glGetUniformLocation(id,name);
-        GL20.glUniformMatrix2fv(loc,true,fb);
+    public void setUniformMat2(String name, float[] f) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer fb = stack.floats(f);
+            int loc = GL20.glGetUniformLocation(id,name);
+            GL20.glUniformMatrix2fv(loc,true,fb);
+        }
     }
     
     @Override

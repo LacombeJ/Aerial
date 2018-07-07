@@ -100,33 +100,40 @@ public class Vector4 extends Vector<Vector4> {
         return new Vector4(Mathf.random(),Mathf.random(),Mathf.random(),Mathf.random());
     }
     
+    public static Vector4 random(float min, float max) {
+        return new Vector4(Mathf.random(min,max),Mathf.random(min,max),Mathf.random(min,max),Mathf.random(min,max));
+    }
+    
     public static final Vector4 forward()   { return new Vector4(Vector3.forward(), 1); }
     public static final Vector4 up()        { return new Vector4(Vector3.up(),      1); }
     public static final Vector4 right()     { return new Vector4(Vector3.right(),   1); }
     
-    public static List<Vector4> pack(float[] values) {
-        List<Vector4> vectors = new ArrayList<>();
-        for (int i=0; i<values.length/4; i++) {
-            Vector4 v = new Vector4(
-                values[i],
-                values[i*4+1],
-                values[i*4+2],
-                values[i*4+3]
-            );
-            vectors.add(v);
-        }
-        return vectors;
+    public static Vector4[] lerp(float alpha, Vector4[] a, Vector4[] b) {
+        Vector4[] lerp = new Vector4[a.length];
+        Util.lerp(alpha,a,b,lerp);
+        return lerp;
     }
     
-    public static float[] unpack(List<Vector4> vectors) {
-        float[] values = new float[vectors.size()*4];
-        for (int i=0; i<vectors.size(); i++) {
-            values[i*4] = vectors.get(i).x;
-            values[i*4+1] = vectors.get(i).y;
-            values[i*4+2] = vectors.get(i).z;
-            values[i*4+3] = vectors.get(i).w;
-        }
-        return values;
+    public static Vector4[] slerp(float alpha, Vector4[] a, Vector4[] b) {
+        Vector4[] slerp = new Vector4[a.length];
+        Util.slerp(alpha,a,b,slerp);
+        return slerp;
+    }
+    
+    public static float[] pack(List<Vector4> vectors) {
+        return Util.pack(vectors);
+    }
+    
+    public static float[] pack(Vector4... vectors) {
+        return Util.pack(vectors);
+    }
+    
+    public static ArrayList<Vector4> unpack(float[] values) {
+        return Util.unpack(values,new Vector4());
+    }
+    
+    public static Vector4[] unpackArray(float[] values) {
+        return Util.unpackArray(values,new Vector4(),new Vector4[values.length/4]);
     }
     
 }

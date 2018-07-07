@@ -90,12 +90,36 @@ public class Vector3 extends Vector<Vector3> {
         return this;
     }
     
+    /**
+     * Returns the angle from the ground, a value from [-pi/2 to pi/2]<br>
+     * Examples:
+     * <pre>
+     * Vector3(1,0,0).theta() = 0
+     * Vector3(1,1,0).theta() = pi/4
+     * Vector3(1,-1,0).theta() = -pi/4
+     * Vector3(0,1,0).theta() = pi/2
+     * Vector3(0,-1,0).theta() = -pi/2
+     * </pre>
+     * @return the angle from the ground, a value from [-pi/2 to pi/2]
+     */
     public float theta() {
-    	return - Mathf.atan( y / Mathf.sqrt(x*x+z*z) );
+    	return Mathf.atan( y / Mathf.sqrt(x*x+z*z) );
     }
     
+    /**
+     * Returns the angle of the x,z component of the vector, a value of [0,2pi)<br>
+     * Examples:
+     * <pre>
+     * Vector3(1,0,0).phi() = 0
+     * Vector3(0,0,1).phi() = pi/2
+     * Vector3(-1,0,0).phi() = pi
+     * Vector3(0,0,-1).phi() = 3pi/2
+     * Vector3(5,10,5).phi() = pi/4
+     * </pre>
+     * @return the angle of the x,z component of the vector, a value of [0,2pi)
+     */
     public float phi() {
-    	return Mathf.rad(-x,-z) - Mathf.PI_OVER_4;
+    	return Mathf.rad(x,z);
     }
     
     public static float thetaBetween(Vector3 u, Vector3 v) {
@@ -168,32 +192,41 @@ public class Vector3 extends Vector<Vector3> {
         return new Vector3(Mathf.random(),Mathf.random(),Mathf.random());
     }
     
+    public static Vector3 random(float min, float max) {
+        return new Vector3(Mathf.random(min,max),Mathf.random(min,max),Mathf.random(min,max));
+    }
+    
     //TODO Make sure these align with Matrix4 and Quaternion definition of forward, up, right
-    public static final Vector3 forward()   { return new Vector3(0,0,1); }
+    public static final Vector3 forward()   { return new Vector3(0,0,-1); }
     public static final Vector3 up()        { return new Vector3(0,1,0); }
     public static final Vector3 right()     { return new Vector3(1,0,0); }
     
-    public static List<Vector3> pack(float[] values) {
-        List<Vector3> vectors = new ArrayList<>();
-        for (int i=0; i<values.length/3; i++) {
-            Vector3 v = new Vector3(
-                values[i],
-                values[i*3+1],
-                values[i*3+2]
-            );
-            vectors.add(v);
-        }
-        return vectors;
+    public static Vector3[] lerp(float alpha, Vector3[] a, Vector3[] b) {
+        Vector3[] lerp = new Vector3[a.length];
+        Util.lerp(alpha,a,b,lerp);
+        return lerp;
     }
     
-    public static float[] unpack(List<Vector3> vectors) {
-        float[] values = new float[vectors.size()*3];
-        for (int i=0; i<vectors.size(); i++) {
-            values[i*3] = vectors.get(i).x;
-            values[i*3+1] = vectors.get(i).y;
-            values[i*3+2] = vectors.get(i).z;
-        }
-        return values;
+    public static Vector3[] slerp(float alpha, Vector3[] a, Vector3[] b) {
+        Vector3[] slerp = new Vector3[a.length];
+        Util.slerp(alpha,a,b,slerp);
+        return slerp;
+    }
+    
+    public static float[] pack(List<Vector3> vectors) {
+        return Util.pack(vectors);
+    }
+    
+    public static float[] pack(Vector3... vectors) {
+        return Util.pack(vectors);
+    }
+    
+    public static ArrayList<Vector3> unpack(float[] values) {
+        return Util.unpack(values,new Vector3());
+    }
+    
+    public static Vector3[] unpackArray(float[] values) {
+        return Util.unpackArray(values,new Vector3(),new Vector3[values.length/3]);
     }
     
 }

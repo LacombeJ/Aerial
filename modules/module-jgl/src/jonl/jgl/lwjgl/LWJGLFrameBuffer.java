@@ -113,6 +113,12 @@ class LWJGLFrameBuffer implements FrameBuffer {
         return textures.toArray(new Texture[0]);
     }
 
-    
+    @Override
+    public void deleteAll() {
+        Texture[] textures = delete();
+        for (Texture texture : textures) {
+            texture.delete();
+        }
+    }
 
 }

@@ -1,10 +1,11 @@
 package jonl.ge.utils;
 
-import jonl.ge.MeshData;
 import jonl.jgl.utils.Presets;
 
 public class PresetData {
     
+	//TOOD remove this
+	
     private static MeshData md(jonl.jgl.utils.MeshData md) {
         MeshData ret = new MeshData(md.vertexData,md.normalData,md.texCoordData,md.indices);
         return ret;

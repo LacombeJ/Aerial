@@ -7,6 +7,7 @@ public class NamespaceDebug {
     
     private static Clock clock = new Clock();
     
+    public static void      log(Object... objects)      { Console.log(objects);         }
     public static void      print(Object... objects)    { Console.print(objects);       }
     public static void      println(Object... objects)  { Console.println(objects);     }
 

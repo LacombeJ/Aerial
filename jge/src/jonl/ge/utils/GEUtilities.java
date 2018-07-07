@@ -1,6 +1,5 @@
 package jonl.ge.utils;
 
-import jonl.ge.MeshData;
 import jonl.jutils.structs.Array3Df;
 import jonl.jutils.structs.IntArray;
 

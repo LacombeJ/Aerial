@@ -7,9 +7,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.opengl.GL40;
-
-import jonl.jgl.AbstractGraphicsLibrary;
-import jonl.jgl.Font;
+import jonl.jgl.AbstractGL;
 import jonl.jgl.FrameBuffer;
 import jonl.jgl.Mesh;
 import jonl.jgl.Program;
@@ -19,7 +17,7 @@ import jonl.jgl.Texture.Filter;
 import jonl.jgl.Texture.Internal;
 import jonl.jgl.Texture.Wrap;
 
-class LWJGL extends AbstractGraphicsLibrary {
+class LWJGL extends AbstractGL {
 
     @Override
     public void glClear(Mask... masks) {
@@ -59,6 +57,11 @@ class LWJGL extends AbstractGraphicsLibrary {
     @Override
     public void glDisable(Target target) {
         GL11.glDisable(getTarget(target));
+    }
+    
+    @Override
+    public void glHint(HintTarget target, Hint hint) {
+        GL11.glHint(getHintTarget(target), getHint(hint));
     }
     
     @Override
@@ -162,11 +165,6 @@ class LWJGL extends AbstractGraphicsLibrary {
     }
     
     @Override
-    public Font glGenFont(String font, int type, int size, boolean antialias) {
-        return new LWJGLFont(this,font,type,size,antialias);
-    }
-    
-    @Override
     public FrameBuffer glGenFramebuffer(int width, int height) {
         return new LWJGLFrameBuffer(width,height);
     }
@@ -252,22 +250,43 @@ class LWJGL extends AbstractGraphicsLibrary {
         }
     }
     
-    Mask getMask(int m) {
+    static Mask getMask(int m) {
         switch(m) {
         case GL11.GL_COLOR_BUFFER_BIT:  return Mask.COLOR_BUFFER_BIT;
         case GL11.GL_DEPTH_BUFFER_BIT:  return Mask.DEPTH_BUFFER_BIT;
-        default:                throw new IllegalStateException("Unknown mask");
+        default:                        throw new IllegalStateException("Unknown mask");
         }
     }
     
     static int getTarget(Target t) {
         switch(t) {
-        case CULL_FACE:     return GL11.GL_CULL_FACE;
-        case DEPTH_TEST:    return GL11.GL_DEPTH_TEST;
-        case STENCIL_TEST:  return GL11.GL_STENCIL_TEST;
-        case SCISSOR_TEST:  return GL11.GL_SCISSOR_TEST;
-        case BLEND:         return GL11.GL_BLEND;
-        default:            throw new IllegalStateException("Unknown target");
+        case CULL_FACE:             return GL11.GL_CULL_FACE;
+        case DEPTH_TEST:            return GL11.GL_DEPTH_TEST;
+        case STENCIL_TEST:          return GL11.GL_STENCIL_TEST;
+        case SCISSOR_TEST:          return GL11.GL_SCISSOR_TEST;
+        case BLEND:                 return GL11.GL_BLEND;
+        case POINT_SMOOTH:          return GL11.GL_POINT_SMOOTH;
+        case PROGRAM_POINT_SIZE:    return GL32.GL_PROGRAM_POINT_SIZE;
+        case POINT_SPRITE:          return GL20.GL_POINT_SPRITE;
+        default:                    throw new IllegalStateException("Unknown target");
+        }
+    }
+    
+    static int getHintTarget(HintTarget ht) {
+        switch(ht) {
+        case POINT_SMOOTH_HINT:     return GL11.GL_POINT_SMOOTH_HINT;
+        case LINE_SMOOTH_HINT:      return GL11.GL_LINE_SMOOTH_HINT;
+        case POLYGON_SMOOTH_HINT:   return GL11.GL_POLYGON_SMOOTH_HINT;
+        default:                    throw new IllegalStateException("Unknown hint target");
+        }
+    }
+    
+    static int getHint(Hint h) {
+        switch(h) {
+        case FASTEST:   return GL11.GL_FASTEST;
+        case NICEST:    return GL11.GL_NICEST;
+        case DONT_CARE: return GL11.GL_DONT_CARE;
+        default:        throw new IllegalStateException("Unknown hint");
         }
     }
     

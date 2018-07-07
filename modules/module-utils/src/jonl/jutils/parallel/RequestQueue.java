@@ -23,9 +23,8 @@ public class RequestQueue<X extends Request, Y extends Response> {
     
     public void respond() {
         X request = dequeueRequest();
-        Y response = null;
         if (request!=null) {
-            response = responder.f(request);
+            Y response = responder.f(request);
             request.setResponse(response);
             request.release();
         }
@@ -36,7 +35,7 @@ public class RequestQueue<X extends Request, Y extends Response> {
     }
     
     private synchronized void queueRequest(X request) {
-        queue.addLast(request);;
+        queue.addLast(request);
     }
 
     public boolean isEmpty() {

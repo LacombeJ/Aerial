@@ -1,5 +1,7 @@
 package jonl.jgl.lwjgl;
 
+import java.util.ArrayDeque;
+
 import org.lwjgl.glfw.GLFW;
 
 import jonl.jgl.AbstractInput;
@@ -27,13 +29,18 @@ class GLFWInput extends AbstractInput {
     private static final int[] BUTTON_ARRAY = new int[MB_COUNT];
     private static final int[] KEY_ARRAY = new int[K_COUNT];
     
-    private final boolean[] buttonDown       = new boolean[MB_COUNT];
-    private final boolean[] buttonPressed    = new boolean[MB_COUNT];
-    private final boolean[] buttonReleased   = new boolean[MB_COUNT];
+    private final boolean[] buttonDown          = new boolean[MB_COUNT];
+    private final boolean[] buttonPressed       = new boolean[MB_COUNT];
+    private final boolean[] buttonReleased      = new boolean[MB_COUNT];
     
-    private final boolean[] keyDown       = new boolean[K_COUNT];
-    private final boolean[] keyPressed    = new boolean[K_COUNT];
-    private final boolean[] keyReleased   = new boolean[K_COUNT];
+    private final boolean[] keyDown             = new boolean[K_COUNT];
+    private final boolean[] keyPressed          = new boolean[K_COUNT];
+    private final boolean[] keyReleased         = new boolean[K_COUNT];
+    private final boolean[] keyRepeated         = new boolean[K_COUNT];
+    
+    // Using a queue because set key callback happens on a different thread
+    private Object keySync = new Object();
+    private final ArrayDeque<Integer> keyRepeatQueue = new ArrayDeque<>();
     
     private float x;
     private float y;
@@ -42,9 +49,9 @@ class GLFWInput extends AbstractInput {
     private float scrollX;
     private float scrollY;
     
-    //Accumulating because scroll callback access happends on a different thread
-    private float saccumx;
-    private float saccumy;
+    //Using a queue because set scroll callback happens on a different thread
+    private Object scrollSync = new Object();
+    private final ArrayDeque<ScrollEvent> scrollQueue = new ArrayDeque<>();
     /**
      * Used to get correct dx and dy values following start of window or
      * following change in cursor state (grabbed to normal and vice-versa)
@@ -59,12 +66,23 @@ class GLFWInput extends AbstractInput {
         this.windowHeight = windowHeight;
         
         GLFW.glfwSetScrollCallback(windowID,(windowid,xoffset,yoffset)->{
-            saccumx += (float) xoffset;
-            saccumy += (float) yoffset;
+            synchronized(scrollSync) {
+                scrollQueue.addLast(new ScrollEvent(xoffset,yoffset));
+            }
+            
+        });
+        
+        // GLFW_REPEAT only works with key callback
+        GLFW.glfwSetKeyCallback(windowID, (windowid,key,scancode,action,mods)->{
+            if (action==GLFW.GLFW_REPEAT) {
+                synchronized(keySync) {
+                    keyRepeatQueue.addLast(KEY_MAP.getKey(key));
+                }
+            }
         });
         
     }
-    
+
     void setOverride(boolean o) {
         override = o;
     }
@@ -89,10 +107,15 @@ class GLFWInput extends AbstractInput {
             dy = ny - y;
         }
         
-        scrollX = saccumx;
-        scrollY = saccumy;
-        saccumx = 0;
-        saccumy = 0;
+        synchronized(scrollSync) {
+            scrollX = 0;
+            scrollY = 0;
+            ScrollEvent poll = scrollQueue.pollFirst();
+            if (poll!=null) {
+                scrollX = (float) poll.x;
+                scrollY = (float) poll.y;
+            }
+        }
         
         x = nx;
         y = ny;
@@ -131,8 +154,16 @@ class GLFWInput extends AbstractInput {
         GetKeyRequest request = new GetKeyRequest(windowID, KEY_ARRAY);
         GetKeyResponse response = GLFWInstance.getKey(request);
         for (int i=0; i<K_COUNT; i++) {
+            
             int action = response.actions[i];
             updateGLFWAction(i,action,keyPressed,keyReleased,keyDown);
+        }
+        synchronized(keySync) {
+            Integer poll = keyRepeatQueue.pollFirst();
+            int key = (poll==null) ? K_NONE : poll;
+            for (int i=0; i<K_COUNT; i++) {
+                keyRepeated[i] = i==key;
+            }
         }
     }
     
@@ -194,6 +225,19 @@ class GLFWInput extends AbstractInput {
     @Override
     public boolean isKeyReleased(int key) {
         return keyReleased[key];
+    }
+    
+    @Override
+    public boolean isKeyRepeated(int key) {
+        return keyRepeated[key];
+    }
+
+    private static class ScrollEvent {
+        double x, y;
+        ScrollEvent(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
     }
     
     static {

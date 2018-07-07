@@ -1,6 +1,8 @@
 package jonl.vmath;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -440,6 +442,14 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
         return v.xyz();
     }
     
+    public static Matrix4 translation(float x, float y, float z) {
+        return Matrix4.identity().translate(x, y, z);
+    }
+    
+    public static Matrix4 translation(Vector3 translation) {
+        return Matrix4.identity().translate(translation);
+    }
+    
     /** @return 3d rotation matrix about x axis */
     public static Matrix4 rotationX(float theta) {
         float cos = Mathf.cos(theta);
@@ -476,6 +486,22 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
 		);
     }
     
+    public static Matrix4 rotation(float xrad, float yrad, float zrad) {
+        return Matrix4.identity().rotate(xrad, yrad, zrad);
+    }
+    
+    public static Matrix4 rotation(Vector3 rotation) {
+        return Matrix4.identity().rotate(rotation);
+    }
+    
+    public static Matrix4 scaled(float x, float y, float z) {
+        return Matrix4.identity().scale(x, y, z);
+    }
+    
+    public static Matrix4 scaled(Vector3 scale) {
+        return Matrix4.identity().scale(scale);
+    }
+    
     /** @return the identity matrix */
     public static Matrix4 identity() {
         return new Matrix4(1,1,1,1);
@@ -484,6 +510,22 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
     /** @return a matrix filled with ones */
     public static Matrix4 ones() {
         return new Matrix4(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+    }
+    
+    public static float[] pack(List<Matrix4> matrices) {
+        return Util.mpack(matrices);
+    }
+    
+    public static float[] pack(Matrix4... matrices) {
+        return Util.mpack(matrices);
+    }
+    
+    public static ArrayList<Matrix4> unpack(float[] values) {
+        return Util.munpack(values,new Matrix4());
+    }
+    
+    public static Matrix4[] unpackArray(float[] values) {
+        return Util.munpackArray(values,new Matrix4(),new Matrix4[values.length/16]);
     }
     
 }

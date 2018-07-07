@@ -1,13 +1,71 @@
 package jonl.jgl;
 
+import java.awt.image.BufferedImage;
+
 import jonl.jgl.Input.CursorState;
 import jonl.jutils.func.Callback;
+import jonl.jutils.func.Callback0D;
 
 /**
  * @author Jonathan Lacombe
  */
 public interface Window {
 
+    // ------------------------------------------------------------------------
+    
+    // Attributes
+    
+    /** indicates whether the specified window has input focus */
+    public static final int FOCUSED = 0;
+    
+    /** indicates whether the specified window is iconified */
+    public static final int ICONIFIED = 1;
+    
+    /** indicates whether the specified window is maximized */
+    public static final int MAXIMIZED = 2;
+    
+    /** indicates whether the specified window is visible */
+    public static final int VISIBLE = 3;
+    
+    /** indicates whether the specified window is resizable by the user */
+    public static final int RESIZABLE = 4;
+    
+    /** indicates whether the specified window has decorations such as a border, a close widget, etc */
+    public static final int DECORATED = 5;
+    
+    /** indicates whether the specified window is floating, also called topmost or always-on-top */
+    public static final int FLOATING = 6;
+    
+    /** indicates whether the mouse is hovered over the window */
+    public static final int HOVERED = 7;
+    
+    // ------------------------------------------------------------------------
+    
+    // Standard Cursors
+    
+    /** the default arrow cursor */
+    public final static int ARROW_CURSOR = 0;
+    
+    public final static int IBEAM_CURSOR = 1;
+    
+    public final static int CROSSHAIR_CURSOR = 2;
+    
+    public final static int HAND_CURSOR = 3;
+    
+    public final static int HRESIZE_CURSOR = 4;
+    
+    public final static int VRESIZE_CURSOR = 5;
+    
+    // ------------------------------------------------------------------------
+    
+    // Resolution type
+    
+    /** Using passed in window size for the resolution */
+    public final static int WINDOW = 0;
+    
+    /** Using the size of the monitor for a fullscreen resolution (100%) */
+    public final static int MONITOR = 1;
+    
     /**
      * Sets the loader for this window whose method is called
      * when start is called and before the window is shown
@@ -29,6 +87,8 @@ public interface Window {
      */
     public void setCloser(Closer closer);
     
+    // ------------------------------------------------------------------------
+    
     /**
      * Does the following in order:
      * <ol>
@@ -46,7 +106,13 @@ public interface Window {
      */
     public void start();
     
+    /** Closes this window */
     public void close();
+    
+    /** Calls this callback on the window thread */
+    public void call(Callback0D call);
+    
+    // ------------------------------------------------------------------------
     
     /**
      * Returns whether window is still running and calls
@@ -73,16 +139,28 @@ public interface Window {
     public int getHeight();
     public void setSize(int width, int height);
     
+    public void setSizeLimits(int minWidth, int minHeight, int maxWidth, int maxHeight);
+    
     public int getScreenWidth();
     public int getScreenHeight();
+    
+    public void maximize();
+    public void minimize();
+    public void restore();
+    
+    public void setIcon(BufferedImage image);
+    
+    public boolean getAttribute(int attribute);
     
     public Insets getInsets();
     
     public CursorState getCursorState();
     public void setCursorState(CursorState state);
     
+    public void setCursor(int cursorId);
+    
     public Input getInput();
-    public GraphicsLibrary getGraphicsLibrary();
+    public GL getGL();
     
     public void addSizeListener(Int2ChangedListener sl);
     public void removeSizeListener(Int2ChangedListener sl);

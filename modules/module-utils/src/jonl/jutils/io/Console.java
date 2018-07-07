@@ -29,7 +29,9 @@ public class Console {
     public static synchronized void print(Object... objects) {
         for (int i=0; i<objects.length; i++) {
             Object o = objects[i];
-            if (o instanceof int[]) {
+            if (o==null) {
+                System.out.print(o);
+            } else if (o instanceof int[]) {
                 System.out.print(ArrayUtils.toString((int[]) o));
             } else if (o instanceof float[]) {
                 System.out.print(ArrayUtils.toString((float[]) o));
@@ -37,8 +39,12 @@ public class Console {
                 System.out.print(ArrayUtils.toString((byte[]) o));
             } else if (o instanceof double[]) {
                 System.out.print(ArrayUtils.toString((double[]) o));
+            } else if (o instanceof long[]) {
+                System.out.print(ArrayUtils.toString((long[]) o));
             } else if (o instanceof char[]) {
                 System.out.print(ArrayUtils.toString((char[]) o));
+            } else if (o.getClass().isArray()) {
+                print(o);
             } else {
                 System.out.print(o);
             }

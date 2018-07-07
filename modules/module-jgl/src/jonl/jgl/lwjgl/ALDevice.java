@@ -3,14 +3,13 @@ package jonl.jgl.lwjgl;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.system.MemoryUtil;
 
 import jonl.jgl.AudioDevice;
-import jonl.jgl.AudioLibrary;
+import jonl.jgl.AL;
 
 public class ALDevice implements AudioDevice {
     
@@ -35,7 +34,7 @@ public class ALDevice implements AudioDevice {
         context = ALC10.alcCreateContext(device, (IntBuffer)null);
         
         ALC10.alcMakeContextCurrent(context);
-        AL.createCapabilities(deviceCaps);
+        org.lwjgl.openal.AL.createCapabilities(deviceCaps);
     }
     
     @Override
@@ -45,7 +44,7 @@ public class ALDevice implements AudioDevice {
     }
 
     @Override
-    public AudioLibrary getAudioLibrary() {
+    public AL getAudioLibrary() {
         return al;
     }
 

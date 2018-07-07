@@ -24,4 +24,9 @@ public interface FrameBuffer {
      */
     public Texture[] delete();
     
+    /**
+     * Deletes the frame buffer and associated textures
+     */
+    public void deleteAll();
+    
 }

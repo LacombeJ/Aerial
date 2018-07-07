@@ -5,14 +5,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import jonl.jutils.func.List;
-
 //TODO use hashing and function to define what type of set
 
 public class ObjectSet<X> implements Set<X> {
 
     //TODO change backed structure
     ArrayList<X> list = new ArrayList<X>();
+    
+    /** @return the array list backing this object */
+    public ArrayList<X> getArrayList() {
+        return list;
+    }
     
     @Override
     public int size() {
@@ -26,11 +29,7 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean contains(Object o) {
-        Iterator<X> it = iterator();
-        while (it.hasNext())
-            if (it.next()==o)
-                return true;
-        return false;
+        return list.contains(o);
     }
 
     @Override
@@ -59,22 +58,12 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean remove(Object o) {
-        int index = List.index(list, x -> x==o);
-        if (index!=-1) {
-            list.remove(index);
-            return true;
-        }
-        return false;
+        return list.remove(o);
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        for (Object x : c) {
-            if (!contains(x)) {
-                return false;
-            }
-        }
-        return true;
+       return list.containsAll(c);
     }
 
     @Override
@@ -94,12 +83,7 @@ public class ObjectSet<X> implements Set<X> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        boolean changed = false;
-        for (Object x : c) {
-            boolean removed = remove(x);
-            if (removed) changed = true;
-        }
-        return changed;
+        return list.removeAll(c);
     }
 
     @Override

@@ -1,16 +1,20 @@
 package jonl.jgl.lwjgl;
 
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
+import jonl.jgl.Window;
+import jonl.jutils.func.Callback0D;
 import jonl.jutils.func.Callback2D;
-import jonl.jutils.misc.BufferPool;
 import jonl.jutils.parallel.Processor;
 import jonl.jutils.parallel.Request;
 import jonl.jutils.parallel.RequestQueue;
@@ -36,14 +40,24 @@ class GLFWInstance {
     private static boolean initialized = false;
     private static LWJGL gl = new LWJGL();
     
-    private final static DoubleBuffer xBuffer = BufferPool.createDoubleBuffer(1);
-    private final static DoubleBuffer yBuffer = BufferPool.createDoubleBuffer(1);
+    private static DoubleBuffer xBuffer;
+    private static DoubleBuffer yBuffer;
+    
+    static final HashMap<Integer,Long> STANDARD_CURSORS = new HashMap<>();
+    
+    
     
     private static final RequestQueue<CreateWindowRequest,CreateWindowResponse>
         CREATE_REQUEST                  = new RequestQueue<>( (request) -> _createWindow(request) );
     
     private static final RequestQueue<StartWindowRequest,StartWindowResponse>
         START_REQUEST                   = new RequestQueue<>( (request) -> _startWindow(request) );
+    
+    private static final RequestQueue<CallWindowRequest,CallWindowResponse>
+        CALL_REQUEST                   = new RequestQueue<>( (request) -> _callWindow(request) );
+    
+    private static final RequestQueue<WindowRequest,WindowResponse>
+        WINDOW_REQUEST  = new RequestQueue<>( (request) -> _window(request) );
     
     private static final RequestQueue<GetWindowFrameSizeRequest,GetWindowFrameSizeResponse>
         GET_WINDOW_FRAME_SIZE_REQUEST   = new RequestQueue<>( (request) -> _getWindowFrameSize(request) );
@@ -57,6 +71,9 @@ class GLFWInstance {
     private static final RequestQueue<SetWindowSizeRequest,SetWindowSizeResponse>
         SET_WINDOW_SIZE_REQUEST         = new RequestQueue<>( (request) -> _setWindowSize(request) );
     
+    private static final RequestQueue<SetWindowSizeLimitsRequest,SetWindowSizeLimitsResponse>
+        SET_WINDOW_SIZE_LIMITS_REQUEST  = new RequestQueue<>( (request) -> _setWindowSizeLimits(request) );
+    
     private static final RequestQueue<GetInputModeRequest,GetInputModeResponse>
         GET_INPUT_MODE_REQUEST          = new RequestQueue<>( (request) -> _getInputMode(request) );
     
@@ -65,6 +82,12 @@ class GLFWInstance {
     
     private static final RequestQueue<GetCursorPosRequest,GetCursorPosResponse>
         GET_CURSOR_POS_REQUEST          = new RequestQueue<>( (request) -> _getCursorPos(request) );
+    
+    private static final RequestQueue<SetCursorRequest,SetCursorResponse>
+        SET_CURSOR_REQUEST          = new RequestQueue<>( (request) -> _setCursor(request) );
+    
+    private static final RequestQueue<SetIconRequest,SetIconResponse>
+        SET_ICON_REQUEST          = new RequestQueue<>( (request) -> _setIcon(request) );
     
     private static final RequestQueue<GetMouseButtonRequest,GetMouseButtonResponse>
         GET_MOUSE_BUTTON_REQUEST        = new RequestQueue<>( (request) -> _getMouseButton(request) );
@@ -75,26 +98,47 @@ class GLFWInstance {
     private static final RequestQueue<SetWindowVisibleRequest,SetWindowVisibleResponse>
         SET_WINDOW_VISIBLE_REQUEST      = new RequestQueue<>( (request) -> _setWindowVisible(request) );
     
+    private static final RequestQueue<GetWindowAttribRequest,GetWindowAttribResponse>
+        GET_WINDOW_ATTRIB_REQUEST         = new RequestQueue<>( (request) -> _getWindowAttrib(request) );
+    
     private static final RequestQueue<?,?>[] REQUEST_QUEUES = {
             CREATE_REQUEST,
             START_REQUEST,
+            CALL_REQUEST,
+            WINDOW_REQUEST,
             GET_WINDOW_FRAME_SIZE_REQUEST,
             SET_WINDOW_TITLE_REQUEST,
             SET_WINDOW_POS_REQUEST,
             SET_WINDOW_SIZE_REQUEST,
+            SET_WINDOW_SIZE_LIMITS_REQUEST,
             GET_INPUT_MODE_REQUEST,
             SET_INPUT_MODE_REQUEST,
             GET_CURSOR_POS_REQUEST,
+            SET_CURSOR_REQUEST,
+            SET_ICON_REQUEST,
             GET_MOUSE_BUTTON_REQUEST,
             GET_KEY_REQUEST,
-            SET_WINDOW_VISIBLE_REQUEST
+            SET_WINDOW_VISIBLE_REQUEST,
+            GET_WINDOW_ATTRIB_REQUEST
     };
+    
+    public enum WindowRequestType {
+        MAXIMIZE,
+        MINIMIZE,
+        RESTORE
+    }
     
     static CreateWindowResponse create(CreateWindowRequest request) {
         return CREATE_REQUEST.request(request);
     }
     static StartWindowResponse start(StartWindowRequest request) {
         return START_REQUEST.request(request);
+    }
+    static CallWindowResponse call(CallWindowRequest request) {
+        return CALL_REQUEST.request(request);
+    }
+    static WindowResponse window(WindowRequest request) {
+        return WINDOW_REQUEST.request(request);
     }
     static GetWindowFrameSizeResponse getWindowFrameSize(GetWindowFrameSizeRequest request) {
         return GET_WINDOW_FRAME_SIZE_REQUEST.request(request);
@@ -108,6 +152,9 @@ class GLFWInstance {
     static SetWindowSizeResponse setWindowSize(SetWindowSizeRequest request) {
         return SET_WINDOW_SIZE_REQUEST.request(request);
     }
+    static SetWindowSizeLimitsResponse setWindowSizeLimits(SetWindowSizeLimitsRequest request) {
+        return SET_WINDOW_SIZE_LIMITS_REQUEST.request(request);
+    }
     static GetInputModeResponse getInputMode(GetInputModeRequest request) {
         return GET_INPUT_MODE_REQUEST.request(request);
     }
@@ -117,6 +164,12 @@ class GLFWInstance {
     static GetCursorPosResponse getCursorPos(GetCursorPosRequest request) {
         return GET_CURSOR_POS_REQUEST.request(request);
     }
+    static SetCursorResponse setCursor(SetCursorRequest request) {
+        return SET_CURSOR_REQUEST.request(request);
+    }
+    static SetIconResponse setIcon(SetIconRequest request) {
+        return SET_ICON_REQUEST.request(request);
+    }
     static GetMouseButtonResponse getMouseButton(GetMouseButtonRequest request) {
         return GET_MOUSE_BUTTON_REQUEST.request(request);
     }
@@ -125,6 +178,9 @@ class GLFWInstance {
     }
     static SetWindowVisibleResponse setWindowVisible(SetWindowVisibleRequest request) {
         return SET_WINDOW_VISIBLE_REQUEST.request(request);
+    }
+    static GetWindowAttribResponse getWindowAttrib(GetWindowAttribRequest request) {
+        return GET_WINDOW_ATTRIB_REQUEST.request(request);
     }
 
     
@@ -141,11 +197,42 @@ class GLFWInstance {
         }
     }
     
+    static void create() {
+        
+        xBuffer = MemoryUtil.memCallocDouble(1);
+        yBuffer = MemoryUtil.memCallocDouble(1);
+        
+        createCursors();
+        
+    }
+    
+    static void createCursors() {
+        for (int cursor = GLFW.GLFW_ARROW_CURSOR; cursor < GLFW.GLFW_VRESIZE_CURSOR+1; cursor++) {
+            long cursorId = GLFW.glfwCreateStandardCursor(cursor);
+            STANDARD_CURSORS.put(cursor, cursorId);
+        }
+    }
+    
+    static void destroy() {
+        
+        MemoryUtil.memFree(xBuffer);
+        MemoryUtil.memFree(yBuffer);
+        
+        GLFW.glfwTerminate();
+        GLFW.glfwSetErrorCallback(null).free();
+        resetInstance();
+    }
+    
+    private static void resetInstance() {
+        initialized = false;
+    }
+    
     static TimeOut initTimeOut;
     private static void initializeInstance() {
     	
     	// Performing a time out check because program will hang if native libraries aren't found
-    	TimeOut timeOut = new TimeOut(1);
+        // Choosing arbitrary value of 3 seconds to timeout
+    	TimeOut timeOut = new TimeOut(3);
     	
         Processor.thread(()->{
         	
@@ -156,6 +243,8 @@ class GLFWInstance {
             }
             
             timeOut.pass(); // Initialization succeeded and no errors have occurred so far
+            
+            create();
             
             while (true) {
             	
@@ -204,10 +293,7 @@ class GLFWInstance {
                 requestRespond();
             }
             
-            GLFW.glfwTerminate();
-            GLFW.glfwSetErrorCallback(null).free();
-            
-            resetInstance();
+            destroy();
         });
         
         if (!timeOut.hold()) {
@@ -232,10 +318,6 @@ class GLFWInstance {
         return false;
     }
     
-    private static void resetInstance() {
-        initialized = false;
-    }
-    
     
     
     
@@ -246,12 +328,13 @@ class GLFWInstance {
         final GLFWWindow window;
         final String title;
         final int width, height;
-        final boolean fullscreen, resizable, decorated;
+        final boolean fullscreen, resizable, decorated, floating;
         final int multiSample;
+        final int resolutionType;
         final Callback2D<Integer,Integer> windowPosCallback;
         final Callback2D<Integer,Integer> windowSizeCallback;
         CreateWindowRequest(GLFWWindow window, String title, int width, int height,
-                boolean fullscreen, boolean resizable, boolean decorated, int multiSample,
+                boolean fullscreen, boolean resizable, boolean decorated, boolean floating, int multiSample, int resolutionType,
                 Callback2D<Integer,Integer> windowPosCallback, Callback2D<Integer,Integer> windowSizeCallback) {
             this.window = window;
             this.title = title;
@@ -260,7 +343,9 @@ class GLFWInstance {
             this.fullscreen = fullscreen;
             this.resizable = resizable;
             this.decorated = decorated;
+            this.floating = floating;
             this.multiSample = multiSample;
+            this.resolutionType = resolutionType;
             this.windowPosCallback = windowPosCallback;
             this.windowSizeCallback = windowSizeCallback;
         }
@@ -269,11 +354,11 @@ class GLFWInstance {
         final long id;
         final String title;
         final int x, y, width, height, screenWidth, screenHeight;
-        final boolean resizable, decorated, fullscreen;
+        final boolean resizable, decorated, fullscreen, floating;
         final GLFWInput input;
         final LWJGL gl;
         CreateWindowResponse(long id, String title, int x, int y, int width, int height,
-                boolean resizable, boolean decorated, boolean fullscreen,
+                boolean resizable, boolean decorated, boolean fullscreen, boolean floating,
                 int screenWidth, int screenHeight, GLFWInput input, LWJGL gl) {
             this.id = id;
             this.title = title;
@@ -284,6 +369,7 @@ class GLFWInstance {
             this.resizable = resizable;
             this.decorated = decorated;
             this.fullscreen = fullscreen;
+            this.floating = floating;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             this.input = input;
@@ -295,7 +381,7 @@ class GLFWInstance {
         final long id;
         final String title;
         final int x, y, width, height, screenWidth, screenHeight;
-        final boolean resizable, decorated, fullscreen;
+        final boolean resizable, decorated, fullscreen, floating;
         final GLFWInput input;
         final LWJGL gl;
         
@@ -303,17 +389,32 @@ class GLFWInstance {
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, request.multiSample);
         
+        //Get screen dimensions
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+        screenWidth = mode.width();
+        screenHeight = mode.height();
+        
+        int windowWidth = request.width;
+        int windowHeight = request.height;
+        
         if (!request.fullscreen) {
             GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE,(resizable=request.resizable) ?
                     GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
             GLFW.glfwWindowHint(GLFW.GLFW_DECORATED,(decorated=request.decorated) ?
                     GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+            GLFW.glfwWindowHint(GLFW.GLFW_FLOATING,(floating=request.floating) ?
+                    GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
         } else {
             resizable = false;
             decorated = false;
+            floating = false;
+            if (request.resolutionType == Window.MONITOR) {
+                windowWidth = screenWidth;
+                windowHeight = screenHeight;
+            }
         }
         
-        id = GLFW.glfwCreateWindow(width=request.width,height=request.height,title=request.title,
+        id = GLFW.glfwCreateWindow(width=windowWidth,height=windowHeight,title=request.title,
                 (fullscreen=request.fullscreen) ? GLFW.glfwGetPrimaryMonitor() : MemoryUtil.NULL,
                 MemoryUtil.NULL);
         
@@ -322,11 +423,8 @@ class GLFWInstance {
         }
         
         //Centers window
-        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-        screenWidth = mode.width();
-        screenHeight = mode.height();
-        x = (screenWidth - request.width) / 2;
-        y = (screenHeight - request.height) / 2;
+        x = (screenWidth - windowWidth) / 2;
+        y = (screenHeight - windowHeight) / 2;
         GLFW.glfwSetWindowPos(id,x,y);
         GLFW.glfwSetWindowPosCallback(id, (windowID,wx,wy)->{
             request.windowPosCallback.f(wx, wy);
@@ -339,8 +437,9 @@ class GLFWInstance {
         input = new GLFWInput(id,()->request.window.getHeight());
         
         gl = GLFWInstance.gl;
+        
         CreateWindowResponse response = new CreateWindowResponse(id, title, x, y, width, height,
-                resizable, decorated, fullscreen,
+                resizable, decorated, fullscreen, floating,
                 screenWidth, screenHeight, input, gl);
         
         CREATED_WINDOWS.add(id);
@@ -367,6 +466,57 @@ class GLFWInstance {
     }
     
     /* ********************************************************************************* */
+    /* ********************************** Call Window ********************************** */
+    /* ********************************************************************************* */
+    static class CallWindowRequest extends Request {
+        final long id;
+        final Callback0D call;
+        CallWindowRequest(long id, Callback0D call) {
+            this.id = id;
+            this.call = call;
+        }
+    }
+    static class CallWindowResponse extends Response {
+        CallWindowResponse() { }
+    }
+    private static CallWindowResponse _callWindow(CallWindowRequest request) {
+        CallWindowResponse response = new CallWindowResponse();
+        request.call.f();
+        return response;
+    }
+    
+    /* ********************************************************************************* */
+    /* ******************************** Window Requests ******************************** */
+    /* ********************************************************************************* */
+    static class WindowRequest extends Request {
+        final long id;
+        final WindowRequestType type;
+        WindowRequest(long id, WindowRequestType type) {
+            this.id = id;
+            this.type = type;
+        }
+    }
+    static class WindowResponse extends Response {
+        WindowResponse() {
+            
+        }
+    }
+    private static WindowResponse _window(WindowRequest request) {
+        switch (request.type) {
+        case MAXIMIZE:
+            GLFW.glfwMaximizeWindow(request.id);
+            break;
+        case MINIMIZE:
+            GLFW.glfwIconifyWindow(request.id);
+            break;
+        case RESTORE:
+            GLFW.glfwRestoreWindow(request.id);
+            break;
+        }
+        return new WindowResponse();
+    }
+    
+    /* ********************************************************************************* */
     /* **************************** Get Window Frame Size ****************************** */
     /* ********************************************************************************* */
     static class GetWindowFrameSizeRequest extends Request {
@@ -380,7 +530,7 @@ class GLFWInstance {
         final int top;
         final int right;
         final int bottom;
-        GetWindowFrameSizeResponse(int left, int right, int top, int bottom) {
+        GetWindowFrameSizeResponse(int left, int top, int right, int bottom) {
             this.left = left;
             this.right = right;
             this.top = top;
@@ -465,6 +615,57 @@ class GLFWInstance {
     }
     
     /* ********************************************************************************* */
+    /* **************************** Set Window Size Limits ***************************** */
+    /* ********************************************************************************* */
+    static class SetWindowSizeLimitsRequest extends Request {
+        final long id;
+        final int minWidth;
+        final int minHeight;
+        final int maxWidth;
+        final int maxHeight;
+        /** Use values of GLFW_DONT_CARE (-1) to ignore limits */
+        SetWindowSizeLimitsRequest(long id, int minWidth, int minHeight, int maxWidth, int maxHeight) {
+            this.id = id;
+            this.minWidth = minWidth;
+            this.minHeight = minHeight;
+            this.maxWidth = maxWidth;
+            this.maxHeight = maxHeight;
+        }
+    }
+    static class SetWindowSizeLimitsResponse extends Response {
+        SetWindowSizeLimitsResponse() {
+            
+        }
+    }
+    private static SetWindowSizeLimitsResponse _setWindowSizeLimits(SetWindowSizeLimitsRequest request) {
+        GLFW.glfwSetWindowSizeLimits(request.id,request.minWidth,request.minHeight,request.maxWidth,request.maxHeight);
+        return new SetWindowSizeLimitsResponse();
+    }
+    
+    /* ********************************************************************************* */
+    /* ****************************** Get Window Attrib ******************************** */
+    /* ********************************************************************************* */
+    static class GetWindowAttribRequest extends Request {
+        final long id;
+        final int attrib;
+        GetWindowAttribRequest(long id, int attrib) {
+            this.id = id;
+            this.attrib = attrib;
+        }
+    }
+    static class GetWindowAttribResponse extends Response {
+        final boolean value;
+        GetWindowAttribResponse(boolean value) {
+            this.value = value;
+        }
+    }
+    private static GetWindowAttribResponse _getWindowAttrib(GetWindowAttribRequest request) {
+        int value = GLFW.glfwGetWindowAttrib(request.id, request.attrib);
+        boolean ret = (value == 1) ? true : false;
+        return new GetWindowAttribResponse(ret);
+    }
+    
+    /* ********************************************************************************* */
     /* ******************************** Get Input Mode  ******************************** */
     /* ********************************************************************************* */
     static class GetInputModeRequest extends Request {
@@ -531,6 +732,66 @@ class GLFWInstance {
         double x = (double) xBuffer.get(0);
         double y = (double) yBuffer.get(0);
         return new GetCursorPosResponse(x,y);
+    }
+    
+    /* ********************************************************************************* */
+    /* ******************************** Set Cursor Pos ********************************* */
+    /* ********************************************************************************* */
+    static class SetCursorRequest extends Request {
+        final long id;
+        final long cursorId;
+        SetCursorRequest(long id, long cursorId) {
+            this.id = id;
+            this.cursorId = cursorId;
+        }
+    }
+    static class SetCursorResponse extends Response {
+        SetCursorResponse() {
+            
+        }
+    }
+    private static SetCursorResponse _setCursor(SetCursorRequest request) {
+        GLFW.glfwSetCursor(request.id,request.cursorId);
+        return new SetCursorResponse();
+    }
+    
+    /* ********************************************************************************* */
+    /* *********************************** Set Icon ************************************ */
+    /* ********************************************************************************* */
+    static class SetIconRequest extends Request {
+        final long id;
+        final int width;
+        final int height;
+        final byte[] pixels;
+        SetIconRequest(long id, int width, int height, byte[] pixels) {
+            this.id = id;
+            this.width = width;
+            this.height = height;
+            this.pixels = pixels;
+        }
+    }
+    static class SetIconResponse extends Response {
+        SetIconResponse() {
+            
+        }
+    }
+    private static SetIconResponse _setIcon(SetIconRequest request) {
+            
+        ByteBuffer buffer = MemoryUtil.memCalloc(request.width*request.height*4);
+        
+        buffer.put(request.pixels);
+        buffer.flip();
+        
+        GLFWImage.Buffer imageBuffer = GLFWImage.create(1);
+        imageBuffer.width(request.width);
+        imageBuffer.height(request.height);
+        imageBuffer.pixels(buffer);
+        
+        GLFW.glfwSetWindowIcon(request.id, imageBuffer);
+        
+        MemoryUtil.memFree(buffer);
+            
+        return new SetIconResponse();
     }
     
     /* ********************************************************************************* */

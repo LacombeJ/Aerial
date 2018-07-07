@@ -7,6 +7,6 @@ public interface AudioDevice {
     
     public void destroy();
     
-    public AudioLibrary getAudioLibrary();
+    public AL getAudioLibrary();
     
 }
