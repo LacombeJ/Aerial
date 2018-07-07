@@ -1,8 +1,8 @@
 
 // Gradle build file
 
-description = 'Java Game Engine'
-group 'jonl.jge'
+description = 'Aerial Game Engine'
+group 'aerial'
 version = '0.0.2'
 
 apply plugin: 'java'
@@ -58,13 +58,13 @@ subprojects {
 }
 
 dependencies {
-    compile project(':jge')
-    compile project(':modules:module-aerial')
-    compile project(':modules:module-jgl')
-    compile project(':modules:module-aui')
-    compile project(':modules:module-utils')
-    compile project(':modules:module-vmath')
-    compile project(':modules:module-physics2d')
+    compile project(':engine')
+    compile project(':aerial:editor')
+    compile project(':aerial:graphics')
+    compile project(':aerial:aui')
+    compile project(':aerial:commons')
+    compile project(':aerial:math')
+    compile project(':aerial:box')
 }
 
 jar {

@@ -1,5 +1,4 @@
 
-import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.plugins.ide.eclipse.model.ClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 import org.gradle.plugins.ide.eclipse.model.FileReference
@@ -8,58 +7,16 @@ import org.gradle.plugins.ide.eclipse.model.internal.FileReferenceFactory
 apply plugin: 'eclipse'
 
 dependencies {
-    compile project(':modules:module-utils')
+    compile project(':engine')
 }
 
 // ----------------------------------------------------------------------------
 
-// LWJGL dependencies //
-
-String version = 'lwjgl_3.1.6'
-String[][] libs = [
-    ['',            'lwjgl'             ,'lwjgl' ],
-    ['_glfw',       'lwjgl-glfw'        ,'glfw' ],
-    ['_openal',     'lwjgl-openal'      ,'OpenAL' ],
-    ['_opengl',     'lwjgl-opengl'      ,'lwjgl_opengl' ],
-    ['_stb',        'lwjgl-stb'         ,'lwjgl_stb' ],
-    ['_assimp',     'lwjgl-assimp'      ,'lwjgl_assimp' ]
+String[] jarFiles = [
+    'lib/jbox2d_2.3.1/jbox2d.jar'
 ]
 
-FileCollection[] libFiles = new FileCollection[libs.length]
-FileCollection[] libNatives = new FileCollection[libs.length]
-
-//String arch = System.properties['sun.arch.data.model'] //arch type (32 or 64)
-
-String os = "windows"
-String ext = ".dll"
-if (Os.isFamily(Os.FAMILY_UNIX)) {
-    os = "linux"
-    ext = ".so"
-} else if (Os.isFamily(Os.FAMILY_MAC)) {
-    os = "macos"
-    ext = ".dylib"
-}
-
-String[] jarFiles = new String[libs.length]
-String[] nativeFiles = new String[libs.length]
-for (int i=0; i<libs.length; i++) {
-    
-    String postfix = libs[i][0]
-    String name = libs[i][1]
-    String nlib = libs[i][2]
-    
-    String jarFile = null
-    String nativeFile = null
-    
-    jarFile = 'lib/'+version+postfix+'/'+name+'.jar'
-    if (nlib != null) {
-        nativeFile = 'lib/'+version+postfix+'/'+name+'-natives-'+os+'.jar'
-    }
-    
-    jarFiles[i] = jarFile
-    nativeFiles[i] = nativeFile
-    
-}
+FileCollection[] libFiles = new FileCollection[jarFiles.length]
 
 // ----------------------------------------------------------------------------
 
@@ -67,16 +24,9 @@ dependencies {
     
     for (int i=0; i<jarFiles.length; i++) {
         String jarFile = jarFiles[i]
-        String nativeFile = nativeFiles[i]
         
         compile files(jarFile)
         libFiles[i] = files(jarFile)
-        
-        if (nativeFile != null) {
-            compile files(nativeFile)
-            libNatives[i] = files(nativeFile)
-        }
-        
     }
     
 }
@@ -85,14 +35,6 @@ jar {
     for (int i=0; i<libFiles.length; i++) {
         from libFiles[i].collect {
 	        zipTree it
-        }
-    }
-    
-    for (int i=0; i<libNatives.length; i++) {
-        if (libNatives[i] != null) {
-            from libNatives[i].collect {
-                zipTree it
-            }
         }
     }
 }
@@ -107,12 +49,7 @@ boolean getSourceDir(it) {
 
 boolean setSourceDir(entries, factory) {
     String[] sources = [
-        'lwjgl',
-        'lwjgl-glfw' ,
-        'lwjgl-openal',
-        'lwjgl-opengl',
-        'lwjgl-stb',
-        'lwjgl-assimp'
+        'jbox2d'
     ]
     for (ClasspathEntry entry : entries) {
         for (int i=0; i<sources.length; i++) {
