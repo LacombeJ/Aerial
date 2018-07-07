@@ -6,10 +6,10 @@
  *
  */
 module jonl.aerial {
-    exports jonl.aerial.editor;
-    exports jonl.aerial.data;
-    exports jonl.aerial.editor.spline;
-    exports jonl.aerial.ui;
+    exports ax.editor;
+    exports ax.editor.data;
+    exports ax.editor.spline;
+    exports ax.editor.ui;
     
     requires java.desktop;
     

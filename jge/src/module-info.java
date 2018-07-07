@@ -1,23 +1,23 @@
 
 module jonl.ge {
     
-	exports jonl.ge.core;
-	exports jonl.ge.core.app;
-	exports jonl.ge.core.geometry;
-	exports jonl.ge.core.material;
-	exports jonl.ge.core.render;
-	exports jonl.ge.core.shaders;
+	exports ax.engine.core;
+	exports ax.engine.core.app;
+	exports ax.engine.core.geometry;
+	exports ax.engine.core.material;
+	exports ax.engine.core.render;
+	exports ax.engine.core.shaders;
 	
-	exports jonl.ge.mod.axis;
-	exports jonl.ge.mod.fx;
-	exports jonl.ge.mod.misc;
-	exports jonl.ge.mod.physics;
-	exports jonl.ge.mod.ray;
-	exports jonl.ge.mod.render;
-	exports jonl.ge.mod.render.pass;
-	exports jonl.ge.mod.text;
+	exports ax.engine.mod.axis;
+	exports ax.engine.mod.fx;
+	exports ax.engine.mod.misc;
+	exports ax.engine.mod.physics;
+	exports ax.engine.mod.ray;
+	exports ax.engine.mod.render;
+	exports ax.engine.mod.render.pass;
+	exports ax.engine.mod.text;
 	
-	exports jonl.ge.utils;
+	exports ax.engine.utils;
 	
 	
 	requires java.base;

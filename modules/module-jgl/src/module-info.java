@@ -1,9 +1,9 @@
 
 module jonl.jgl {
     
-	exports jonl.jgl;
-	exports jonl.jgl.utils;
-	exports jonl.jgl.lwjgl;
+	exports ax.graphics;
+	exports ax.graphics.utils;
+	exports ax.graphics.lwjgl;
 
 	requires java.base;
 	requires transitive java.desktop;

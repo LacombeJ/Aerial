@@ -1,7 +1,7 @@
 
 module jonl.ge.mod.physics2d {
     
-    exports jonl.ge.mod.physics2d;
+    exports ax.box;
     
     requires java.base;
     

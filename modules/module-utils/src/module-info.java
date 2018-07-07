@@ -1,17 +1,17 @@
 
 module jonl.utils {
     
-	exports jonl.jutils.structs;
-	exports jonl.jutils.image;
-	exports jonl.jutils;
-	exports jonl.jutils.data;
-	exports jonl.jutils.misc;
-	exports jonl.jutils.io;
-	exports jonl.jutils.jss;
-	exports jonl.jutils.time;
-	exports jonl.jutils.func;
-	exports jonl.jutils.parallel;
-	exports jonl.jutils.call;
+	exports ax.commons.structs;
+	exports ax.commons.image;
+	exports ax.commons;
+	exports ax.commons.data;
+	exports ax.commons.misc;
+	exports ax.commons.io;
+	exports ax.commons.jss;
+	exports ax.commons.time;
+	exports ax.commons.func;
+	exports ax.commons.parallel;
+	exports ax.commons.call;
 
 	requires gson;
 	

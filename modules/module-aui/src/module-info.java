@@ -1,11 +1,11 @@
 
 module jonl.aui {
     
-	exports jonl.aui;
-	exports jonl.aui.tea;
-	exports jonl.aui.tea.event;
-	exports jonl.aui.tea.graphics;
-	exports jonl.aui.tea.spatial;
+	exports ax.aui;
+	exports ax.aui.tea;
+	exports ax.aui.tea.event;
+	exports ax.aui.tea.graphics;
+	exports ax.aui.tea.spatial;
 	
 	requires java.base;
     requires java.desktop;

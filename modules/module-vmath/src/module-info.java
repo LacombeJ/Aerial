@@ -1,8 +1,8 @@
 
 module jonl.vmath {
     
-	exports jonl.vmath;
-	exports jonl.imath;
+	exports ax.math.vector;
+	exports ax.math.infinite;
     
 	requires java.base;
 	
