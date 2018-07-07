@@ -1,84 +1,12 @@
 
-import org.gradle.plugins.ide.eclipse.model.ClasspathEntry
-import org.gradle.plugins.ide.eclipse.model.SourceFolder
-import org.gradle.plugins.ide.eclipse.model.FileReference
-import org.gradle.plugins.ide.eclipse.model.internal.FileReferenceFactory
-
-apply plugin: 'eclipse'
-
 dependencies {
+
     compile project(':aerial:graphics')
     compile project(':aerial:aui')
     compile project(':aerial:commons')
     compile project(':aerial:math')
-}
-
-// ----------------------------------------------------------------------------
-
-// Jar dependencies //
-
-String[] libs = [
-    'jbullet',
-    'vecmath'
-]
-
-FileCollection[] libFiles = new FileCollection[libs.length]
-
-String[] ref = new String[libs.length]
-for (int i=0; i<ref.length; i++) {
     
-    String name = libs[i]
+    compile libraries.jbullet
+    compile libraries.vecmath
     
-    String jarFile = 'lib/'+name+'/'+name+'.jar'
-    ref[i] = jarFile
-    
-}
-
-// ----------------------------------------------------------------------------
-
-dependencies {
-    
-    for (int i=0; i<ref.length; i++) {
-        String jarFile = ref[i]
-        
-        compile files(jarFile)
-        libFiles[i] = files(jarFile)
-    }
-    
-}
-
-jar {
-    for (int i=0; i<ref.length; i++) {
-        from libFiles[i].collect {
-	        zipTree it
-        }
-    }
-}
-
-boolean setSourceDir(entries, factory) {
-    String[][] sources = [
-        ['jbullet.jar','jbullet-sources.zip','jbullet-javadoc.zip'],
-        ['vecmath.jar','vecmath-sources.zip','vecmath-javadoc.zip']
-    ]
-    for (ClasspathEntry entry : entries) {
-        for (int i=0; i<sources.length; i++) {
-            if (entry.path.endsWith(sources[i][0])) {
-                String sourcePath = entry.path.replace(sources[i][0], sources[i][1])
-                FileReference sourceRef = factory.fromPath(sourcePath)
-                entry.sourcePath = sourceRef
-                
-                String javadocPath = entry.path.replace(sources[i][0], sources[i][2])
-                FileReference javadocRef = factory.fromPath(javadocPath)
-                entry.javadocPath = javadocRef
-            }
-        }
-    }
-    return false
-}
-
-eclipse.classpath {
-    FileReferenceFactory factory = getFileReferenceFactory()
-    file.whenMerged {
-        setSourceDir(entries, factory)
-    }
 }

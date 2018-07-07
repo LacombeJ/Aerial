@@ -1,0 +1,7 @@
+
+// Gradle task file
+
+task runGLWindowExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.graphics.GLWindowMain"
+}

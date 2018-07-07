@@ -5,6 +5,8 @@ description = 'Aerial Game Engine'
 group 'aerial'
 version = '0.0.2'
 
+apply from: "depend.gradle"
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
@@ -13,11 +15,6 @@ targetCompatibility = 9
 
 repositories {
     mavenCentral()
-}
-
-// Project level dependencies
-project.ext {
-    dependency_gson = dependencies.create( group: 'com.google.code.gson', name: 'gson', version: '2.8.3' )
 }
 
 boolean isModule(entry) {
@@ -65,13 +62,7 @@ dependencies {
     compile project(':aerial:commons')
     compile project(':aerial:math')
     compile project(':aerial:box')
-}
-
-jar {
-    from configurations.compile .collect { zipTree it }
-    exclude '**/module-info.class'
-    exclude '**/*.sha1'
-    exclude '**/*.git'
+    compile project(':examples')
 }
 
 apply plugin: 'maven-publish'
@@ -93,4 +84,6 @@ publishing {
         mavenLocal()
     }
 }
+
+apply from: "tasks.gradle"
 

@@ -1,0 +1,47 @@
+
+// Gradle dependencies file
+
+ext {
+    versions = [:]
+    libraries = [:]
+}
+
+
+// Versions
+
+versions.gson = "2.8.3"
+versions.lwjgl = "3.1.6"
+versions.jbox2d = "2.3.1"
+
+// Libraries
+
+libraries.gson = [
+    "com.google.code.gson:gson:${versions.gson}"
+]
+
+libraries.lwjgl = [
+    "org.lwjgl:lwjgl:${versions.lwjgl}",
+    "org.lwjgl:lwjgl:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-assimp:${versions.lwjgl}",
+    "org.lwjgl:lwjgl-assimp:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-glfw:${versions.lwjgl}",
+    "org.lwjgl:lwjgl-glfw:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-openal:${versions.lwjgl}",
+    "org.lwjgl:lwjgl-openal:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-opengl:${versions.lwjgl}",
+    "org.lwjgl:lwjgl-opengl:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-stb:${versions.lwjgl}",
+    "org.lwjgl:lwjgl-stb:${versions.lwjgl}:natives-windows"
+]
+
+libraries.jbullet = [
+    files("lib/jbullet/jbullet.jar")
+]
+
+libraries.vecmath = [
+    files("lib/vecmath/vecmath.jar")
+]
+
+libraries.jbox2d = [
+    files("lib/jbox2d_${versions.jbox2d}/jbox2d.jar")
+]

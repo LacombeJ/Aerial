@@ -8,12 +8,12 @@ module ax.graphics {
 	requires java.base;
 	requires transitive java.desktop;
 	
-	requires lwjgl;
-	requires lwjgl.opengl;
-	requires lwjgl.openal;
-	requires lwjgl.glfw;
-	requires lwjgl.stb;
-	requires lwjgl.assimp;
+	requires org.lwjgl;
+	requires org.lwjgl.opengl;
+	requires org.lwjgl.openal;
+	requires org.lwjgl.glfw;
+	requires org.lwjgl.assimp;
+	requires org.lwjgl.stb;
 	
 	requires transitive ax.commons;
     

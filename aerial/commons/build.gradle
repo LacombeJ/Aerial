@@ -1,6 +1,6 @@
 
 dependencies {
 
-    compile project.dependency_gson
+    compile libraries.gson
 
 }

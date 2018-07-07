@@ -13,10 +13,11 @@ public class GLWindowMain {
         
         Window window = new GLFWWindow();
         GL gl = window.getGL();
-        Mesh mesh = createMesh(gl);
-        Program program = createProgram(gl);
         
         window.setRunner(()->{
+            
+            Mesh mesh = createMesh(gl);
+            Program program = createProgram(gl);
             
             while (window.isRunning()) {
                 
