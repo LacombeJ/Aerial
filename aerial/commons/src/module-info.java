@@ -1,5 +1,5 @@
 
-module jonl.utils {
+module ax.commons {
     
 	exports ax.commons.structs;
 	exports ax.commons.image;

@@ -1,5 +1,5 @@
 
-module jonl.aui {
+module ax.aui {
     
 	exports ax.aui;
 	exports ax.aui.tea;
@@ -10,8 +10,8 @@ module jonl.aui {
 	requires java.base;
     requires java.desktop;
 	
-	requires transitive jonl.jgl;
-	requires transitive jonl.utils;
-	requires transitive jonl.vmath;
+	requires transitive ax.graphics;
+	requires transitive ax.commons;
+	requires transitive ax.math;
     
 }

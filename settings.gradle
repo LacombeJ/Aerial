@@ -9,4 +9,6 @@ include ":aerial:commons"
 include ":aerial:math"
 include ":aerial:box"
 
+include ":examples"
+
 rootProject.name = 'aerial'

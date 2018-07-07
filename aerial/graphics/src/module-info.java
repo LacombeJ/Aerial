@@ -1,5 +1,5 @@
 
-module jonl.jgl {
+module ax.graphics {
     
 	exports ax.graphics;
 	exports ax.graphics.utils;
@@ -15,6 +15,6 @@ module jonl.jgl {
 	requires lwjgl.stb;
 	requires lwjgl.assimp;
 	
-	requires transitive jonl.utils;
+	requires transitive ax.commons;
     
 }

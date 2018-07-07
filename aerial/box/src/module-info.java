@@ -1,5 +1,5 @@
 
-module jonl.ge.mod.physics2d {
+module ax.box {
     
     exports ax.box;
     
@@ -7,7 +7,7 @@ module jonl.ge.mod.physics2d {
     
     requires jbox2d;
     
-    requires transitive jonl.ge;
-    requires transitive jonl.vmath;
+    requires transitive ax.engine;
+    requires transitive ax.math;
     
 }

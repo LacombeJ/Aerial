@@ -5,7 +5,7 @@
  * @author Jonathan
  *
  */
-module jonl.aerial {
+module ax.editor {
     exports ax.editor;
     exports ax.editor.data;
     exports ax.editor.spline;
@@ -13,6 +13,6 @@ module jonl.aerial {
     
     requires java.desktop;
     
-    requires transitive jonl.ge;
-    requires transitive jonl.aui;
+    requires transitive ax.engine;
+    requires transitive ax.aui;
 }

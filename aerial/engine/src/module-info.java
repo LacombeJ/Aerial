@@ -1,5 +1,5 @@
 
-module jonl.ge {
+module ax.engine {
     
 	exports ax.engine.core;
 	exports ax.engine.core.app;
@@ -26,8 +26,8 @@ module jonl.ge {
 	requires jbullet;
 	requires vecmath;
 	
-	requires transitive jonl.jgl;
-	requires transitive jonl.utils;
-	requires transitive jonl.vmath;
+	requires transitive ax.graphics;
+	requires transitive ax.commons;
+	requires transitive ax.math;
 	
 }
