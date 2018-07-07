@@ -1,8 +1,7 @@
 
 // Gradle settings file
 
-include ":engine"
-
+include ":aerial:engine"
 include ":aerial:editor"
 include ":aerial:graphics"
 include ":aerial:aui"

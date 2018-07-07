@@ -58,7 +58,7 @@ subprojects {
 }
 
 dependencies {
-    compile project(':engine')
+    compile project(':aerial:engine')
     compile project(':aerial:editor')
     compile project(':aerial:graphics')
     compile project(':aerial:aui')
