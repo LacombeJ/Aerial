@@ -1,12 +1,22 @@
 
 // Gradle task file
 
+task runBoxGravityExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.box.BoxGravityMain"
+}
+
+task runEditorExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.editor.EditorMain"
+}
+
 task runGraphicsWindowExample(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "ax.examples.graphics.GraphicsWindowMain"
 }
 
-task runBoxGravityExample(type: JavaExec) {
+task runTeaAdvancedExample(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = "ax.examples.box.BoxGravityMain"
+    main = "ax.examples.tea.TeaAdvancedMain"
 }
