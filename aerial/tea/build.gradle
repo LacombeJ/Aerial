@@ -1,0 +1,7 @@
+
+dependencies {
+    compile project(':aerial:graphics')
+    compile project(':aerial:commons')
+    compile project(':aerial:math')
+    compile project(':aerial:aui')
+}

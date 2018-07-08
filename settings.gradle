@@ -1,13 +1,17 @@
 
 // Gradle settings file
 
-include ":jge"
+include ":aerial:aui"
+include ":aerial:box"
+include ":aerial:bullet"
+include ":aerial:commons"
+include ":aerial:editor"
+include ":aerial:engine"
+include ":aerial:graphics"
+include ":aerial:math"
+include ":aerial:standard"
+include ":aerial:tea"
 
-include ":modules:module-aerial"
-include ":modules:module-jgl"
-include ":modules:module-aui"
-include ":modules:module-utils"
-include ":modules:module-vmath"
-include ":modules:module-physics2d"
+include ":examples"
 
-rootProject.name = 'javage'
+rootProject.name = 'aerial'

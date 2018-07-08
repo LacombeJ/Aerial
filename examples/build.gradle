@@ -1,0 +1,13 @@
+
+dependencies {
+    compile project(':aerial:editor')
+    compile project(':aerial:engine')
+    compile project(':aerial:graphics')
+    compile project(':aerial:aui')
+    compile project(':aerial:commons')
+    compile project(':aerial:math')
+    compile project(':aerial:box')
+    compile project(':aerial:bullet')
+    compile project(':aerial:engine')
+}
+

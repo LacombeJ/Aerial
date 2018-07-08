@@ -1,0 +1,32 @@
+
+// Gradle task file
+
+task runBoxGravityExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.box.BoxGravityMain"
+}
+
+task runEditorExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.editor.EditorMain"
+}
+
+task runGraphicsWindowExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.graphics.GraphicsWindowMain"
+}
+
+task runLWJGLPathExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.lwjgl.LWJGLPathMain"
+}
+
+task runMathVectorExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.math.MathVectorMain"
+}
+
+task runTeaAdvancedExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.tea.TeaAdvancedMain"
+}

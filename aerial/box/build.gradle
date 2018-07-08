@@ -1,0 +1,8 @@
+
+dependencies {
+
+    compile project(':aerial:engine')
+    
+    compile libraries.jbox2d
+    
+}
