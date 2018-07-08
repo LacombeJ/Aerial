@@ -14,5 +14,7 @@ module ax.editor {
     requires java.desktop;
     
     requires transitive ax.engine;
+    requires transitive ax.std;
     requires transitive ax.aui;
+    requires transitive ax.tea;
 }

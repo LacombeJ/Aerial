@@ -6,7 +6,7 @@ import ax.aui.Label;
 import ax.aui.List;
 import ax.aui.Signal;
 import ax.aui.UIManager;
-import ax.aui.tea.TPanel;
+import ax.tea.TPanel;
 import ax.commons.data.Dir;
 import ax.commons.func.Callback;
 import ax.math.vector.Color;

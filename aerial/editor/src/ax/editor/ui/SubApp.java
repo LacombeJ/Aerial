@@ -1,8 +1,8 @@
 package ax.editor.ui;
 
 import ax.aui.Widget;
-import ax.aui.tea.TGraphics;
-import ax.aui.tea.TWindow;
+import ax.tea.TGraphics;
+import ax.tea.TWindow;
 import ax.engine.core.BaseApp;
 import ax.engine.core.Input;
 import ax.engine.core.Window;
@@ -17,7 +17,7 @@ public class SubApp extends BaseApp {
     private SubAppInput input;
     
     private ax.engine.core.Window window;
-    private ax.aui.tea.TWindow uiWindow;
+    private ax.tea.TWindow uiWindow;
     private ax.graphics.Window glWindow;
     
     private boolean loaded = false;

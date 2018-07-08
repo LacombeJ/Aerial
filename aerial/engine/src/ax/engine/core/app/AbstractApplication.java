@@ -14,11 +14,6 @@ import ax.engine.core.Service;
 import ax.engine.core.Time;
 import ax.engine.core.Window;
 import ax.engine.core.Input.CursorState;
-import ax.engine.mod.fx.FXModule;
-import ax.engine.mod.physics.PhysicsModule;
-import ax.engine.mod.ray.RayModule;
-import ax.engine.mod.render.RenderModule;
-import ax.engine.mod.text.TextModule;
 
 public abstract class AbstractApplication {
 	
@@ -45,11 +40,6 @@ public abstract class AbstractApplication {
         attachments = new HashMap<>();
         caller = new Caller();
         
-        add(new RenderModule());
-        add(new TextModule());
-        add(new FXModule());
-        add(new PhysicsModule());
-        add(new RayModule());
     }
     
     // -------------------------------------------------------

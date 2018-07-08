@@ -1,7 +1,7 @@
 package ax.editor;
 
 import ax.aui.Widget;
-import ax.aui.tea.TInput;
+import ax.tea.TInput;
 import ax.engine.core.Input;
 import ax.engine.core.InputEvent;
 import ax.math.vector.Vector2;

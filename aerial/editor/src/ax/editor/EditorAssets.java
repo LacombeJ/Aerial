@@ -5,7 +5,7 @@ import ax.engine.core.Property;
 import ax.engine.core.SceneObject;
 import ax.engine.core.Transform;
 import ax.engine.core.Input.CursorState;
-import ax.engine.mod.render.Light;
+import ax.std.render.Light;
 import ax.math.vector.Mathf;
 import ax.math.vector.Quaternion;
 import ax.math.vector.Vector3;

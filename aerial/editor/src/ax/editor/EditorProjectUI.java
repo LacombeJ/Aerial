@@ -7,7 +7,7 @@ import ax.aui.TabPanel;
 import ax.aui.Tree;
 import ax.aui.UIManager;
 import ax.aui.Widget;
-import ax.aui.tea.TPanel;
+import ax.tea.TPanel;
 import ax.commons.data.Json;
 import ax.editor.EditorProject.OpenTool;
 

@@ -8,8 +8,8 @@ import ax.engine.core.Scene;
 import ax.engine.core.SceneObject;
 import ax.engine.core.geometry.SphereGeometry;
 import ax.engine.core.material.SolidMaterial;
-import ax.engine.mod.misc.OrthoBox;
-import ax.engine.mod.misc.PerspectiveUpdate;
+import ax.std.misc.OrthoBox;
+import ax.std.misc.PerspectiveUpdate;
 import ax.math.vector.Color;
 import ax.math.vector.Vector2;
 

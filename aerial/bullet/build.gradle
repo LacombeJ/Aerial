@@ -1,0 +1,9 @@
+
+dependencies {
+
+    compile project(':aerial:engine')
+    
+    compile libraries.jbullet
+    compile libraries.vecmath
+    
+}

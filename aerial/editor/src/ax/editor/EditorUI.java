@@ -3,7 +3,7 @@ package ax.editor;
 import java.io.InputStream;
 
 import ax.aui.FileDialog;
-import ax.aui.tea.TUIManager;
+import ax.tea.TUIManager;
 import ax.commons.data.Dir;
 import ax.commons.io.FileUtils;
 import ax.commons.jss.Style;

@@ -1,8 +1,9 @@
 
 dependencies {
     compile project(':aerial:engine')
-    compile project(':aerial:graphics')
+    compile project(':aerial:standard')
     compile project(':aerial:aui')
+    compile project(':aerial:tea')
     compile project(':aerial:commons')
     compile project(':aerial:math')
 }

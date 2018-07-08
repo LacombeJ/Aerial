@@ -6,7 +6,4 @@ dependencies {
     compile project(':aerial:commons')
     compile project(':aerial:math')
     
-    compile libraries.jbullet
-    compile libraries.vecmath
-    
 }
