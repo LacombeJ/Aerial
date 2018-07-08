@@ -14,6 +14,7 @@ module ax.commons {
 	exports ax.commons.call;
 
 	requires gson;
+	requires java.sql;
 	
 	requires java.base;
 	requires transitive java.desktop;

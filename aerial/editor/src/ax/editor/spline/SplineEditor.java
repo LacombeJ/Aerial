@@ -8,7 +8,7 @@ import ax.aui.UIManager;
 import ax.aui.Widget;
 import ax.aui.Window;
 import ax.editor.SubEditor;
-import ax.editor.ui.SubApp;
+import ax.engine.core.ui.SubApp;
 
 public class SplineEditor implements SubEditor {
 

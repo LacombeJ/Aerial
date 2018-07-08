@@ -1,10 +1,10 @@
-package ax.editor.ui;
+package ax.engine.core.ui;
 
 import ax.aui.Widget;
-import ax.tea.TInput;
 import ax.engine.core.Input;
 import ax.engine.core.InputEvent;
 import ax.math.vector.Vector2;
+import ax.tea.TInput;
 
 public class SubAppInput implements Input {
     

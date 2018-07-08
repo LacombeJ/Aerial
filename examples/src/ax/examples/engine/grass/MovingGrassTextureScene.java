@@ -2,7 +2,6 @@ package ax.examples.engine.grass;
 
 import ax.aui.Widget;
 import ax.aui.Window;
-import ax.editor.ui.SubApp;
 import ax.engine.core.Camera;
 import ax.engine.core.Geometry;
 import ax.engine.core.Material;
@@ -11,6 +10,7 @@ import ax.engine.core.Scene;
 import ax.engine.core.SceneObject;
 import ax.engine.core.geometry.BoxGeometry;
 import ax.engine.core.material.TextureMaterial;
+import ax.engine.core.ui.SubApp;
 import ax.math.vector.Color;
 import ax.math.vector.Vector3;
 import ax.std.misc.FPCToggle;

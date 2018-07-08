@@ -1,22 +1,22 @@
-package ax.editor.ui;
+package ax.engine.core.ui;
 
 import ax.aui.Widget;
-import ax.tea.TGraphics;
-import ax.tea.TWindow;
 import ax.engine.core.BaseApp;
 import ax.engine.core.Input;
-import ax.engine.core.Window;
 import ax.engine.core.Input.CursorState;
+import ax.engine.core.Window;
 import ax.engine.core.app.ApplicationWindow;
 import ax.graphics.GL;
 import ax.math.vector.Matrix4;
+import ax.tea.TGraphics;
+import ax.tea.TWindow;
 
 public class SubApp extends BaseApp {
 
     private GL gl;
     private SubAppInput input;
     
-    private ax.engine.core.Window window;
+    private Window window;
     private ax.tea.TWindow uiWindow;
     private ax.graphics.Window glWindow;
     
