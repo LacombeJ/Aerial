@@ -9,6 +9,7 @@ apply from: "depend.gradle"
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 sourceCompatibility = 9
 targetCompatibility = 9
@@ -27,6 +28,7 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: 'idea'
     
     sourceCompatibility = 9
     targetCompatibility = 9
@@ -50,6 +52,11 @@ subprojects {
     
     eclipse.classpath.file.whenMerged {
         entries.findAll { isModule(it) }.each { it.entryAttributes['module'] = 'true' }
+    }
+
+    // This is so that intellij can recognize resource directories defined by gradle
+    idea.module {
+        inheritOutputDirs = true
     }
 
 }
