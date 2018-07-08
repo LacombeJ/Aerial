@@ -3,10 +3,7 @@
  *
  */
 module ax.examples {
-    
-    exports ax.examples.box;
-    exports ax.examples.graphics;
-    
+
     requires ax.aui;
     requires ax.box;
     requires ax.bullet;

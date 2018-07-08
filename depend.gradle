@@ -21,18 +21,22 @@ libraries.gson = [
 
 libraries.lwjgl = [
     "org.lwjgl:lwjgl:${versions.lwjgl}",
-    "org.lwjgl:lwjgl:${versions.lwjgl}:natives-windows",
     "org.lwjgl:lwjgl-assimp:${versions.lwjgl}",
-    "org.lwjgl:lwjgl-assimp:${versions.lwjgl}:natives-windows",
     "org.lwjgl:lwjgl-glfw:${versions.lwjgl}",
-    "org.lwjgl:lwjgl-glfw:${versions.lwjgl}:natives-windows",
     "org.lwjgl:lwjgl-openal:${versions.lwjgl}",
-    "org.lwjgl:lwjgl-openal:${versions.lwjgl}:natives-windows",
     "org.lwjgl:lwjgl-opengl:${versions.lwjgl}",
+    "org.lwjgl:lwjgl-stb:${versions.lwjgl}"
+]
+
+libraries.lwjgl_natives = [
+    "org.lwjgl:lwjgl:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-assimp:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-glfw:${versions.lwjgl}:natives-windows",
+    "org.lwjgl:lwjgl-openal:${versions.lwjgl}:natives-windows",
     "org.lwjgl:lwjgl-opengl:${versions.lwjgl}:natives-windows",
-    "org.lwjgl:lwjgl-stb:${versions.lwjgl}",
     "org.lwjgl:lwjgl-stb:${versions.lwjgl}:natives-windows"
 ]
+
 
 libraries.jbullet = [
     files("lib/jbullet/jbullet.jar")

@@ -4,5 +4,6 @@ dependencies {
     compile project(':aerial:commons')
     
     compile libraries.lwjgl
+    compile libraries.lwjgl_natives
     
 }

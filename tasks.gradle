@@ -16,6 +16,16 @@ task runGraphicsWindowExample(type: JavaExec) {
     main = "ax.examples.graphics.GraphicsWindowMain"
 }
 
+task runLWJGLPathExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.lwjgl.LWJGLPathMain"
+}
+
+task runMathVectorExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.math.MathVectorMain"
+}
+
 task runTeaAdvancedExample(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "ax.examples.tea.TeaAdvancedMain"
