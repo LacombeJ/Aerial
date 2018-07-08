@@ -11,6 +11,16 @@ task runEditorExample(type: JavaExec) {
     main = "ax.examples.editor.EditorMain"
 }
 
+task runEngineGrassExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.engine.grass.MovingGrassMain"
+}
+
+task runEnginePostProcessingExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.engine.postproc.PostProcessingMain"
+}
+
 task runGraphicsWindowExample(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "ax.examples.graphics.GraphicsWindowMain"
