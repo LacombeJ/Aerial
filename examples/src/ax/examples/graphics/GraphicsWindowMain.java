@@ -7,10 +7,13 @@ import ax.graphics.Shader;
 import ax.graphics.Window;
 import ax.graphics.lwjgl.GLFWWindow;
 
-public class GLWindowMain {
+public class GraphicsWindowMain {
 
     public static void main(String[]args) {
-        
+        new GraphicsWindowMain().run();
+    }
+    
+    void run() {
         Window window = new GLFWWindow();
         GL gl = window.getGL();
         
@@ -33,7 +36,6 @@ public class GLWindowMain {
         });
         
         window.start();
-        
     }
     
     static Mesh createMesh(GL gl) {

@@ -1,7 +1,12 @@
 
 // Gradle task file
 
-task runGLWindowExample(type: JavaExec) {
+task runGraphicsWindowExample(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = "ax.examples.graphics.GLWindowMain"
+    main = "ax.examples.graphics.GraphicsWindowMain"
+}
+
+task runBoxGravityExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ax.examples.box.BoxGravityMain"
 }

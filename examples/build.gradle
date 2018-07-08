@@ -7,6 +7,7 @@ dependencies {
     compile project(':aerial:commons')
     compile project(':aerial:math')
     compile project(':aerial:box')
+    compile project(':aerial:bullet')
     compile project(':aerial:engine')
 }
 
