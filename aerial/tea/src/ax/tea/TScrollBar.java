@@ -13,7 +13,7 @@ public class TScrollBar extends TSlider {
     
     public TScrollBar(Align align) {
         super(align, new TScrollButton(20,20));
-        
+        this.setMax(1000);
     }
     
     public Signal<Callback<Integer>> scrolled() { return scrolled; }

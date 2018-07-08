@@ -27,22 +27,22 @@ public class TScrollPanel extends TWidget implements ScrollPanel {
         content.layoutCb = (size) -> {
             int diffX = size.width - content.width;
             int diffY = size.height - content.height;
-            int x = (int) ((horBar.value()/100f) * diffX);
-            int y = (int) ((verBar.value()/100f) * diffY);
+            int x = (int) ((horBar.value()/1000f) * diffX);
+            int y = (int) ((verBar.value()/1000f) * diffY);
             content.setScrollX(x);
             content.setScrollY(y);
         };
         
         content.scrolled().connect((sy)->{
-            verBar.setValue(verBar.value() - sy*10);
+            verBar.setValue(verBar.value() - sy*100);
             content.invalidateLayout();
         });
         horBar.scrolled().connect((sy)->{
-            horBar.setValue(horBar.value() - sy*10);
+            horBar.setValue(horBar.value() - sy*100);
             content.invalidateLayout();
         });
         verBar.scrolled().connect((sy)->{
-            verBar.setValue(verBar.value() - sy*10);
+            verBar.setValue(verBar.value() - sy*100);
             content.invalidateLayout();
         });
         

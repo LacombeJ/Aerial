@@ -11,6 +11,7 @@ module ax.commons {
 	exports ax.commons.time;
 	exports ax.commons.func;
 	exports ax.commons.parallel;
+	exports ax.commons.reflect;
 	exports ax.commons.call;
 
 	requires gson;

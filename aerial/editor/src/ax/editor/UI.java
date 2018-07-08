@@ -78,10 +78,10 @@ public class UI {
     }
     
     public static String buttonStyle(Color color, String icon) {
-        int[] c = Color.toInt(color);
-        String bg = "rgba("+c[0]+","+c[1]+","+c[2]+","+"64)";
-        String bh = "rgba("+c[0]+","+c[1]+","+c[2]+","+"128)";
-        String bd = "rgba("+c[0]+","+c[1]+","+c[2]+","+"32)";
+        Color.ColorInt c = Color.toInt(color);
+        String bg = "rgba("+c.r+","+c.g+","+c.b+","+"64)";
+        String bh = "rgba("+c.r+","+c.g+","+c.b+","+"128)";
+        String bd = "rgba("+c.r+","+c.g+","+c.b+","+"32)";
         return ""
             + "ProjectButton {"
             + "     background: "+bg+";"

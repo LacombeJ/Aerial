@@ -61,7 +61,7 @@ public class Matrix4 extends SquareMatrix<Matrix4,Vector4> {
     
     /**
      * Creates matrix from columns
-     * @see #Matrix4f(Vector4, Vector4, Vector4, Vector4, boolean)
+     * @see #Matrix4(Vector4, Vector4, Vector4, Vector4, boolean)
      */
     public Matrix4(Vector4 v0, Vector4 v1, Vector4 v2, Vector4 v3) {
         this(v0,v1,v2,v3,false);

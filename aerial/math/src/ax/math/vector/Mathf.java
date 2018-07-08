@@ -78,7 +78,11 @@ public final class Mathf {
     public static float ceil(float a) {
         return (float) Math.ceil(a);
     }
-    
+
+    public static float copySign(float magnitude, float sign) {
+        return Math.copySign(magnitude, sign);
+    }
+
     public static float cos(float rad) {
         return (float) Math.cos(rad);
     }
@@ -136,6 +140,18 @@ public final class Mathf {
         }
         return max;
     }
+
+    public static int maxIndex(float... a) {
+        float max = a[0];
+        int index = 0;
+        for (int i=1; i<a.length; i++) {
+            if (a[i]>max) {
+                max = a[i];
+                index = i;
+            }
+        }
+        return index;
+    }
     
     public static float min(float a, float b) {
         return (a<b) ? a : b;
@@ -147,6 +163,18 @@ public final class Mathf {
             if (a[i]<min) min = a[i];
         }
         return min;
+    }
+
+    public static float minIndex(float... a) {
+        float min = a[0];
+        int index = 0;
+        for (int i=1; i<a.length; i++) {
+            if (a[i]<min) {
+                min = a[i];
+                index = i;
+            }
+        }
+        return index;
     }
     
     public static float pow(float a, float b) {
@@ -244,7 +272,6 @@ public final class Mathf {
     /* ******************************************************************************** */
     /* ***************************    Extended METHODS      *************************** */
     /* ******************************************************************************** */
-    
     
     public static float average(float... values) {
         float sum = sum(values);

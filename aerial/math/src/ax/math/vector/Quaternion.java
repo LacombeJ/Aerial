@@ -913,37 +913,68 @@ public class Quaternion {
     public float getAngleAroundDeg (final Vector3 axis) {
         return getAngleAroundDeg(axis.x, axis.y, axis.z);
     }
-    
-    
-    /**
-     * In degrees
-     * @param x
-     * @param y
-     * @param z
-     * @return
-     */
-    public static Quaternion euler(float x, float y, float z) {
-        Quaternion quat = new Quaternion().setEulerAnglesDeg(x,y,z);
-        quat.nor();
-        return quat;
+
+
+    // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+    // JL
+    // Using custom conversions for euler angles because default methods seem to fail on conversion from
+    // quat to euler, and back from euler to quat
+    // TODO check implementation of setEulerAngles and getYawDeg, getPitchDef, getRollDeg and modify
+    // TODO -> it if necessary (as well as other methods)
+    // TODO also make unit tests for methods
+
+    public static Quaternion euler(float yaw, float pitch, float roll) {
+        return eulerRad(Mathf.rad(yaw), Mathf.rad(pitch), Mathf.rad(roll));
     }
     
-    public static Quaternion eulerRad(float x, float y, float z) {
-        Quaternion quat = new Quaternion().setEulerAngles(x,y,z);
-        quat.nor();
-        return quat;
-    }
-    
-    public static Vector3 asEuler(Quaternion quat) {
-        Quaternion q = quat.cpy();
+    public static Quaternion eulerRad(float yaw, float pitch, float roll) {
+        Quaternion q = new Quaternion();
+
+        float cy = Mathf.cos(yaw * 0.5f);
+        float sy = Mathf.sin(yaw * 0.5f);
+        float cr = Mathf.cos(roll * 0.5f);
+        float sr = Mathf.sin(roll * 0.5f);
+        float cp = Mathf.cos(pitch * 0.5f);
+        float sp = Mathf.sin(pitch * 0.5f);
+
+        q.w = cy * cr * cp + sy * sr * sp;
+        q.x = cy * sr * cp - sy * cr * sp;
+        q.y = cy * cr * sp + sy * sr * cp;
+        q.z = sy * cr * cp - cy * sr * sp;
+
         q.nor();
-        return new Vector3(q.getYawDeg(), q.getPitchDeg(), q.getRollDeg());
+
+        return q;
     }
     
-    public static Vector3 asEulerRad(Quaternion quat) {
-        Quaternion q = quat.cpy();
-        q.nor();
-        return new Vector3(q.getYaw(), q.getPitch(), q.getRoll());
+    public static Vector3 asEuler(Quaternion q) {
+        Vector3 e = asEulerRad(q);
+        return new Vector3(Mathf.deg(e.x), Mathf.deg(e.y), Mathf.deg(e.z));
+    }
+    
+    public static Vector3 asEulerRad(Quaternion q) {
+        float yaw;
+        float pitch;
+        float roll;
+
+        // roll (x-axis rotation)
+        float sinr = +2.0f * (q.w * q.x + q.y * q.z);
+        float cosr = +1.0f - 2.0f * (q.x * q.x + q.y * q.y);
+        roll = Mathf.atan2(sinr, cosr);
+
+        // pitch (y-axis rotation)
+        float sinp = +2.0f * (q.w * q.y - q.z * q.x);
+        if (Mathf.abs(sinp) >= 1)
+            pitch = Mathf.copySign(Mathf.PI / 2, sinp); // use 90 degrees if out of range
+        else
+            pitch = Mathf.asin(sinp);
+
+        // yaw (z-axis rotation)
+        float siny = +2.0f * (q.w * q.z + q.x * q.y);
+        float cosy = +1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+        yaw = Mathf.atan2(siny, cosy);
+
+        return new Vector3(yaw, pitch, roll);
     }
 
     public static Quaternion slerp(Quaternion initialRot, Quaternion targetRot, float alpha) {

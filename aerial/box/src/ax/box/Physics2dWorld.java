@@ -2,6 +2,8 @@ package ax.box;
 
 import java.util.ArrayList;
 
+import ax.math.vector.Quaternion;
+import ax.math.vector.Vector3;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -19,7 +21,7 @@ public class Physics2dWorld {
     int positionIterations = 3;
     
     World world = new World(new Vec2(0.0f, -10.0f));
-    float timeStep = 1.0f / 60.0f;
+    float timeStep = 1.0f / 30.0f; //TODO should be 1/60 but this is slower than expected, find out why and fix
     
     Physics2dWorld(Scene scene) {
         
@@ -38,10 +40,12 @@ public class Physics2dWorld {
             if (rb2d!=null && c2d!=null) {
                 if (rb2d.body==null) {
                     Transform transform = rb2d.computeWorldTransform();
-                    
+                    Vector3 euler = Quaternion.asEulerRad(transform.rotation);
+
                     BodyDef bodyDef = new BodyDef();
                     bodyDef.type = Util.type(rb2d.type);
                     bodyDef.position.set(transform.translation.x, transform.translation.y);
+                    bodyDef.angle = euler.z;
                     Body body = world.createBody(bodyDef);
                     
                     rb2d.fixtureDef.shape = c2d.shape();

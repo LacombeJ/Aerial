@@ -92,7 +92,11 @@ public class Color {
     public Vector4 toVector() {
         return new Vector4(r,g,b,a);
     }
-    
+
+    public ColorInt toInt() { return Color.toInt(this); }
+
+    public ColorHSL toHSL() { return Color.toHSL(this); }
+
     @Override
     public String toString() {
         return "Color("+r+","+g+","+b+","+a+")";
@@ -144,16 +148,14 @@ public class Color {
         return fromInt(r,g,b,a);
     }
     
-    public static int[] toInt(Color c) {
-        int R = (int) (c.r * 255);
-        int G = (int) (c.g * 255);
-        int B = (int) (c.b * 255);
-        int A = (int) (c.a * 255);
-        return new int[] {R,G,B,A};
+
+
+    public static Color fromHSL(ColorHSL hsl) {
+        return fromHSL(hsl.h, hsl.s, hsl.l);
     }
-    
+
     // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
-    public static Color hsl2rgb(float h, float s, float l) {
+    public static Color fromHSL(float h, float s, float l) {
         
         float r = 0;
         float g = 0;
@@ -181,6 +183,52 @@ public class Color {
 
         return Color.fromFloat(r,g,b);
     }
+
+    public static ColorInt toInt(Color c) {
+        int R = (int) (c.r * 255);
+        int G = (int) (c.g * 255);
+        int B = (int) (c.b * 255);
+        int A = (int) (c.a * 255);
+        return new ColorInt(R,G,B,A);
+    }
+
+    // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
+    public static ColorHSL toHSL(Color c) {
+
+        float r = c.r, g = c.g, b = c.b;
+
+        int maxi = Mathf.maxIndex( r, g, b );
+        float max = Mathf.max( r, g, b );
+        float min = Mathf.min( r, g, b );
+
+        float hue=0;
+        float saturation;
+        float lightness = ( min + max ) / 2.0f;
+
+        if ( min == max ) {
+
+            hue = 0;
+            saturation = 0;
+
+        } else {
+
+            float delta = max - min;
+
+            saturation = lightness <= 0.5f ? delta / ( max + min ) : delta / ( 2 - max - min );
+
+            switch ( maxi ) {
+
+                case 0: hue = ( g - b ) / delta + ( g < b ? 6 : 0 ); break;
+                case 1: hue = ( b - r ) / delta + 2; break;
+                case 2: hue = ( r - g ) / delta + 4; break;
+
+            }
+
+            hue /= 6f;
+
+        }
+        return new ColorHSL(hue, saturation, lightness);
+    }
     
     // https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
     public static float hue2rgb(float p, float q, float t) {
@@ -190,6 +238,30 @@ public class Color {
         if ( t < 1f / 2f ) return q;
         if ( t < 2f / 3f ) return p + ( q - p ) * 6f * ( 2f / 3f - t );
         return p;
+    }
+
+    public static class ColorInt {
+        public final int r;
+        public final int g;
+        public final int b;
+        public final int a;
+        public ColorInt(int r, int g, int b, int a) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+    }
+
+    public static class ColorHSL {
+        public final float h;
+        public final float s;
+        public final float l;
+        public ColorHSL(float h, float s, float l) {
+            this.h = h;
+            this.s = s;
+            this.l = l;
+        }
     }
     
 }

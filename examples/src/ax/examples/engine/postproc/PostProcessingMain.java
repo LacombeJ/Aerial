@@ -262,11 +262,11 @@ public class PostProcessingMain {
         } else {
             rgb = cAmbient;
         }
-        int[] color = Color.toInt(rgb);
+        Color.ColorInt color = Color.toInt(rgb);
         
-        pickerWidget.pickers.get(0).setValue(color[0]);
-        pickerWidget.pickers.get(1).setValue(color[1]);
-        pickerWidget.pickers.get(2).setValue(color[2]);
+        pickerWidget.pickers.get(0).setValue(color.r);
+        pickerWidget.pickers.get(1).setValue(color.g);
+        pickerWidget.pickers.get(2).setValue(color.b);
         
     }
     
