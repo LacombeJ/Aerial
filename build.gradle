@@ -2,8 +2,11 @@
 // Gradle build file
 
 description = 'Aerial Game Engine'
-group 'aerial'
-version = '0.0.3'
+
+allprojects {
+    group 'aerial'
+    version = '0.0.3'
+}
 
 apply from: "depend.gradle"
 
@@ -94,6 +97,23 @@ publishing {
     repositories {
         mavenLocal()
     }
+}
+
+subprojects {
+
+    apply plugin: 'maven-publish'
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
+    }
+    
 }
 
 apply from: "tasks.gradle"
