@@ -47,9 +47,9 @@ subprojects {
         options.fork = true
         options.incremental = true
         doFirst {
-	        options.compilerArgs = [
-	            '--module-path', classpath.asPath,
-	        ]
+            options.compilerArgs = [
+                '--module-path', classpath.asPath,
+            ]
         }
     }
     
