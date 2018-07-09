@@ -26,12 +26,16 @@ public abstract class TestbedTest {
     public final static Color STATIC = Color.SLATE;
     public final static Color DYNAMIC = Color.CERULEAN;
 
-    protected void boxMesh(SceneObject so, float width, float height, Color color) {
-        Geometry geometry = new BoxGeometry(width, height, 1);
+    protected void boxMesh(SceneObject so, float width, float height, float depth, Color color) {
+        Geometry geometry = new BoxGeometry(width, height, depth);
         //Material material = new SolidMaterial(color.toVector());
         Material material = standard(color.toVector());
         Mesh mesh = new Mesh(geometry, material);
         so.addComponent(mesh);
+    }
+
+    protected void boxMesh(SceneObject so, float width, float height, Color color) {
+        boxMesh(so,width,height,1,color);
     }
 
     static StandardMaterial standard(Vector4 color) {
