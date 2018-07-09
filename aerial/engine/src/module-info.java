@@ -16,7 +16,7 @@ module ax.engine {
 	
 	requires transitive ax.graphics;
 	requires transitive ax.aui;
-	requires ax.tea;
+	requires transitive ax.tea;
 	requires transitive ax.commons;
 	requires transitive ax.math;
 	
