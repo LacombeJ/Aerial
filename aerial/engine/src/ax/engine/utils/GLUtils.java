@@ -99,14 +99,15 @@ public class GLUtils {
     
     public static ax.graphics.Texture.Internal map(Texture.Internal internal) {
         switch (internal) {
-        case R16F       : return ax.graphics.Texture.Internal.R16F;
-        case R32F       : return ax.graphics.Texture.Internal.R32F;
-        case RGB16      : return ax.graphics.Texture.Internal.RGB16;
-        case RGB16F     : return ax.graphics.Texture.Internal.RGB16F;
-        case RGBA8      : return ax.graphics.Texture.Internal.RGBA8;
-        case RGBA16     : return ax.graphics.Texture.Internal.RGBA16;
-        case RGBA16F    : return ax.graphics.Texture.Internal.RGBA16F;
-        default         : return null;
+        case R16F               : return ax.graphics.Texture.Internal.R16F;
+        case R32F               : return ax.graphics.Texture.Internal.R32F;
+        case RGB16              : return ax.graphics.Texture.Internal.RGB16;
+        case RGB16F             : return ax.graphics.Texture.Internal.RGB16F;
+        case RGBA8              : return ax.graphics.Texture.Internal.RGBA8;
+        case RGBA16             : return ax.graphics.Texture.Internal.RGBA16;
+        case RGBA16F            : return ax.graphics.Texture.Internal.RGBA16F;
+        case DEPTH_COMPONENT    : return ax.graphics.Texture.Internal.DEPTH_COMPONENT;
+        default                 : return null;
         }
     }
     

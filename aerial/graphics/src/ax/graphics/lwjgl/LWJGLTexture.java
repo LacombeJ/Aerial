@@ -123,13 +123,14 @@ class LWJGLTexture implements Texture {
     private int getInternal(Internal internal) {
         int glInternal = 0;
         switch (internal) {
-        case R16F:      glInternal = GL30.GL_R16F;      break;
-        case R32F:      glInternal = GL30.GL_R32F;      break;
-        case RGB16:     glInternal = GL11.GL_RGB16;     break;
-        case RGB16F:    glInternal = GL30.GL_RGB16F;    break;
-        case RGBA8:     glInternal = GL11.GL_RGBA8;     break;
-        case RGBA16:    glInternal = GL11.GL_RGBA16;    break;
-        case RGBA16F:   glInternal = GL30.GL_RGBA16F;   break;
+        case R16F:              glInternal = GL30.GL_R16F;              break;
+        case R32F:              glInternal = GL30.GL_R32F;              break;
+        case RGB16:             glInternal = GL11.GL_RGB16;             break;
+        case RGB16F:            glInternal = GL30.GL_RGB16F;            break;
+        case RGBA8:             glInternal = GL11.GL_RGBA8;             break;
+        case RGBA16:            glInternal = GL11.GL_RGBA16;            break;
+        case RGBA16F:           glInternal = GL30.GL_RGBA16F;           break;
+        case DEPTH_COMPONENT:   glInternal = GL11.GL_DEPTH_COMPONENT;   break;
         }
         return glInternal;
     }

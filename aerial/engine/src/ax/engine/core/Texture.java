@@ -53,18 +53,19 @@ public class Texture {
         RGB16F,
         RGBA8,
         RGBA16,
-        RGBA16F;
+        RGBA16F,
+        DEPTH_COMPONENT
     }
     
     public static enum Wrap {
         CLAMP,
-        REPEAT;
+        REPEAT
     }
     
     public static enum Filter {
         NEAREST,
         LINEAR,
-        MIPMAP;
+        MIPMAP
     }
     
 }
