@@ -7,15 +7,13 @@ import ax.engine.core.FrameBuffer;
 import ax.engine.core.Material;
 import ax.engine.core.Texture;
 import ax.engine.core.TextureUniform;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
 import ax.engine.core.material.GeneratedShader;
 import ax.engine.core.material.ShaderLanguage;
 import ax.engine.core.material.ShaderLanguage.SLInt;
 import ax.engine.core.material.ShaderLanguage.SLTexU;
 import ax.engine.core.material.ShaderLanguage.SLVec2;
 import ax.engine.core.material.ShaderLanguage.SLVec3;
+import ax.graphics.GL;
 import ax.math.vector.Vector3;
 import ax.std.render.ImageEffect;
 import ax.std.render.Light;
@@ -33,7 +31,7 @@ public class DeferredPass extends ImageEffect {
     
     private void create() {
         buffer = new FrameBuffer(1024,576);
-        texture = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        texture = new Texture(buffer.width(),buffer.height(),GL.RGB16,GL.CLAMP,GL.LINEAR);
         
         buffer.attach(texture);
         

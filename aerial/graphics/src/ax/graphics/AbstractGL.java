@@ -6,9 +6,6 @@ import java.nio.FloatBuffer;
 import org.lwjgl.system.MemoryUtil;
 
 import ax.commons.misc.ImageUtils;
-import ax.graphics.Texture.Filter;
-import ax.graphics.Texture.Internal;
-import ax.graphics.Texture.Wrap;
 import ax.graphics.utils.MeshData;
 
 /**

@@ -96,46 +96,5 @@ public class GLUtils {
             setUniform(program,name+"["+i+"]",v[i]);
         }
     }
-    
-    public static ax.graphics.Texture.Internal map(Texture.Internal internal) {
-        switch (internal) {
-        case R16F               : return ax.graphics.Texture.Internal.R16F;
-        case R32F               : return ax.graphics.Texture.Internal.R32F;
-        case RGB16              : return ax.graphics.Texture.Internal.RGB16;
-        case RGB16F             : return ax.graphics.Texture.Internal.RGB16F;
-        case RGBA8              : return ax.graphics.Texture.Internal.RGBA8;
-        case RGBA16             : return ax.graphics.Texture.Internal.RGBA16;
-        case RGBA16F            : return ax.graphics.Texture.Internal.RGBA16F;
-        case DEPTH_COMPONENT    : return ax.graphics.Texture.Internal.DEPTH_COMPONENT;
-        default                 : return null;
-        }
-    }
-    
-    public static ax.graphics.Texture.Filter map(Texture.Filter filter) {
-        switch (filter) {
-        case NEAREST    : return ax.graphics.Texture.Filter.NEAREST;
-        case LINEAR     : return ax.graphics.Texture.Filter.LINEAR;
-        case MIPMAP     : return ax.graphics.Texture.Filter.MIPMAP;
-        default         : return null;
-        }
-    }
-    
-    public static ax.graphics.Texture.Wrap map(Texture.Wrap wrap) {
-        switch (wrap) {
-        case CLAMP  : return ax.graphics.Texture.Wrap.CLAMP;
-        case REPEAT : return ax.graphics.Texture.Wrap.REPEAT;
-        default     : return null;
-        }
-    }
-    
-    public static ax.graphics.GL.Mode map(Mesh.Mode mode) {
-        switch (mode) {
-        case TRIANGLES  : return ax.graphics.GL.TRIANGLES;
-        case LINES      : return ax.graphics.GL.LINES;
-        case LINE_STRIP : return ax.graphics.GL.LINE_STRIP;
-        case POINTS     : return ax.graphics.GL.POINTS;
-        default         : return null;
-        }
-    }
-    
+
 }

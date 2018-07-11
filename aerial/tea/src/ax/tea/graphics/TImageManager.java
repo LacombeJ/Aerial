@@ -3,9 +3,6 @@ package ax.tea.graphics;
 import ax.commons.structs.Pool;
 import ax.graphics.GL;
 import ax.graphics.Texture;
-import ax.graphics.Texture.Filter;
-import ax.graphics.Texture.Internal;
-import ax.graphics.Texture.Wrap;
 
 public class TImageManager {
 
@@ -26,7 +23,7 @@ public class TImageManager {
     }
     
     private Texture createTexture(TImage image) {
-        return gl.glGenTexture(image.image(), Internal.RGBA16, Wrap.CLAMP, Filter.NEAREST);
+        return gl.glGenTexture(image.image(), GL.RGBA16, GL.CLAMP, GL.NEAREST);
     }
     
     private void destroyTexture(Texture texture) {

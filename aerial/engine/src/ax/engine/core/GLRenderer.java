@@ -91,16 +91,16 @@ class GLRenderer {
             if (texture.data==null) {
                 gltexture = gl.glGenTexture(
                         texture.width, texture.height,
-                        GLUtils.map(texture.format),
-                        GLUtils.map(texture.wrap),
-                        GLUtils.map(texture.filter));
+                        texture.format,
+                        texture.wrap,
+                        texture.filter);
             } else {
                 gltexture = gl.glGenTexture(
                         texture.data,
                         texture.width,texture.height,
-                        GLUtils.map(texture.format),
-                        GLUtils.map(texture.wrap),
-                        GLUtils.map(texture.filter));
+                        texture.format,
+                        texture.wrap,
+                        texture.filter);
             }
             textureMap.put(texture,gltexture);
         }

@@ -4,10 +4,8 @@ import ax.engine.core.Camera;
 import ax.engine.core.FrameBuffer;
 import ax.engine.core.Material;
 import ax.engine.core.Texture;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
 import ax.engine.core.render.FBCamera;
+import ax.graphics.GL;
 
 public class PostCamera extends Camera implements FBCamera {
 
@@ -23,7 +21,7 @@ public class PostCamera extends Camera implements FBCamera {
     void resize(int width, int height) {
         //TODO delete previous buffer if not null
         buffer = new FrameBuffer(width,height);
-        texture = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        texture = new Texture(buffer.width(),buffer.height(),GL.RGB16,GL.CLAMP,GL.LINEAR);
         buffer.attach(texture);
     }
     

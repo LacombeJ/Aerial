@@ -1,6 +1,6 @@
 package ax.editor.data;
 
-import ax.engine.core.Mesh.Mode;
+import ax.graphics.GL;
 
 public class MeshData {
 
@@ -11,8 +11,8 @@ public class MeshData {
     public boolean castShadows;
     public boolean recieveShadows;
     public boolean recieveLight;
-    
-    Mode mode;
+
+    GL.Mode mode;
     float thickness = 1;
     boolean depthTest = true;
     boolean visible = true;

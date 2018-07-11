@@ -2,21 +2,8 @@ package ax.graphics.lwjgl;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL32;
-import org.lwjgl.opengl.GL40;
-
-import ax.graphics.AbstractGL;
-import ax.graphics.FrameBuffer;
-import ax.graphics.Mesh;
-import ax.graphics.Program;
-import ax.graphics.Shader;
-import ax.graphics.Texture;
-import ax.graphics.Texture.Filter;
-import ax.graphics.Texture.Internal;
-import ax.graphics.Texture.Wrap;
+import ax.graphics.*;
+import org.lwjgl.opengl.*;
 
 class LWJGL extends AbstractGL {
 
@@ -89,27 +76,27 @@ class LWJGL extends AbstractGL {
     public void glBlendFunc(Blend type) {
         GL11.glEnable(GL11.GL_BLEND);
         switch (type) {
-        case NORMAL:
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
-            break;
-        case MULTIPLY:
-            GL11.glBlendFunc(GL11.GL_ZERO,GL11.GL_SRC_COLOR);
-            break;
-        case ADDITIVE:
-            GL11.glBlendFunc(GL11.GL_ONE,GL11.GL_ONE);
-            break;
-        case SCREEN:
-            GL11.glBlendFunc(GL11.GL_ONE,GL11.GL_ONE_MINUS_SRC_ALPHA);
-            break;
-        case SUBTRACT:
-            GL11.glBlendFunc(GL11.GL_ZERO,GL11.GL_ONE_MINUS_SRC_COLOR);
-            break;
-        case DARKEN:
-            GL11.glBlendFunc(GL11.GL_ONE,GL11.GL_SRC_COLOR);
-            break;
-        default:
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
-            break;
+            case NORMAL:
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+                break;
+            case MULTIPLY:
+                GL11.glBlendFunc(GL11.GL_ZERO,GL11.GL_SRC_COLOR);
+                break;
+            case ADDITIVE:
+                GL11.glBlendFunc(GL11.GL_ONE,GL11.GL_ONE);
+                break;
+            case SCREEN:
+                GL11.glBlendFunc(GL11.GL_ONE,GL11.GL_ONE_MINUS_SRC_ALPHA);
+                break;
+            case SUBTRACT:
+                GL11.glBlendFunc(GL11.GL_ZERO,GL11.GL_ONE_MINUS_SRC_COLOR);
+                break;
+            case DARKEN:
+                GL11.glBlendFunc(GL11.GL_ONE,GL11.GL_SRC_COLOR);
+                break;
+            default:
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+                break;
         }
     }
     
@@ -245,117 +232,146 @@ class LWJGL extends AbstractGL {
     
     static int getMask(Mask m) {
         switch(m) {
-        case COLOR_BUFFER_BIT:  return GL11.GL_COLOR_BUFFER_BIT;
-        case DEPTH_BUFFER_BIT:  return GL11.GL_DEPTH_BUFFER_BIT;
-        default:                throw new IllegalStateException("Unknown mask");
+            case COLOR_BUFFER_BIT:  return GL11.GL_COLOR_BUFFER_BIT;
+            case DEPTH_BUFFER_BIT:  return GL11.GL_DEPTH_BUFFER_BIT;
+            default:                throw new IllegalStateException("Unknown mask");
         }
     }
     
     static Mask getMask(int m) {
         switch(m) {
-        case GL11.GL_COLOR_BUFFER_BIT:  return Mask.COLOR_BUFFER_BIT;
-        case GL11.GL_DEPTH_BUFFER_BIT:  return Mask.DEPTH_BUFFER_BIT;
-        default:                        throw new IllegalStateException("Unknown mask");
+            case GL11.GL_COLOR_BUFFER_BIT:  return Mask.COLOR_BUFFER_BIT;
+            case GL11.GL_DEPTH_BUFFER_BIT:  return Mask.DEPTH_BUFFER_BIT;
+            default:                        throw new IllegalStateException("Unknown mask");
         }
     }
     
     static int getTarget(Target t) {
         switch(t) {
-        case CULL_FACE:             return GL11.GL_CULL_FACE;
-        case DEPTH_TEST:            return GL11.GL_DEPTH_TEST;
-        case STENCIL_TEST:          return GL11.GL_STENCIL_TEST;
-        case SCISSOR_TEST:          return GL11.GL_SCISSOR_TEST;
-        case BLEND:                 return GL11.GL_BLEND;
-        case POINT_SMOOTH:          return GL11.GL_POINT_SMOOTH;
-        case PROGRAM_POINT_SIZE:    return GL32.GL_PROGRAM_POINT_SIZE;
-        case POINT_SPRITE:          return GL20.GL_POINT_SPRITE;
-        default:                    throw new IllegalStateException("Unknown target");
+            case CULL_FACE:             return GL11.GL_CULL_FACE;
+            case DEPTH_TEST:            return GL11.GL_DEPTH_TEST;
+            case STENCIL_TEST:          return GL11.GL_STENCIL_TEST;
+            case SCISSOR_TEST:          return GL11.GL_SCISSOR_TEST;
+            case BLEND:                 return GL11.GL_BLEND;
+            case POINT_SMOOTH:          return GL11.GL_POINT_SMOOTH;
+            case PROGRAM_POINT_SIZE:    return GL32.GL_PROGRAM_POINT_SIZE;
+            case POINT_SPRITE:          return GL20.GL_POINT_SPRITE;
+            default:                    throw new IllegalStateException("Unknown target");
         }
     }
     
     static int getHintTarget(HintTarget ht) {
         switch(ht) {
-        case POINT_SMOOTH_HINT:     return GL11.GL_POINT_SMOOTH_HINT;
-        case LINE_SMOOTH_HINT:      return GL11.GL_LINE_SMOOTH_HINT;
-        case POLYGON_SMOOTH_HINT:   return GL11.GL_POLYGON_SMOOTH_HINT;
-        default:                    throw new IllegalStateException("Unknown hint target");
+            case POINT_SMOOTH_HINT:     return GL11.GL_POINT_SMOOTH_HINT;
+            case LINE_SMOOTH_HINT:      return GL11.GL_LINE_SMOOTH_HINT;
+            case POLYGON_SMOOTH_HINT:   return GL11.GL_POLYGON_SMOOTH_HINT;
+            default:                    throw new IllegalStateException("Unknown hint target");
         }
     }
     
     static int getHint(Hint h) {
         switch(h) {
-        case FASTEST:   return GL11.GL_FASTEST;
-        case NICEST:    return GL11.GL_NICEST;
-        case DONT_CARE: return GL11.GL_DONT_CARE;
-        default:        throw new IllegalStateException("Unknown hint");
+            case FASTEST:   return GL11.GL_FASTEST;
+            case NICEST:    return GL11.GL_NICEST;
+            case DONT_CARE: return GL11.GL_DONT_CARE;
+            default:        throw new IllegalStateException("Unknown hint");
         }
     }
     
     static int getFactor(Factor f) {
         switch(f) {
-        case ZERO:                  return GL11.GL_ZERO;
-        case ONE:                   return GL11.GL_ONE;
-        case SRC_COLOR:             return GL11.GL_SRC_COLOR;
-        case ONE_MINUS_SRC_COLOR:   return GL11.GL_ONE_MINUS_SRC_COLOR;
-        case DST_ALPHA:             return GL11.GL_DST_ALPHA;
-        case ONE_MINUS_DST_ALPHA:   return GL11.GL_ONE_MINUS_DST_ALPHA;
-        case ONE_MINUS_SRC_ALPHA:   return GL11.GL_ONE_MINUS_SRC_ALPHA;
-        case ONE_MINUS_DST_COLOR:   return GL11.GL_ONE_MINUS_DST_COLOR;
-        default:                    throw new IllegalStateException("Unknown factor");
+            case ZERO:                  return GL11.GL_ZERO;
+            case ONE:                   return GL11.GL_ONE;
+            case SRC_COLOR:             return GL11.GL_SRC_COLOR;
+            case ONE_MINUS_SRC_COLOR:   return GL11.GL_ONE_MINUS_SRC_COLOR;
+            case DST_ALPHA:             return GL11.GL_DST_ALPHA;
+            case ONE_MINUS_DST_ALPHA:   return GL11.GL_ONE_MINUS_DST_ALPHA;
+            case ONE_MINUS_SRC_ALPHA:   return GL11.GL_ONE_MINUS_SRC_ALPHA;
+            case ONE_MINUS_DST_COLOR:   return GL11.GL_ONE_MINUS_DST_COLOR;
+            default:                    throw new IllegalStateException("Unknown factor");
         }
     }
     
     static int getFace(Face m) {
         switch(m) {
-        case FRONT:                 return GL11.GL_FRONT;
-        case BACK:                  return GL11.GL_BACK;
-        case FRONT_AND_BACK:        return GL11.GL_FRONT_AND_BACK;
-        default:                    throw new IllegalStateException("Unknown face");
+            case FRONT:                 return GL11.GL_FRONT;
+            case BACK:                  return GL11.GL_BACK;
+            case FRONT_AND_BACK:        return GL11.GL_FRONT_AND_BACK;
+            default:                    throw new IllegalStateException("Unknown face");
         }
     }
     
     static int getMode(Mode m) {
         switch(m) {
-        case POINTS:                return GL11.GL_POINTS;
-        case LINES:                 return GL11.GL_LINES;
-        case LINE_STRIP:            return GL11.GL_LINE_STRIP;
-        case TRIANGLES:             return GL11.GL_TRIANGLES;
-        default:                    throw new IllegalStateException("Unknown mode");
+            case POINTS:                return GL11.GL_POINTS;
+            case LINES:                 return GL11.GL_LINES;
+            case LINE_STRIP:            return GL11.GL_LINE_STRIP;
+            case TRIANGLES:             return GL11.GL_TRIANGLES;
+            default:                    throw new IllegalStateException("Unknown mode");
         }
     }
     
     static int getPMode(PMode m) {
         switch(m) {
-        case POINT:                 return GL11.GL_POINT;
-        case LINE:                  return GL11.GL_LINE;
-        case FILL:                  return GL11.GL_FILL;
-        default:                    throw new IllegalStateException("Unknown polygon mode");
+            case POINT:                 return GL11.GL_POINT;
+            case LINE:                  return GL11.GL_LINE;
+            case FILL:                  return GL11.GL_FILL;
+            default:                    throw new IllegalStateException("Unknown polygon mode");
         }
     }
     
     static int getShaderType(ShaderType t) {
         switch(t) {
-        case VERTEX_SHADER:             return GL20.GL_VERTEX_SHADER;
-        case FRAGMENT_SHADER:           return GL20.GL_FRAGMENT_SHADER;
-        case GEOMETRY_SHADER:           return GL32.GL_GEOMETRY_SHADER;
-        case TESS_CONTROL_SHADER:       return GL40.GL_TESS_CONTROL_SHADER;
-        case TESS_EVALUATION_SHADER:    return GL40.GL_TESS_EVALUATION_SHADER;
-        default:                        throw new IllegalStateException("Unknown shader type");
+            case VERTEX_SHADER:             return GL20.GL_VERTEX_SHADER;
+            case FRAGMENT_SHADER:           return GL20.GL_FRAGMENT_SHADER;
+            case GEOMETRY_SHADER:           return GL32.GL_GEOMETRY_SHADER;
+            case TESS_CONTROL_SHADER:       return GL40.GL_TESS_CONTROL_SHADER;
+            case TESS_EVALUATION_SHADER:    return GL40.GL_TESS_EVALUATION_SHADER;
+            default:                        throw new IllegalStateException("Unknown shader type");
         }
     }
     
     static ShaderType getShaderType(int t) {
         switch(t) {
-        case GL20.GL_VERTEX_SHADER:             return ShaderType.VERTEX_SHADER;
-        case GL20.GL_FRAGMENT_SHADER:           return ShaderType.FRAGMENT_SHADER;
-        case GL32.GL_GEOMETRY_SHADER:           return ShaderType.GEOMETRY_SHADER;
-        case GL40.GL_TESS_CONTROL_SHADER:       return ShaderType.TESS_CONTROL_SHADER;
-        case GL40.GL_TESS_EVALUATION_SHADER:    return ShaderType.TESS_EVALUATION_SHADER;
-        default:                                throw new IllegalStateException("Unknown shader type");
+            case GL20.GL_VERTEX_SHADER:             return ShaderType.VERTEX_SHADER;
+            case GL20.GL_FRAGMENT_SHADER:           return ShaderType.FRAGMENT_SHADER;
+            case GL32.GL_GEOMETRY_SHADER:           return ShaderType.GEOMETRY_SHADER;
+            case GL40.GL_TESS_CONTROL_SHADER:       return ShaderType.TESS_CONTROL_SHADER;
+            case GL40.GL_TESS_EVALUATION_SHADER:    return ShaderType.TESS_EVALUATION_SHADER;
+            default:                                throw new IllegalStateException("Unknown shader type");
         }
     }
 
-    
+    static int getInternal(Internal i) {
+        switch (i) {
+            case R16F:              return GL30.GL_R16F;
+            case R32F:              return GL30.GL_R32F;
+            case RGB16:             return GL11.GL_RGB16;
+            case RGB16F:            return GL30.GL_RGB16F;
+            case RGBA8:             return GL11.GL_RGBA8;
+            case RGBA16:            return GL11.GL_RGBA16;
+            case RGBA16F:           return GL30.GL_RGBA16F;
+            case DEPTH_COMPONENT:   return GL11.GL_DEPTH_COMPONENT;
+            default:                throw new IllegalStateException("Unknown internal format");
+        }
+    }
+
+    static int getWrap(Wrap w) {
+        switch (w) {
+            case CLAMP:     return GL12.GL_CLAMP_TO_EDGE;
+            case REPEAT:    return GL11.GL_REPEAT;
+            default:        throw new IllegalStateException("Unknown wrap type");
+        }
+    }
+
+    static int getFilter(Filter f) {
+        switch (f) {
+            case NEAREST:   return GL11.GL_NEAREST;
+            case LINEAR:    return GL11.GL_LINEAR;
+            case MIPMAP:    return GL11.GL_LINEAR_MIPMAP_LINEAR;
+            default:        throw new IllegalStateException("Unknown filter type");
+        }
+    }
 
 
 }

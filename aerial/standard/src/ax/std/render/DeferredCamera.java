@@ -4,10 +4,8 @@ import ax.engine.core.Camera;
 import ax.engine.core.FrameBuffer;
 import ax.engine.core.Material;
 import ax.engine.core.Texture;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
 import ax.engine.core.render.FBCamera;
+import ax.graphics.GL;
 
 public class DeferredCamera extends Camera implements FBCamera {
 
@@ -30,12 +28,12 @@ public class DeferredCamera extends Camera implements FBCamera {
     void resize(int width, int height) {
         //TODO delete previous buffer if not null
         buffer = new FrameBuffer(width,height);
-        position = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
-        normal = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
-        texCoord = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
-        stencil = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
-        diffuse = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
-        specular = new Texture(buffer.width(),buffer.height(),Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        position = new Texture(buffer.width(),buffer.height(),GL.RGB16F,GL.CLAMP,GL.LINEAR);
+        normal = new Texture(buffer.width(),buffer.height(),GL.RGB16F,GL.CLAMP,GL.LINEAR);
+        texCoord = new Texture(buffer.width(),buffer.height(),GL.RGB16,GL.CLAMP,GL.LINEAR);
+        stencil = new Texture(buffer.width(),buffer.height(),GL.RGB16,GL.CLAMP,GL.LINEAR);
+        diffuse = new Texture(buffer.width(),buffer.height(),GL.RGB16,GL.CLAMP,GL.LINEAR);
+        specular = new Texture(buffer.width(),buffer.height(),GL.RGB16,GL.CLAMP,GL.LINEAR);
         
         buffer.attach(position);
         buffer.attach(normal);

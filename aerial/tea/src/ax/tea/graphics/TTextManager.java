@@ -10,9 +10,6 @@ import ax.graphics.GL;
 import ax.graphics.Mesh;
 import ax.graphics.Program;
 import ax.graphics.Texture;
-import ax.graphics.Texture.Filter;
-import ax.graphics.Texture.Internal;
-import ax.graphics.Texture.Wrap;
 import ax.math.vector.Color;
 import ax.math.vector.Matrix4;
 
@@ -84,9 +81,9 @@ public class TTextManager {
     
     private Texture createTexture(TText text) {
         AwtFont font = text.getFont().awt();
-        Filter filter = (text.getFont().antialias()) ? Filter.LINEAR : Filter.NEAREST;
+        GL.Filter filter = (text.getFont().antialias()) ? GL.LINEAR : GL.NEAREST;
         BufferedImage image = font.genBufferedImage(text.getText(), toAwtAlign(text.getAlign()));
-        Texture tex = gl.glGenTexture(image, Internal.RGBA16, Wrap.CLAMP, filter);
+        Texture tex = gl.glGenTexture(image, GL.RGBA16, GL.CLAMP, filter);
         return tex;
     }
     

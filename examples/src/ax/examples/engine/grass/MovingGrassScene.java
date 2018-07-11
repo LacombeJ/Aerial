@@ -11,7 +11,6 @@ import ax.engine.core.Scene;
 import ax.engine.core.SceneObject;
 import ax.engine.core.Texture;
 import ax.engine.core.TextureUniform;
-import ax.engine.core.Mesh.Mode;
 import ax.engine.core.geometry.BoxGeometry;
 import ax.engine.core.geometry.GeometryBuilder;
 import ax.engine.core.geometry.PlaneGeometry;
@@ -30,6 +29,7 @@ import ax.engine.core.material.ShaderLanguage.SLVec2;
 import ax.engine.core.material.ShaderLanguage.SLVec3;
 import ax.engine.core.material.ShaderLanguage.SLVec4;
 import ax.engine.core.ui.SubApp;
+import ax.graphics.GL;
 import ax.math.vector.Color;
 import ax.math.vector.Mathf;
 import ax.math.vector.Matrix4;
@@ -237,7 +237,7 @@ public class MovingGrassScene {
         
         SceneObject grassPoints = new SceneObject();
         Material mat = new SolidMaterial(Color.RED.toVector());
-        Mesh grassMesh = new Mesh(geometry,mat,Mode.POINTS);
+        Mesh grassMesh = new Mesh(geometry,mat,GL.POINTS);
         grassMesh.setThickness(4f);
         grassPoints.addComponent(grassMesh);
         //so.addChild(grassPoints);
@@ -245,7 +245,7 @@ public class MovingGrassScene {
         
         SceneObject grassBlades = new SceneObject();
         Material shader = grassShader(mgt.texture);
-        Mesh bladesMesh = new Mesh(geometry,shader,Mode.POINTS);
+        Mesh bladesMesh = new Mesh(geometry,shader,GL.POINTS);
         bladesMesh.cullFace = false;
         grassBlades.addComponent(bladesMesh);
         grassBlades.addComponent(new MovingGrass(shader));

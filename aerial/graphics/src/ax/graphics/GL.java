@@ -3,9 +3,6 @@ package ax.graphics;
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
 
-import ax.graphics.Texture.Filter;
-import ax.graphics.Texture.Internal;
-import ax.graphics.Texture.Wrap;
 import ax.graphics.utils.MeshData;
 
 /**
@@ -16,68 +13,68 @@ import ax.graphics.utils.MeshData;
 public interface GL {
 
     /** Clears given buffers */
-    public void glClear(Mask... masks);
+    void glClear(Mask... masks);
     
     /** Sets scissor bounds */
-    public void glScissor(int x, int y, int width, int height);
+    void glScissor(int x, int y, int width, int height);
     
-    public void glScissor(int[] box);
+    void glScissor(int[] box);
     
-    public int[] glGetScissor();
+    int[] glGetScissor();
     
     /** Enables target */
-    public void glEnable(Target target);
+    void glEnable(Target target);
     
     /** Disables target */
-    public void glDisable(Target target);
+    void glDisable(Target target);
     
     /** Sets the GL hint */
-    public void glHint(HintTarget target, Hint hint);
+    void glHint(HintTarget target, Hint hint);
     
     /** Returns GL version */
-    public String glGetVersion();
+    String glGetVersion();
     
     /** Returns GL shading version */
-    public String glGetGLSLVersion();
+    String glGetGLSLVersion();
     
     /** Retruns GL shading version as an int */
-    public int glGetGLSLVersioni();
+    int glGetGLSLVersioni();
     
     /** Sets the blend function */
-    public void glBlendFunc(Factor src, Factor dst);
+    void glBlendFunc(Factor src, Factor dst);
     
     /**
      * Sets the blending type
-     * @see #glBlendFunc(int, int)
+     * @see #glBlendFunc(Factor, Factor)
      */
-    public void glBlendFunc(Blend type);
+    void glBlendFunc(Blend type);
     
     /** Sets the clear color (background color) */
-    public void glClearColor(float r, float g, float b, float a);
+    void glClearColor(float r, float g, float b, float a);
     
-    /** @see #setClearColor(float, float, float, float) */
-    public void glClearColor(float[] color);
+    /** @see #glClearColor(float, float, float, float) */
+    void glClearColor(float[] color);
     
     /** Sets the view port for rendering */
-    public void glViewport(int x, int y, int width, int height);
+    void glViewport(int x, int y, int width, int height);
     
-    public void glPointSize(float size);
+    void glPointSize(float size);
     
-    public void glLineWidth(float width);
+    void glLineWidth(float width);
     
-    public void glPolygonMode(Face face, PMode mode);
+    void glPolygonMode(Face face, PMode mode);
     
-    public boolean glHasError();
-    
-    
+    boolean glHasError();
     
     
-    public Texture glGenTexture();
     
-    public Texture glGenTexture(FloatBuffer data, int width, int height,
+    
+    Texture glGenTexture();
+    
+    Texture glGenTexture(FloatBuffer data, int width, int height,
             Internal internal, Wrap wrap, Filter filter);
     
-    public Texture glGenTexture(FloatBuffer data, int width, int height);
+    Texture glGenTexture(FloatBuffer data, int width, int height);
     
     /**
      * 
@@ -90,40 +87,40 @@ public interface GL {
      * @param filter
      * @return
      */
-    public Texture glGenTexture(float[] data, int width, int height, Internal internal, Wrap wrap, Filter filter);
+    Texture glGenTexture(float[] data, int width, int height, Internal internal, Wrap wrap, Filter filter);
     
     /** @see #glGenTexture(float[], int, int, Internal, Wrap, Filter) */
-    public Texture glGenTexture(float[] data, int width, int height);
+    Texture glGenTexture(float[] data, int width, int height);
     
-    public Texture glGenTexture(BufferedImage image, Internal internal, Wrap wrap, Filter filter);
+    Texture glGenTexture(BufferedImage image, Internal internal, Wrap wrap, Filter filter);
     
-    public Texture glGenTexture(BufferedImage image);
+    Texture glGenTexture(BufferedImage image);
     
-    public Texture glGenTexture(String file, Internal internal, Wrap wrap, Filter filter);
+    Texture glGenTexture(String file, Internal internal, Wrap wrap, Filter filter);
     
-    public Texture glGenTexture(String file);
+    Texture glGenTexture(String file);
     
-    public Texture glGenTexture(int width, int height, Internal internal, Wrap wrap, Filter filter);
+    Texture glGenTexture(int width, int height, Internal internal, Wrap wrap, Filter filter);
   
-    public Texture glGenTexture(int width, int height);
+    Texture glGenTexture(int width, int height);
     
     /** Binds the given texture or 0 if null */
-    public void glBindTexture(Texture texture);
+    void glBindTexture(Texture texture);
     
     
     /**
      * Binds texture then calls glGetTexImage; does not free texture
      * @return float array of texture
      */
-    public float[] glGetTexImage(Texture texture);
+    float[] glGetTexImage(Texture texture);
     
     
     
     /** @return a new framebuffer with no attached textue */
-    public FrameBuffer glGenFramebuffer(int width, int height);
+    FrameBuffer glGenFramebuffer(int width, int height);
     
     /** @return a new framebuffer with attached textures */
-    public FrameBuffer glGenFramebuffer(Texture... textures);
+    FrameBuffer glGenFramebuffer(Texture... textures);
     
     
     
@@ -132,62 +129,62 @@ public interface GL {
      * Remember to clear the color buffer and depth buffer bit after this call
      * if you plan on rendering to frame buffer.
      */
-    public void glBindFramebuffer(FrameBuffer fb);
+    void glBindFramebuffer(FrameBuffer fb);
     
     /**
      * Read pixels from the currently bound buffer
      * @return float array of pixels
      */
-    public float[] glReadPixels(int x, int y, int width, int height);
+    float[] glReadPixels(int x, int y, int width, int height);
     
     /** @return a new mesh/VBO */
-    public Mesh glGenMesh(float[] vertexData, float[] normalData,
+    Mesh glGenMesh(float[] vertexData, float[] normalData,
             float[] texCoordData, int[] indices);
     
-    public Mesh glGenMesh(float[] vertexData, int[] indices);
+    Mesh glGenMesh(float[] vertexData, int[] indices);
     
-    /** @see #createMesh(float[], float[], float[], int[]) */
-    public Mesh glGenMesh(MeshData md);
+    /** @see #glGenMesh(float[], float[], float[], int[]) */
+    Mesh glGenMesh(MeshData md);
     
-    public void glRender(Mesh mesh);
+    void glRender(Mesh mesh);
     
-    public void glRender(Mesh mesh, Mode mode);
+    void glRender(Mesh mesh, Mode mode);
     
-    public void glRenderInstance(Mesh mesh, int count);
+    void glRenderInstance(Mesh mesh, int count);
     
-    public void glRenderInstance(Mesh mesh, Mode mode, int count);
+    void glRenderInstance(Mesh mesh, Mode mode, int count);
     
     /** @return a new shader program with the given source code */
-    public Program glCreateProgram();
+    Program glCreateProgram();
     
     /** @return a shader program of the given type */
-    public Shader glCreateShader(ShaderType type);
+    Shader glCreateShader(ShaderType type);
     
     /** @return a shader program of the given type and compiled with the given source */
-    public Shader glCreateShader(ShaderType type, String source);
+    Shader glCreateShader(ShaderType type, String source);
     
     /** Uses the given program or 0 if null */
-    public void glUseProgram(Program program);
+    void glUseProgram(Program program);
 
     
     // Enums
     
-    public final static Mask COLOR_BUFFER_BIT = Mask.COLOR_BUFFER_BIT;
-    public final static Mask DEPTH_BUFFER_BIT = Mask.DEPTH_BUFFER_BIT;
-    public static enum Mask {
+    Mask COLOR_BUFFER_BIT = Mask.COLOR_BUFFER_BIT;
+    Mask DEPTH_BUFFER_BIT = Mask.DEPTH_BUFFER_BIT;
+    enum Mask {
         COLOR_BUFFER_BIT,
         DEPTH_BUFFER_BIT
     }
     
-    public final static Target CULL_FACE            = Target.CULL_FACE;
-    public final static Target DEPTH_TEST           = Target.DEPTH_TEST;
-    public final static Target STENCIL_TEST         = Target.STENCIL_TEST;
-    public final static Target SCISSOR_TEST         = Target.SCISSOR_TEST;
-    public final static Target BLEND                = Target.BLEND;
-    public final static Target POINT_SMOOTH         = Target.POINT_SMOOTH;
-    public final static Target PROGRAM_POINT_SIZE   = Target.PROGRAM_POINT_SIZE;
-    public final static Target POINT_SPRITE         = Target.POINT_SPRITE;
-    public static enum Target {
+    Target CULL_FACE            = Target.CULL_FACE;
+    Target DEPTH_TEST           = Target.DEPTH_TEST;
+    Target STENCIL_TEST         = Target.STENCIL_TEST;
+    Target SCISSOR_TEST         = Target.SCISSOR_TEST;
+    Target BLEND                = Target.BLEND;
+    Target POINT_SMOOTH         = Target.POINT_SMOOTH;
+    Target PROGRAM_POINT_SIZE   = Target.PROGRAM_POINT_SIZE;
+    Target POINT_SPRITE         = Target.POINT_SPRITE;
+    enum Target {
         CULL_FACE,
         DEPTH_TEST,
         STENCIL_TEST,
@@ -198,31 +195,31 @@ public interface GL {
         POINT_SPRITE
     }
     
-    public final static HintTarget POINT_SMOOTH_HINT    = HintTarget.POINT_SMOOTH_HINT;
-    public final static HintTarget LINE_SMOOTH_HINT     = HintTarget.LINE_SMOOTH_HINT;
-    public final static HintTarget POLYGON_SMOOTH_HINT  = HintTarget.POLYGON_SMOOTH_HINT;
-    public static enum HintTarget {
+    HintTarget POINT_SMOOTH_HINT    = HintTarget.POINT_SMOOTH_HINT;
+    HintTarget LINE_SMOOTH_HINT     = HintTarget.LINE_SMOOTH_HINT;
+    HintTarget POLYGON_SMOOTH_HINT  = HintTarget.POLYGON_SMOOTH_HINT;
+    enum HintTarget {
         POINT_SMOOTH_HINT,
         LINE_SMOOTH_HINT,
         POLYGON_SMOOTH_HINT
     }
     
-    public final static Hint FASTEST    = Hint.FASTEST;
-    public final static Hint NICEST     = Hint.NICEST;
-    public final static Hint DONT_CARE  = Hint.DONT_CARE;
-    public static enum Hint {
+    Hint FASTEST    = Hint.FASTEST;
+    Hint NICEST     = Hint.NICEST;
+    Hint DONT_CARE  = Hint.DONT_CARE;
+    enum Hint {
         FASTEST,
         NICEST,
         DONT_CARE
     }
     
-    public final static Blend NORMAL    = Blend.NORMAL;
-    public final static Blend MULTIPLY  = Blend.MULTIPLY;
-    public final static Blend ADDITIVE  = Blend.ADDITIVE;
-    public final static Blend SCREEN    = Blend.SCREEN;
-    public final static Blend SUBTRACT  = Blend.SUBTRACT;
-    public final static Blend DARKEN    = Blend.DARKEN;
-    public static enum Blend {
+    Blend NORMAL    = Blend.NORMAL;
+    Blend MULTIPLY  = Blend.MULTIPLY;
+    Blend ADDITIVE  = Blend.ADDITIVE;
+    Blend SCREEN    = Blend.SCREEN;
+    Blend SUBTRACT  = Blend.SUBTRACT;
+    Blend DARKEN    = Blend.DARKEN;
+    enum Blend {
         /** src=SRC_ALPHA dst=ONE_MINUS_SRC_ALPHA   */
         NORMAL,
         
@@ -242,17 +239,17 @@ public interface GL {
         DARKEN
     }
     
-    public final static Factor ZERO                 = Factor.ZERO;
-    public final static Factor ONE                  = Factor.ONE;
-    public final static Factor SRC_COLOR            = Factor.SRC_COLOR;
-    public final static Factor ONE_MINUS_SRC_COLOR  = Factor.ONE_MINUS_SRC_COLOR;
-    public final static Factor SRC_ALPHA            = Factor.SRC_ALPHA;
-    public final static Factor ONE_MINUS_SRC        = Factor.ONE_MINUS_SRC;
-    public final static Factor DST_ALPHA            = Factor.DST_ALPHA;
-    public final static Factor ONE_MINUS_DST_ALPHA  = Factor.ONE_MINUS_DST_ALPHA;
-    public final static Factor ONE_MINUS_SRC_ALPHA  = Factor.ONE_MINUS_SRC_ALPHA;
-    public final static Factor ONE_MINUS_DST_COLOR  = Factor.ONE_MINUS_DST_COLOR;
-    public static enum Factor {
+    Factor ZERO                 = Factor.ZERO;
+    Factor ONE                  = Factor.ONE;
+    Factor SRC_COLOR            = Factor.SRC_COLOR;
+    Factor ONE_MINUS_SRC_COLOR  = Factor.ONE_MINUS_SRC_COLOR;
+    Factor SRC_ALPHA            = Factor.SRC_ALPHA;
+    Factor ONE_MINUS_SRC        = Factor.ONE_MINUS_SRC;
+    Factor DST_ALPHA            = Factor.DST_ALPHA;
+    Factor ONE_MINUS_DST_ALPHA  = Factor.ONE_MINUS_DST_ALPHA;
+    Factor ONE_MINUS_SRC_ALPHA  = Factor.ONE_MINUS_SRC_ALPHA;
+    Factor ONE_MINUS_DST_COLOR  = Factor.ONE_MINUS_DST_COLOR;
+    enum Factor {
         ZERO,
         ONE,
         SRC_COLOR,
@@ -265,41 +262,41 @@ public interface GL {
         ONE_MINUS_DST_COLOR
     }
     
-    public final static Face FRONT              = Face.FRONT;
-    public final static Face BACK               = Face.BACK;
-    public final static Face FRONT_AND_BACK     = Face.FRONT_AND_BACK;
-    public static enum Face {
+    Face FRONT              = Face.FRONT;
+    Face BACK               = Face.BACK;
+    Face FRONT_AND_BACK     = Face.FRONT_AND_BACK;
+    enum Face {
         FRONT,
         BACK,
         FRONT_AND_BACK
     }
     
-    public final static Mode POINTS     = Mode.POINTS;
-    public final static Mode LINES      = Mode.LINES;
-    public final static Mode LINE_STRIP = Mode.LINE_STRIP;
-    public final static Mode TRIANGLES  = Mode.TRIANGLES;
-    public static enum Mode {
+    Mode POINTS     = Mode.POINTS;
+    Mode LINES      = Mode.LINES;
+    Mode LINE_STRIP = Mode.LINE_STRIP;
+    Mode TRIANGLES  = Mode.TRIANGLES;
+    enum Mode {
         POINTS,
         LINES,
         LINE_STRIP,
         TRIANGLES
     }
     
-    public final static PMode POINT = PMode.POINT;
-    public final static PMode LINE  = PMode.LINE;
-    public final static PMode FILL  = PMode.FILL;
-    public static enum PMode {
+    PMode POINT = PMode.POINT;
+    PMode LINE  = PMode.LINE;
+    PMode FILL  = PMode.FILL;
+    enum PMode {
         POINT,
         LINE,
         FILL
     }
     
-    public final static ShaderType VERTEX_SHADER            = ShaderType.VERTEX_SHADER;
-    public final static ShaderType FRAGMENT_SHADER          = ShaderType.FRAGMENT_SHADER;
-    public final static ShaderType GEOMETRY_SHADER          = ShaderType.GEOMETRY_SHADER;
-    public final static ShaderType TESS_CONTROL_SHADER      = ShaderType.TESS_CONTROL_SHADER;
-    public final static ShaderType TESS_EVALUATION_SHADER   = ShaderType.TESS_EVALUATION_SHADER;
-    public static enum ShaderType {
+    ShaderType VERTEX_SHADER            = ShaderType.VERTEX_SHADER;
+    ShaderType FRAGMENT_SHADER          = ShaderType.FRAGMENT_SHADER;
+    ShaderType GEOMETRY_SHADER          = ShaderType.GEOMETRY_SHADER;
+    ShaderType TESS_CONTROL_SHADER      = ShaderType.TESS_CONTROL_SHADER;
+    ShaderType TESS_EVALUATION_SHADER   = ShaderType.TESS_EVALUATION_SHADER;
+    enum ShaderType {
         VERTEX_SHADER,
         FRAGMENT_SHADER,
         GEOMETRY_SHADER,
@@ -307,6 +304,40 @@ public interface GL {
         TESS_EVALUATION_SHADER
     }
 
-    
+
+    Internal R16F               = Internal.R16F;
+    Internal R32F               = Internal.R32F;
+    Internal RGB16              = Internal.RGB16;
+    Internal RGB16F             = Internal.RGB16F;
+    Internal RGBA8              = Internal.RGBA8;
+    Internal RGBA16             = Internal.RGBA16;
+    Internal RGBA16F            = Internal.RGBA16F;
+    Internal DEPTH_COMPONENT    = Internal.DEPTH_COMPONENT;
+    enum Internal {
+        R16F,
+        R32F,
+        RGB16,
+        RGB16F,
+        RGBA8,
+        RGBA16,
+        RGBA16F,
+        DEPTH_COMPONENT
+    }
+
+    Wrap CLAMP  = Wrap.CLAMP;
+    Wrap REPEAT = Wrap.REPEAT;
+    enum Wrap {
+        CLAMP,
+        REPEAT
+    }
+
+    Filter NEAREST  = Filter.NEAREST;
+    Filter LINEAR   = Filter.LINEAR;
+    Filter MIPMAP   = Filter.MIPMAP;
+    enum Filter {
+        NEAREST,
+        LINEAR,
+        MIPMAP
+    }
     
 }

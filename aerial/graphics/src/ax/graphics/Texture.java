@@ -11,13 +11,13 @@ public interface Texture {
     public int getHeight();
     
     /** glTexImage2D - generates the texture image and sets width and height */
-    public void image(float[] data, int width, int height, Internal internal);
+    public void image(float[] data, int width, int height, GL.Internal internal);
     
     /** glTexImage2D - generates the texture image and sets width and height*/
-    public void image(FloatBuffer data, int width, int height, Internal internal);
+    public void image(FloatBuffer data, int width, int height, GL.Internal internal);
     
     /** glTexParametersi - sets the texture parameters */
-    public void parameters(Wrap wrap, Filter filter);
+    public void parameters(GL.Wrap wrap, GL.Filter filter);
     
     /** glTexSubImage2D */
     public void subImage(float[] data, int x, int y, int width, int height);
@@ -25,30 +25,5 @@ public interface Texture {
     public void subImage(FloatBuffer data, int x, int y, int width, int height);
     
     public void delete();
-    
-    public static enum Internal {
-        R16F,
-        R32F,
-        
-        RGB16,
-        RGB16F,
-        
-        RGBA8,
-        RGBA16,
-        RGBA16F,
-
-        DEPTH_COMPONENT
-    }
-    
-    public static enum Wrap {
-        CLAMP,
-        REPEAT
-    }
-    
-    public static enum Filter {
-        NEAREST,
-        LINEAR,
-        MIPMAP
-    }
     
 }

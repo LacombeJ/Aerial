@@ -9,11 +9,11 @@ import ax.engine.core.Mesh;
 import ax.engine.core.Property;
 import ax.engine.core.SceneObject;
 import ax.engine.core.Transform;
-import ax.engine.core.Mesh.Mode;
 import ax.engine.core.geometry.ConeGeometry;
 import ax.engine.core.geometry.GeometryBuilder;
 import ax.engine.core.geometry.GeometryOperation;
 import ax.engine.core.material.SolidMaterial;
+import ax.graphics.GL;
 import ax.math.vector.Color;
 import ax.math.vector.Mathf;
 import ax.math.vector.Matrix4;
@@ -120,7 +120,7 @@ public class TranslationAxis {
             lineGeometry.modify(rotateOp);
         }
         Mesh lineMesh = new Mesh(lineGeometry,material);
-        lineMesh.setMode(Mode.LINES);
+        lineMesh.setMode(GL.LINES);
         lineMesh.setThickness(3f);
         lineMesh.setDepthTest(false);
         soLine.addComponent(lineMesh);
@@ -397,7 +397,7 @@ public class TranslationAxis {
         Geometry geometry = gb.build();
         SolidMaterial material = new SolidMaterial(color);
         Mesh mesh = new Mesh(geometry, material);
-        mesh.setMode(Mode.POINTS);
+        mesh.setMode(GL.POINTS);
         mesh.setDepthTest(false);
         mesh.setThickness(10f);
         mesh.setVisible(visible);

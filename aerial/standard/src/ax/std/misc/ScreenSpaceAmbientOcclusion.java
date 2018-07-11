@@ -3,11 +3,9 @@ package ax.std.misc;
 import ax.commons.io.FileUtils;
 import ax.engine.core.Texture;
 import ax.engine.core.Transform;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
 import ax.engine.core.render.CameraExtension;
 import ax.engine.core.render.RenderTarget;
+import ax.graphics.GL;
 import ax.math.vector.Mathf;
 import ax.math.vector.Matrix4;
 import ax.math.vector.Vector3;
@@ -54,7 +52,7 @@ public class ScreenSpaceAmbientOcclusion extends CameraExtension {
             ssaoNoise[i] = noise;
         }
         noiseTexture = new Texture(Vector3.pack(ssaoNoise),
-                ssaoNoiseSize,ssaoNoiseSize,Internal.RGB16,Wrap.REPEAT,Filter.NEAREST);
+                ssaoNoiseSize,ssaoNoiseSize,GL.RGB16,GL.REPEAT,GL.NEAREST);
     }
     
     @Override

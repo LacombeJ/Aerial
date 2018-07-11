@@ -5,9 +5,6 @@ import ax.engine.core.FrameBuffer;
 import ax.engine.core.Material;
 import ax.engine.core.Texture;
 import ax.engine.core.TextureUniform;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
 import ax.engine.core.material.GeneratedShader;
 import ax.engine.core.material.ShaderLanguage;
 import ax.engine.core.material.ShaderLanguage.SLFloat;
@@ -19,6 +16,7 @@ import ax.engine.core.material.ShaderLanguage.SLVec3;
 import ax.engine.core.material.ShaderLanguage.SLVec4;
 import ax.engine.core.shaders.SLUtils;
 import ax.engine.utils.GLUtils;
+import ax.graphics.GL;
 import ax.graphics.Program;
 import ax.math.vector.Mathf;
 import ax.math.vector.Vector3;
@@ -64,14 +62,14 @@ public class SSAO extends ImageEffect {
             ssaoNoise[i] = noise;
         }
         noiseTexture = new Texture(Vector3.pack(ssaoNoise),
-                ssaoNoiseSize,ssaoNoiseSize,Internal.RGB16,Wrap.REPEAT,Filter.NEAREST);
+                ssaoNoiseSize,ssaoNoiseSize,GL.RGB16,GL.REPEAT,GL.NEAREST);
         
         create();
     }
     
     private void create() {
         buffer = new FrameBuffer(1024,576);
-        ssao = new Texture(buffer.width(),buffer.height(),Internal.RGB16F,Wrap.CLAMP,Filter.LINEAR);
+        ssao = new Texture(buffer.width(),buffer.height(),GL.RGB16F,GL.CLAMP,GL.LINEAR);
         
         buffer.attach(ssao);
         

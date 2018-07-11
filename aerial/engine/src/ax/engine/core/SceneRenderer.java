@@ -155,7 +155,7 @@ class SceneRenderer {
                 
                 ax.commons.func.List.iterate(manager.delegate().onGLPreRender(), (cb) -> cb.f(so,mesh,gl) );
                 
-                gl.glRender(glr.getOrCreateMesh(geometry),GLUtils.map(mesh.getMode()));
+                gl.glRender(glr.getOrCreateMesh(geometry),mesh.getMode());
                 
                 ax.commons.func.List.iterate(manager.delegate().onGLPostRender(), (cb) -> cb.f(so,mesh,gl) );
                 

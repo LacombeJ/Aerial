@@ -6,9 +6,7 @@ import ax.engine.core.FrameBuffer;
 import ax.engine.core.Material;
 import ax.engine.core.Service;
 import ax.engine.core.Texture;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
+import ax.graphics.GL;
 
 public class RenderTexture extends Component {
     
@@ -16,7 +14,7 @@ public class RenderTexture extends Component {
     FrameBuffer[] buffers = null;
     boolean clearOnRender = true;
     
-    public RenderTexture(int numBuffers, Material material, int width, int height, Internal internal, Wrap wrap, Filter filter) {
+    public RenderTexture(int numBuffers, Material material, int width, int height, GL.Internal internal, GL.Wrap wrap, GL.Filter filter) {
         this.material = material;
         
         buffers = new FrameBuffer[numBuffers];
@@ -28,12 +26,12 @@ public class RenderTexture extends Component {
         
     }
     
-    public RenderTexture(int numBuffers, Material material, int width, int height, Internal internal) {
-        this(numBuffers,material,width,height,Internal.RGB16,Wrap.CLAMP,Filter.NEAREST);
+    public RenderTexture(int numBuffers, Material material, int width, int height, GL.Internal internal) {
+        this(numBuffers,material,width,height,GL.RGB16,GL.CLAMP,GL.NEAREST);
     }
     
     public RenderTexture(int numBuffers, Material material, int width, int height) {
-        this(numBuffers,material,width,height,Internal.RGB16);
+        this(numBuffers,material,width,height,GL.RGB16);
     }
     
     public void render() {

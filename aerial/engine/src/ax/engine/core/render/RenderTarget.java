@@ -3,9 +3,7 @@ package ax.engine.core.render;
 import ax.engine.core.Camera;
 import ax.engine.core.FrameBuffer;
 import ax.engine.core.Texture;
-import ax.engine.core.Texture.Filter;
-import ax.engine.core.Texture.Internal;
-import ax.engine.core.Texture.Wrap;
+import ax.graphics.GL;
 
 public class RenderTarget extends Camera implements FBCamera {
     
@@ -23,7 +21,7 @@ public class RenderTarget extends Camera implements FBCamera {
     
     public RenderTarget(int width, int height) {
         buffer = new FrameBuffer(width,height);
-        Texture texture = new Texture(width,height,Internal.RGB16,Wrap.CLAMP,Filter.LINEAR);
+        Texture texture = new Texture(width,height,GL.RGB16,GL.CLAMP,GL.LINEAR);
         buffer.attach(texture);
         
         gBuffer = new FrameBuffer(width,height);

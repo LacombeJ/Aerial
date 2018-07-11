@@ -6,9 +6,6 @@ import java.util.HashMap;
 import ax.commons.misc.AwtFont;
 import ax.graphics.GL;
 import ax.graphics.Texture;
-import ax.graphics.Texture.Filter;
-import ax.graphics.Texture.Internal;
-import ax.graphics.Texture.Wrap;
 
 /**
  * This implementation of text rendering will keep a map of text to textures
@@ -63,9 +60,9 @@ class DynamicTextImplementation implements TextImplementation {
     }
     
     Texture genTexture(AwtFont font, Text text) {
-        Filter filter = (text.getFont().antialias()) ? Filter.LINEAR : Filter.NEAREST;
+        GL.Filter filter = (text.getFont().antialias()) ? GL.LINEAR : GL.NEAREST;
         BufferedImage image = font.genBufferedImage(text.getText(), TextUtils.toAwtAlign(text.getAlign()));
-        return gl.glGenTexture(image, Internal.RGBA16, Wrap.CLAMP, filter);
+        return gl.glGenTexture(image, GL.RGBA16, GL.CLAMP, filter);
     }
 
 }

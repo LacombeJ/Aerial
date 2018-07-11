@@ -1,5 +1,7 @@
 package ax.engine.core;
 
+import ax.graphics.GL;
+
 public class Mesh extends Component {
 
     public boolean cullFace = true;
@@ -9,27 +11,20 @@ public class Mesh extends Component {
     
     Geometry geometry; //TODO hide variables, getters and setters?
     Material material = null;
-    Mode mode;
+    GL.Mode mode;
     float thickness = 1;
     boolean depthTest = true;
     boolean visible = true;
     boolean wireframe = false;
     
-    public enum Mode {
-        TRIANGLES,
-        LINES,
-        LINE_STRIP,
-        POINTS;
-    }
-    
-    public Mesh(Geometry mesh, Material material, Mode mode) {
+    public Mesh(Geometry mesh, Material material, GL.Mode mode) {
         this.geometry = mesh;
         this.material = material;
         this.mode = mode;
     }
     
     public Mesh(Geometry mesh, Material material) {
-        this(mesh, material, Mode.TRIANGLES);
+        this(mesh, material, GL.TRIANGLES);
     }
     
     public Geometry getGeometry() {
@@ -48,11 +43,11 @@ public class Mesh extends Component {
         material = mat;
     }
     
-    public Mode getMode() {
+    public GL.Mode getMode() {
         return mode;
     }
     
-    public void setMode(Mode mode) {
+    public void setMode(GL.Mode mode) {
         this.mode = mode;
     }
     
