@@ -80,63 +80,64 @@ public class TextModule extends Attachment {
         TextMesh textMesh = g.getComponent(TextMesh.class);
         if (textMesh != null) {
             Text text = textMesh.getText();
-            
-            Transform cameraWorld = service.getWorldTransform(camera.sceneObject());
-            Matrix4 V = Camera.computeViewMatrix(cameraWorld);
-            Matrix4 P = camera.getProjection();
-            Matrix4 VP = P.get().multiply(V);
-            
-            Transform t = service.getWorldTransform(g);
-            Matrix4 M = t.computeMatrix();
-            
-            
-            Texture texture = ti.get(text);
-            float width = texture.getWidth();
-            float height = texture.getHeight();
-            Align halign = textMesh.getHAlign();
-            Align valign = textMesh.getVAlign();
-            float x = 0;
-            float y = 0;
-            if (halign==Align.HA_LEFT) {
-                x = width * 0.5f;
-            } else if (halign==Align.HA_RIGHT) {
-                x = -width * 0.5f;
+            if (!text.getText().equals("")) {
+                Transform cameraWorld = service.getWorldTransform(camera.sceneObject());
+                Matrix4 V = Camera.computeViewMatrix(cameraWorld);
+                Matrix4 P = camera.getProjection();
+                Matrix4 VP = P.get().multiply(V);
+
+                Transform t = service.getWorldTransform(g);
+                Matrix4 M = t.computeMatrix();
+
+
+                Texture texture = ti.get(text);
+                float width = texture.getWidth();
+                float height = texture.getHeight();
+                Align halign = textMesh.getHAlign();
+                Align valign = textMesh.getVAlign();
+                float x = 0;
+                float y = 0;
+                if (halign == Align.HA_LEFT) {
+                    x = width * 0.5f;
+                } else if (halign == Align.HA_RIGHT) {
+                    x = -width * 0.5f;
+                }
+                if (valign == Align.VA_BOTTOM) {
+                    y = height * 0.5f;
+                } else if (valign == Align.VA_TOP) {
+                    y = -height * 0.5f;
+                }
+
+                // Post-scale alignment translation
+                M.translate(x, y, 0);
+
+                // Scale
+                // In matrix multiplication backwards-operations, we perform scale afterwards although logically
+                // this means we scale first
+                M.scale(width, height, 1);
+
+                Matrix4 MVP = VP.get().multiply(M);
+
+                gl.glUseProgram(fontProgram);
+
+                GLUtils.setUniform(fontProgram, "MVP", MVP);
+                GLUtils.setUniform(fontProgram, "fontColor", textMesh.getColor());
+                GLUtils.setTexture(fontProgram, "texture", texture, 0);
+
+                if (!textMesh.getDepthTest()) {
+                    gl.glDisable(GL.DEPTH_TEST);
+                }
+
+                gl.glRender(mesh, GL.TRIANGLES);
+
+                if (!textMesh.getDepthTest()) {
+                    gl.glEnable(GL.DEPTH_TEST);
+                }
+
+                gl.glEnable(GL.CULL_FACE);
+
+                gl.glUseProgram(null);
             }
-            if (valign==Align.VA_BOTTOM) {
-                y = height * 0.5f;
-            } else if (valign==Align.VA_TOP) {
-                y = -height * 0.5f;
-            }
-            
-            // Post-scale alignment translation
-            M.translate(x, y, 0);
-            
-            // Scale
-            // In matrix multiplication backwards-operations, we perform scale afterwards although logically
-            // this means we scale first
-            M.scale(width, height, 1);
-            
-            Matrix4 MVP = VP.get().multiply(M);
-            
-            gl.glUseProgram(fontProgram);
-            
-            GLUtils.setUniform(fontProgram, "MVP", MVP);
-            GLUtils.setUniform(fontProgram, "fontColor", textMesh.getColor());
-            GLUtils.setTexture(fontProgram, "texture", texture, 0);
-            
-            if (!textMesh.getDepthTest()) {
-                gl.glDisable(GL.DEPTH_TEST);
-            }
-            
-            gl.glRender(mesh, GL.TRIANGLES);
-            
-            if (!textMesh.getDepthTest()) {
-                gl.glEnable(GL.DEPTH_TEST);
-            }
-            
-            gl.glEnable(GL.CULL_FACE);
-            
-            gl.glUseProgram(null);
         }
         
     }

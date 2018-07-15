@@ -18,9 +18,14 @@ public class CanvasObject {
 
     private SceneObject root;
     private Camera camera;
+    private int width;
+    private int height;
     
     public CanvasObject() {
-        
+
+        width = 1024;
+        height = 576;
+
         root = new SceneObject();
         
         SceneObject canvas = new SceneObject();
@@ -30,15 +35,17 @@ public class CanvasObject {
         camera.setScissorMode(Camera.NONE);
         camera.enableClearColor(false);
         camera.setTargetType(Camera.ONLY);
-        camera.setOrthographicBox(576, 1024, -1, 1);
+        camera.setOrthographicBox(height, width, -1, 1);
         
         canvas.addComponent(camera);
         canvas.transform().translation.set(512,288,0);
         
         canvas.addUpdate(()->{
             Window window = canvas.window();
-            camera.setOrthographicBox(window.height(), window.width(), -1, 1);
-            camera.transform().translation.set(window.width()/2, window.height()/2, 0);
+            width = window.width();
+            height = window.height();
+            camera.setOrthographicBox(height, width, -1, 1);
+            camera.transform().translation.set(width/2, height/2, 0);
         });
         
         root.addChild(canvas);
@@ -58,6 +65,14 @@ public class CanvasObject {
     public void addChild(SceneObject so) {
         add(so);
         root.addChild(so);
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
     }
     
 }

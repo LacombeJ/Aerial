@@ -41,7 +41,7 @@ public class Texture {
     public int width() {
         return width;
     }
-    public int getHeight() {
+    public int height() {
         return height;
     }
     

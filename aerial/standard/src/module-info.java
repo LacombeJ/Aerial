@@ -8,6 +8,7 @@ module ax.std {
     exports ax.std.ray;
     exports ax.std.render;
     exports ax.std.render.pass;
+    exports ax.std.render.shadow;
     exports ax.std.text;
     
     requires transitive ax.engine;

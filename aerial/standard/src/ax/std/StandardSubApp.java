@@ -12,10 +12,7 @@ public class StandardSubApp extends SubApp {
 	public StandardSubApp(ax.aui.Window window, Widget widget) {
 		super(window, widget);
 
-		add(new RenderModule());
-		add(new TextModule());
-		add(new FXModule());
-		add(new RayModule());
+		Standard.addStandardModules(this);
 	}
 
 }

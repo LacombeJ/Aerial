@@ -40,7 +40,12 @@ public class TextMesh extends Component {
     public void setVAlign(Align valign) {
         this.valign = valign;
     }
-    
+
+    public void setAlign(Align halign, Align valign) {
+        this.halign = halign;
+        this.valign = valign;
+    }
+
     public Vector4 getColor() {
         return color.get();
     }

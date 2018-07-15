@@ -48,7 +48,7 @@ public class RenderModule extends Attachment {
         };
         
         preRenderCamera = (camera) -> {
-            prerender(camera);
+            preRender(camera);
         };
         
         postRenderCamera = (camera) -> {
@@ -83,7 +83,7 @@ public class RenderModule extends Attachment {
         delegate.onSceneObjectRender().remove(onSceneObjectRender);
     }
     
-    private void prerender(Camera camera) {
+    private void preRender(Camera camera) {
         if (camera instanceof DeferredCamera) {
             DeferredCamera pc = (DeferredCamera)camera;
             

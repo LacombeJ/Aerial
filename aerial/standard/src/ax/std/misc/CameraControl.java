@@ -5,6 +5,7 @@ import ax.engine.core.Transform;
 import ax.math.vector.Mathf;
 import ax.math.vector.Quaternion;
 import ax.math.vector.Vector3;
+import ax.std.Std;
 
 public class CameraControl extends Component {
     
@@ -17,14 +18,11 @@ public class CameraControl extends Component {
         Transform selfWorldTransform = transform().multiply(parentWorldTransform);
         
         Vector3 selfPos = selfWorldTransform.translation;
-        
-        float theta = Vector3.thetaBetween(selfPos, point);
-        float phi = Vector3.phiBetween(selfPos, point);
-        
-        Quaternion quat = new Quaternion();
-        quat.mul( Quaternion.eulerRad(theta, 0, 0).conjugate().nor() );
-        quat.mul( Quaternion.eulerRad(0, phi+Mathf.PI_OVER_2, 0) );
-        
+
+        Vector3 dir = point.get().sub(selfPos);
+
+        Quaternion quat = Std.rotationFromVector(dir);
+
         selfWorldTransform.rotation = quat;
         
         Transform updateTransform = selfWorldTransform.inverse(parentWorldTransform);

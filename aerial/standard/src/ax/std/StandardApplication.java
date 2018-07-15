@@ -10,11 +10,8 @@ public class StandardApplication extends Application {
 
     public StandardApplication() {
         super();
-        
-        add(new RenderModule());
-        add(new TextModule());
-        add(new FXModule());
-        add(new RayModule());
+
+        Standard.addStandardModules(this);
     }
     
 }

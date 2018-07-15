@@ -86,6 +86,23 @@ public abstract class AbstractApplication {
     	}
     	attach.add(delegate, service);
     }
+
+    public Attachment get(String attachmentName) {
+        return attachments.get(attachmentName);
+    }
+
+    public <T extends Attachment> T get(String attachmentName, Class<T> c) {
+        return (T) attachments.get(attachmentName);
+    }
+
+    public <T extends Attachment> T get(Class<T> c) {
+        for (Attachment attach : attachments.values()) {
+            if (attach.getClass().equals(c)) {
+                return (T) attach;
+            }
+        }
+        return null;
+    }
     
     public void remove(String key) {
     	Attachment attach = attachments.remove(key);

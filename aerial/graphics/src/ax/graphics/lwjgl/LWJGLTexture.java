@@ -55,28 +55,37 @@ class LWJGLTexture implements Texture {
     public int getHeight() {
         return height;
     }
-    
-    @Override
-    public void image(float[] data, int width, int height, GL.Internal internal) {
-        bind();
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D,0,LWJGL.getInternal(internal),width,height,0,GL11.GL_RGBA,GL11.GL_FLOAT,data);
+
+    private void setSizeAndMipmap(int width, int height) {
         this.width = width;
         this.height = height;
         if (filter==GL.Filter.MIPMAP) {
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         }
+    }
+
+    private int getFormatFromInternalFormat(GL.Internal internal) {
+        if (internal==GL.DEPTH_COMPONENT) {
+            return GL11.GL_DEPTH_COMPONENT;
+        }
+        return GL11.GL_RGBA;
+    }
+
+    @Override
+    public void image(float[] data, int width, int height, GL.Internal internal) {
+        bind();
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D,0,LWJGL.getInternal(internal),
+                width,height,0,getFormatFromInternalFormat(internal),GL11.GL_FLOAT,data);
+        setSizeAndMipmap(width, height);
         free();
     }
 
     @Override
     public void image(FloatBuffer data, int width, int height, GL.Internal internal) {
         bind();
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D,0,LWJGL.getInternal(internal),width,height,0,GL11.GL_RGBA,GL11.GL_FLOAT,data);
-        this.width = width;
-        this.height = height;
-        if (filter==GL.Filter.MIPMAP) {
-            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-        }
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D,0,LWJGL.getInternal(internal),
+                width,height,0,getFormatFromInternalFormat(internal),GL11.GL_FLOAT,data);
+        setSizeAndMipmap(width, height);
         free();
     }
 
