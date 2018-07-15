@@ -9,5 +9,8 @@ dependencies {
     compile project(':aerial:box')
     compile project(':aerial:bullet')
     compile project(':aerial:engine')
+
+    compile libraries.lwjgl
+    compile libraries.lwjgl_natives
 }
 

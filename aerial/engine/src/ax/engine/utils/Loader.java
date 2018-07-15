@@ -27,7 +27,8 @@ public class Loader {
     
     public static Texture loadTexture(String fileLoc, GL.Internal internal, GL.Wrap wrap, GL.Filter filter) {
         BufferedImage b = ImageUtils.load(fileLoc);
-        Texture t = new Texture(ImageUtils.data(b),b.getWidth(),b.getHeight(),internal,wrap,filter);
+        float[] glOrientedTextureData = ImageUtils.data(b, false, true, true);
+        Texture t = new Texture(glOrientedTextureData,b.getWidth(),b.getHeight(),internal,wrap,filter);
         return t;
     }
     

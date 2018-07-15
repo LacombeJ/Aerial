@@ -66,16 +66,40 @@ public class ImageUtils {
             e.printStackTrace();
         }
     }
-    
-    public static float[] data(BufferedImage bi) {
-        FloatArray data = new FloatArray(bi.getHeight() * bi.getWidth() * BYTES_PER_PIXEL);
-        for (int i=0; i<bi.getHeight(); i++) {
-            for (int j=0; j<bi.getWidth(); j++) {
-                float[] c = getColor(bi.getRGB(j,i),true);
+
+    public static float[] data(BufferedImage bi, boolean top, boolean left, boolean byRow) {
+
+        int width = bi.getWidth();
+        int height = bi.getHeight();
+
+        int topStart = top ? 0 : height-1;
+        int leftStart = left ? 0 : width-1;
+        int startI = (byRow) ? topStart : leftStart;
+        int startJ = (byRow) ? leftStart : topStart;
+
+        int topEnd = top ? height : -1;
+        int leftEnd = left ? width : -1;
+        int checkI = (byRow) ? topEnd : leftEnd;
+        int checkJ = (byRow) ? leftEnd : topEnd;
+
+        int topIncrement = top ? 1 : -1;
+        int leftIncrement = left ? 1 : -1;
+        int incrementI = (byRow) ? topIncrement : leftIncrement;
+        int incrementJ = (byRow) ? leftIncrement : topIncrement;
+
+        FloatArray data = new FloatArray(width * height * BYTES_PER_PIXEL);
+
+        for (int i=startI; i!=checkI; i+=incrementI) {
+            for (int j=startJ; j!=checkJ; j+=incrementJ) {
+                float[] c = (byRow) ? getColor(bi.getRGB(j,i),true) : getColor(bi.getRGB(i,j),true);
                 data.put(c);
             }
         }
         return data.getArray();
+    }
+
+    public static float[] data(BufferedImage bi) {
+        return data(bi,true,true,true);
     }
     
     /**

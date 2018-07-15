@@ -135,5 +135,9 @@ public class Dir {
     public static Dir appData() {
         return new Dir(SystemUtils.appDataLocation());
     }
-    
+
+    public static Dir at(String path) {
+        return new Dir(path);
+    }
+
 }
