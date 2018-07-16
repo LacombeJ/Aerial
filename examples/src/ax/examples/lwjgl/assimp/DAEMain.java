@@ -4,22 +4,22 @@ import ax.commons.io.Console;
 import ax.commons.misc.ArrayUtils;
 import ax.engine.core.*;
 import ax.engine.core.geometry.BoxGeometry;
+import ax.engine.core.geometry.GeometryOperation;
 import ax.engine.core.geometry.PlaneGeometry;
+import ax.engine.core.material.ShaderLanguage;
 import ax.engine.core.material.SolidMaterial;
 import ax.engine.core.material.TextureMaterial;
 import ax.engine.utils.Loader;
 import ax.graphics.GL;
-import ax.math.vector.Color;
-import ax.math.vector.Vector3;
-import ax.math.vector.Vector4;
+import ax.math.vector.*;
 import ax.std.StandardApplication;
+import ax.std.Std;
 import ax.std.misc.CanvasObject;
 import ax.std.misc.FirstPersonControl;
 import ax.std.misc.MouseGrabToggle;
 import ax.std.render.Light;
 import ax.std.render.StandardMaterial;
 import ax.std.render.StandardMaterialBuilder;
-import ax.std.render.shadow.ShadowMap;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class DAEMain {
 
-    public static  void main(String[]args) {
+    public static void main(String[]args) {
         new DAEMain().run();
     }
 
@@ -83,9 +83,13 @@ public class DAEMain {
 
         Geometry geometry = new BoxGeometry(1,1,1);
         Material material = new SolidMaterial(Color.MANGO.toVector());
+        material = standard(Color.GRAY.toVector(), Color.MANGO.toVector(), Color.GRAY.toVector());
+
         Mesh mesh = new Mesh(geometry, material);
 
         so.addComponent(mesh);
+
+        so.transform().translation = new Vector3(3,1,3);
 
         return so;
     }
@@ -97,6 +101,8 @@ public class DAEMain {
         Light light = new Light();
         light.setType(Light.DIRECTIONAL);
         light.setDirection(new Vector3(1.1f,-0.9f,0.8f).norm());
+
+        light.setAmbient(new Vector3(0.1f, 0.1f, 0.1f));
 
         so.addComponent(light);
 
@@ -197,6 +203,13 @@ public class DAEMain {
                 ArrayUtils.toFloatArray(textures),
                 ArrayUtils.toIntArray(indices));
 
+        Vector3[] vertexArray = geometry.getVertexArray();
+        Vector3[] normalArray = geometry.getNormalArray();
+        Std.coordinateTranslate(Std.BLENDER_COORDINATES,Std.STANDARD_COORDINATES,vertexArray);
+        Std.coordinateTranslate(Std.BLENDER_COORDINATES,Std.STANDARD_COORDINATES,normalArray);
+        geometry.setVectorArray(vertexArray);
+        geometry.setNormalArray(normalArray);
+
         Material material;
         int materialIdx = aiMesh.mMaterialIndex();
         if (materialIdx >= 0 && materialIdx < materials.size()) {
@@ -231,6 +244,7 @@ public class DAEMain {
     }
 
     private static void processTextCoords(AIMesh aiMesh, List<Float> textures) {
+        //TODO figure out why we are indexing at 0 here
         AIVector3D.Buffer aiTextCoords = aiMesh.mTextureCoords(0);
         while (aiTextCoords.remaining() > 0) {
             AIVector3D aiTextCoord = aiTextCoords.get();
@@ -281,6 +295,8 @@ public class DAEMain {
         }
 
         Material material = new TextureMaterial(texture);
+        //material = standard(ambient, diffuse, specular);
+        material = standard(texture,specular);
 
         materials.add(material);
     }
@@ -290,6 +306,19 @@ public class DAEMain {
         StandardMaterialBuilder sl = new StandardMaterialBuilder();
 
         sl.diffuse = sl.vec3(diffuse.xyz());
+        sl.specular = sl.vec3(specular.xyz());
+
+        return sl.build();
+
+    }
+
+    private static StandardMaterial standard(Texture texture, Vector4 specular) {
+
+        StandardMaterialBuilder sl = new StandardMaterialBuilder();
+
+        ShaderLanguage.SLTexU texU = sl.texture("texture",texture);
+
+        sl.diffuse = sl.sample(texU);
         sl.specular = sl.vec3(specular.xyz());
 
         return sl.build();
