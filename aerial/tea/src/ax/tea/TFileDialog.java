@@ -68,7 +68,11 @@ public class TFileDialog implements FileDialog {
     
     @Override
     public String selected() {
-        return fileChooser.getSelectedFile().getPath();
+        File file = fileChooser.getSelectedFile();
+        if (file != null) {
+            return file.getPath();
+        }
+        return null;
     }
     
     
